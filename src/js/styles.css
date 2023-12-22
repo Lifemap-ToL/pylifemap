@@ -1,0 +1,11 @@
+@import url('../../packages/lifemapjs/css/leaflet.css');
+@import url('../../packages/lifemapjs/css/lifemap-leaflet.css');
+
+.pylifemap-map {
+    /*height: 600px;*/
+}
+
+/* VSCode workarounds */
+.cell-output-ipywidget-background:has(.p-Widget):has(.pylifemap-map) {
+    background-color: transparent !important;
+}

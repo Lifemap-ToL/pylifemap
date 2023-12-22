@@ -1,0 +1,3 @@
+[submodule "packages/lifemapjs"]
+	path = packages/lifemapjs
+	url = git@github.com:juba/lifemapjs.git
