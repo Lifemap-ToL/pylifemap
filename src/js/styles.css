@@ -5,6 +5,10 @@
     /*height: 600px;*/
 }
 
+.pylifemap-map .lifemap-legend {
+    color: black;
+}
+
 /* VSCode workarounds */
 .cell-output-ipywidget-background:has(.p-Widget):has(.pylifemap-map) {
     background-color: transparent !important;
