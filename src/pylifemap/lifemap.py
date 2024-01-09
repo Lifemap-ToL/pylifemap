@@ -16,6 +16,7 @@ class Lifemap:
     def __init__(
         self,
         data: pd.DataFrame | pl.DataFrame,
+        *,
         locate: bool = True,
         taxid_col: str = "taxid",
         x_col: str = "pylifemap_x",
@@ -52,8 +53,19 @@ class Lifemap:
             lmdata, how="inner", left_on=self.taxid_col, right_on="taxid"
         )
 
-    def layer_points(self, radius: int = 15, opacity: float = 0.8) -> Lifemap:
-        options = {"radius": radius, "opacity": opacity}
+    def layer_points(
+        self,
+        *,
+        radius: int = 4,
+        radius_col: str | None = None,
+        fill_col: str | None = None,
+        fill_col_cat: bool | None = None,
+        scheme: str | None = None,
+        opacity: float = 0.1,
+        popup: bool | None = False,
+    ) -> Lifemap:
+        options = locals()
+        del options["self"]
         self.layers.append({"layer": "points", "options": options})
         return self
 
