@@ -2,7 +2,7 @@ import { lifemap } from "lifemapjs";
 
 import "./styles.css";
 
-export function render({ model, el }) {
+function render({ model, el }) {
     // Traitlets
     let layers = () => model.get("layers");
     let options = () => model.get("options");
@@ -55,3 +55,5 @@ function _onHeightChanged(model, el) {
     let container = el.querySelector(":scope > .pylifemap-map");
     container.style.height = height();
 }
+
+export default { render };
