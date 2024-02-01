@@ -7,8 +7,8 @@ name = "pylifemap"
 dynamic = ["version"]
 description = 'Python package for Lifemap visualizations.'
 readme = "README.md"
-requires-python = ">=3.9"
-license = "MIT"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
 keywords = []
 authors = [
   { name = "Julien Barnier", email = "julien.barnier@cnrs.fr" },
@@ -16,7 +16,6 @@ authors = [
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -24,11 +23,15 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "anywidget[dev]>=0.8.0",
-  "polars>=0.20.2",
+  "anywidget[dev]>=0.9.0",
+  "polars>=0.20.6",
   "pandas",
   "pyarrow>=14.0.0",
   "ipywidgets>=8.1.0",
+  "solara>=1",
+  "shiny",
+  "shinywidgets",
+  "htmltools"
 ]
 
 [project.optional-dependencies]
@@ -77,21 +80,19 @@ all = ["style", "typing"]
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.hatch.build]
-include = [
-  "src/pylifemap/data/*",
-]
 [tool.hatch.build.targets.sdist]
+ignore-vcs = true
+include = [
+  "src/pylifemap/*", "src/pylifemap/static/*", "src/pylifemap/data/*"
+]
 exclude = [".github", "doc", ".vscode", "examples"]
-
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pylifemap"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["src/static/static-widget.js"]
-skip-if-exists = ["src/static/static-widget.js"]
+ensured-targets = ["src/pylifemap/static/widget.js", "src/pylifemap/static/widget.css"]
 dependencies = ["hatch-jupyter-builder>=0.5.0"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
