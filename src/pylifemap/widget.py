@@ -3,7 +3,7 @@ import pathlib
 import anywidget
 import traitlets
 
-BUNDLER_OUTPUT_DIR = pathlib.Path(__file__).parent.parent / "static"
+BUNDLER_OUTPUT_DIR = pathlib.Path(__file__).parent / "static"
 
 
 class LifemapWidget(anywidget.AnyWidget):
