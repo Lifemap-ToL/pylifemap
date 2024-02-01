@@ -1,7 +1,7 @@
 {
     "dependencies": {},
     "scripts": {
-        "bundle": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/static src/js/widget.js",
+        "bundle": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/pylifemap/static src/js/widget.js",
         "build": "npm run bundle -- --minify",
         "dev": "npm run bundle -- --sourcemap=inline --watch",
         "test": "hatch run test"
