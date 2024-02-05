@@ -4,4 +4,4 @@ dist/
 .ipynb_checkpoints/
 data/
 examples/
-src/static/
+src/pylifemap/static/

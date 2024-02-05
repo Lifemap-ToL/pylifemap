@@ -29,7 +29,6 @@ function render({ model, el }) {
     el.map = map;
 
     // Add traitlets change callback
-    //model.on("change:data", () => _onDataChanged(model, el));
     model.on("change:layers", () => _onLayersChanged(model, el));
     model.on("change:width", () => _onWidthChanged(model, el));
     model.on("change:height", () => _onHeightChanged(model, el));

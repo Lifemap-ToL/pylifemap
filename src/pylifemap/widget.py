@@ -14,7 +14,6 @@ class LifemapWidget(anywidget.AnyWidget):
         BUNDLER_OUTPUT_DIR / "widget.css", start_thread=False
     )
     # traitlets
-    # data = traitlets.Dict().tag(sync=True)
     layers = traitlets.List().tag(sync=True)
     options = traitlets.Dict().tag(sync=True)
     width = traitlets.Unicode().tag(sync=True)
