@@ -45,17 +45,18 @@ class Lifemap:
 
     def to_widget(self) -> LifemapWidget:
         return LifemapWidget(
+            data=self.data,
             layers=self.layers,
             options=self.map_options,
             width=self.width,
             height=self.height,
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         # Override default __repr__ to avoid very long and slow text output
         return "<LifemapWidget>"
 
-    def show(self):
+    def show(self) -> None:
         display(self.to_widget())
 
     def save(self, path, title: str = "Lifemap") -> None:
@@ -63,29 +64,32 @@ class Lifemap:
             path, views=[self.to_widget()], drop_defaults=False, title=title
         )
 
-    def generate_layer_points(self, options: dict) -> dict:
+    def generate_data_points(self, options: dict) -> bytes:
         radius_col = options["radius_col"] if "radius_col" in options else None
         fill_col = options["fill_col"] if "fill_col" in options else None
-        data = self.data_computations.points_data(
+        return self.data_computations.points_data(
             radius_col=radius_col, fill_col=fill_col
         )
-        return {"layer": "points", "data": data, "options": options}
+
+    def generate_data_heatmap(self) -> bytes:
+        return self.data_computations.heatmap_data()
+
+    def generate_layer_points(self, options: dict) -> dict:
+        return {"layer": "points", "options": options}
 
     def generate_layer_heatmap(self, options: dict) -> dict:
-        data = self.data_computations.heatmap_data()
-        return {"layer": "heatmap", "data": data, "options": options}
+        return {"layer": "heatmap", "options": options}
 
     def generate_layer_grid(self, options: dict) -> dict:
-        data = self.data_computations.heatmap_data()
-        return {"layer": "grid", "data": data, "options": options}
+        return {"layer": "grid", "options": options}
 
     def generate_layer_screengrid(self, options: dict) -> dict:
-        data = self.data_computations.heatmap_data()
-        return {"layer": "screengrid", "data": data, "options": options}
+        return {"layer": "screengrid", "options": options}
 
     def layer_points(
         self,
         *,
+        id: str | None = None,  # noqa: A002
         radius: float = 4,
         radius_col: str | None = None,
         fill_col: str | None = None,
@@ -98,11 +102,14 @@ class Lifemap:
         del options["self"]
         layer = self.generate_layer_points(options)
         self.layers.append(layer)
+        data = self.generate_data_points(options)
+        self.data[id] = data
         return self
 
     def layer_heatmap(
         self,
         *,
+        id: str | None = None,  # noqa: A002
         radius: float = 30,
         intensity: float = 5,
         threshold: float = 0.05,
@@ -113,11 +120,13 @@ class Lifemap:
         del options["self"]
         layer = self.generate_layer_heatmap(options)
         self.layers.append(layer)
+        self.data[id] = self.generate_data_heatmap()
         return self
 
     def layer_grid(
         self,
         *,
+        id: str | None = None,  # noqa: A002
         cell_size: int = 500,
         extruded: bool = False,
         opacity: float = 0.5,
@@ -126,11 +135,13 @@ class Lifemap:
         del options["self"]
         layer = self.generate_layer_grid(options)
         self.layers.append(layer)
+        self.data[id] = self.generate_data_heatmap()
         return self
 
     def layer_screengrid(
         self,
         *,
+        id: str | None = None,  # noqa: A002
         cell_size: int = 30,
         extruded: bool = False,
         opacity: float = 0.5,
@@ -139,4 +150,5 @@ class Lifemap:
         del options["self"]
         layer = self.generate_layer_screengrid(options)
         self.layers.append(layer)
+        self.data[id] = self.generate_data_heatmap()
         return self
