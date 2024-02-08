@@ -14,15 +14,18 @@ class LifemapWidget(anywidget.AnyWidget):
         BUNDLER_OUTPUT_DIR / "widget.css", start_thread=False
     )
     # traitlets
+    data = traitlets.Dict().tag(sync=True)
     layers = traitlets.List().tag(sync=True)
     options = traitlets.Dict().tag(sync=True)
     width = traitlets.Unicode().tag(sync=True)
     height = traitlets.Unicode().tag(sync=True)
 
-    def __init__(self, layers, options, width, height):
-        super().__init__(layers=layers, options=options, width=width, height=height)
+    def __init__(self, data, layers, options, width, height):
+        super().__init__(
+            data=data, layers=layers, options=options, width=width, height=height
+        )
 
     # @traitlets.validate("layers")
     # def _validate_layers(self, proposal):
-    #     layers = proposal["value"]
-    #     return layers
+    #     new_layers = proposal["value"]
+    #     return new_layers
