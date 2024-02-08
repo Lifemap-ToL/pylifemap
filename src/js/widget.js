@@ -4,6 +4,7 @@ import "./styles.css";
 
 function render({ model, el }) {
     // Traitlets
+    let data = () => model.get("data");
     let layers = () => model.get("layers");
     let options = () => model.get("options");
     let width = () => model.get("width");
@@ -14,7 +15,7 @@ function render({ model, el }) {
     container.classList.add("pylifemap-map");
 
     // Create map
-    const map = lifemap(container, layers(), options());
+    const map = lifemap(container, data(), layers(), options());
 
     // Invalidate map size when container is resized
     const resizeObserver = new ResizeObserver((entries) => {
@@ -26,17 +27,22 @@ function render({ model, el }) {
     container.style.width = width();
 
     el.appendChild(container);
-    el.map = map;
 
     // Add traitlets change callback
-    model.on("change:layers", () => _onLayersChanged(model, el));
+    model.on("change:data", () => _onDataChanged(model, map));
+    model.on("change:layers", () => _onLayersChanged(model, map));
     model.on("change:width", () => _onWidthChanged(model, el));
     model.on("change:height", () => _onHeightChanged(model, el));
 }
 
+// Data value change callback
+function _onDataChanged(model, map) {
+    let data = () => model.get("data");
+    map.update_data(data());
+}
+
 // Layers value change callback
-function _onLayersChanged(model, el) {
-    let map = el.map;
+function _onLayersChanged(model, map) {
     let layers = () => model.get("layers");
     map.update_layers(layers());
 }
