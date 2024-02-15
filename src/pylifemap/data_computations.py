@@ -41,7 +41,7 @@ class DataComputations:
         cols = self.base_cols + [
             col for col in [radius_col, fill_col] if col is not None
         ]
-        data = self.data.select(cols)
+        data = self.data.select(set(cols))
         return serialize_data(data)
 
     def heatmap_data(self) -> bytes:
