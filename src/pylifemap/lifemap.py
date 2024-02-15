@@ -32,6 +32,7 @@ class Lifemap:
         self.data = {}
         self.width = width
         self.height = height
+        self.layers_counter = 0
 
         self.data_computations = DataComputations(
             data, locate=locate, taxid_col=taxid_col, x_col=x_col, y_col=y_col
@@ -99,11 +100,14 @@ class Lifemap:
         popup: bool | None = False,
     ) -> Lifemap:
         options = locals()
+        self.layers_counter += 1
+        if options["id"] is None:
+            options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         layer = self.generate_layer_points(options)
         self.layers.append(layer)
         data = self.generate_data_points(options)
-        self.data[id] = data
+        self.data[options["id"]] = data
         return self
 
     def layer_heatmap(
@@ -117,10 +121,13 @@ class Lifemap:
         color_range: list | None = None,
     ) -> Lifemap:
         options = locals()
+        self.layers_counter += 1
+        if options["id"] is None:
+            options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         layer = self.generate_layer_heatmap(options)
         self.layers.append(layer)
-        self.data[id] = self.generate_data_heatmap()
+        self.data[options["id"]] = self.generate_data_heatmap()
         return self
 
     def layer_grid(
@@ -132,10 +139,13 @@ class Lifemap:
         opacity: float = 0.5,
     ) -> Lifemap:
         options = locals()
+        self.layers_counter += 1
+        if options["id"] is None:
+            options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         layer = self.generate_layer_grid(options)
         self.layers.append(layer)
-        self.data[id] = self.generate_data_heatmap()
+        self.data[options["id"]] = self.generate_data_heatmap()
         return self
 
     def layer_screengrid(
@@ -147,8 +157,11 @@ class Lifemap:
         opacity: float = 0.5,
     ) -> Lifemap:
         options = locals()
+        self.layers_counter += 1
+        if options["id"] is None:
+            options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         layer = self.generate_layer_screengrid(options)
         self.layers.append(layer)
-        self.data[id] = self.generate_data_heatmap()
+        self.data[options["id"]] = self.generate_data_heatmap()
         return self
