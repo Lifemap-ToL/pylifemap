@@ -17,12 +17,6 @@ function render({ model, el }) {
     // Create map
     const map = lifemap(container, data(), layers(), options());
 
-    // Invalidate map size when container is resized
-    const resizeObserver = new ResizeObserver((entries) => {
-        map.invalidateSize();
-    });
-    resizeObserver.observe(container);
-
     container.style.height = height();
     container.style.width = width();
 

@@ -1,5 +1,5 @@
-@import url('../../packages/lifemapjs/css/leaflet.css');
-@import url('../../packages/lifemapjs/css/lifemap-leaflet.css');
+@import url('../../node_modules/ol/ol.css');
+@import url('../../packages/lifemapjs/css/lifemap-ol.css');
 
 .pylifemap-map {
     /*height: 600px;*/
