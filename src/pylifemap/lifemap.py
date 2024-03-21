@@ -33,6 +33,8 @@ class Lifemap:
         self.width = width
         self.height = height
         self.layers_counter = 0
+        self.x_col = x_col
+        self.y_col = y_col
 
         self.data_computations = DataComputations(
             data, locate=locate, taxid_col=taxid_col, x_col=x_col, y_col=y_col
@@ -104,6 +106,8 @@ class Lifemap:
         if options["id"] is None:
             options["id"] = f"layer{self.layers_counter}"
         del options["self"]
+        options["x_col"] = self.x_col
+        options["y_col"] = self.y_col
         layer = self.generate_layer_points(options)
         self.layers.append(layer)
         data = self.generate_data_points(options)
@@ -125,6 +129,8 @@ class Lifemap:
         if options["id"] is None:
             options["id"] = f"layer{self.layers_counter}"
         del options["self"]
+        options["x_col"] = self.x_col
+        options["y_col"] = self.y_col
         layer = self.generate_layer_heatmap(options)
         self.layers.append(layer)
         self.data[options["id"]] = self.generate_data_heatmap()
@@ -143,6 +149,8 @@ class Lifemap:
         if options["id"] is None:
             options["id"] = f"layer{self.layers_counter}"
         del options["self"]
+        options["x_col"] = self.x_col
+        options["y_col"] = self.y_col
         layer = self.generate_layer_grid(options)
         self.layers.append(layer)
         self.data[options["id"]] = self.generate_data_heatmap()
@@ -161,6 +169,8 @@ class Lifemap:
         if options["id"] is None:
             options["id"] = f"layer{self.layers_counter}"
         del options["self"]
+        options["x_col"] = self.x_col
+        options["y_col"] = self.y_col
         layer = self.generate_layer_screengrid(options)
         self.layers.append(layer)
         self.data[options["id"]] = self.generate_data_heatmap()
