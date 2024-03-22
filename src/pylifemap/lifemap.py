@@ -5,7 +5,7 @@ import polars as pl
 from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
-from pylifemap.data_computations import DataComputations
+from pylifemap.data import LifemapData
 from pylifemap.widget import LifemapWidget
 
 DEFAULT_WIDTH = "100%"
@@ -28,17 +28,20 @@ class Lifemap:
         height: str = DEFAULT_HEIGHT,
     ) -> None:
 
-        self.layers = []
-        self.data = {}
         self.width = width
         self.height = height
+        self.layers = []
         self.layers_counter = 0
-        self.x_col = x_col
-        self.y_col = y_col
+        self.layers_data = {}
 
-        self.data_computations = DataComputations(
-            data, locate=locate, taxid_col=taxid_col, x_col=x_col, y_col=y_col
-        )
+        self.data = LifemapData(data, taxid_col=taxid_col, x_col=x_col, y_col=y_col)
+
+        if locate:
+            # Geolocate species
+            self.data.locate()
+        else:
+            # Rename x_col and y_col to "pylifemap_x" and "pylifemap_y"
+            self.data.rename_xy()
 
         self.map_options = {
             "zoom": zoom,
@@ -48,7 +51,7 @@ class Lifemap:
 
     def to_widget(self) -> LifemapWidget:
         return LifemapWidget(
-            data=self.data,
+            data=self.layers_data,
             layers=self.layers,
             options=self.map_options,
             width=self.width,
@@ -67,32 +70,15 @@ class Lifemap:
             path, views=[self.to_widget()], drop_defaults=False, title=title
         )
 
-    def generate_data_points(self, options: dict) -> bytes:
-        radius_col = options["radius_col"] if "radius_col" in options else None
-        fill_col = options["fill_col"] if "fill_col" in options else None
-        return self.data_computations.points_data(
-            radius_col=radius_col, fill_col=fill_col
-        )
-
-    def generate_data_heatmap(self) -> bytes:
-        return self.data_computations.heatmap_data()
-
-    def generate_layer_points(self, options: dict) -> dict:
-        return {"layer": "points", "options": options}
-
-    def generate_layer_heatmap(self, options: dict) -> dict:
-        return {"layer": "heatmap", "options": options}
-
-    def generate_layer_grid(self, options: dict) -> dict:
-        return {"layer": "grid", "options": options}
-
-    def generate_layer_screengrid(self, options: dict) -> dict:
-        return {"layer": "screengrid", "options": options}
+    def process_options(self, options: dict) -> dict:
+        self.layers_counter += 1
+        options["id"] = f"layer{self.layers_counter}"
+        del options["self"]
+        return options
 
     def layer_points(
         self,
         *,
-        id: str | None = None,  # noqa: A002
         radius: float = 4,
         radius_col: str | None = None,
         fill_col: str | None = None,
@@ -101,77 +87,66 @@ class Lifemap:
         opacity: float = 0.1,
         popup: bool | None = False,
     ) -> Lifemap:
-        options = locals()
-        self.layers_counter += 1
-        if options["id"] is None:
-            options["id"] = f"layer{self.layers_counter}"
-        del options["self"]
-        options["x_col"] = self.x_col
-        options["y_col"] = self.y_col
-        layer = self.generate_layer_points(options)
+        options = self.process_options(locals())
+        layer = {"layer": "points", "options": options}
         self.layers.append(layer)
-        data = self.generate_data_points(options)
-        self.data[options["id"]] = data
+        self.layers_data[options["id"]] = self.data.points_data(options)
+        return self
+
+    def layer_points_ol(
+        self,
+        *,
+        radius: float = 4,
+        radius_col: str | None = None,
+        fill_col: str | None = None,
+        fill_col_cat: bool | None = None,
+        scheme: str | None = None,
+        opacity: float = 0.1,
+        popup: bool | None = False,
+    ) -> Lifemap:
+        options = self.process_options(locals())
+        layer = {"layer": "points_ol", "options": options}
+        self.layers.append(layer)
+        self.layers_data[options["id"]] = self.data.points_data(options)
         return self
 
     def layer_heatmap(
         self,
         *,
-        id: str | None = None,  # noqa: A002
         radius: float = 30,
         intensity: float = 5,
         threshold: float = 0.05,
         opacity: float = 0.5,
         color_range: list | None = None,
     ) -> Lifemap:
-        options = locals()
-        self.layers_counter += 1
-        if options["id"] is None:
-            options["id"] = f"layer{self.layers_counter}"
-        del options["self"]
-        options["x_col"] = self.x_col
-        options["y_col"] = self.y_col
-        layer = self.generate_layer_heatmap(options)
+        options = self.process_options(locals())
+        layer = {"layer": "heatmap", "options": options}
         self.layers.append(layer)
-        self.data[options["id"]] = self.generate_data_heatmap()
+        self.layers_data[options["id"]] = self.data.points_data()
         return self
 
     def layer_grid(
         self,
         *,
-        id: str | None = None,  # noqa: A002
         cell_size: int = 500,
         extruded: bool = False,
         opacity: float = 0.5,
     ) -> Lifemap:
-        options = locals()
-        self.layers_counter += 1
-        if options["id"] is None:
-            options["id"] = f"layer{self.layers_counter}"
-        del options["self"]
-        options["x_col"] = self.x_col
-        options["y_col"] = self.y_col
-        layer = self.generate_layer_grid(options)
+        options = self.process_options(locals())
+        layer = {"layer": "grid", "options": options}
         self.layers.append(layer)
-        self.data[options["id"]] = self.generate_data_heatmap()
+        self.layers_data[options["id"]] = self.data.points_data(options)
         return self
 
     def layer_screengrid(
         self,
         *,
-        id: str | None = None,  # noqa: A002
         cell_size: int = 30,
         extruded: bool = False,
         opacity: float = 0.5,
     ) -> Lifemap:
-        options = locals()
-        self.layers_counter += 1
-        if options["id"] is None:
-            options["id"] = f"layer{self.layers_counter}"
-        del options["self"]
-        options["x_col"] = self.x_col
-        options["y_col"] = self.y_col
-        layer = self.generate_layer_screengrid(options)
+        options = self.process_options(locals())
+        layer = {"layer": "screengrid", "options": options}
         self.layers.append(layer)
-        self.data[options["id"]] = self.generate_data_heatmap()
+        self.layers_data[options["id"]] = self.data.points_data(options)
         return self

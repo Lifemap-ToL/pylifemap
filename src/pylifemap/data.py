@@ -1,17 +1,17 @@
 import pandas as pd
 import polars as pl
+import polars.selectors as cs
 
-from pylifemap.serialize import serialize_data
+from pylifemap.serialization import serialize_data
 from pylifemap.utils import LMDATA_PATH
 
 
-class DataComputations:
+class LifemapData:
 
     def __init__(
         self,
         data: pl.DataFrame | pd.DataFrame,
         *,
-        locate: bool,
         taxid_col: str,
         x_col: str,
         y_col: str,
@@ -19,15 +19,14 @@ class DataComputations:
         self.taxid_col = taxid_col
         self.x_col = x_col
         self.y_col = y_col
-        self.base_cols = [self.taxid_col, self.x_col, self.y_col]
+        self.base_cols = [self.taxid_col, "pylifemap_x", "pylifemap_y"]
 
         if isinstance(data, pd.DataFrame):
             data = pl.DataFrame(data)
-        self.data = data
-        if locate:
-            self.locate_data()
 
-    def locate_data(self) -> None:
+        self.data = data
+
+    def locate(self) -> None:
         lmdata = pl.read_parquet(LMDATA_PATH)
         rename = {"lon": "pylifemap_x", "lat": "pylifemap_y"}
         for col in ["zoom", "depth", "parent", "n_childs"]:
@@ -37,13 +36,16 @@ class DataComputations:
             lmdata, how="inner", left_on=self.taxid_col, right_on="taxid"
         )
 
-    def points_data(self, radius_col: str | None, fill_col: str | None) -> bytes:
-        cols = self.base_cols + [
-            col for col in [radius_col, fill_col] if col is not None
-        ]
-        data = self.data.select(set(cols))
-        return serialize_data(data)
+    def rename_xy(self) -> None:
+        rename = {self.x_col: "pylifemap_x", self.y_col: "pylifemap_y"}
+        self.data = self.data.rename(rename)
 
-    def heatmap_data(self) -> bytes:
-        data = self.data.select([self.x_col, self.y_col])
+    def points_data(self, options: dict | None) -> bytes:
+        cols = self.base_cols
+        if options is not None:
+            if "fill_col" in options:
+                cols.append(options["fill_col"])
+            if "radius_col" in options:
+                cols.append(options["radius_col"])
+        data = self.data.select(set(cols))
         return serialize_data(data)
