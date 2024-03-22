@@ -135,7 +135,7 @@ class Lifemap:
         options = self.process_options(locals())
         layer = {"layer": "grid", "options": options}
         self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
+        self.layers_data[options["id"]] = self.data.points_data()
         return self
 
     def layer_screengrid(
@@ -148,5 +148,5 @@ class Lifemap:
         options = self.process_options(locals())
         layer = {"layer": "screengrid", "options": options}
         self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
+        self.layers_data[options["id"]] = self.data.points_data()
         return self
