@@ -40,7 +40,7 @@ class LifemapData:
         rename = {self.x_col: "pylifemap_x", self.y_col: "pylifemap_y"}
         self.data = self.data.rename(rename)
 
-    def points_data(self, options: dict | None) -> bytes:
+    def points_data(self, options: dict | None = None) -> bytes:
         cols = self.base_cols
         if options is not None:
             if "fill_col" in options:
