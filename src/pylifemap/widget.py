@@ -1,3 +1,7 @@
+"""
+Lifemap anywidget objects.
+"""
+
 import pathlib
 
 import anywidget

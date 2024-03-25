@@ -1,3 +1,7 @@
+""" 
+Main Lifemap object.
+"""
+
 from __future__ import annotations
 
 import pandas as pd
@@ -106,6 +110,23 @@ class Lifemap:
     ) -> Lifemap:
         options = self.process_options(locals())
         layer = {"layer": "points_ol", "options": options}
+        self.layers.append(layer)
+        self.layers_data[options["id"]] = self.data.points_data(options)
+        return self
+
+    def layer_lines(
+        self,
+        *,
+        radius: float = 4,
+        radius_col: str | None = None,
+        fill_col: str | None = None,
+        fill_col_cat: bool | None = None,
+        scheme: str | None = None,
+        opacity: float = 0.1,
+        popup: bool | None = False,
+    ) -> Lifemap:
+        options = self.process_options(locals())
+        layer = {"layer": "points", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data(options)
         return self
