@@ -117,18 +117,17 @@ class Lifemap:
     def layer_lines(
         self,
         *,
-        radius: float = 4,
-        radius_col: str | None = None,
-        fill_col: str | None = None,
-        fill_col_cat: bool | None = None,
+        width: float = 4,
+        width_col: str | None = None,
+        color_col: str | None = None,
         scheme: str | None = None,
         opacity: float = 0.1,
         popup: bool | None = False,
     ) -> Lifemap:
         options = self.process_options(locals())
-        layer = {"layer": "points", "options": options}
+        layer = {"layer": "lines", "options": options}
         self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
+        self.layers_data[options["id"]] = self.data.lines_data(options)
         return self
 
     def layer_heatmap(
