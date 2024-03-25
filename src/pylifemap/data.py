@@ -1,9 +1,12 @@
+"""
+Handling of Lifemap objects data.
+"""
+
 import pandas as pd
 import polars as pl
-import polars.selectors as cs
 
 from pylifemap.serialization import serialize_data
-from pylifemap.utils import LMDATA_PATH
+from pylifemap.utils import LMDATA
 
 
 class LifemapData:
@@ -27,11 +30,7 @@ class LifemapData:
         self.data = data
 
     def locate(self) -> None:
-        lmdata = pl.read_parquet(LMDATA_PATH)
-        rename = {"lon": "pylifemap_x", "lat": "pylifemap_y"}
-        for col in ["zoom", "depth", "parent", "n_childs"]:
-            rename[col] = f"pylifemap_{col}"
-        lmdata = lmdata.rename(rename)
+        lmdata = LMDATA.select(["taxid", "pylifemap_x", "pylifemap_y"])
         self.data = self.data.join(
             lmdata, how="inner", left_on=self.taxid_col, right_on="taxid"
         )
