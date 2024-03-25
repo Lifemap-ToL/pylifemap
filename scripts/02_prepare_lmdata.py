@@ -66,6 +66,7 @@ def convert_lmdata(lm: pl.DataFrame) -> pl.DataFrame:
             "zoom": "pylifemap_zoom",
             "ascend": "pylifemap_ascend",
             "leaf": "pylifemap_leaf",
+            "parent": "pylifemap_parent",
         }
     )
     lm = lm.select(
@@ -76,6 +77,7 @@ def convert_lmdata(lm: pl.DataFrame) -> pl.DataFrame:
             "pylifemap_y",
             "pylifemap_ascend",
             "pylifemap_leaf",
+            "pylifemap_parent",
         ]
     )
     return lm
