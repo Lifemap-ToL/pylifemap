@@ -16,11 +16,11 @@ def aggregate_num(d, var_col, *, fn=pl.sum, taxid_col="taxid"):
         agg_fn = fn_dict[fn]
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(var_col))
     res = (
-        d.join(LMDATA.select("taxid", "ascend"), on="taxid", how="left")
-        .explode("ascend")
-        .group_by(["ascend"])
+        d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
+        .explode("pylifemap_ascend")
+        .group_by(["pylifemap_ascend"])
         .agg(agg_fn(var_col))
-        .rename({"ascend": "taxid"})
+        .rename({"pylifemap_ascend": "taxid"})
     )
     res = pl.concat([res, d], how="vertical_relaxed")
     return res
@@ -29,11 +29,11 @@ def aggregate_num(d, var_col, *, fn=pl.sum, taxid_col="taxid"):
 def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
     d = d.select(pl.col(taxid_col).alias("taxid"))
     res = (
-        d.join(LMDATA.select("taxid", "ascend"), on="taxid", how="left")
-        .explode("ascend")
-        .group_by("ascend")
+        d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
+        .explode("pylifemap_ascend")
+        .group_by("pylifemap_ascend")
         .count()
-        .rename({"ascend": "taxid", "count": result_col})
+        .rename({"pylifemap_ascend": "taxid", "count": result_col})
     )
     res = pl.concat(
         [res, d.with_columns(pl.col("taxid"), pl.lit(1).alias(result_col))],
@@ -45,11 +45,11 @@ def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
 def aggregate_cat(d, var_col, *, taxid_col="taxid", keep_individuals=False):
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(var_col))
     res = (
-        d.join(LMDATA.select("taxid", "ascend"), on="taxid", how="left")
-        .explode("ascend")
-        .group_by(["ascend", var_col])
+        d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
+        .explode("pylifemap_ascend")
+        .group_by(["pylifemap_ascend", var_col])
         .count()
-        .rename({"ascend": "taxid"})
+        .rename({"pylifemap_ascend": "taxid"})
     )
     if keep_individuals:
         res = pl.concat(
