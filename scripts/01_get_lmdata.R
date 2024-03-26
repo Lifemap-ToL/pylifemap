@@ -1,6 +1,6 @@
 library(arrow)
 
-lmdata_url <- url("https://lifemap-ncbi.univ-lyon1.fr/data/lmdata.Rdata")
+lmdata_url <- url("https://lifemap.univ-lyon1.fr/data/lmdata.Rdata")
 
 
 load(lmdata_url) # DF
