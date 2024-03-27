@@ -59,14 +59,26 @@ class LifemapData:
         rename = {self._x_col: "pylifemap_x", self._y_col: "pylifemap_y"}
         self._data = self._data.rename(rename)
 
-    def points_data(self, options: dict | None = None) -> bytes:
+    def points_data(self, options: dict | None = None, leaves: str = "show") -> bytes:
         cols = [self._taxid_col, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
+        data = self._data
+        if leaves in ["only", "omit"]:
+            keep_expr = pl.col("pylifemap_leaf")
+            if leaves == "omit":
+                keep_expr = keep_expr.not_()
+            to_keep = LMDATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
+            data = data.join(
+                to_keep,
+                how="inner",
+                left_on=self._taxid_col,
+                right_on="taxid",
+            )
         if options is not None:
             if "fill_col" in options and options["fill_col"] is not None:
                 cols.append(options["fill_col"])
             if "radius_col" in options and options["radius_col"] is not None:
                 cols.append(options["radius_col"])
-        data = self._data.select(set(cols))
+        data = data.select(set(cols))
         return serialize_data(data)
 
     def lines_data(self, options: dict | None = None) -> bytes:

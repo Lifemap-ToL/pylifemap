@@ -83,6 +83,7 @@ class Lifemap:
     def layer_points(
         self,
         *,
+        leaves: str = "show",
         radius: float | None = None,
         radius_col: str | None = None,
         fill_col: str | None = None,
@@ -93,9 +94,13 @@ class Lifemap:
     ) -> Lifemap:
         options = self.process_options(locals())
         options["z_col"] = "pylifemap_zoom"
+        leaves_values = ["show", "only", "omit"]
+        if options["leaves"] not in leaves_values:
+            msg = f"leaves must be one of {leaves_values}"
+            raise ValueError(msg)
         layer = {"layer": "points", "options": options}
         self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
+        self.layers_data[options["id"]] = self.data.points_data(options, leaves)
         return self
 
     def layer_points_ol(
