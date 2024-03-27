@@ -2,12 +2,23 @@
 Data aggregation functions.
 """
 
+import pandas as pd
 import polars as pl
 
 from pylifemap.utils import LMDATA
 
 
+def convert_to_polars(data) -> pl.DataFrame:
+    if isinstance(data, pd.DataFrame):
+        return pl.DataFrame(data)
+    if isinstance(data, pl.DataFrame):
+        return data
+    msg = "data must be in a pandas or polars DataFrame."
+    raise TypeError(msg)
+
+
 def aggregate_num(d, var_col, *, fn="sum", taxid_col="taxid"):
+    d = convert_to_polars(d)
     if var_col == "taxid":
         msg = "Can't aggregate on the taxid column, please make a copy and rename it before."
         raise ValueError(msg)
@@ -33,6 +44,7 @@ def aggregate_num(d, var_col, *, fn="sum", taxid_col="taxid"):
 
 
 def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
+    d = convert_to_polars(d)
     d = d.select(pl.col(taxid_col).alias("taxid"))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
@@ -49,6 +61,7 @@ def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
 
 
 def aggregate_cat(d, var_col, *, taxid_col="taxid", keep_individuals=False):
+    d = convert_to_polars(d)
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(var_col))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
