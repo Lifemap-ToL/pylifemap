@@ -83,15 +83,16 @@ class Lifemap:
     def layer_points(
         self,
         *,
-        radius: float = 4,
+        radius: float | None = None,
         radius_col: str | None = None,
         fill_col: str | None = None,
         fill_col_cat: bool | None = None,
         scheme: str | None = None,
-        opacity: float = 0.1,
+        opacity: float | None = 0.8,
         popup: bool | None = False,
     ) -> Lifemap:
         options = self.process_options(locals())
+        options["z_col"] = "pylifemap_zoom"
         layer = {"layer": "points", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data(options)
@@ -117,16 +118,21 @@ class Lifemap:
     def layer_lines(
         self,
         *,
-        width: float = 4,
+        width: float | None = None,
         width_col: str | None = None,
         color_col: str | None = None,
         scheme: str | None = None,
-        opacity: float = 0.1,
+        opacity: float | None = 0.8,
         popup: bool | None = False,
     ) -> Lifemap:
         options = self.process_options(locals())
         layer = {"layer": "lines", "options": options}
         self.layers.append(layer)
+        if color_col is not None:
+            options["scale_extent"] = [
+                self.data.data.get_column(color_col).min(),
+                self.data.data.get_column(color_col).max(),
+            ]
         self.layers_data[options["id"]] = self.data.lines_data(options)
         return self
 
