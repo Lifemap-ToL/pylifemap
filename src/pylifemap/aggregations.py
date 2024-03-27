@@ -60,7 +60,7 @@ def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
     return res
 
 
-def aggregate_cat(d, column, *, taxid_col="taxid", keep_individuals=False):
+def aggregate_cat(d, column, *, taxid_col="taxid", keep_leaves=False):
     d = convert_to_polars(d)
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
     res = (
@@ -70,7 +70,7 @@ def aggregate_cat(d, column, *, taxid_col="taxid", keep_individuals=False):
         .count()
         .rename({"pylifemap_ascend": "taxid"})
     )
-    if keep_individuals:
+    if keep_leaves:
         res = pl.concat(
             [res, d.with_columns(pl.lit(1).alias("count"))], how="vertical_relaxed"
         )
