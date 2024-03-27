@@ -17,9 +17,9 @@ def convert_to_polars(data) -> pl.DataFrame:
     raise TypeError(msg)
 
 
-def aggregate_num(d, var_col, *, fn="sum", taxid_col="taxid"):
+def aggregate_num(d, column, *, fn="sum", taxid_col="taxid"):
     d = convert_to_polars(d)
-    if var_col == "taxid":
+    if column == "taxid":
         msg = "Can't aggregate on the taxid column, please make a copy and rename it before."
         raise ValueError(msg)
     fn_dict = {"sum": pl.sum, "mean": pl.mean}
@@ -28,12 +28,12 @@ def aggregate_num(d, var_col, *, fn="sum", taxid_col="taxid"):
         raise ValueError(msg)
     else:
         agg_fn = fn_dict[fn]
-    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(var_col))
+    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
         .explode("pylifemap_ascend")
         .group_by(["pylifemap_ascend"])
-        .agg(agg_fn(var_col))
+        .agg(agg_fn(column))
         .rename({"pylifemap_ascend": "taxid"})
     )
     leaves = LMDATA.filter(pl.col("pylifemap_leaf"))
@@ -60,13 +60,13 @@ def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
     return res
 
 
-def aggregate_cat(d, var_col, *, taxid_col="taxid", keep_individuals=False):
+def aggregate_cat(d, column, *, taxid_col="taxid", keep_individuals=False):
     d = convert_to_polars(d)
-    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(var_col))
+    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
         .explode("pylifemap_ascend")
-        .group_by(["pylifemap_ascend", var_col])
+        .group_by(["pylifemap_ascend", column])
         .count()
         .rename({"pylifemap_ascend": "taxid"})
     )
@@ -74,5 +74,5 @@ def aggregate_cat(d, var_col, *, taxid_col="taxid", keep_individuals=False):
         res = pl.concat(
             [res, d.with_columns(pl.lit(1).alias("count"))], how="vertical_relaxed"
         )
-    res = res.pivot(index="taxid", columns=var_col, values="count").fill_null(0)
+    res = res.pivot(index="taxid", columns=column, values="count").fill_null(0)
     return res
