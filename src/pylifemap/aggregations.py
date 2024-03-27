@@ -7,7 +7,10 @@ import polars as pl
 from pylifemap.utils import LMDATA
 
 
-def aggregate_num(d, var_col, *, fn=pl.sum, taxid_col="taxid"):
+def aggregate_num(d, var_col, *, fn="sum", taxid_col="taxid"):
+    if var_col == "taxid":
+        msg = "Can't aggregate on the taxid column, please make a copy and rename it before."
+        raise ValueError(msg)
     fn_dict = {"sum": pl.sum, "mean": pl.mean}
     if fn not in fn_dict:
         msg = f"fn value must be one of {fn_dict.keys()}."
@@ -22,7 +25,10 @@ def aggregate_num(d, var_col, *, fn=pl.sum, taxid_col="taxid"):
         .agg(agg_fn(var_col))
         .rename({"pylifemap_ascend": "taxid"})
     )
-    res = pl.concat([res, d], how="vertical_relaxed")
+    leaves = LMDATA.filter(pl.col("pylifemap_leaf"))
+    res = pl.concat(
+        [res, d.join(leaves, on="taxid", how="semi")], how="vertical_relaxed"
+    )
     return res
 
 
