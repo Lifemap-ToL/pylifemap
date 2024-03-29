@@ -1,4 +1,4 @@
-""" 
+"""
 Main Lifemap object.
 """
 
@@ -118,6 +118,23 @@ class Lifemap:
         layer = {"layer": "points_ol", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data(options)
+        return self
+
+    def layer_donuts(
+        self,
+        counts_col: str,
+        *,
+        size: float | None = None,
+        scheme: str | None = None,
+        opacity: float | None = 1,
+        popup: bool | None = False,
+    ) -> Lifemap:
+        options = self.process_options(locals())
+        options["z_col"] = "pylifemap_zoom"
+        options["label"] = counts_col
+        layer = {"layer": "donuts", "options": options}
+        self.layers.append(layer)
+        self.layers_data[options["id"]] = self.data.donuts_data(options)
         return self
 
     def layer_lines(

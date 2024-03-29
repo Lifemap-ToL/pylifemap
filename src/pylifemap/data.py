@@ -78,6 +78,30 @@ class LifemapData:
                 cols.append(options["fill_col"])
             if "radius_col" in options and options["radius_col"] is not None:
                 cols.append(options["radius_col"])
+        if "pylifemap_count_type" in data.columns:
+            data = data.filter(pl.col("pylifemap_count_type") == "leaf")
+        data = data.select(set(cols))
+        return serialize_data(data)
+
+    def donuts_data(self, options: dict) -> bytes:
+        cols = [
+            self._taxid_col,
+            "pylifemap_x",
+            "pylifemap_y",
+            "pylifemap_zoom",
+            options["counts_col"],
+        ]
+        data = self._data
+        # Remove leaves
+        keep_expr = pl.col("pylifemap_leaf").not_()
+        to_keep = LMDATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
+        data = data.join(
+            to_keep,
+            how="inner",
+            left_on=self._taxid_col,
+            right_on="taxid",
+        )
+        data = data.filter(pl.col("pylifemap_count_type") == "count")
         data = data.select(set(cols))
         return serialize_data(data)
 

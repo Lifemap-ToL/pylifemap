@@ -8,7 +8,7 @@ import polars as pl
 from pylifemap.utils import LMDATA
 
 
-def convert_to_polars(data) -> pl.DataFrame:
+def ensure_polars(data) -> pl.DataFrame:
     if isinstance(data, pd.DataFrame):
         return pl.DataFrame(data)
     if isinstance(data, pl.DataFrame):
@@ -17,10 +17,19 @@ def convert_to_polars(data) -> pl.DataFrame:
     raise TypeError(msg)
 
 
-def aggregate_num(d, column, *, fn="sum", taxid_col="taxid"):
-    d = convert_to_polars(d)
+def aggregate_num(
+    d: pd.DataFrame | pl.DataFrame,
+    column: str,
+    *,
+    fn: str = "sum",
+    taxid_col: str = "taxid",
+) -> pl.DataFrame:
+    d = ensure_polars(d)
     if column == "taxid":
-        msg = "Can't aggregate on the taxid column, please make a copy and rename it before."
+        msg = (
+            "Can't aggregate on the taxid column, please make a copy and"
+            " rename it before."
+        )
         raise ValueError(msg)
     fn_dict = {"sum": pl.sum, "mean": pl.mean}
     if fn not in fn_dict:
@@ -43,8 +52,10 @@ def aggregate_num(d, column, *, fn="sum", taxid_col="taxid"):
     return res
 
 
-def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
-    d = convert_to_polars(d)
+def aggregate_count(
+    d: pd.DataFrame | pl.DataFrame, *, taxid_col: str = "taxid", result_col: str = "n"
+) -> pl.DataFrame:
+    d = ensure_polars(d)
     d = d.select(pl.col(taxid_col).alias("taxid"))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
@@ -60,9 +71,17 @@ def aggregate_count(d, *, taxid_col="taxid", result_col="n"):
     return res
 
 
-def aggregate_cat(d, column, *, taxid_col="taxid", keep_leaves=False):
-    d = convert_to_polars(d)
+def aggregate_cat(
+    d: pd.DataFrame | pl.DataFrame,
+    column: str,
+    *,
+    keep_leaves: bool = False,
+    taxid_col: str = "taxid",
+) -> pl.DataFrame:
+
+    d = ensure_polars(d)
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
+    levels = d.get_column(column).unique()
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
         .explode("pylifemap_ascend")
@@ -70,9 +89,24 @@ def aggregate_cat(d, column, *, taxid_col="taxid", keep_leaves=False):
         .count()
         .rename({"pylifemap_ascend": "taxid"})
     )
-    if keep_leaves:
-        res = pl.concat(
-            [res, d.with_columns(pl.lit(1).alias("count"))], how="vertical_relaxed"
-        )
     res = res.pivot(index="taxid", columns=column, values="count").fill_null(0)
+    res = preprocess_counts(res, columns=levels.to_list(), result_col=column)
+    if keep_leaves:
+        leaves = d.select([taxid_col, column]).with_columns(
+            pl.lit("leaf").alias("pylifemap_count_type")
+        )
+        res = pl.concat([res, leaves], how="vertical_relaxed")
     return res
+
+
+def preprocess_counts(
+    d: pd.DataFrame | pl.DataFrame,
+    columns: list,
+    result_col: str,
+) -> pl.DataFrame:
+    d = ensure_polars(d)
+    d = d.with_columns(
+        pl.struct(pl.col(columns)).struct.json_encode().alias(result_col),
+        pl.lit("count").alias("pylifemap_count_type"),
+    ).select(pl.all().exclude(columns))
+    return d
