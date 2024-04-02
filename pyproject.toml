@@ -46,7 +46,8 @@ features=["dev"]
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
-  "quartodoc"
+  "quartodoc",
+  "nbstripout"
 ]
 [tool.hatch.envs.default.scripts]
 get_lmdata = "Rscript scripts/01_get_lmdata.R && python scripts/02_prepare_lmdata.py"
