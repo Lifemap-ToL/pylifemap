@@ -1,0 +1,64 @@
+project:
+    type: website
+
+execute:
+    freeze: auto
+
+website:
+    title: "pylifemap"
+    site-url: "https://juba.github.io/pylifemap"
+    favicon: favicon.png
+    repo-url: https://github.com/juba/pylifemap/
+    repo-subdir: "doc"
+    repo-actions: [issue]
+    search:
+        location: navbar
+        type: overlay
+    navbar:
+        background: "#e15759"
+        pinned: false
+        left:
+            - usage.qmd
+            - text: "Layers"
+              menu:
+                  - layer_points.qmd
+            - reference/index.qmd
+            - development.qmd
+            - changelog.md
+        tools:
+            - icon: github
+              href: https://github.com/juba/pylifemap/
+
+metadata-files:
+    - _quartodoc_sidebar.yml
+
+quartodoc:
+    package: pylifemap
+    sidebar: _quartodoc_sidebar.yml
+    title: Reference
+    parser: google
+    sections:
+        - title: Lifemap class
+          desc: Main Lifemap class.
+          contents:
+              - Lifemap
+        - title: Aggregation functions
+          desc: Functions aggregate data.
+          contents:
+              - aggregate_count
+              - aggregate_num
+              - aggregate_cat
+
+format:
+    html:
+        theme:
+            - cosmo
+            - custom.scss
+        mainfont: "'Source Sans 3', 'Source Sans Pro', 'Segoe UI', 'Roboto', 'Helvetica', sans-serif"
+        monofont: "Fira Mono"
+        linkcolor: "#FF4222"
+        toc: true
+        highlight-style: gruvbox
+        grid:
+            body-width: 900px
+            gutter-width: 3rem

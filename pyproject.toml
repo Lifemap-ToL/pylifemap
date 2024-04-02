@@ -64,6 +64,7 @@ cov = [
   "test-cov",
   "cov-report",
 ]
+doc = "cd doc && quartodoc build && quarto render"
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.10", "3.11", "3.12"]
@@ -73,7 +74,7 @@ detached = true
 dependencies = ["black>=23.9.1", "mypy>=1.0.0", "ruff>=0.0.291"]
 
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/pyobsplot tests}"
+typing = "mypy --install-types --non-interactive {args:src/pylifemap tests}"
 style = ["ruff {args:.}", "black --check --diff {args:.}"]
 fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
 all = ["style", "typing"]

@@ -1,0 +1,14 @@
+website:
+  sidebar:
+  - contents:
+    - reference/index.qmd
+    - contents:
+      - reference/Lifemap.qmd
+      section: Lifemap class
+    - contents:
+      - reference/aggregate_count.qmd
+      - reference/aggregate_num.qmd
+      - reference/aggregate_cat.qmd
+      section: Aggregation functions
+    id: reference
+  - id: dummy-sidebar

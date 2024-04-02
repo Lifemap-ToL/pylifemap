@@ -1,0 +1,48 @@
+---
+title: "Development"
+---
+
+
+## Install from git
+
+To install `pylifemap` from git:
+
+```sh 
+pip install git+https://github.com/juba/pylifemap.git
+```
+
+## Install fom source
+
+If you want to build `pylifemap` from source, you'll have to follow these steps:
+
+- Install [node.js](https://nodejs.org/en)
+- Install [hatch](https://hatch.pypa.io/latest/) dependency management system
+- Clone the [pylifemap](https://github.com/juba/pylifemap) repository
+- Install Python dependencies with : `hatch shell`
+- Install JavaScript dependencies with : `npm install --workspaces --include-root-workspace`
+
+
+## Widget JavaScript modification and bundling
+
+Each time the widget JavaScript or CSS code is modified in the `src/js/` or `packages/lifemapjs` directories, it must be bundled with one of the following commands in `pylifemap`:
+
+```sh
+# Bundle only once
+npm run bundle
+# Or, to bundle and watch for code change
+npm run dev
+```
+
+The result is put into `src/pylifemap/static`. 
+
+
+## Maintenance notes
+
+### Releases
+
+- Change version in `NEWS.md` and `src/pylifemap/__about__.py`
+- Release the Python package with `hatch build` and `hatch publish` in `pylifemap`
+- Tag the version in git
+- Create a release on Github
+- Bump to dev version in `pyproject.toml` and `NEWS.md`
+

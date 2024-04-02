@@ -1,0 +1,4 @@
+# aggregate_num { #pylifemap.aggregate_num }
+
+`aggregate_num(d, column, *, fn='sum', taxid_col='taxid')`
+

@@ -1,0 +1,19 @@
+# Reference {.doc .doc-index}
+
+## Lifemap class
+
+Main Lifemap class.
+
+| | |
+| --- | --- |
+| [Lifemap](Lifemap.qmd#pylifemap.Lifemap) |  |
+
+## Aggregation functions
+
+Functions aggregate data.
+
+| | |
+| --- | --- |
+| [aggregate_count](aggregate_count.qmd#pylifemap.aggregate_count) |  |
+| [aggregate_num](aggregate_num.qmd#pylifemap.aggregate_num) |  |
+| [aggregate_cat](aggregate_cat.qmd#pylifemap.aggregate_cat) |  |

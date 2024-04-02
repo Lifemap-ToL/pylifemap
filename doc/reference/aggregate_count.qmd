@@ -1,0 +1,4 @@
+# aggregate_count { #pylifemap.aggregate_count }
+
+`aggregate_count(d, *, taxid_col='taxid', result_col='n')`
+

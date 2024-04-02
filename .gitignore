@@ -2,8 +2,10 @@ node_modules/
 __pycache__/
 dist/
 .ipynb_checkpoints/
-./data/
+/data/
 scripts/data/
 examples/
 src/pylifemap/static/
 app/
+doc/_site
+doc/_freeze
