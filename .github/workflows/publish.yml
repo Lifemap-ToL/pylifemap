@@ -1,0 +1,49 @@
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+
+name: Documentation
+
+jobs:
+    Build-deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v3
+
+            - name: Setup node
+              uses: actions/setup-node@v3
+              with:
+                  cache: "npm"
+
+            - name: Install node dependencies
+              run: |
+                  npm ci --workspaces --include-workspace-root
+
+            - name: Set up Quarto
+              uses: quarto-dev/quarto-actions/setup@v2
+
+            - name: Install Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+                  cache: "pip"
+
+            - name: Install hatch
+              run: pipx install hatch
+
+            - name: Bundle
+              run: npm run bundle
+
+            - name: Render and Publish
+              shell: bash
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  git config --global user.email "julien.barnier@cnrs.fr"
+                  git config --global user.name "Julien Barnier"
+                  cd doc && quartodoc build
+                  hatch run quarto publish gh-pages doc
