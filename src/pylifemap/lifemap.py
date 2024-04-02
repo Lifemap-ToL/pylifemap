@@ -13,7 +13,7 @@ from pylifemap.data import LifemapData
 from pylifemap.widget import LifemapWidget
 
 DEFAULT_WIDTH = "100%"
-DEFAULT_HEIGHT = "600px"
+DEFAULT_HEIGHT = "800px"
 
 
 class Lifemap:
@@ -27,12 +27,12 @@ class Lifemap:
         y_col: str = "pylifemap_y",
         zoom: int = 5,
         legend_width: int | None = None,
-        width: str = DEFAULT_WIDTH,
-        height: str = DEFAULT_HEIGHT,
+        width: int | str = DEFAULT_WIDTH,
+        height: int | str = DEFAULT_HEIGHT,
     ) -> None:
 
-        self.width = width
-        self.height = height
+        self.width = width if isinstance(width, str) else f"{width}px"
+        self.height = height if isinstance(height, str) else f"{height}px"
         self.layers = []
         self.layers_counter = 0
         self.layers_data = {}
