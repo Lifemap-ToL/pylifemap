@@ -14,8 +14,10 @@ jobs:
                 python-version: ["3.10", "3.11", "3.12"]
 
         steps:
-            - name: Check out pyobsplot repository
-              uses: actions/checkout@v3
+            - name: Check out pylifemap repository
+              uses: actions/checkout@v4
+              with:
+                  submodules: true
 
             - name: Setup node
               uses: actions/setup-node@v3
