@@ -7,7 +7,6 @@ from typing import Any
 
 import pandas as pd
 import polars as pl
-import pyarrow as pa
 import pyarrow.feather as pf
 
 

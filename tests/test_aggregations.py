@@ -6,7 +6,7 @@ import pandas as pd
 import polars as pl
 import pytest
 
-from pylifemap import aggregate_cat, aggregate_count, aggregate_num
+from pylifemap import aggregate_count
 
 df1 = pd.DataFrame({"taxid": [33213, 33154, 33208, 33090, 33208, 2]})
 

@@ -1,5 +1,6 @@
-import polars as pl
 import logging
+
+import polars as pl
 
 LMDATA_RAW = "scripts/data/lmdata_raw.parquet"
 LMDATA_OUT = "src/pylifemap/data/lmdata.parquet"
