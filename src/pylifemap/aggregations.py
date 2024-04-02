@@ -17,6 +17,10 @@ def ensure_polars(data) -> pl.DataFrame:
     raise TypeError(msg)
 
 
+def ensure_int32(data, taxid_col) -> pl.DataFrame:
+    return data.with_columns(pl.col(taxid_col).cast(pl.Int32))
+
+
 def aggregate_num(
     d: pd.DataFrame | pl.DataFrame,
     column: str,
@@ -56,6 +60,7 @@ def aggregate_count(
     d: pd.DataFrame | pl.DataFrame, *, taxid_col: str = "taxid", result_col: str = "n"
 ) -> pl.DataFrame:
     d = ensure_polars(d)
+    d = ensure_int32(d, taxid_col)
     d = d.select(pl.col(taxid_col).alias("taxid"))
     res = (
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
@@ -68,6 +73,8 @@ def aggregate_count(
         [res, d.with_columns(pl.col("taxid"), pl.lit(1).alias(result_col))],
         how="vertical_relaxed",
     )
+    res = res.group_by("taxid").agg(pl.col(result_col).sum())
+    res = res.sort("taxid")
     return res
 
 
@@ -80,6 +87,7 @@ def aggregate_cat(
 ) -> pl.DataFrame:
 
     d = ensure_polars(d)
+    d = ensure_int32(d, taxid_col)
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
     levels = d.get_column(column).unique()
     res = (

@@ -26,6 +26,9 @@ class LifemapData:
         if isinstance(data, pd.DataFrame):
             data = pl.DataFrame(data)
 
+        # Convert taxid column to Int32 for join compatibility with lmdata
+        data = data.with_columns(pl.col(self._taxid_col).cast(pl.Int32))
+
         self._data = data
 
     def locate(self) -> None:
