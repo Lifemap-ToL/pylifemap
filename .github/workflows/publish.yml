@@ -12,22 +12,24 @@ jobs:
             contents: write
         steps:
             - name: Check out repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  submodules: true
 
             - name: Setup node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
+                  node-version: 20
                   cache: "npm"
 
             - name: Install node dependencies
-              run: |
-                  npm ci --workspaces --include-workspace-root
+              run: npm ci --workspaces --include-workspace-root
 
             - name: Set up Quarto
               uses: quarto-dev/quarto-actions/setup@v2
 
             - name: Install Python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@v5
               with:
                   python-version: "3.11"
                   cache: "pip"
@@ -45,5 +47,5 @@ jobs:
               run: |
                   git config --global user.email "julien.barnier@cnrs.fr"
                   git config --global user.name "Julien Barnier"
-                  cd doc && quartodoc build
+                  hatch run doc
                   hatch run quarto publish gh-pages doc
