@@ -26,7 +26,7 @@ jobs:
                   cache: "npm"
 
             - name: Install node dependencies
-              run: npm ci --workspaces --include-workspace-root
+              run: npm install --workspaces --include-workspace-root
 
             - name: Install hatch
               run: pipx install hatch
