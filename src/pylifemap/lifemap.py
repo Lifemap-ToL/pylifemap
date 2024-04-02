@@ -13,7 +13,7 @@ from pylifemap.data import LifemapData
 from pylifemap.widget import LifemapWidget
 
 DEFAULT_WIDTH = "100%"
-DEFAULT_HEIGHT = "800px"
+DEFAULT_HEIGHT = "600px"
 
 
 class Lifemap:
