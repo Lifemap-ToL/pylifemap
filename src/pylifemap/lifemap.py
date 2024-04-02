@@ -26,7 +26,6 @@ class Lifemap:
         x_col: str = "pylifemap_x",
         y_col: str = "pylifemap_y",
         zoom: int = 5,
-        legend_position: str = "bottomright",
         legend_width: int | None = None,
         width: str = DEFAULT_WIDTH,
         height: str = DEFAULT_HEIGHT,
@@ -49,7 +48,6 @@ class Lifemap:
 
         self.map_options = {
             "zoom": zoom,
-            "legend_position": legend_position,
             "legend_width": legend_width,
         }
 
