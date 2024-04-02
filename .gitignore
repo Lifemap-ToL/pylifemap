@@ -2,7 +2,7 @@ node_modules/
 __pycache__/
 dist/
 .ipynb_checkpoints/
-/data/
+/data/raw/
 scripts/data/
 examples/
 app/
