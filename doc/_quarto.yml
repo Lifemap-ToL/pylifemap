@@ -43,11 +43,11 @@ quartodoc:
           contents:
               - Lifemap
         - title: Aggregation functions
-          desc: Functions aggregate data.
+          desc: Functions to aggregate data along the branches of the lifemap tree.
           contents:
               - aggregate_count
               - aggregate_num
-              - aggregate_cat
+              - aggregate_freq
 
 format:
     html:
