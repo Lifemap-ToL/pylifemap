@@ -215,7 +215,6 @@ def aggregate_freq(
     d: pd.DataFrame | pl.DataFrame,
     column: str,
     *,
-    keep_leaves: bool = False,
     taxid_col: str = "taxid",
 ) -> pl.DataFrame:
     """
@@ -228,19 +227,14 @@ def aggregate_freq(
         DataFrame to aggregate data from.
     column : str
         Name of the `d` column to aggregate.
-    keep_leaves : bool, optional
-        If True, keep nodes that are tree leaves and keep their variable value. This
-        is useful if you want to visualize both a donuts layer for nodes and a points
-        layer for leaves. By default False.
     taxid_col : str, optional
         Name of the `d` column containing taxonomy ids, by default "taxid".
 
     Returns
     -------
     pl.DataFrame
-        Aggregated DataFrame. The "count" column contains the JSON serialized value
-        counts, and the "pylifemap_count_type" column allows to differentiate nodes
-        values (with value counts) and leaves values.
+        Aggregated DataFrame. The "count" column contains the value
+        counts as a polars struct.
 
     See also
     --------
@@ -248,34 +242,24 @@ def aggregate_freq(
     aggregate_count : aggregation of the number of observations.
     """
     d = ensure_polars(d)
+    ensure_column_exists(d, taxid_col)
+    ensure_column_exists(d, column)
     d = ensure_int32(d, taxid_col)
+    # Generate dataframe of parent counts
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    levels = d.get_column(column).unique()
+    res = d.join(
+        LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left"
+    ).explode("pylifemap_ascend")
+    # Get original nodes with itself as parent in order to take into account
+    # the nodes themselves
+    obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
+    # Concat parent and node values
+    res = pl.concat([res, obs])
+    # Group by parent and value, and count
     res = (
-        d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
-        .explode("pylifemap_ascend")
-        .group_by(["pylifemap_ascend", column])
+        res.group_by(["pylifemap_ascend", column])
         .len(name="count")
         .rename({"pylifemap_ascend": "taxid"})
     )
-    res = res.pivot(index="taxid", columns=column, values="count").fill_null(0)
-    res = postprocess_freq(res, columns=levels.to_list(), result_col=column)
-    if keep_leaves:
-        leaves = d.select([taxid_col, column]).with_columns(
-            pl.lit("leaf").alias("pylifemap_count_type")
-        )
-        res = pl.concat([res, leaves], how="vertical_relaxed")
+    res = res.sort(["taxid", column])
     return res
-
-
-def postprocess_freq(
-    d: pd.DataFrame | pl.DataFrame,
-    columns: list,
-    result_col: str,
-) -> pl.DataFrame:
-    d = ensure_polars(d)
-    d = d.with_columns(
-        pl.struct(pl.col(columns)).struct.json_encode().alias(result_col),
-        pl.lit("count").alias("pylifemap_count_type"),
-    ).select(pl.all().exclude(columns))
-    return d

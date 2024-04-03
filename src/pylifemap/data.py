@@ -8,6 +8,16 @@ import polars as pl
 from pylifemap.serialization import serialize_data
 from pylifemap.utils import LMDATA
 
+LMDATA_MINIMAL = LMDATA.select(
+    [
+        "taxid",
+        "pylifemap_x",
+        "pylifemap_y",
+        "pylifemap_parent",
+        "pylifemap_zoom",
+    ]
+)
+
 
 class LifemapData:
 
@@ -32,17 +42,8 @@ class LifemapData:
         self._data = data
 
     def locate(self) -> None:
-        lmdata = LMDATA.select(
-            [
-                "taxid",
-                "pylifemap_x",
-                "pylifemap_y",
-                "pylifemap_parent",
-                "pylifemap_zoom",
-            ]
-        )
         self._data = self._data.join(
-            lmdata, how="inner", left_on=self._taxid_col, right_on="taxid"
+            LMDATA_MINIMAL, how="inner", left_on=self._taxid_col, right_on="taxid"
         )
 
     @property
@@ -87,12 +88,13 @@ class LifemapData:
         return serialize_data(data)
 
     def donuts_data(self, options: dict) -> bytes:
+        counts_col = options["counts_col"]
         cols = [
             self._taxid_col,
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
-            options["counts_col"],
+            counts_col,
         ]
         data = self._data
         # Remove leaves
@@ -104,7 +106,16 @@ class LifemapData:
             left_on=self._taxid_col,
             right_on="taxid",
         )
-        data = data.filter(pl.col("pylifemap_count_type") == "count")
+        levels = data.get_column(counts_col).unique().sort()
+        data = data.pivot(
+            index=self._taxid_col, columns=counts_col, values="count"
+        ).fill_null(0)
+        data = data.with_columns(
+            pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)
+        ).select(pl.all().exclude(levels))
+        data = data.join(
+            LMDATA_MINIMAL, how="inner", left_on=self._taxid_col, right_on="taxid"
+        )
         data = data.select(set(cols))
         return serialize_data(data)
 

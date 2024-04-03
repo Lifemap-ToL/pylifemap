@@ -6,7 +6,6 @@ from pylifemap.aggregations import (
     aggregate_count,
     aggregate_freq,
     aggregate_num,
-    postprocess_freq,
 )
 from pylifemap.lifemap import Lifemap
 
@@ -15,5 +14,4 @@ __all__ = [
     "aggregate_freq",
     "aggregate_count",
     "aggregate_num",
-    "postprocess_freq",
 ]

@@ -126,6 +126,7 @@ class Lifemap:
         scheme: str | None = None,
         opacity: float | None = 1,
         popup: bool | None = False,
+        show_leaves: bool = False,
     ) -> Lifemap:
         options = self.process_options(locals())
         options["z_col"] = "pylifemap_zoom"
@@ -133,6 +134,21 @@ class Lifemap:
         layer = {"layer": "donuts", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.donuts_data(options)
+        if show_leaves:
+            points_id = f"{options['id']}-points"
+            points_options = {
+                "id": points_id,
+                "scheme": scheme,
+                "opacity": 1,
+                "popup": popup,
+                "fill_col": options["counts_col"],
+            }
+            points_layer = {"layer": "points", "options": points_options}
+            self.layers.append(points_layer)
+            self.layers_data[points_id] = self.data.points_data(
+                points_options, leaves="only"
+            )
+
         return self
 
     def layer_lines(
