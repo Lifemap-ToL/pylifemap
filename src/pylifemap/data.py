@@ -63,7 +63,7 @@ class LifemapData:
         rename = {self._x_col: "pylifemap_x", self._y_col: "pylifemap_y"}
         self._data = self._data.rename(rename)
 
-    def points_data(self, options: dict | None = None, leaves: str = "show") -> bytes:
+    def points_data(self, options: dict | None = None, leaves: str = "show") -> dict:
         cols = [self._taxid_col, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
         data = self._data
         if leaves in ["only", "omit"]:
@@ -87,7 +87,7 @@ class LifemapData:
         data = data.select(set(cols))
         return serialize_data(data)
 
-    def donuts_data(self, options: dict) -> bytes:
+    def donuts_data(self, options: dict) -> dict:
         counts_col = options["counts_col"]
         cols = [
             self._taxid_col,
@@ -119,7 +119,7 @@ class LifemapData:
         data = data.select(set(cols))
         return serialize_data(data)
 
-    def lines_data(self, options: dict | None = None) -> bytes:
+    def lines_data(self, options: dict | None = None) -> dict:
 
         data = self.data_with_parents()
         data = (
