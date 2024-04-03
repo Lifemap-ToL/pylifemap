@@ -33,10 +33,11 @@ metadata-files:
     - _quartodoc_sidebar.yml
 
 quartodoc:
+    style: pkgdown
     package: pylifemap
     sidebar: _quartodoc_sidebar.yml
     title: Reference
-    parser: google
+    parser: numpy
     sections:
         - title: Lifemap class
           desc: Main Lifemap class.
