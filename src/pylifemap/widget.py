@@ -7,16 +7,36 @@ import pathlib
 import anywidget
 import traitlets
 
+# Output directory for bundled js and css files
 BUNDLER_OUTPUT_DIR = pathlib.Path(__file__).parent / "static"
 
 
 class LifemapWidget(anywidget.AnyWidget):
+    """
+    Lifemap widget class.
+
+    Attributes
+    ----------
+    data
+        Widget data dictionary traitlet.
+    layers
+        Widget layers list traitlet.
+    options
+        Widget options dict traitlet.
+    width
+        Widget width string traitlet.
+    height
+        Widhet height string traitlet.
+    """
+
+    # Static JS and CSS for widet are accessed through bundled files
     _esm = anywidget._file_contents.FileContents(  # type: ignore
         BUNDLER_OUTPUT_DIR / "widget.js", start_thread=False
     )
     _css = anywidget._file_contents.FileContents(  # type: ignore
         BUNDLER_OUTPUT_DIR / "widget.css", start_thread=False
     )
+
     # traitlets
     data = traitlets.Dict().tag(sync=True)
     layers = traitlets.List().tag(sync=True)
@@ -24,12 +44,25 @@ class LifemapWidget(anywidget.AnyWidget):
     width = traitlets.Unicode().tag(sync=True)
     height = traitlets.Unicode().tag(sync=True)
 
-    def __init__(self, data, layers, options, width, height):
+    def __init__(
+        self, data: dict, layers: list, options: dict, width: str, height: str
+    ) -> None:
+        """
+        Widget class constructor.
+
+        Parameters
+        ----------
+        data : dict
+            Widget data dictionary.
+        layers : list
+            Widget layers list.
+        options : dict
+            Widget options dictionary.
+        width : str
+            Widget width as CSS string.
+        height : str
+            Widget height as CSS string.
+        """
         super().__init__(
             data=data, layers=layers, options=options, width=width, height=height
         )
-
-    # @traitlets.validate("layers")
-    # def _validate_layers(self, proposal):
-    #     new_layers = proposal["value"]
-    #     return new_layers
