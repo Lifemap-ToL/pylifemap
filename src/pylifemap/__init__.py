@@ -3,17 +3,17 @@
 # SPDX-License-Identifier: MIT
 
 from pylifemap.aggregations import (
-    aggregate_cat,
     aggregate_count,
+    aggregate_freq,
     aggregate_num,
-    preprocess_counts,
+    postprocess_freq,
 )
 from pylifemap.lifemap import Lifemap
 
 __all__ = [
     "Lifemap",
-    "aggregate_cat",
+    "aggregate_freq",
     "aggregate_count",
     "aggregate_num",
-    "preprocess_counts",
+    "postprocess_freq",
 ]

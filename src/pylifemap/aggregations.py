@@ -115,7 +115,7 @@ def aggregate_num(
     See also
     --------
     aggregate_count : aggregation of the number of observations.
-    aggregate_cat : aggregation of the values counts of a categorical variable.
+    aggregate_freq : aggregation of the values counts of a categorical variable.
     """
     d = ensure_polars(d)
     ensure_column_exists(d, column)
@@ -169,15 +169,14 @@ def aggregate_count(
     Aggregates nodes count in a DataFrame with taxonomy ids along the branches
     of the lifemap tree.
 
-
     Parameters
     ----------
     d : pd.DataFrame | pl.DataFrame
         DataFrame to aggregate data from.
     result_col : str, optional
-        Name of the column created to store the counts, by default "n"
+        Name of the column created to store the counts, by default "n".
     taxid_col : str, optional
-        Name of the `d` column containing taxonomy ids, by default "taxid"
+        Name of the `d` column containing taxonomy ids, by default "taxid".
 
     Returns
     -------
@@ -187,8 +186,7 @@ def aggregate_count(
     See also
     --------
     aggregate_num : aggregation of a numeric variable.
-    aggregate_cat : aggregation of the values counts of a categorical variable.
-
+    aggregate_freq : aggregation of the values counts of a categorical variable.
     """
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
@@ -213,14 +211,42 @@ def aggregate_count(
     return res
 
 
-def aggregate_cat(
+def aggregate_freq(
     d: pd.DataFrame | pl.DataFrame,
     column: str,
     *,
     keep_leaves: bool = False,
     taxid_col: str = "taxid",
 ) -> pl.DataFrame:
+    """
+    Aggregates a categorical variable in a DataFrame with taxonomy ids as a value
+    counts along the branchesof the lifemap tree.
 
+    Parameters
+    ----------
+    d : pd.DataFrame | pl.DataFrame
+        DataFrame to aggregate data from.
+    column : str
+        Name of the `d` column to aggregate.
+    keep_leaves : bool, optional
+        If True, keep nodes that are tree leaves and keep their variable value. This
+        is useful if you want to visualize both a donuts layer for nodes and a points
+        layer for leaves. By default False.
+    taxid_col : str, optional
+        Name of the `d` column containing taxonomy ids, by default "taxid".
+
+    Returns
+    -------
+    pl.DataFrame
+        Aggregated DataFrame. The "count" column contains the JSON serialized value
+        counts, and the "pylifemap_count_type" column allows to differentiate nodes
+        values (with value counts) and leaves values.
+
+    See also
+    --------
+    aggregate_num : aggregation of a numeric variable.
+    aggregate_count : aggregation of the number of observations.
+    """
     d = ensure_polars(d)
     d = ensure_int32(d, taxid_col)
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
@@ -229,11 +255,11 @@ def aggregate_cat(
         d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left")
         .explode("pylifemap_ascend")
         .group_by(["pylifemap_ascend", column])
-        .count()
+        .len(name="count")
         .rename({"pylifemap_ascend": "taxid"})
     )
     res = res.pivot(index="taxid", columns=column, values="count").fill_null(0)
-    res = preprocess_counts(res, columns=levels.to_list(), result_col=column)
+    res = postprocess_freq(res, columns=levels.to_list(), result_col=column)
     if keep_leaves:
         leaves = d.select([taxid_col, column]).with_columns(
             pl.lit("leaf").alias("pylifemap_count_type")
@@ -242,7 +268,7 @@ def aggregate_cat(
     return res
 
 
-def preprocess_counts(
+def postprocess_freq(
     d: pd.DataFrame | pl.DataFrame,
     columns: list,
     result_col: str,
