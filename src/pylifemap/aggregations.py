@@ -86,6 +86,8 @@ def aggregate_num(
     taxid_col: str = "taxid",
 ) -> pl.DataFrame:
     """
+    Numerical variable aggregation along branches.
+
     Aggregates a numerical variable in a DataFrame with taxonomy ids along the branches
     of the lifemap tree.
 
@@ -114,8 +116,32 @@ def aggregate_num(
 
     See also
     --------
-    aggregate_count : aggregation of the number of observations.
-    aggregate_freq : aggregation of the values counts of a categorical variable.
+    [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
+
+    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a
+        categorical variable.
+
+    Examples
+    --------
+    >>> from pylifemap import aggregate_num
+    >>> import polars as pl
+    >>> d = pl.DataFrame({
+    ...     "taxid": [33154, 33090, 2],
+    ...     "value": [10, 5, 100]
+    ... })
+    >>> aggregate_num(d, column="value", fn="sum")
+    shape: (5, 2)
+    ┌───────┬───────┐
+    │ taxid ┆ value │
+    │ ---   ┆ ---   │
+    │ i32   ┆ i64   │
+    ╞═══════╪═══════╡
+    │ 0     ┆ 115   │
+    │ 2     ┆ 100   │
+    │ 2759  ┆ 15    │
+    │ 33090 ┆ 5     │
+    │ 33154 ┆ 10    │
+    └───────┴───────┘
     """
     d = ensure_polars(d)
     ensure_column_exists(d, column)
@@ -166,6 +192,8 @@ def aggregate_count(
     d: pd.DataFrame | pl.DataFrame, *, result_col: str = "n", taxid_col: str = "taxid"
 ) -> pl.DataFrame:
     """
+    Nodes count aggregation along branches.
+
     Aggregates nodes count in a DataFrame with taxonomy ids along the branches
     of the lifemap tree.
 
@@ -185,8 +213,28 @@ def aggregate_count(
 
     See also
     --------
-    aggregate_num : aggregation of a numeric variable.
-    aggregate_freq : aggregation of the values counts of a categorical variable.
+    [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
+
+    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical variable.
+
+    Examples
+    --------
+    >>> from pylifemap import aggregate_count
+    >>> import polars as pl
+    >>> d = pl.DataFrame({"taxid": [33154, 33090, 2]})
+    >>> aggregate_count(d)
+    shape: (5, 2)
+    ┌───────┬─────┐
+    │ taxid ┆ n   │
+    │ ---   ┆ --- │
+    │ i32   ┆ u32 │
+    ╞═══════╪═════╡
+    │ 0     ┆ 3   │
+    │ 2     ┆ 1   │
+    │ 2759  ┆ 2   │
+    │ 33090 ┆ 1   │
+    │ 33154 ┆ 1   │
+    └───────┴─────┘
     """
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
@@ -218,8 +266,10 @@ def aggregate_freq(
     taxid_col: str = "taxid",
 ) -> pl.DataFrame:
     """
-    Aggregates a categorical variable in a DataFrame with taxonomy ids as a value
-    counts along the branchesof the lifemap tree.
+    Categorical variable frequencies aggregation along branches.
+
+    Aggregates a categorical variable in a DataFrame with taxonomy ids as levels
+    frequencies along the branches of the lifemap tree.
 
     Parameters
     ----------
@@ -238,8 +288,33 @@ def aggregate_freq(
 
     See also
     --------
-    aggregate_num : aggregation of a numeric variable.
-    aggregate_count : aggregation of the number of observations.
+    [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
+
+    [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
+
+    Examples
+    --------
+    >>> from pylifemap import aggregate_freq
+    >>> import polars as pl
+    >>> d = pl.DataFrame({
+    ...     "taxid": [33154, 33090, 2],
+    ...     "value": ["a", "b", "a"]
+    ... })
+    >>> aggregate_freq(d, column="value")
+    shape: (7, 3)
+    ┌───────┬───────┬───────┐
+    │ taxid ┆ value ┆ count │
+    │ ---   ┆ ---   ┆ ---   │
+    │ i32   ┆ str   ┆ u32   │
+    ╞═══════╪═══════╪═══════╡
+    │ 0     ┆ a     ┆ 2     │
+    │ 0     ┆ b     ┆ 1     │
+    │ 2     ┆ a     ┆ 1     │
+    │ 2759  ┆ a     ┆ 1     │
+    │ 2759  ┆ b     ┆ 1     │
+    │ 33090 ┆ b     ┆ 1     │
+    │ 33154 ┆ a     ┆ 1     │
+    └───────┴───────┴───────┘
     """
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
