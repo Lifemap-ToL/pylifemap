@@ -10,10 +10,10 @@ Main Lifemap class.
 
 ## Aggregation functions
 
-Functions aggregate data.
+Functions to aggregate data along the branches of the lifemap tree.
 
 | | |
 | --- | --- |
-| [aggregate_count](aggregate_count.qmd#pylifemap.aggregate_count) |  |
-| [aggregate_num](aggregate_num.qmd#pylifemap.aggregate_num) |  |
-| [aggregate_cat](aggregate_cat.qmd#pylifemap.aggregate_cat) |  |
+| [aggregate_count](aggregate_count.qmd#pylifemap.aggregate_count) | Nodes count aggregation along branches. |
+| [aggregate_num](aggregate_num.qmd#pylifemap.aggregate_num) | Numerical variable aggregation along branches. |
+| [aggregate_freq](aggregate_freq.qmd#pylifemap.aggregate_freq) | Categorical variable frequences aggregation along branches. |

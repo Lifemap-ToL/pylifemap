@@ -8,7 +8,7 @@ website:
     - contents:
       - reference/aggregate_count.qmd
       - reference/aggregate_num.qmd
-      - reference/aggregate_cat.qmd
+      - reference/aggregate_freq.qmd
       section: Aggregation functions
     id: reference
   - id: dummy-sidebar

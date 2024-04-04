@@ -1,4 +1,4 @@
 # Lifemap { #pylifemap.Lifemap }
 
-`Lifemap(self, data, *, locate=True, taxid_col='taxid', x_col='pylifemap_x', y_col='pylifemap_y', zoom=5, legend_position='bottomright', legend_width=None, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)`
+`Lifemap(self, data, *, locate=True, taxid_col='taxid', x_col='pylifemap_x', y_col='pylifemap_y', zoom=5, legend_width=None, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)`
 

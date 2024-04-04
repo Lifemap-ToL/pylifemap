@@ -15,7 +15,8 @@ website:
         location: navbar
         type: overlay
     navbar:
-        background: "#e15759"
+        foreground: "#FFF"
+        background: "#333"
         pinned: false
         left:
             - usage.qmd
@@ -23,8 +24,10 @@ website:
               menu:
                   - layer_points.qmd
             - reference/index.qmd
-            - development.qmd
-            - changelog.md
+            - text: "Development"
+              menu:
+                  - changelog.md
+                  - development.qmd
         tools:
             - icon: github
               href: https://github.com/juba/pylifemap/
@@ -38,6 +41,7 @@ quartodoc:
     sidebar: _quartodoc_sidebar.yml
     title: Reference
     parser: numpy
+    render_interlinks: true
     sections:
         - title: Lifemap class
           desc: Main Lifemap class.
@@ -50,16 +54,24 @@ quartodoc:
               - aggregate_num
               - aggregate_freq
 
+filters:
+    - interlinks
+
+interlinks:
+    sources:
+        python:
+            url: https://docs.python.org/3/
+
 format:
     html:
         theme:
             - cosmo
             - custom.scss
-        mainfont: "'Source Sans 3', 'Source Sans Pro', 'Segoe UI', 'Roboto', 'Helvetica', sans-serif"
-        monofont: "Fira Mono"
-        linkcolor: "#FF4222"
+        mainfont: "Source Sans 3, Source Sans Pro, Segoe UI, Roboto, Helvetica, sans-serif"
+        monofont: "SFMono-Regular, Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace"
+        linkcolor: "#337AB7"
         toc: true
-        highlight-style: gruvbox
+        highlight-style: breeze
         grid:
             body-width: 900px
             gutter-width: 3rem

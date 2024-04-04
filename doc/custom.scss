@@ -1,39 +1,53 @@
 /*-- scss:defaults --*/
 
-$toc-color: #FF4222;
-$toc-active-border: #FF4222;
+$toc-color: #337AB7;
+$toc-active-border: #337AB7;
 
 /*-- scss:rules --*/
+
+
+/* Sidebar */
+
+.sidebar-item-section {
+    padding-top: 1rem;
+}
+
+.sidebar-item-container .text-start {
+    font-weight: 600;
+}
 
 #TOC {
     margin-top: 2em;
 }
+
+
+/* General styles */
 
 a:hover {
     color: #FF4222;
     text-decoration: none;
 }
 
+.quarto-title {
+    margin: 1.5em 0 1em 0;
+}
+
+h1.title,
+h1.doc {
+    font-size: 2.5rem;
+}
+
+/* Source code */
+
 div.sourceCode {
     margin: 1em 0 2em 0;
 }
 
-.quarto-title {
-    margin: 1.5em 0 1em 0;
-
-    h1 {
-        font-size: 2.5rem;
-    }
-}
 
 pre.sourceCode {
     code.sourceCode {
         overflow: auto;
     }
-}
-
-code {
-    color: #787109;
 }
 
 .cell-output {
@@ -50,29 +64,10 @@ code {
     }
 }
 
-/* fira-mono-regular - latin */
-@font-face {
-    font-family: 'Fira Mono';
-    font-style: normal;
-    font-weight: 400;
-    src: local(''),
-        url('fonts/fira-mono-v12-latin-regular.woff2') format('woff2')
-}
 
-/* fira-mono-500 - latin */
-@font-face {
-    font-family: 'Fira Mono';
-    font-style: normal;
-    font-weight: 500;
-    src: local(''),
-        url('fonts/fira-mono-v12-latin-500.woff2') format('woff2')
-}
+/* quartodoc */
 
-/* fira-mono-700 - latin */
-@font-face {
-    font-family: 'Fira Mono';
-    font-style: normal;
-    font-weight: 700;
-    src: local(''),
-        url('fonts/fira-mono-v12-latin-700.woff2') format('woff2')
+td:first-child {
+    text-wrap: nowrap;
+    text-size-adjust: 100%;
 }

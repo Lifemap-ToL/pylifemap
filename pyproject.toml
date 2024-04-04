@@ -61,7 +61,7 @@ cov = [
   "test-cov",
   "cov-report",
 ]
-doc = "cd doc && quartodoc build && quarto render"
+doc = "cd doc && quartodoc build && quartodoc interlinks && quarto render"
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.10", "3.11", "3.12"]
