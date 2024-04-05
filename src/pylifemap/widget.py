@@ -7,6 +7,8 @@ import pathlib
 import anywidget
 import traitlets
 
+from pylifemap.serialization import serialize_data
+
 # Output directory for bundled js and css files
 BUNDLER_OUTPUT_DIR = pathlib.Path(__file__).parent / "static"
 
@@ -63,6 +65,7 @@ class LifemapWidget(anywidget.AnyWidget):
         height : str
             Widget height as CSS string.
         """
+        data = {k: serialize_data(v) for k, v in data.items()}
         super().__init__(
             data=data, layers=layers, options=options, width=width, height=height
         )
