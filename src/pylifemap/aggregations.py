@@ -215,7 +215,8 @@ def aggregate_count(
     --------
     [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
 
-    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical variable.
+    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical
+        variable.
 
     Examples
     --------
