@@ -12,38 +12,80 @@ from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
 from pylifemap.data import LifemapData
+from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH
 from pylifemap.widget import LifemapWidget
-
-DEFAULT_WIDTH = "100%"
-DEFAULT_HEIGHT = "600px"
 
 
 class Lifemap:
+    """
+    Main class allowing to create visualizations.
+    """
+
     def __init__(
         self,
         data: pl.DataFrame | pd.DataFrame,
         *,
         taxid_col: str = "taxid",
-        zoom: int = 5,
-        legend_width: int | None = None,
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
+        zoom: int = 5,
+        legend_width: int | None = None,
     ) -> None:
+        """
+        Lifemap constructor.
 
+        Allows to initialize a Lifemap visualization with a DataFrame and some
+        global options.
+
+        Parameters
+        ----------
+        data : pl.DataFrame | pd.DataFrame
+            Lifemap visualization DataFrame.
+        taxid_col : str, optional
+            Name of the `data` column with taxonomy ids, by default "taxid"
+        width : int | str, optional
+            Lifemap visualization width, in pixels or CSS units, by
+            default `DEFAULT_WIDTH`
+        height : int | str, optional
+            Lifemap visualization height, in pixels or CSS units, by
+            default DEFAULT_HEIGHT
+        zoom : int, optional
+            Default Lifemap zoom level, by default 5
+        legend_width : int | None, optional
+            Legend width in pixels, by default None
+        """
+
+        # Init LifemapData object with data
         self.data = LifemapData(data, taxid_col=taxid_col)
 
+        # Convert width and height to CSS pixels if integers
         self.width = width if isinstance(width, str) else f"{width}px"
         self.height = height if isinstance(height, str) else f"{height}px"
+
+        # Init layers attributes
         self.layers = []
         self.layers_counter = 0
         self.layers_data = {}
 
+        # Store global map options
         self.map_options = {
             "zoom": zoom,
             "legend_width": legend_width,
         }
 
+    def __repr__(self) -> str:
+        # Override default __repr__ to avoid very long and slow text output
+        return "<LifemapWidget>"
+
     def _to_widget(self) -> LifemapWidget:
+        """
+        Convert current instance to a Jupyter Widget.
+
+        Returns
+        -------
+        LifemapWidget
+            An Anywidget widget.
+        """
         return LifemapWidget(
             data=self.layers_data,
             layers=self.layers,
@@ -53,19 +95,44 @@ class Lifemap:
         )
 
     def _process_options(self, options: dict) -> dict:
+        """
+        Process a layer options dictionary.
+
+        The method increments layer counter, generates a layer id and deletes a `self`
+        option.
+
+        Parameters
+        ----------
+        options : dict
+            Options dictionary.
+
+        Returns
+        -------
+        dict
+            Processed dictionary.
+        """
         self.layers_counter += 1
         options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         return options
 
-    def __repr__(self) -> str:
-        # Override default __repr__ to avoid very long and slow text output
-        return "<LifemapWidget>"
-
     def show(self) -> None:
+        """
+        Display the Jupyter widget for this instance.
+        """
         display(self._to_widget())
 
-    def save(self, path, title: str = "Lifemap") -> None:
+    def save(self, path: str, title: str = "Lifemap") -> None:
+        """
+        Save the Jupyter widget for this instance to an HTML file.
+
+        Parameters
+        ----------
+        path : str
+            Path to the HTML file to save the widget.
+        title : str, optional
+            Optional HTML page title, by default "Lifemap"
+        """
         embed_minimal_html(
             path, views=[self._to_widget()], drop_defaults=False, title=title
         )
@@ -82,8 +149,44 @@ class Lifemap:
         opacity: float | None = 0.8,
         popup: bool | None = False,
     ) -> Lifemap:
+        """
+        Add a points layer.
+
+        Parameters
+        ----------
+        leaves : Literal[&quot;show&quot;, &quot;only&quot;, &quot;omit&quot;], optional
+            If `"only"`, only show tree leaves. If `"omit"`, only show nodes that are
+            not leaves. If `"show"`, show all nodes, by default "show"
+        radius : float | None, optional
+            Base points radius, by default None
+        radius_col : str | None, optional
+            Name of a numeric DataFrame column to compute points radius, by default None
+        fill_col : str | None, optional
+            Name of a DataFrame column to determine points color, by default None
+        fill_col_cat : bool | None, optional
+            If True, force color scheme to be categorical instead of continuous,
+            by default None
+        scheme : str | None, optional
+            Color scheme for points color. If `fill_col` is defined, it is the name of
+            an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
+            Otherwise, it is an hexadecimal color value, by default None
+        opacity : float | None, optional
+            Points opacity as a floating number between 0 and 1, by default 0.8
+        popup : bool | None, optional
+            If True, display informations in a popup when a point is clicked,
+            by default False
+
+        Returns
+        -------
+        Lifemap
+            A Lifemap visualization object.
+
+        Raises
+        ------
+        ValueError
+            If leaves is not one of the allowed values.
+        """
         options = self._process_options(locals())
-        options["z_col"] = "pylifemap_zoom"
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
@@ -93,22 +196,23 @@ class Lifemap:
         self.layers_data[options["id"]] = self.data.points_data(options)
         return self
 
-    def layer_points_ol(
-        self,
-        *,
-        radius: float = 4,
-        radius_col: str | None = None,
-        fill_col: str | None = None,
-        fill_col_cat: bool | None = None,
-        scheme: str | None = None,
-        opacity: float = 0.1,
-        popup: bool | None = False,
-    ) -> Lifemap:
-        options = self._process_options(locals())
-        layer = {"layer": "points_ol", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
-        return self
+    # TODO : cleanup
+    # def layer_points_ol(
+    #     self,
+    #     *,
+    #     radius: float = 4,
+    #     radius_col: str | None = None,
+    #     fill_col: str | None = None,
+    #     fill_col_cat: bool | None = None,
+    #     scheme: str | None = None,
+    #     opacity: float = 0.1,
+    #     popup: bool | None = False,
+    # ) -> Lifemap:
+    #     options = self._process_options(locals())
+    #     layer = {"layer": "points_ol", "options": options}
+    #     self.layers.append(layer)
+    #     self.layers_data[options["id"]] = self.data.points_data(options)
+    #     return self
 
     def layer_donuts(
         self,
@@ -178,18 +282,19 @@ class Lifemap:
         self.layers_data[options["id"]] = self.data.points_data()
         return self
 
-    def layer_grid(
-        self,
-        *,
-        cell_size: int = 500,
-        extruded: bool = False,
-        opacity: float = 0.5,
-    ) -> Lifemap:
-        options = self._process_options(locals())
-        layer = {"layer": "grid", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data()
-        return self
+    # TODO: cleanup
+    # def layer_grid(
+    #     self,
+    #     *,
+    #     cell_size: int = 500,
+    #     extruded: bool = False,
+    #     opacity: float = 0.5,
+    # ) -> Lifemap:
+    #     options = self._process_options(locals())
+    #     layer = {"layer": "grid", "options": options}
+    #     self.layers.append(layer)
+    #     self.layers_data[options["id"]] = self.data.points_data()
+    #     return self
 
     def layer_screengrid(
         self,
