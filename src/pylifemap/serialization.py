@@ -12,8 +12,10 @@ import pyarrow.feather as pf
 
 def serialize_data(data: Any) -> dict:
     """
-    Serialize an object. Pandas and polars DataFrames are serialized to
-    Apache Arrow IPC, other objects are kept as is.
+    Serialize an object.
+
+    Pandas and polars DataFrames are serialized to Apache Arrow IPC, other objects are
+    kept as is.
 
     Parameters
     ----------
