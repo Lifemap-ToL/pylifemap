@@ -41,6 +41,18 @@ def lmd():
     return LifemapData(data=d, taxid_col="tid")
 
 
+@pytest.fixture
+def lmd_cat():
+    dagg = aggregate_freq(d_cat, column="value", taxid_col="tid")
+    return LifemapData(data=dagg)
+
+
+@pytest.fixture
+def lmd_num():
+    dagg = aggregate_num(d, column="value", taxid_col="tid", fn="sum")
+    return LifemapData(data=dagg)
+
+
 class TestLifemapDataInit:
     def test_data_is_dataframe(self):
         with pytest.raises(TypeError):
@@ -86,6 +98,14 @@ class TestPointsData:
         ]
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [6, 8, 8, 20]
 
+    def test_points_data_validations(self, lmd, lmd_cat):
+        with pytest.raises(ValueError):
+            lmd.points_data(options={"fill_col": "whatever"})
+        with pytest.raises(ValueError):
+            lmd.points_data(options={"radius_col": "whatever"})
+        with pytest.raises(ValueError):
+            lmd_cat.points_data(options={"radius_col": "counts_col"})
+
     def test_points_data_leaves_omit(self, lmd):
         tmp = lmd.points_data(options={"fill_col": "value", "leaves": "omit"})
         assert tmp.shape == (3, 5)
@@ -114,10 +134,12 @@ class TestPointsData:
 
 
 class TestDonutsData:
-    def test_donuts_data(self, data_cat):
-        dagg = aggregate_freq(data_cat, column="value", taxid_col="tid")
-        lmd = LifemapData(data=dagg)
-        tmp = lmd.donuts_data({"counts_col": "value"})
+    def test_donuts_data_validations(self, lmd_cat):
+        with pytest.raises(ValueError):
+            lmd_cat.donuts_data(options={"counts_col": "whatever"})
+
+    def test_donuts_data(self, lmd_cat):
+        tmp = lmd_cat.donuts_data({"counts_col": "value"})
         assert tmp.shape == (10, 5)
         assert sorted(tmp.columns) == [
             "pylifemap_x",
@@ -133,10 +155,17 @@ class TestDonutsData:
 
 
 class TestLinesData:
-    def test_lines_data(self, data_pl):
-        dagg = aggregate_num(data_pl, column="value", taxid_col="tid", fn="sum")
-        lmd = LifemapData(data=dagg)
-        tmp = lmd.lines_data({"width_col": "value"})
+    def tests_lines_data_validations(self, lmd_num):
+        with pytest.raises(ValueError):
+            lmd_num.lines_data(options={"width_col": "whatever"})
+        with pytest.raises(ValueError):
+            lmd_num.lines_data(options={"color_col": "whatever"})
+        with pytest.raises(ValueError):
+            lmd_num._data = lmd_num._data.with_columns(pl.col("value").cast(pl.Utf8))
+            lmd_num.lines_data(options={"width_col": "value"})
+
+    def test_lines_data(self, lmd_num):
+        tmp = lmd_num.lines_data({"width_col": "value"})
         assert tmp.shape == (10, 6)
         assert sorted(tmp.columns) == [
             "pylifemap_x0",

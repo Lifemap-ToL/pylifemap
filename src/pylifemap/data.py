@@ -112,6 +112,13 @@ class LifemapData:
         ------
         ValueError
             If `options["leaves"]` value is not allowed.
+        ValueError
+            If `options["fill_col"]` is not a column of data.
+        ValueError
+            If `options["radius_col"]` is not a column of data.
+        ValueError
+            If `options["radius_col"]` is not numeric.
+
         """
 
         needed_cols = [self._taxid_col, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
@@ -139,11 +146,20 @@ class LifemapData:
                 right_on="taxid",
             )
 
-        # Add fill_col and radius_col to needed columns list if nexessary
+        # Check and add fill_col and radius_col to needed columns list if necessary
         if options is not None:
             if "fill_col" in options and options["fill_col"] is not None:
+                if options["fill_col"] not in data.columns:
+                    msg = f"{options['fill_col']} must be a column of data."
+                    raise ValueError(msg)
                 needed_cols.append(options["fill_col"])
             if "radius_col" in options and options["radius_col"] is not None:
+                if options["radius_col"] not in data.columns:
+                    msg = f"{options['radius_col']} must be a column of data."
+                    raise ValueError(msg)
+                if not data.get_column(options["radius_col"]).dtype.is_numeric():
+                    msg = f"{options['radius_col']} must be numeric."
+                    raise ValueError(msg)
                 needed_cols.append(options["radius_col"])
 
         # Add needed lifemap tree data
@@ -172,6 +188,7 @@ class LifemapData:
         """
 
         counts_col = options["counts_col"]
+
         needed_cols = [
             self._taxid_col,
             "pylifemap_x",
@@ -180,6 +197,10 @@ class LifemapData:
             counts_col,
         ]
         data = self._data
+
+        if counts_col not in data.columns:
+            msg = f"f{counts_col} must be a column of data."
+            raise ValueError(msg)
 
         # Remove leaves
         keep_expr = pl.col("pylifemap_leaf").not_()
@@ -263,11 +284,21 @@ class LifemapData:
             "pylifemap_x1",
             "pylifemap_y1",
         ]
-        # Add width and color columns to needed columns if they are defined
+
+        # Check and add width and color columns to needed columns if they are defined
         if options is not None:
             if "width_col" in options and options["width_col"] is not None:
+                if options["width_col"] not in data.columns:
+                    msg = f"{options['width_col']} must be a column of data."
+                    raise ValueError(msg)
+                if not data.get_column(options["width_col"]).dtype.is_numeric():
+                    msg = f"{options['width_col']} must be numeric."
+                    raise ValueError(msg)
                 needed_cols.append(options["width_col"])
             if "color_col" in options and options["color_col"] is not None:
+                if options["color_col"] not in data.columns:
+                    msg = f"{options['color_col']} must be a column of data."
+                    raise ValueError(msg)
                 needed_cols.append(options["color_col"])
         # Only keep needed columns
         return data.select(set(needed_cols))
