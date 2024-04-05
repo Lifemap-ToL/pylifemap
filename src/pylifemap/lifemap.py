@@ -4,6 +4,8 @@ Main Lifemap object.
 
 from __future__ import annotations
 
+from typing import Literal
+
 import pandas as pd
 import polars as pl
 from IPython.display import display
@@ -21,15 +23,14 @@ class Lifemap:
         self,
         data: pl.DataFrame | pd.DataFrame,
         *,
-        locate: bool = True,
         taxid_col: str = "taxid",
-        x_col: str = "pylifemap_x",
-        y_col: str = "pylifemap_y",
         zoom: int = 5,
         legend_width: int | None = None,
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
     ) -> None:
+
+        self.data = LifemapData(data, taxid_col=taxid_col)
 
         self.width = width if isinstance(width, str) else f"{width}px"
         self.height = height if isinstance(height, str) else f"{height}px"
@@ -37,21 +38,12 @@ class Lifemap:
         self.layers_counter = 0
         self.layers_data = {}
 
-        self.data = LifemapData(data, taxid_col=taxid_col, x_col=x_col, y_col=y_col)
-
-        if locate:
-            # Geolocate species
-            self.data.locate()
-        else:
-            # Rename x_col and y_col to "pylifemap_x" and "pylifemap_y"
-            self.data.rename_xy()
-
         self.map_options = {
             "zoom": zoom,
             "legend_width": legend_width,
         }
 
-    def to_widget(self) -> LifemapWidget:
+    def _to_widget(self) -> LifemapWidget:
         return LifemapWidget(
             data=self.layers_data,
             layers=self.layers,
@@ -60,28 +52,28 @@ class Lifemap:
             height=self.height,
         )
 
-    def __repr__(self) -> str:
-        # Override default __repr__ to avoid very long and slow text output
-        return "<LifemapWidget>"
-
-    def show(self) -> None:
-        display(self.to_widget())
-
-    def save(self, path, title: str = "Lifemap") -> None:
-        embed_minimal_html(
-            path, views=[self.to_widget()], drop_defaults=False, title=title
-        )
-
-    def process_options(self, options: dict) -> dict:
+    def _process_options(self, options: dict) -> dict:
         self.layers_counter += 1
         options["id"] = f"layer{self.layers_counter}"
         del options["self"]
         return options
 
+    def __repr__(self) -> str:
+        # Override default __repr__ to avoid very long and slow text output
+        return "<LifemapWidget>"
+
+    def show(self) -> None:
+        display(self._to_widget())
+
+    def save(self, path, title: str = "Lifemap") -> None:
+        embed_minimal_html(
+            path, views=[self._to_widget()], drop_defaults=False, title=title
+        )
+
     def layer_points(
         self,
         *,
-        leaves: str = "show",
+        leaves: Literal["show", "only", "omit"] = "show",
         radius: float | None = None,
         radius_col: str | None = None,
         fill_col: str | None = None,
@@ -90,7 +82,7 @@ class Lifemap:
         opacity: float | None = 0.8,
         popup: bool | None = False,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         options["z_col"] = "pylifemap_zoom"
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
@@ -98,7 +90,7 @@ class Lifemap:
             raise ValueError(msg)
         layer = {"layer": "points", "options": options}
         self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options, leaves)
+        self.layers_data[options["id"]] = self.data.points_data(options)
         return self
 
     def layer_points_ol(
@@ -112,7 +104,7 @@ class Lifemap:
         opacity: float = 0.1,
         popup: bool | None = False,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         layer = {"layer": "points_ol", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data(options)
@@ -128,7 +120,7 @@ class Lifemap:
         popup: bool | None = False,
         show_leaves: bool = False,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         options["z_col"] = "pylifemap_zoom"
         options["label"] = counts_col
         layer = {"layer": "donuts", "options": options}
@@ -145,9 +137,8 @@ class Lifemap:
             }
             points_layer = {"layer": "points", "options": points_options}
             self.layers.append(points_layer)
-            self.layers_data[points_id] = self.data.points_data(
-                points_options, leaves="only"
-            )
+            points_options["leaves"] = "only"
+            self.layers_data[points_id] = self.data.points_data(points_options)
 
         return self
 
@@ -161,7 +152,7 @@ class Lifemap:
         opacity: float | None = 0.8,
         popup: bool | None = False,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
         self.layers.append(layer)
         if color_col is not None:
@@ -181,7 +172,7 @@ class Lifemap:
         opacity: float = 0.5,
         color_range: list | None = None,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         layer = {"layer": "heatmap", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data()
@@ -194,7 +185,7 @@ class Lifemap:
         extruded: bool = False,
         opacity: float = 0.5,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         layer = {"layer": "grid", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data()
@@ -207,7 +198,7 @@ class Lifemap:
         extruded: bool = False,
         opacity: float = 0.5,
     ) -> Lifemap:
-        options = self.process_options(locals())
+        options = self._process_options(locals())
         layer = {"layer": "screengrid", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.points_data()
