@@ -38,7 +38,7 @@ jobs:
               run: pipx install hatch
 
             - name: Bundle
-              run: npm run bundle
+              run: npm run build
 
             - name: Render and Publish
               shell: bash
