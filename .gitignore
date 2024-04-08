@@ -9,3 +9,5 @@ app/
 doc/_site
 doc/_freeze
 TODO.md
+test.py
+out.html
