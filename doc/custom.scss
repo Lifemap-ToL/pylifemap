@@ -29,6 +29,15 @@ a:hover {
     text-decoration: none;
 }
 
+.table {
+    width: auto;
+}
+
+.table th,
+.table td {
+    padding: 0.25rem 1rem;
+}
+
 /* Headings */
 
 .quarto-title {

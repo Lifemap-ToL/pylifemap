@@ -24,17 +24,36 @@ If you want to build `pylifemap` from source, you'll have to follow these steps:
 
 ## Widget JavaScript modification and bundling
 
-Each time the widget JavaScript or CSS code is modified in the `src/js/` or `packages/lifemapjs` directories, it must be bundled with one of the following commands in `pylifemap`:
+Each time the widget JavaScript or CSS code is modified in the `src/js/` or `packages/lifemapjs/` directories, it must be bundled with one of the following commands in `pylifemap`:
 
 ```sh
-# Bundle only once
+# Bundle
 npm run bundle
-# Or, to bundle and watch for code change
+# Build (bundle + minify)
+npm run build
+# Bundle and watch for code change
 npm run dev
 ```
 
 The result is put into `src/pylifemap/static`. 
 
+## Tests
+
+Python tests are in the `tests` directory and can be run with:
+
+```sh
+hatch run test
+```
+
+## Documentation
+
+The package documentation is in `doc/`. It is managed by [quarto](https://quarto.org) and [quartodoc](https://machow.github.io/quartodoc/).
+
+To build it in HTML format in `doc/_site/`you can run:
+
+```sh
+hatch run doc
+```
 
 ## Maintenance notes
 

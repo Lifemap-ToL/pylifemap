@@ -22,7 +22,7 @@ website:
             - usage.qmd
             - text: "Layers"
               menu:
-                  - layer_points.qmd
+                  - layers/layer_points.qmd
             - reference/index.qmd
             - text: "Development"
               menu:
