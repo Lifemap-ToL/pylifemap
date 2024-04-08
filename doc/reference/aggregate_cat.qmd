@@ -1,4 +1,0 @@
-# aggregate_cat { #pylifemap.aggregate_cat }
-
-`aggregate_cat(d, column, *, keep_leaves=False, taxid_col='taxid')`
-
