@@ -148,6 +148,7 @@ class Lifemap:
         scheme: str | None = None,
         opacity: float | None = 0.8,
         popup: bool | None = False,
+        label: str | None = None,
     ) -> Lifemap:
         """
         Add a points layer.
@@ -175,6 +176,9 @@ class Lifemap:
         popup : bool | None, optional
             If True, display informations in a popup when a point is clicked,
             by default False
+        label : str | None, optional
+            Legend title for this layer if `fill_col` is defined. If `None`, the value
+            of `fill_col` is used.
 
         Returns
         -------
@@ -218,19 +222,67 @@ class Lifemap:
         self,
         counts_col: str,
         *,
-        size: float | None = None,
+        radius: float | None = None,
+        leaves: Literal["show", "hide"] = "hide",
         scheme: str | None = None,
         opacity: float | None = 1,
-        popup: bool | None = False,
-        show_leaves: bool = False,
+        popup: bool | None = True,
+        label: str | None = None,
     ) -> Lifemap:
+        """
+        Add a donuts layer.
+
+        This layer displays the distribution of a categorical variable values among
+        each nodes' children. Optionnaly it can also represent leaves values as a
+        point layer.
+
+        It should be applied to data computed with [](`~pylifemap.aggregate_freq`).
+
+        Parameters
+        ----------
+        counts_col : str
+            DataFrame column containing the counts.
+        radius : float | None, optional
+            Donut charts radius, by default None
+        leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
+            If `"show"`, add a points layer with individual leaves values, by
+            default "hide"
+        scheme : str | None, optional
+            Color scheme for donut charts ans points. It is the name of
+            a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),
+            by default None
+        opacity : float | None, optional
+            Donut charts and points opacity, by default 1
+        popup : bool | None, optional
+            If True, display informations in a popup when a point is clicked,
+            by default False, by default True
+        label : str | None, optional
+            Legend title for this layer. If `None`, the value of `counts_col` is used.
+
+
+        Returns
+        -------
+        Lifemap
+            A Lifemap visualization object.
+
+
+        Raises
+        ------
+        ValueError
+            If leaves is not one of the allowed values.
+        """
         options = self._process_options(locals())
-        options["z_col"] = "pylifemap_zoom"
-        options["label"] = counts_col
+        leaves_values = ["show", "hide"]
+        if options["leaves"] not in leaves_values:
+            msg = f"leaves must be one of {leaves_values}"
+            raise ValueError(msg)
+        options["label"] = counts_col if options["label"] is None else options["label"]
         layer = {"layer": "donuts", "options": options}
         self.layers.append(layer)
         self.layers_data[options["id"]] = self.data.donuts_data(options)
-        if show_leaves:
+
+        # If leaves is "show", add a specific points layer
+        if leaves == "show":
             points_id = f"{options['id']}-points"
             points_options = {
                 "id": points_id,
@@ -255,6 +307,7 @@ class Lifemap:
         scheme: str | None = None,
         opacity: float | None = 0.8,
         popup: bool | None = False,
+        label: str | None = None,
     ) -> Lifemap:
         options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
