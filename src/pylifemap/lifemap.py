@@ -289,7 +289,7 @@ class Lifemap:
         Add a donuts layer.
 
         This layer displays the distribution of a categorical variable values among
-        each nodes' children. Optionnaly it can also represent leaves values as a
+        each nodes children. Optionally it can also represent leaves values as a
         point layer.
 
         It should be applied to data computed with [](`~pylifemap.aggregate_freq`).
@@ -345,7 +345,7 @@ class Lifemap:
 
         See also
         --------
-        [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a
+        [](c) : aggregation of the values counts of a
         categorical variable.
 
         """  # noqa: E501
