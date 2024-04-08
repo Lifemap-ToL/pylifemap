@@ -4,6 +4,9 @@ Main Lifemap object.
 
 from __future__ import annotations
 
+import webbrowser
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Literal
 
 import pandas as pd
@@ -12,13 +15,13 @@ from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
 from pylifemap.data import LifemapData
-from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH
+from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, is_notebook
 from pylifemap.widget import LifemapWidget
 
 
 class Lifemap:
     """
-    Main class allowing to create visualizations.
+    Build visualization.
 
     Parameters
     ----------
@@ -36,6 +39,14 @@ class Lifemap:
         Default Lifemap zoom level, by default 5
     legend_width : int | None, optional
         Legend width in pixels, by default None
+
+    Examples
+    --------
+    >>> import polars as pl
+    >>> from pylifemap import Lifemap
+    >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
+    >>> Lifemap(d).layer_points().show()
+
 
     """
 
@@ -114,16 +125,26 @@ class Lifemap:
     def show(self) -> None:
         """
         Display the Jupyter widget for this instance.
-        """
-        display(self._to_widget())
 
-    def save(self, path: str, title: str = "Lifemap") -> None:
+        If we are in a notebook environment, use `display`. Otherwise, export widget to
+        an HTML file and open it in a browser if possible.
+        """
+        if is_notebook():
+            display(self._to_widget())
+        else:
+            with TemporaryDirectory() as tempdir:
+                temp_path = Path(tempdir) / "lifemap.html"
+                self.save(temp_path)
+                webbrowser.open(str(temp_path))
+                input("Press any key when finished.")
+
+    def save(self, path: str | Path, title: str = "Lifemap") -> None:
         """
         Save the Jupyter widget for this instance to an HTML file.
 
         Parameters
         ----------
-        path : str
+        path : str | Path
             Path to the HTML file to save the widget.
         title : str, optional
             Optional HTML page title, by default "Lifemap"
