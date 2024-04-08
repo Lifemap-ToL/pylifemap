@@ -3,6 +3,7 @@
 $toc-color: #337AB7;
 $toc-active-border: #337AB7;
 $code-color: #C7254E;
+$dropdown-link-color: #333;
 
 /*-- scss:rules --*/
 
@@ -29,6 +30,9 @@ a:hover {
     text-decoration: none;
 }
 
+
+/* Tables */
+
 .table {
     width: auto;
 }
@@ -37,6 +41,7 @@ a:hover {
 .table td {
     padding: 0.25rem 1rem;
 }
+
 
 /* Headings */
 
@@ -54,6 +59,24 @@ h2 {
     margin-bottom: 1.5rem;
     border-bottom: none;
 }
+
+h1 code,
+h2 code,
+h3 code,
+h4 code {
+    color: #6f6f6f;
+}
+
+/* Callouts */
+
+div.callout-note.callout-style-default>.callout-header {
+    background-color: #e9f2fc;
+}
+
+div.callout-note.callout {
+    border-left-color: #2780e3;
+}
+
 
 /* Source code */
 

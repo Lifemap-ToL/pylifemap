@@ -4,8 +4,21 @@ title: "pylifemap"
 
 ## Overview
 
-`pylifemap` is a jupyter widget allowing to visualize taxonomy data on [Lifemap](https://lifemap-ncbi.univ-lyon1.fr).
+`pylifemap` is a jupyter widget allowing to visualize taxonomy data on [Lifemap](https://lifemap-ncbi.univ-lyon1.fr). It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.
 
+Here is a simple example:
+
+```{python}
+import pandas as pd
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pd.read_csv(
+    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+)
+
+Lifemap(iucn).layer_points(radius=5, opacity=0.1).show()
+```
 
 ## Installation and usage
 
@@ -15,7 +28,9 @@ For the moment the package can only be installed from Github:
 pip install git+https://github.com/juba/pylifemap.git
 ```
 
-[Usage](usage.qmd) gives more detailed usage instructions.
+- [Getting started](getting_started.qmd) gives general usage instructions.
+- The *Layers* section shows visual interactive examples of the different available layers.
+- [Reference](reference/index.qmd) provides detailed documentation of the different methods and functions.
 
 
 ## Credits

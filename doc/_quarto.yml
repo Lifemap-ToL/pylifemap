@@ -19,10 +19,14 @@ website:
         background: "#333"
         pinned: false
         left:
-            - usage.qmd
+            - getting_started.qmd
             - text: "Layers"
               menu:
                   - layers/layer_points.qmd
+                  - layers/layer_lines.qmd
+                  - layers/layer_donuts.qmd
+                  - layers/layer_heatmap.qmd
+                  - layers/layer_screengrid.qmd
             - reference/index.qmd
             - text: "Development"
               menu:

@@ -2,3 +2,27 @@
 title: Points layer
 ---
 
+The points layer displays observations as points on the lifemap tree. 
+
+It is possible to make the fill color and the radius of the points depending on a data variable.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap, aggregate_count
+
+# Load iucn dataset
+iucn = pl.read_csv(
+    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+)
+
+# Aggregate observations count along branches
+iucn_agg = aggregate_count(iucn)
+
+(
+    Lifemap(iucn_agg)
+    .layer_points(fill_col="n", radius_col="n", opacity=0.7, popup=True)
+    .show()
+)
+```
+
+For a detailed list of `layer_points` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_points`).

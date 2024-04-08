@@ -2,3 +2,27 @@
 title: Donuts layer
 ---
 
+The donuts layer displays aggregated levels count of a categorical variable as donut charts, optionally displayng the individual values with points.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap, aggregate_freq
+
+# Load iucn dataset
+iucn = pl.read_csv(
+    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+)
+
+# Aggregate observations count along branches
+iucn_freq = aggregate_freq(iucn, column="status")
+
+(
+    Lifemap(iucn_freq)
+    .layer_donuts(counts_col="status", opacity=1, leaves="show")
+    .show()
+)
+```
+
+The `leaves` argument allows to `"show"` or `"hide"` individual leaves values.
+
+For a detailed list of `layer_donuts` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_donuts`).

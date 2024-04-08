@@ -2,3 +2,28 @@
 title: Screengrid layer
 ---
 
+The screengrid layer displays observations distribution as a colored grid with fixed-size cells. 
+
+
+::: {.callout-note}
+This visualization is highly sensitive to the current zoom level and the extent. Small modifications of the view can lead to very different visual representations.
+:::
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_csv(
+    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+)
+
+(
+    Lifemap(iucn)
+    .layer_screengrid(opacity=0.5)
+    .show()
+)
+```
+
+
+For a detailed list of `layer_screengrid` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_screengrid`).

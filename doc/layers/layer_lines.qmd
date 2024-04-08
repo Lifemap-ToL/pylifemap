@@ -2,3 +2,27 @@
 title: Lines layer
 ---
 
+The lines layer displays aggregated observations (count or numerical variable) by highlighting branches of the tree. 
+
+It is possible to make the color and the width of the lines depending on a data variable.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap, aggregate_count
+
+# Load iucn dataset
+iucn = pl.read_csv(
+    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+)
+
+# Aggregate observations count along branches
+iucn_agg = aggregate_count(iucn)
+
+(
+    Lifemap(iucn_agg)
+    .layer_lines(color_col="n", width_col="n", opacity=0.6)
+    .show()
+)
+```
+
+For a detailed list of `layer_lines` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_lines`).

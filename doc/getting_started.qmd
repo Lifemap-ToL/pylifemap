@@ -1,5 +1,5 @@
 ---
-title: "Usage"
+title: "Getting started"
 ---
 
 
@@ -93,6 +93,10 @@ Just adding layers is not sufficient to see our visualization. For it to appear,
 ```{python}
 Lifemap(iucn, taxid_col="taxid").layer_points().show()
 ```
+
+::: {.callout-note}
+When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a textual Python REPL, the visualisation will be saved to a temporary file and, if possible, displayed in the user's browser.
+:::
 
 We can also save it to an HTML file which can be opened later in a browser by using the [save()](`~pylifemap.Lifemap.save`) method:
 
