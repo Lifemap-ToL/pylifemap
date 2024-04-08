@@ -45,8 +45,11 @@ class Lifemap:
     >>> import polars as pl
     >>> from pylifemap import Lifemap
     >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
-    >>> Lifemap(d).layer_points().show()
-
+    >>> (
+    ...     Lifemap(d, width="100%", height="100vh")
+    ...     .layer_points()
+    ...     .show()
+    >>> )
 
     """
 
@@ -136,7 +139,7 @@ class Lifemap:
                 temp_path = Path(tempdir) / "lifemap.html"
                 self.save(temp_path)
                 webbrowser.open(str(temp_path))
-                input("Press Enter or Ctrl-C when finished.")
+                input("Press Enter when finished.\n")
 
     def save(self, path: str | Path, title: str = "Lifemap") -> None:
         """
@@ -148,6 +151,18 @@ class Lifemap:
             Path to the HTML file to save the widget.
         title : str, optional
             Optional HTML page title, by default "Lifemap"
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
+        >>> (
+        ...     Lifemap(d, width="100%", height="100vh")
+        ...     .layer_points()
+        ...     .save("lifemap.html", title="Example lifemap")
+        ... )
+
         """
         embed_minimal_html(
             path, views=[self._to_widget()], drop_defaults=False, title=title
@@ -185,8 +200,8 @@ class Lifemap:
         fill_col : str | None, optional
             Name of a DataFrame column to determine points color, by default None
         fill_col_cat : bool | None, optional
-            If True, force color scheme to be categorical instead of continuous,
-            by default None
+            If True, force color scheme to be categorical. If False, force it to be
+            continuous. If None, let pylifemap decide, by default None
         scheme : str | None, optional
             Color scheme for points color. If `fill_col` is defined, it is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
@@ -210,12 +225,27 @@ class Lifemap:
         ValueError
             If leaves is not one of the allowed values.
 
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame({
+        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
+        ...     "value": [ 7.4,  2.5,  8.3,     1.0,     1.4,     5.6,     4.6,     3.4,     2.3,     2.8,    3.1]
+        ... })
+        >>> (
+        ...     Lifemap(d)
+        ...     .layer_points(radius_col="value", fill_col="value", popup=True)
+        ...     .show()
+        ... )
+
+
         See also
         --------
         [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
-        """
+        """  # noqa: E501
         options = self._process_options(locals())
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
@@ -297,12 +327,28 @@ class Lifemap:
         ValueError
             If leaves is not one of the allowed values.
 
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap, aggregate_freq
+        >>> d = pl.DataFrame({
+        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
+        ...     "category": ["a", "b", "b", "a", "a", "c", "a", "b", "b", "a", "b"]
+        ... })
+        >>> d = aggregate_freq(d, column="category")
+        >>> (
+        ...     Lifemap(d)
+        ...     .layer_donuts(counts_col="category", leaves="hide")
+        ...     .show()
+        ... )
+
+
         See also
         --------
         [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a
         categorical variable.
 
-        """
+        """  # noqa: E501
         options = self._process_options(locals())
         leaves_values = ["show", "hide"]
         if options["leaves"] not in leaves_values:
@@ -374,12 +420,28 @@ class Lifemap:
         Lifemap
             A Lifemap visualization object.
 
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap, aggregate_num
+        >>> d = pl.DataFrame({
+        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
+        ...     "value": [ 7.4,  2.5,  8.3,     1.0,     1.4,     5.6,     4.6,     3.4,     2.3,     2.8,    3.1]
+        ... })
+        >>> d = aggregate_num(d, column="value", fn="mean")
+        >>> (
+        ...     Lifemap(d)
+        ...     .layer_lines(width_col="value", color_col="value")
+        ...     .show()
+        ... )
+
+
         See also
         --------
         [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
-        """
+        """  # noqa: E501
         options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
@@ -420,7 +482,21 @@ class Lifemap:
         -------
         Lifemap
             A Lifemap visualization object.
-        """
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame({
+        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
+        ... })
+        >>> (
+        ...     Lifemap(d)
+        ...     .layer_heatmap()
+        ...     .show()
+        ... )
+
+        """  # noqa: E501
 
         options = self._process_options(locals())
         layer = {"layer": "heatmap", "options": options}
@@ -459,7 +535,7 @@ class Lifemap:
         ----------
         cell_size : int, optional
             Screen grid cell size, in pixels, by default 30
-        extruded : bool, optional
+        extruded : bool, optionals
             If True, show the grid as extruded, by default False
         opacity : float, optional
             Screengrid opacity as a floating point number between 0 and 1,
@@ -469,7 +545,21 @@ class Lifemap:
         -------
         Lifemap
             A Lifemap visualization object.
-        """
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame({
+        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
+        ... })
+        >>> (
+        ...     Lifemap(d)
+        ...     .layer_screengrid()
+        ...     .show()
+        ... )
+
+        """  # noqa: E501
         options = self._process_options(locals())
         layer = {"layer": "screengrid", "options": options}
         self._layers.append(layer)
