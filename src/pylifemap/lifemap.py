@@ -19,6 +19,24 @@ from pylifemap.widget import LifemapWidget
 class Lifemap:
     """
     Main class allowing to create visualizations.
+
+    Parameters
+    ----------
+    data : pl.DataFrame | pd.DataFrame
+        Visualization data.
+    taxid_col : str, optional
+        Name of the `data` column with taxonomy ids, by default `"taxid"`
+    width : int | str, optional
+        Lifemap visualization width, in pixels or CSS units, by
+        default `DEFAULT_WIDTH`
+    height : int | str, optional
+        Lifemap visualization height, in pixels or CSS units, by
+        default `DEFAULT_HEIGHT`
+    zoom : int, optional
+        Default Lifemap zoom level, by default 5
+    legend_width : int | None, optional
+        Legend width in pixels, by default None
+
     """
 
     def __init__(
@@ -31,44 +49,21 @@ class Lifemap:
         zoom: int = 5,
         legend_width: int | None = None,
     ) -> None:
-        """
-        Lifemap constructor.
-
-        Allows to initialize a Lifemap visualization with a DataFrame and some
-        global options.
-
-        Parameters
-        ----------
-        data : pl.DataFrame | pd.DataFrame
-            Lifemap visualization DataFrame.
-        taxid_col : str, optional
-            Name of the `data` column with taxonomy ids, by default "taxid"
-        width : int | str, optional
-            Lifemap visualization width, in pixels or CSS units, by
-            default `DEFAULT_WIDTH`
-        height : int | str, optional
-            Lifemap visualization height, in pixels or CSS units, by
-            default DEFAULT_HEIGHT
-        zoom : int, optional
-            Default Lifemap zoom level, by default 5
-        legend_width : int | None, optional
-            Legend width in pixels, by default None
-        """
 
         # Init LifemapData object with data
         self.data = LifemapData(data, taxid_col=taxid_col)
 
         # Convert width and height to CSS pixels if integers
-        self.width = width if isinstance(width, str) else f"{width}px"
-        self.height = height if isinstance(height, str) else f"{height}px"
+        self._width = width if isinstance(width, str) else f"{width}px"
+        self._height = height if isinstance(height, str) else f"{height}px"
 
         # Init layers attributes
-        self.layers = []
-        self.layers_counter = 0
-        self.layers_data = {}
+        self._layers = []
+        self._layers_counter = 0
+        self._layers_data = {}
 
         # Store global map options
-        self.map_options = {
+        self._map_options = {
             "zoom": zoom,
             "legend_width": legend_width,
         }
@@ -87,11 +82,11 @@ class Lifemap:
             An Anywidget widget.
         """
         return LifemapWidget(
-            data=self.layers_data,
-            layers=self.layers,
-            options=self.map_options,
-            width=self.width,
-            height=self.height,
+            data=self._layers_data,
+            layers=self._layers,
+            options=self._map_options,
+            width=self._width,
+            height=self._height,
         )
 
     def _process_options(self, options: dict) -> dict:
@@ -111,8 +106,8 @@ class Lifemap:
         dict
             Processed dictionary.
         """
-        self.layers_counter += 1
-        options["id"] = f"layer{self.layers_counter}"
+        self._layers_counter += 1
+        options["id"] = f"layer{self._layers_counter}"
         del options["self"]
         return options
 
@@ -206,8 +201,8 @@ class Lifemap:
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
         layer = {"layer": "points", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data(options)
+        self._layers.append(layer)
+        self._layers_data[options["id"]] = self.data.points_data(options)
         return self
 
     # TODO : cleanup
@@ -294,8 +289,8 @@ class Lifemap:
             raise ValueError(msg)
         options["label"] = counts_col if options["label"] is None else options["label"]
         layer = {"layer": "donuts", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.donuts_data(options)
+        self._layers.append(layer)
+        self._layers_data[options["id"]] = self.data.donuts_data(options)
 
         # If leaves is "show", add a specific points layer
         if leaves == "show":
@@ -308,9 +303,9 @@ class Lifemap:
                 "fill_col": options["counts_col"],
             }
             points_layer = {"layer": "points", "options": points_options}
-            self.layers.append(points_layer)
+            self._layers.append(points_layer)
             points_options["leaves"] = "only"
-            self.layers_data[points_id] = self.data.points_data(points_options)
+            self._layers_data[points_id] = self.data.points_data(points_options)
 
         return self
 
@@ -366,13 +361,13 @@ class Lifemap:
         """
         options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
-        self.layers.append(layer)
+        self._layers.append(layer)
         if color_col is not None:
             options["scale_extent"] = [
                 self.data.data.get_column(color_col).min(),
                 self.data.data.get_column(color_col).max(),
             ]
-        self.layers_data[options["id"]] = self.data.lines_data(options)
+        self._layers_data[options["id"]] = self.data.lines_data(options)
         return self
 
     def layer_heatmap(
@@ -408,8 +403,8 @@ class Lifemap:
 
         options = self._process_options(locals())
         layer = {"layer": "heatmap", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data()
+        self._layers.append(layer)
+        self._layers_data[options["id"]] = self.data.points_data()
         return self
 
     # TODO: cleanup
@@ -456,6 +451,6 @@ class Lifemap:
         """
         options = self._process_options(locals())
         layer = {"layer": "screengrid", "options": options}
-        self.layers.append(layer)
-        self.layers_data[options["id"]] = self.data.points_data()
+        self._layers.append(layer)
+        self._layers_data[options["id"]] = self.data.points_data()
         return self
