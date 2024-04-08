@@ -36,18 +36,41 @@ metadata-files:
     - _quartodoc_sidebar.yml
 
 quartodoc:
+    title: Reference
     style: pkgdown
     package: pylifemap
     sidebar: _quartodoc_sidebar.yml
-    title: Reference
     parser: numpy
     render_interlinks: true
+    renderer:
+        style: markdown
+        display_name: name
+    options:
+        include_functions: true
+        children: linked
     sections:
-        - title: Lifemap class
-          desc: Main Lifemap class.
+        - title: Visualization
+          desc: ""
           contents:
-              - Lifemap
-        - title: Aggregation functions
+              - name: Lifemap
+                members:
+                    [
+                        "layer_points",
+                        "layer_lines",
+                        "layer_donuts",
+                        "layer_heatmap",
+                        "layer_screengrid",
+                        "show",
+                        "save",
+                    ]
+              - Lifemap.layer_points
+              - Lifemap.layer_lines
+              - Lifemap.layer_donuts
+              - Lifemap.layer_heatmap
+              - Lifemap.layer_screengrid
+              - Lifemap.show
+              - Lifemap.save
+        - title: Data aggregation
           desc: Functions to aggregate data along the branches of the lifemap tree.
           contents:
               - aggregate_count
@@ -65,7 +88,7 @@ interlinks:
 format:
     html:
         theme:
-            - cosmo
+            - flatly
             - custom.scss
         mainfont: "Source Sans 3, Source Sans Pro, Segoe UI, Roboto, Helvetica, sans-serif"
         monofont: "SFMono-Regular, Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace"

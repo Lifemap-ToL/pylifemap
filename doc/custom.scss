@@ -2,6 +2,7 @@
 
 $toc-color: #337AB7;
 $toc-active-border: #337AB7;
+$code-color: #C7254E;
 
 /*-- scss:rules --*/
 
@@ -24,9 +25,11 @@ $toc-active-border: #337AB7;
 /* General styles */
 
 a:hover {
-    color: #FF4222;
+    color: #67a9df;
     text-decoration: none;
 }
+
+/* Headings */
 
 .quarto-title {
     margin: 1.5em 0 1em 0;
@@ -35,6 +38,12 @@ a:hover {
 h1.title,
 h1.doc {
     font-size: 2.5rem;
+}
+
+h2 {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    border-bottom: none;
 }
 
 /* Source code */
