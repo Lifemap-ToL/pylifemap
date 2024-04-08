@@ -136,7 +136,7 @@ class Lifemap:
                 temp_path = Path(tempdir) / "lifemap.html"
                 self.save(temp_path)
                 webbrowser.open(str(temp_path))
-                input("Press any key when finished.")
+                input("Press Enter or Ctrl-C when finished.")
 
     def save(self, path: str | Path, title: str = "Lifemap") -> None:
         """
