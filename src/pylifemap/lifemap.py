@@ -129,8 +129,9 @@ class Lifemap:
         """
         Display the Jupyter widget for this instance.
 
-        If we are in a notebook environment, use `display`. Otherwise, export widget to
-        an HTML file and open it in a browser if possible.
+        In a notebook environment, the method uses `IPython.display.display` to display
+        the visualization directly. Otherwise, it exports the widget to an HTML file and
+        opens it in a browser if possible.
         """
         if is_notebook():
             display(self._to_widget())
