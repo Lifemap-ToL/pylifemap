@@ -55,6 +55,15 @@ To build it in HTML format in `doc/_site/`you can run:
 hatch run doc
 ```
 
+## Docker image
+
+To build the docker image manually, run the following at the root of the repisotory:
+
+```sh
+docker build . -t pylifemap
+```
+
+
 ## Maintenance notes
 
 ### Releases
