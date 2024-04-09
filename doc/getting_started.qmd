@@ -54,7 +54,7 @@ iucn
 
 ## Initialize a `Lifemap` object
 
-The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers[^if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]:
+The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]:
 
 ```{python}
 from pylifemap import Lifemap
@@ -107,7 +107,7 @@ Lifemap(iucn, taxid_col="taxid").layer_points().show()
 ```
 
 ::: {.callout-note}
-When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a textual Python REPL, the visualisation will be saved to a temporary file and, if possible, displayed in the user's browser.
+When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a textual Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user's browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.
 :::
 
 We can also save it to an HTML file which can be opened later in a browser by using the [save()](`~pylifemap.Lifemap.save`) method:
