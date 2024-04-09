@@ -4,6 +4,7 @@ Main Lifemap object.
 
 from __future__ import annotations
 
+import os
 import webbrowser
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -135,6 +136,13 @@ class Lifemap:
         """
         if is_notebook():
             display(self._to_widget())
+            return
+        self._width = "100%"
+        self._height = "100vh"
+        if os.environ.get("PYLIFEMAP_DOCKER") == "1":
+            path = Path("lifemap.html")
+            self.save(path)
+            print("File saved in lifemap.html")  # noqa: T201
         else:
             with TemporaryDirectory() as tempdir:
                 temp_path = Path(tempdir) / "lifemap.html"
