@@ -20,7 +20,7 @@ iucn = pd.read_csv(
 Lifemap(iucn).layer_points(radius=5, opacity=0.1).show()
 ```
 
-## Installation and usage
+## Installation
 
 For the moment the package can only be installed from Github:
 
@@ -28,10 +28,13 @@ For the moment the package can only be installed from Github:
 pip install git+https://github.com/juba/pylifemap.git
 ```
 
+You can also try the package without installing anything by using our [introduction notebook](https://colab.research.google.com/github/juba/pylifemap/blob/master/notebooks/introduction.ipynb) in Google Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pylifemap/blob/master/notebooks/introduction.ipynb)
+
+## Usage
+
 - [Getting started](getting_started.qmd) gives general usage instructions.
 - The *Layers* section shows visual interactive examples of the different available layers.
 - [Reference](reference/index.qmd) provides detailed documentation of the different methods and functions.
-
 
 ## Credits
 
