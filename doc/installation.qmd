@@ -1,0 +1,54 @@
+---
+title: Installation
+---
+
+## Notebook run / script run
+
+As it provides a Jupyter widget, `pylifemap` is primarily designed to be used in a notebook environment such as [Jupyter](https://jupyter.org) or [VSCode](https://code.visualstudio.com/docs/datascience/jupyter-notebooks). 
+
+But it is also possible to use it in a Python script or in the Python REPL. In this case you can use the [save()](`~pylifemap.Lifemap.save`) method to export the widget to an HTML file that can be opened later. You can also use the [show()](`~pylifemap.Lifemap.show`) method, ins this case the widget is exported to a temporary file and opened in the user's browser.
+
+::: {.callout-note}
+`pylifemap` visualizations can also be embedded in [Quarto](https://quarto.org) documents in HTML format.
+:::
+
+## Install locally
+
+You can install the package locally (preferably in a virtual environment) with [pip](https://pypi.org/project/pip/).
+
+For the moment only the development version can be installed from Github with the following command:
+
+```shell
+pip install git+https://github.com/juba/pylifemap.git
+```
+
+## Run in Google Colab
+
+You can try the package (without installing anything) in [Google Colab](https://colab.research.google.com/).
+
+The easiest way is by using our [introduction notebook](https://colab.research.google.com/github/juba/pylifemap/blob/master/notebooks/introduction.ipynb) directly in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/juba/pylifemap/blob/master/notebooks/introduction.ipynb).
+
+
+## Run with Docker
+
+### Run in Jupyter
+
+Another way to use the package without having to install it is to use our [Docker image](https://github.com/juba/pylifemap/pkgs/container/pylifemap).
+
+To use `pylifemap` in a Jupyter environment, you have to [install Docker](https://docs.docker.com/engine/install/), open a terminal in the directory containing your data and notebook files, and run:
+
+```sh
+docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/juba/pylifemap:latest
+```
+
+Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
+
+### Run a script
+
+If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:
+
+```sh
+docker run -v $PWD:/local/ ghcr.io/juba/pylifemap:latest myscript.py
+```
+
+In this case, if you use [show()](`~pylifemap.Lifemap.show`) in your script the result will not be opened in your browser but will instead be saved in a `lifemap.html` file in your working directory.

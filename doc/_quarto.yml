@@ -19,6 +19,7 @@ website:
         background: "#333"
         pinned: false
         left:
+            - installation.qmd
             - getting_started.qmd
             - text: "Layers"
               menu:
