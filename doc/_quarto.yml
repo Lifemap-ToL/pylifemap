@@ -92,13 +92,13 @@ interlinks:
 format:
     html:
         theme:
-            - flatly
-            - custom.scss
+            light: [flatly, custom.scss]
+            dark: [superhero, custom.scss]
         mainfont: "Source Sans 3, Source Sans Pro, Segoe UI, Roboto, Helvetica, sans-serif"
         monofont: "SFMono-Regular, Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace"
         linkcolor: "#337AB7"
         toc: true
-        highlight-style: breeze
+        highlight-style: arrow
         grid:
             body-width: 900px
             gutter-width: 3rem
