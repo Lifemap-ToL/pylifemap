@@ -43,7 +43,7 @@ quartodoc:
     title: Reference
     style: pkgdown
     package: pylifemap
-    sidebar: _quartodoc_sidebar.yml
+    sidebar: _sidebar.yml
     parser: numpy
     render_interlinks: true
     renderer:
