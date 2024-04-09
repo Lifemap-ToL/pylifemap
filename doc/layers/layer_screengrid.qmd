@@ -6,7 +6,7 @@ The screengrid layer displays observations distribution as a colored grid with f
 
 
 ::: {.callout-note}
-This visualization is highly sensitive to the current zoom level and the extent. Small modifications of the view can lead to very different visual representations.
+This visualization is highly sensitive to the current zoom level and extent. Small modifications of the view can lead to very different visual representations.
 :::
 
 ```{python}
