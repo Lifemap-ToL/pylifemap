@@ -65,7 +65,7 @@ class LifemapData:
         self._data = data
 
         # Check for taxids absent from lmdata
-        self.check_taxids()
+        self.check_unknown_taxids()
 
     @property
     def data(self) -> pl.DataFrame:
@@ -79,7 +79,7 @@ class LifemapData:
         """
         return self._data
 
-    def check_taxids(self) -> None:
+    def check_unknown_taxids(self) -> None:
         """
         Check and display a warning if taxids in user data are not found in
         Lifemap data.

@@ -92,7 +92,7 @@ class TestLifemapDataMethods:
             )
         )
 
-    def test_check_taxids(self, data_absent):
+    def test_check_unknown_taxids(self, data_absent):
         with pytest.warns():
             LifemapData(data_absent)
 
