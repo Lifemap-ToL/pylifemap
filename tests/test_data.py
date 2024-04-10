@@ -12,6 +12,9 @@ from pylifemap.data import LifemapData
 # from pylifemap.utils import LMDATA
 
 d = pd.DataFrame({"tid": [33090, 33208, 2, 2944257], "value": [1, 2, 3, 4]})
+d_absent = pd.DataFrame(
+    {"taxid": [33090, 33208, 2, -12, -834], "value": [1, 2, 3, 4, 5]}
+)
 d_pl_int64 = pl.DataFrame(d, schema_overrides={"tid": pl.Int64})
 d_cat = pl.DataFrame(d).with_columns(pl.col("value").cast(pl.Utf8))
 
@@ -34,6 +37,11 @@ def data_pd():
 @pytest.fixture
 def data_cat():
     return d_cat
+
+
+@pytest.fixture
+def data_absent():
+    return d_absent
 
 
 @pytest.fixture
@@ -83,6 +91,10 @@ class TestLifemapDataMethods:
                 }
             )
         )
+
+    def test_check_taxids(self, data_absent):
+        with pytest.warns():
+            LifemapData(data_absent)
 
 
 class TestPointsData:

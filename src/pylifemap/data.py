@@ -2,6 +2,8 @@
 Handling of Lifemap objects data.
 """
 
+import warnings
+
 import pandas as pd
 import polars as pl
 
@@ -62,6 +64,9 @@ class LifemapData:
         # Store data as attribute
         self._data = data
 
+        # Check for taxids absent from lmdata
+        self.check_taxids()
+
     @property
     def data(self) -> pl.DataFrame:
         """
@@ -73,6 +78,23 @@ class LifemapData:
             Object data attribute as polars DataFrame.
         """
         return self._data
+
+    def check_taxids(self) -> None:
+        """
+        Check and display a warning if taxids in user data are not found in
+        Lifemap data.
+        """
+        lmdata = LMDATA.select("taxid")
+        data = self._data.select(self._taxid_col)
+        absent_ids = data.join(
+            lmdata, how="anti", left_on=self._taxid_col, right_on="taxid"
+        )
+        if (n := absent_ids.height) > 0:
+            msg = f"{n} taxids have not been found in Lifemap database"
+            if n < 10:  # noqa: PLR2004
+                ids = absent_ids.get_column(self._taxid_col).to_list()
+                msg = msg + f": {ids}"
+            warnings.warn(msg, stacklevel=0)
 
     def data_with_parents(self) -> pl.DataFrame:
         """
