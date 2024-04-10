@@ -64,8 +64,9 @@ class LifemapData:
         # Store data as attribute
         self._data = data
 
-        # Check for taxids absent from lmdata
+        # Check for unknown or duplicated taxids
         self.check_unknown_taxids()
+        self.check_duplicated_taxids()
 
     @property
     def data(self) -> pl.DataFrame:
@@ -94,6 +95,18 @@ class LifemapData:
             if n < 10:  # noqa: PLR2004
                 ids = absent_ids.get_column(self._taxid_col).to_list()
                 msg = msg + f": {ids}"
+            warnings.warn(msg, stacklevel=0)
+
+    def check_duplicated_taxids(self) -> None:
+        """
+        Check and display a warning if their are duplicated taxids in user data.
+        """
+        taxids = self._data.get_column(self._taxid_col)
+        duplicates = taxids.filter(taxids.is_duplicated()).unique()
+        if (n := duplicates.len()) > 0:
+            msg = f"{n} duplicated taxids have been found in the data"
+            if n < 10:  # noqa: PLR2004
+                msg = msg + f": {duplicates.to_list()}"
             warnings.warn(msg, stacklevel=0)
 
     def data_with_parents(self) -> pl.DataFrame:
