@@ -28,15 +28,16 @@ dependencies = [
   "pandas",
   "pyarrow>=15.0.0",
   "ipywidgets>=8.1.0",
+  "pickleshare>=0.7.5"
 ]
 
 [project.optional-dependencies]
 dev = ["watchfiles", "jupyterlab"]
 
 [project.urls]
-Documentation = "https://github.com/juba/pylifemap#readme"
-Issues = "https://github.com/juba/pylifemap/issues"
-Source = "https://github.com/juba/pylifemap"
+Documentation = "https://github.com/Lifemap-ToL/pylifemap#readme"
+Issues = "https://github.com/Lifemap-ToL/pylifemap/issues"
+Source = "https://github.com/Lifemap-ToL/pylifemap"
 
 [tool.hatch.version]
 path = "src/pylifemap/__about__.py"

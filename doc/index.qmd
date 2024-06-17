@@ -14,7 +14,7 @@ from pylifemap import Lifemap
 
 # Load iucn dataset
 iucn = pd.read_csv(
-    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
 )
 
 Lifemap(iucn).layer_points(radius=5, opacity=0.1).show()

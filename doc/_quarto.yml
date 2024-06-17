@@ -6,9 +6,9 @@ execute:
 
 website:
     title: "pylifemap"
-    site-url: "https://juba.github.io/pylifemap"
+    site-url: "https://lifemap-tol.github.io/pylifemap"
     favicon: favicon.png
-    repo-url: https://github.com/juba/pylifemap/
+    repo-url: https://github.com/Lifemap-ToL/pylifemap/
     repo-subdir: "doc"
     repo-actions: [issue]
     search:
@@ -35,7 +35,7 @@ website:
                   - development.qmd
         tools:
             - icon: github
-              href: https://github.com/juba/pylifemap/
+              href: https://github.com/Lifemap-ToL/pylifemap/
 
 metadata-files:
     - _quartodoc_sidebar.yml

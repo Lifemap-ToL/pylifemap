@@ -28,7 +28,7 @@ We can import it as a polars or pandas DataFrame with the following code:
 import polars as pl
 
 iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
 )
 ```
 
@@ -39,7 +39,7 @@ iucn = pl.read_csv(
 import pandas as pd
 
 iucn = pd.read_csv(
-    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
 )
 ```
 

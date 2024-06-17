@@ -8,7 +8,7 @@ title: "Development notes"
 To install `pylifemap` from git:
 
 ```sh 
-pip install git+https://github.com/juba/pylifemap.git
+pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
 ## Install fom source
@@ -17,7 +17,7 @@ If you want to build `pylifemap` from source, you'll have to follow these steps:
 
 - Install [node.js](https://nodejs.org/en)
 - Install [hatch](https://hatch.pypa.io/latest/) dependency management system
-- Clone the [pylifemap](https://github.com/juba/pylifemap) repository
+- Clone the [pylifemap](https://github.com/Lifemap-ToL/pylifemap) repository
 - Install Python dependencies with : `hatch shell`
 - Install JavaScript dependencies with : `npm install --workspaces --include-root-workspace`
 

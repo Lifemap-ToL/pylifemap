@@ -15,7 +15,7 @@ from pylifemap import Lifemap
 
 # Load iucn dataset
 iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/juba/pylifemap/main/data/iucn.csv"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
 )
 
 (
