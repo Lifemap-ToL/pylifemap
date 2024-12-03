@@ -50,7 +50,7 @@ export function layer_ol(el, deck_layer, options) {
         renderBuffer: 256,
     });
 
-    const rank_label_layers = new VectorTileLayer({
+    const rank_label_layer = new VectorTileLayer({
         source: new VectorTileSource({
             maxZoom: 42,
             format: new MVT(),
@@ -189,7 +189,7 @@ export function layer_ol(el, deck_layer, options) {
         view,
         layers: [
             polygons_layer,
-            //rank_label_layers,
+            rank_label_layer,
             branches_layer,
             deck_layer,
             labels_layer,

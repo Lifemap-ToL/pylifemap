@@ -1,4 +1,4 @@
-import { Stroke, Fill, Style } from "ol/style";
+import { Stroke, Fill, Style, Text } from "ol/style";
 
 const ARCHAE_FILL_COLOR = [170, 255, 238, 0.2];
 const EUKARYOTES_FILL_COLOR = [101, 153, 255, 0.23];
