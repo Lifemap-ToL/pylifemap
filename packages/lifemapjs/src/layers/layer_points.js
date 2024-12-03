@@ -1,5 +1,5 @@
 import { ScatterplotLayer } from "@deck.gl/layers";
-import { guidGenerator, DEFAULT_NUM_SCHEME, DEFAULT_CAT_SCHEME } from "./utils";
+import { guidGenerator, DEFAULT_NUM_SCHEME, DEFAULT_CAT_SCHEME } from "../utils";
 import { fromLonLat } from "ol/proj.js";
 import { CollisionFilterExtension } from "@deck.gl/extensions";
 

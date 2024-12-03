@@ -1,4 +1,4 @@
-import { guidGenerator, DEFAULT_CAT_SCHEME } from "./utils";
+import { guidGenerator, DEFAULT_CAT_SCHEME } from "../utils";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import Point from "ol/geom/Point.js";

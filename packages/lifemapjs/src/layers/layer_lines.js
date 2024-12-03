@@ -1,5 +1,5 @@
 import { LineLayer } from "@deck.gl/layers";
-import { guidGenerator, DEFAULT_NUM_SCHEME } from "./utils";
+import { guidGenerator, DEFAULT_NUM_SCHEME } from "../utils";
 import * as d3 from "d3";
 import * as Plot from "@observablehq/plot";
 

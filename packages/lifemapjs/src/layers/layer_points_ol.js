@@ -1,4 +1,4 @@
-import { guidGenerator } from "./utils";
+import { guidGenerator } from "../utils";
 
 import Feature from "ol/Feature.js";
 import Point from "ol/geom/Point.js";

@@ -1,5 +1,5 @@
 import { HeatmapLayer } from "@deck.gl/aggregation-layers";
-import { guidGenerator } from "./utils";
+import { guidGenerator } from "../utils";
 
 export function layer_heatmap(map, data, options = {}) {
     let {

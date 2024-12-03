@@ -1,11 +1,11 @@
-import { layer_ol } from "./layer_ol";
-import { layer_heatmap } from "./layer_heatmap";
-import { layer_points } from "./layer_points";
-import { layer_points_ol } from "./layer_points_ol";
-import { layer_grid } from "./layer_grid";
-import { layer_screengrid } from "./layer_screen_grid";
-import { layer_lines } from "./layer_lines";
-import { layer_donuts } from "./layer_donuts";
+import { layer_ol } from "./layers/layer_ol";
+import { layer_heatmap } from "./layers/layer_heatmap";
+import { layer_points } from "./layers/layer_points";
+import { layer_points_ol } from "./layers/layer_points_ol";
+import { layer_grid } from "./layers/layer_grid";
+import { layer_screengrid } from "./layers/layer_screen_grid";
+import { layer_lines } from "./layers/layer_lines";
+import { layer_donuts } from "./layers/layer_donuts";
 import { unserialize_data, stringify_scale } from "./utils";
 
 import { Deck } from "@deck.gl/core";

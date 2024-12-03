@@ -12,13 +12,23 @@ import Feature from "ol/Feature.js";
 import Point from "ol/geom/Point.js";
 import { Vector } from "ol/source.js";
 import VectorLayer from "ol/layer/Vector.js";
+import VectorTileLayer from "ol/layer/VectorTile";
+import VectorTileSource from "ol/source/VectorTile";
+import { MVT } from "ol/format";
+
 import { Style, Circle, Fill, Stroke } from "ol/style.js";
 import Text from "ol/style/Text.js";
+import {
+    createRankLabelStyleFunction,
+    createRankPolygonStyleFunction,
+    createBranchStyle,
+} from "../styles/ol_styles";
 
 import fetchJsonp from "fetch-jsonp";
 
 export function layer_ol(el, deck_layer, options) {
-    const { zoom = 5, minZoom = 4, maxZoom = 32 } = options;
+    const { zoom = 5, minZoom = 4, maxZoom = 42 } = options;
+    const lang = "en";
 
     const view = new View({
         center: fromLonLat([0, -4.226497]),
@@ -26,13 +36,48 @@ export function layer_ol(el, deck_layer, options) {
         minZoom: minZoom,
         maxZoom: maxZoom,
         enableRotation: false,
-        constrainResolution: true,
+        constrainResolution: false,
         smoothResolutionConstraint: false,
     });
-    const tile_layer = new TileLayer({
-        source: new XYZ({
-            url: "https://lifemap.univ-lyon1.fr/nolabels/{z}/{x}/{y}.png",
+
+    const branches_layer = new VectorTileLayer({
+        source: new VectorTileSource({
+            maxZoom: 42,
+            format: new MVT(),
+            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/branches/{z}/{x}/{y}.pbf",
         }),
+        style: createBranchStyle(),
+        declutter: true,
+        renderMode: "vector",
+        renderBuffer: 256,
+    });
+
+    const rank_label_layers = new VectorTileLayer({
+        source: new VectorTileSource({
+            maxZoom: 42,
+            format: new MVT(),
+            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/ranks/{z}/{x}/{y}.pbf",
+        }),
+        style: createRankLabelStyleFunction(lang),
+        declutter: true,
+        renderMode: "vector",
+        renderBuffer: 256,
+    });
+
+    const polygons_layer = new VectorTileLayer({
+        background: "#000",
+        source: new VectorTileSource({
+            maxZoom: 42,
+            format: new MVT(),
+            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/polygons/{z}/{x}/{y}.pbf",
+        }),
+        style: createRankPolygonStyleFunction(view),
+        declutter: false,
+        renderMode: "vector",
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        renderBuffer: 256,
+        preload: Infinity,
     });
 
     const API_URL = "https://lifemap.univ-lyon1.fr/solr";
@@ -135,16 +180,22 @@ export function layer_ol(el, deck_layer, options) {
             new DragPan({ duration: 0, kinetic: false }),
             new MouseWheelZoom({
                 onFocusOnly: false,
-                constrainResolution: true,
+                constrainResolution: false,
                 maxDelta: 1,
-                duration: 200,
+                duration: 300,
                 timeout: 100,
             }),
         ]),
         overlays: [],
         target: el,
         view,
-        layers: [tile_layer, deck_layer, labels_layer],
+        layers: [
+            polygons_layer,
+            //rank_label_layers,
+            branches_layer,
+            deck_layer,
+            labels_layer,
+        ],
     });
 
     map.on("moveend", on_move_end);

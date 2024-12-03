@@ -1,25 +1,25 @@
-import { GridLayer } from "@deck.gl/aggregation-layers";
-import { guidGenerator } from "./utils";
+import { ScreenGridLayer } from "@deck.gl/aggregation-layers";
+import { guidGenerator } from "../utils";
 
-export function layer_grid(map, data, options = {}) {
+export function layer_screengrid(map, data, options = {}) {
     let {
         id = undefined,
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
-        cell_size = 200,
+        cell_size = 30,
         opacity = 0.5,
         extruded = false,
     } = options;
 
     id = `lifemap-ol-${id ?? guidGenerator()}`;
 
-    const layer = new GridLayer({
+    const layer = new ScreenGridLayer({
         data: data,
         id: id,
         pickable: false,
         getPosition: (d) => [d[x_col], d[y_col]],
         getWeight: 1,
-        cellSize: cell_size,
+        cellSizePixels: cell_size,
         extruded: extruded,
         opacity: opacity,
     });
