@@ -38,7 +38,7 @@ Another way to use the package without having to install it is to use our [Docke
 To use `pylifemap` in a Jupyter environment, you have to [install Docker](https://docs.docker.com/engine/install/), open a terminal in the directory containing your data and notebook files, and run:
 
 ```sh
-docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/Lifemap-ToL/pylifemap:latest
+docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
 ```
 
 Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
@@ -48,7 +48,7 @@ Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you wil
 If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:
 
 ```sh
-docker run -v $PWD:/local/ ghcr.io/Lifemap-ToL/pylifemap:latest myscript.py
+docker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py
 ```
 
 In this case, if you use [show()](`~pylifemap.Lifemap.show`) in your script the result will not be opened in your browser but will instead be saved in a `lifemap.html` file in your working directory.
