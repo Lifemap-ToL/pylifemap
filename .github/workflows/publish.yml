@@ -46,3 +46,4 @@ jobs:
                   git config --global user.email "julien.barnier@cnrs.fr"
                   git config --global user.name "Julien Barnier"
                   just doc
+                  uv run quarto publish gh-pages doc
