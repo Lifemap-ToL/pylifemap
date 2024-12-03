@@ -4,10 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pylifemap"
-dynamic = ["version"]
-description = 'Python package for Lifemap visualizations.'
+version = "0.0.1"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 license = {file = "LICENSE"}
 keywords = []
 authors = [
@@ -24,80 +23,31 @@ classifiers = [
 ]
 dependencies = [
   "anywidget[dev]>=0.9.0",
-  "polars>=0.20.5",
-  "pandas",
-  "pyarrow>=15.0.0",
-  "ipywidgets>=8.1.0",
-  "pickleshare>=0.7.5"
+  "ipywidgets>=8.1.5",
+  "pandas>=2.2.0",
+  "pickleshare>=0.7.5",
+  "polars>=1.10.0",
+  "pyarrow>=17.0.0",
 ]
 
-[project.optional-dependencies]
-dev = ["watchfiles", "jupyterlab"]
+
+[tool.uv]
+dev-dependencies = [
+    "jupyterlab>=4.2.5",
+    "nbstripout>=0.7.1",
+    "pytest>=8.3.3",
+    "quartodoc>=0.8.1",
+    "rust-just>=1.36.0",
+    "watchfiles>=0.24.0",
+]
+
 
 [project.urls]
 Documentation = "https://github.com/Lifemap-ToL/pylifemap#readme"
 Issues = "https://github.com/Lifemap-ToL/pylifemap/issues"
 Source = "https://github.com/Lifemap-ToL/pylifemap"
 
-[tool.hatch.version]
-path = "src/pylifemap/__about__.py"
 
-[tool.hatch.envs.default]
-features=["dev"]
-dependencies = [
-  "coverage[toml]>=6.5",
-  "pytest",
-  "quartodoc",
-  "nbstripout"
-]
-[tool.hatch.envs.default.scripts]
-get_lmdata = "Rscript scripts/01_get_lmdata.R && python scripts/02_prepare_lmdata.py"
-test = "pytest {args:tests}"
-test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
-doc = "cd doc && quartodoc build && quartodoc interlinks && quarto render"
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.10", "3.11", "3.12"]
-
-[tool.hatch.envs.lint]
-detached = true
-dependencies = ["black>=23.9.1", "mypy>=1.0.0", "ruff>=0.0.291"]
-
-[tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/pylifemap tests}"
-style = ["ruff check {args:.}", "black --check --diff {args:.}"]
-all = ["style", "typing"]
-
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.sdist]
-ignore-vcs = true
-include = [
-  "src/pylifemap/*", "src/pylifemap/static/*", "src/pylifemap/data/*"
-]
-exclude = [".github", "app", "doc", ".vscode", "examples"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/pylifemap"]
-
-# [tool.hatch.build.hooks.jupyter-builder]
-# build-function = "hatch_jupyter_builder.npm_builder"
-# ensured-targets = ["src/pylifemap/static/widget.js", "src/pylifemap/static/widget.css"]
-# dependencies = ["hatch-jupyter-builder>=0.5.0"]
-
-# [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
-# npm = "npm"
-# build_cmd = "bundle"
 
 
 [tool.black]
@@ -173,22 +123,3 @@ ban-relative-imports = "all"
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
-
-[tool.coverage.run]
-source_pkgs = ["pylifemap", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/pylifemap/__about__.py",
-]
-
-[tool.coverage.paths]
-pylifemap = ["src/pylifemap", "*/pylifemap/src/pylifemap"]
-tests = ["tests", "*/pylifemap/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]

@@ -8,7 +8,10 @@ title: "Development notes"
 To install `pylifemap` from git:
 
 ```sh 
+# With pip
 pip install git+https://github.com/Lifemap-ToL/pylifemap.git
+# Add to a project with uv
+uv add 
 ```
 
 ## Install fom source
@@ -16,9 +19,9 @@ pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 If you want to build `pylifemap` from source, you'll have to follow these steps:
 
 - Install [node.js](https://nodejs.org/en)
-- Install [hatch](https://hatch.pypa.io/latest/) dependency management system
+- Install [uv](https://docs.astral.sh/uv/) dependency management system
 - Clone the [pylifemap](https://github.com/Lifemap-ToL/pylifemap) repository
-- Install Python dependencies with : `hatch shell`
+- Install Python dependencies with : `uv sync`
 - Install JavaScript dependencies with : `npm install --workspaces --include-root-workspace`
 
 
@@ -42,7 +45,7 @@ The result is put into `src/pylifemap/static`.
 Python tests are in the `tests` directory and can be run with:
 
 ```sh
-hatch run test
+just test
 ```
 
 ## Documentation
@@ -52,7 +55,7 @@ The package documentation is in `doc/`. It is managed by [quarto](https://quarto
 To build it in HTML format in `doc/_site/`you can run:
 
 ```sh
-hatch run doc
+just doc
 ```
 
 ## Docker image
@@ -69,7 +72,7 @@ docker build . -t pylifemap
 ### Releases
 
 - Change version in `NEWS.md` and `src/pylifemap/__about__.py`
-- Release the Python package with `hatch build` and `hatch publish` in `pylifemap`
+- Release the Python package with `uv build` and `uv publish` in `pylifemap`
 - Tag the version in git
 - Create a release on Github
 - Bump to dev version in `pyproject.toml` and `NEWS.md`
