@@ -263,13 +263,13 @@ Note
 <h3 class="anchored" data-anchor-id="run-in-jupyter">Run in Jupyter</h3>
 <p>Another way to use the package without having to install it is to use our <a href="https://github.com/Lifemap-ToL/pylifemap/pkgs/container/pylifemap">Docker image</a>.</p>
 <p>To use <code>pylifemap</code> in a Jupyter environment, you have to <a href="https://docs.docker.com/engine/install/">install Docker</a>, open a terminal in the directory containing your data and notebook files, and run:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">-p</span> 8899:8899 <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/Lifemap-ToL/pylifemap:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">-p</span> 8899:8899 <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Open the following URL in your browser: <a href="http://127.0.0.1:8899/lab" class="uri">http://127.0.0.1:8899/lab</a>, and you will have access to a Jupyter notebook environment with <code>pylifemap</code> and its dependencies preinstalled.</p>
 </section>
 <section id="run-a-script" class="level3">
 <h3 class="anchored" data-anchor-id="run-a-script">Run a script</h3>
 <p>If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/Lifemap-ToL/pylifemap:latest myscript.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In this case, if you use <a href="./reference/Lifemap.show.html#pylifemap.Lifemap.show">show()</a> in your script the result will not be opened in your browser but will instead be saved in a <code>lifemap.html</code> file in your working directory.</p>
 
 
