@@ -1,6 +1,5 @@
 get_lmdata:
-    Rscript scripts/01_get_lmdata.R
-    uv run scripts/02_prepare_lmdata.py
+    uv run scripts/prepare_lmdata.py
 
 test:
     uv run pytest
