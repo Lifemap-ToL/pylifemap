@@ -13,8 +13,6 @@ jobs:
         steps:
             - name: Check out repository
               uses: actions/checkout@v4
-              with:
-                  submodules: true
 
             - name: Setup node
               uses: actions/setup-node@v4
@@ -28,17 +26,17 @@ jobs:
             - name: Set up Quarto
               uses: quarto-dev/quarto-actions/setup@v2
 
-            - name: Install Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.11"
-                  cache: "pip"
+            - name: Install uv
+              uses: astral-sh/setup-uv@v4
 
-            - name: Install hatch
-              run: pipx install hatch
+            - name: Set up Python
+              run: uv python install
 
             - name: Bundle
               run: npm run build
+
+            - name: Install just
+              uses: extractions/setup-just@v2
 
             - name: Render and Publish
               shell: bash
@@ -47,5 +45,4 @@ jobs:
               run: |
                   git config --global user.email "julien.barnier@cnrs.fr"
                   git config --global user.name "Julien Barnier"
-                  hatch run doc
-                  hatch run quarto publish gh-pages doc
+                  just doc
