@@ -24,8 +24,6 @@ import {
     createBranchStyle,
 } from "../styles/ol_styles";
 
-import fetchJsonp from "fetch-jsonp";
-
 export function layer_ol(el, deck_layer, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options;
     const lang = "en";
@@ -80,7 +78,7 @@ export function layer_ol(el, deck_layer, options) {
         preload: Infinity,
     });
 
-    const API_URL = "https://lifemap.univ-lyon1.fr/solr";
+    const API_URL = "https://lifemap-back.univ-lyon1.fr/solr";
     const TEXT_COLOR = "rgba(255, 255, 255, 1)";
     const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)";
 
@@ -150,7 +148,7 @@ export function layer_ol(el, deck_layer, options) {
         zoom = Math.round(zoom);
         const url = `${API_URL}/taxo/select?q=*:*&fq=zoom:[0 TO ${zoom}]&fq=lat:[${extent[1]} TO ${extent[3]}]&fq=lon:[${extent[0]} TO ${extent[2]}]&wt=json&rows=1000`;
         const list_taxa = () =>
-            fetchJsonp(url, { jsonpCallback: "json.wrf" })
+            fetch(url)
                 .then((response) => response.json())
                 .then((response) => response.response.docs.map((d) => to_taxon(d, zoom)))
                 .catch(function (ex) {
