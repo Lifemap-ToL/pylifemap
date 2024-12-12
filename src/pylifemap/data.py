@@ -14,8 +14,8 @@ class LifemapData:
     """
     LifemapData class.
 
-    The aim of this class is to store data associated to a  Lifemap object and provide
-    computations methods.
+    The aim of this class is to store data associated to a Lifemap object and provide
+    computation methods.
     """
 
     def __init__(
