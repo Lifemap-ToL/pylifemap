@@ -24,7 +24,7 @@ def is_notebook() -> bool:
         True if we are running in a notebook environment, False otherwise.
     """
     try:
-        test = get_ipython().__class__.__name__  # noqa: F841
+        _ = get_ipython().__class__.__name__
         return True
     except NameError:
         return False
