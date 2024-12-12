@@ -252,7 +252,7 @@ class LifemapData:
 
         # Store frequencies as a pl.Struct and encode as JSON
         data = data.pivot(
-            index=self._taxid_col, columns=counts_col, values="count"
+            index=self._taxid_col, on=counts_col, values="count"
         ).fill_null(0)
         data = data.with_columns(
             pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)
