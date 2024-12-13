@@ -91,7 +91,7 @@ class LmData:
         """
 
         if self._data is None:
-            msg = "Lifemap data not available."
+            msg = "Lifemap data not available and not downloadable."
             raise ValueError(msg)
         return self._data
 
