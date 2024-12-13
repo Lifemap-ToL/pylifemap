@@ -7,7 +7,7 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.utils import LMDATA
+from pylifemap.data import LMDATA
 
 
 def ensure_polars(d: pd.DataFrame | pl.DataFrame) -> pl.DataFrame:

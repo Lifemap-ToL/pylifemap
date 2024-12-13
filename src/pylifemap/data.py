@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 import polars as pl
 
-from pylifemap.utils import LMDATA
+from pylifemap.lmdata import LMDATA
 
 
 class LifemapData:

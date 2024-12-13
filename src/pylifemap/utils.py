@@ -2,16 +2,16 @@
 Misc utilities functions and values.
 """
 
-import importlib.resources
-
-import polars as pl
-
-LMDATA_FILE = "data/lmdata.parquet"
-LMDATA_PATH = str(importlib.resources.files("pylifemap").joinpath(LMDATA_FILE))
-LMDATA = pl.read_parquet(LMDATA_PATH)
+import logging
+import sys
 
 DEFAULT_WIDTH = "800px"
 DEFAULT_HEIGHT = "600px"
+
+logger = logging.getLogger("LifemapBuilder")
+ch = logging.StreamHandler(stream=sys.stdout)
+logger.addHandler(ch)
+logger.setLevel(logging.DEBUG)
 
 
 def is_notebook() -> bool:
