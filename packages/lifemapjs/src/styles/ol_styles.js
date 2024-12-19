@@ -75,3 +75,18 @@ export function createRankPolygonStyleFunction(view) {
         });
     };
 }
+
+export function createCompositeStyleFunction(view, lang) {
+    const poly_style = createRankPolygonStyleFunction(view);
+    const branch_style = createBranchStyle();
+    const rank_style = createRankLabelStyleFunction(lang);
+
+    return function (feature) {
+        const type = feature.getProperties()["layer"];
+        return type == "poly-layer"
+            ? poly_style(feature)
+            : type == "branches-layer"
+            ? branch_style
+            : rank_style(feature);
+    };
+}

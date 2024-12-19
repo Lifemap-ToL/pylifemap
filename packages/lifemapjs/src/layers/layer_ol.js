@@ -18,11 +18,7 @@ import { MVT } from "ol/format";
 
 import { Style, Circle, Fill, Stroke } from "ol/style.js";
 import Text from "ol/style/Text.js";
-import {
-    createRankLabelStyleFunction,
-    createRankPolygonStyleFunction,
-    createBranchStyle,
-} from "../styles/ol_styles";
+import { createCompositeStyleFunction } from "../styles/ol_styles";
 
 export function layer_ol(el, deck_layer, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options;
@@ -38,38 +34,14 @@ export function layer_ol(el, deck_layer, options) {
         smoothResolutionConstraint: false,
     });
 
-    const branches_layer = new VectorTileLayer({
-        source: new VectorTileSource({
-            maxZoom: 42,
-            format: new MVT(),
-            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/branches/{z}/{x}/{y}.pbf",
-        }),
-        style: createBranchStyle(),
-        declutter: true,
-        renderMode: "vector",
-        renderBuffer: 256,
-    });
-
-    const rank_label_layer = new VectorTileLayer({
-        source: new VectorTileSource({
-            maxZoom: 42,
-            format: new MVT(),
-            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/ranks/{z}/{x}/{y}.pbf",
-        }),
-        style: createRankLabelStyleFunction(lang),
-        declutter: true,
-        renderMode: "vector",
-        renderBuffer: 256,
-    });
-
-    const polygons_layer = new VectorTileLayer({
+    const composite_layer = new VectorTileLayer({
         background: "#000",
         source: new VectorTileSource({
             maxZoom: 42,
             format: new MVT(),
-            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/polygons/{z}/{x}/{y}.pbf",
+            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf",
         }),
-        style: createRankPolygonStyleFunction(view),
+        style: createCompositeStyleFunction(view, lang),
         declutter: false,
         renderMode: "vector",
         updateWhileAnimating: true,
@@ -187,13 +159,7 @@ export function layer_ol(el, deck_layer, options) {
         overlays: [],
         target: el,
         view,
-        layers: [
-            polygons_layer,
-            rank_label_layer,
-            branches_layer,
-            deck_layer,
-            labels_layer,
-        ],
+        layers: [composite_layer, deck_layer, labels_layer],
     });
 
     map.on("moveend", on_move_end);
