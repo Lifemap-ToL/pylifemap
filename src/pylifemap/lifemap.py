@@ -16,7 +16,7 @@ from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
 from pylifemap.data import LifemapData
-from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, is_notebook
+from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, check_jupyter, check_marimo
 from pylifemap.widget import LifemapWidget
 
 
@@ -64,7 +64,6 @@ class Lifemap:
         zoom: int = 5,
         legend_width: int | None = None,
     ) -> None:
-
         # Init LifemapData object with data
         self.data = LifemapData(data, taxid_col=taxid_col)
 
@@ -126,17 +125,21 @@ class Lifemap:
         del options["self"]
         return options
 
-    def show(self) -> None:
+    def show(self) -> None | LifemapWidget:
         """
         Display the Jupyter widget for this instance.
 
-        In a notebook environment, the method uses `IPython.display.display` to display
-        the visualization directly. Otherwise, it exports the widget to an HTML file and
-        opens it in a browser if possible.
+        In a Jupyter notebook environment, the method uses `IPython.display.display` to
+        display the visualization directly. Otherwise, it exports the widget to an HTML
+        file and opens it in a browser if possible.
+
+        In a marimo notebook environment, the widget object is returned in order to be
+        passed to marimo.ui.anywidget().
         """
-        if is_notebook():
+        if check_marimo():
+            return self._to_widget()
+        if check_jupyter():
             display(self._to_widget())
-            return
         self._width = "100%"
         self._height = "100vh"
         if os.environ.get("PYLIFEMAP_DOCKER") == "1":

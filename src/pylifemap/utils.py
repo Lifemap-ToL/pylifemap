@@ -14,15 +14,34 @@ logger.addHandler(ch)
 logger.setLevel(logging.DEBUG)
 
 
-def is_notebook() -> bool:
+def check_marimo() -> bool:
     """
-    Checks if we are currently in a notebook.
+    Check if we are currently in a marimo notebook.
 
     Returns
     -------
     bool
-        True if we are running in a notebook environment, False otherwise.
+        True if we are running in a marimo notebook environment, False otherwise.
     """
+
+    try:
+        import marimo  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+def check_jupyter() -> bool:
+    """
+    Check if we are currently in a jupyter notebook.
+
+    Returns
+    -------
+    bool
+        True if we are running in a jupyter notebook environment, False otherwise.
+    """
+
     try:
         _ = get_ipython().__class__.__name__
         return True
