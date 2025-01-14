@@ -14,9 +14,15 @@ But it is also possible to use it in a Python script or in the Python REPL. In t
 
 ## Install locally
 
-You can install the package locally (preferably in a virtual environment) with [pip](https://pypi.org/project/pip/).
+For the moment only the development version can be installed from Github.
 
-For the moment only the development version can be installed from Github with the following command:
+You can add the package to a script or project with [uv](https://docs.astral.sh/uv/):
+
+```shell
+uv add git+https://github.com/Lifemap-ToL/pylifemap.git
+```
+
+You can also install it (preferably in a virtual environment) with [pip](https://pypi.org/project/pip/):
 
 ```shell
 pip install git+https://github.com/Lifemap-ToL/pylifemap.git
@@ -27,6 +33,18 @@ pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 You can try the package (without installing anything) in [Google Colab](https://colab.research.google.com/).
 
 The easiest way is by using our [introduction notebook](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb) directly in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb).
+
+## Run with `juv`
+
+[juv](https://github.com/manzt/juv) is a toolkit for reproducible Jupyter notebooks, powered by [uv](https://docs.astral.sh/uv/).
+
+You can easily create and run a notebook with `pylifemap` with:
+
+```shell
+juv init notebook.ipynb
+juv add notebook.ipynb git+https://github.com/Lifemap-ToL/pylifemap.git
+juv run notebook.ipynb
+```
 
 
 ## Run with Docker
