@@ -37,6 +37,7 @@ class LmData:
             logger.info("Newer data are available, downloading...")
             self.download_timestamp()
             self.download_data()
+            logger.info("Done.")
 
         self._data = pl.read_parquet(LMDATA_DATA_PATH)
 
