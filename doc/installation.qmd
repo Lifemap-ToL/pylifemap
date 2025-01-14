@@ -18,13 +18,13 @@ For the moment only the development version can be installed from Github.
 
 You can add the package to a script or project with [uv](https://docs.astral.sh/uv/):
 
-```shell
+```sh
 uv add git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
 You can also install it (preferably in a virtual environment) with [pip](https://pypi.org/project/pip/):
 
-```shell
+```sh
 pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
@@ -40,7 +40,7 @@ The easiest way is by using our [introduction notebook](https://colab.research.g
 
 You can easily create and run a notebook with `pylifemap` with:
 
-```shell
+```sh
 juv init notebook.ipynb
 juv add notebook.ipynb git+https://github.com/Lifemap-ToL/pylifemap.git
 juv run notebook.ipynb
