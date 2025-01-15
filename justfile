@@ -1,6 +1,3 @@
-get_lmdata:
-    uv run scripts/prepare_lmdata.py
-
 test:
     uv run pytest
 
