@@ -140,6 +140,7 @@ class Lifemap:
             return self._to_widget()
         if check_jupyter():
             display(self._to_widget())
+            return
         self._width = "100%"
         self._height = "100vh"
         if os.environ.get("PYLIFEMAP_DOCKER") == "1":
