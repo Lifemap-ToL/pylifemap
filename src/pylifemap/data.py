@@ -90,7 +90,7 @@ class LifemapData:
             lmdata, how="anti", left_on=self._taxid_col, right_on="taxid"
         )
         if (n := absent_ids.height) > 0:
-            msg = f"Warning: {n} taxids have not been found in Lifemap database."
+            msg = f"Warning: {n} taxids have not been found in Lifemap database"
             if n < 10:  # noqa: PLR2004
                 ids = absent_ids.get_column(self._taxid_col).to_list()
                 msg = msg + f": {ids}"
@@ -103,7 +103,7 @@ class LifemapData:
         taxids = self._data.get_column(self._taxid_col)
         duplicates = taxids.filter(taxids.is_duplicated()).unique()
         if (n := duplicates.len()) > 0:
-            msg = f"Warning: {n} duplicated taxids have been found in the data."
+            msg = f"Warning: {n} duplicated taxids have been found in the data"
             if n < 10:  # noqa: PLR2004
                 msg = msg + f": {duplicates.to_list()}"
             logger.warning(msg)
