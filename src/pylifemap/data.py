@@ -2,12 +2,11 @@
 Handling of Lifemap objects data.
 """
 
-import warnings
-
 import pandas as pd
 import polars as pl
 
 from pylifemap.lmdata import LMDATA
+from pylifemap.utils import logger
 
 
 class LifemapData:
@@ -91,11 +90,11 @@ class LifemapData:
             lmdata, how="anti", left_on=self._taxid_col, right_on="taxid"
         )
         if (n := absent_ids.height) > 0:
-            msg = f"{n} taxids have not been found in Lifemap database"
+            msg = f"Warning: {n} taxids have not been found in Lifemap database."
             if n < 10:  # noqa: PLR2004
                 ids = absent_ids.get_column(self._taxid_col).to_list()
                 msg = msg + f": {ids}"
-            warnings.warn(msg, stacklevel=0)
+            logger.warning(msg)
 
     def check_duplicated_taxids(self) -> None:
         """
@@ -104,10 +103,10 @@ class LifemapData:
         taxids = self._data.get_column(self._taxid_col)
         duplicates = taxids.filter(taxids.is_duplicated()).unique()
         if (n := duplicates.len()) > 0:
-            msg = f"{n} duplicated taxids have been found in the data"
+            msg = f"Warning: {n} duplicated taxids have been found in the data."
             if n < 10:  # noqa: PLR2004
                 msg = msg + f": {duplicates.to_list()}"
-            warnings.warn(msg, stacklevel=0)
+            logger.warning(msg)
 
     def data_with_parents(self) -> pl.DataFrame:
         """
@@ -316,6 +315,7 @@ class LifemapData:
             self._taxid_col,
             "pylifemap_x0",
             "pylifemap_y0",
+            "pylifemap_parent",
             "pylifemap_x1",
             "pylifemap_y1",
         ]
