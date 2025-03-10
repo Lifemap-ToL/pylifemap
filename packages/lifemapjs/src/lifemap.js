@@ -15,7 +15,9 @@ import { Control, defaults as defaultControls } from "ol/control.js";
 
 import * as Plot from "@observablehq/plot";
 
+const SOLR_API_URL = "https://lifemap-back.univ-lyon1.fr/solr";
 const OL_LAYERS = ["donuts", "points_ol"];
+const MAX_SOLR_QUERY = 100000;
 
 class LegendControl extends Control {
     constructor(opt_options) {
@@ -176,16 +178,85 @@ export function lifemap(el, data, layers, options = {}) {
         update_ol_layers(layers_list);
     };
 
-    map.update_data = function (data) {
+    // Get up-to-date taxids coordinates from lifemap-back solr server
+    async function get_coords(taxids) {
+        console.log("Getting up-to-date taxids coordinates...");
+        const url_taxids = [...taxids].join(" ");
+        const url = `${SOLR_API_URL}/taxo/select`;
+        const payload = {
+            params: {
+                q: "*:*",
+                fq: `taxid:(${url_taxids})`,
+                fl: "taxid,lat,lon",
+                wt: "json",
+                rows: taxids.size,
+            },
+        };
+        try {
+            const response = await fetch(url, {
+                method: "post",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+            let data = await response.json();
+            data = data.response.docs;
+            let result = {};
+            data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }));
+            return result;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    map.update_data = async function (data, layers) {
         let deserialized_data = {};
+        let taxids = new Set();
         for (let k in data) {
-            deserialized_data[k] = unserialize_data(data[k]);
+            let current_data = unserialize_data(data[k]);
+            deserialized_data[k] = current_data;
+            taxids = taxids.union(new Set(current_data.map((d) => d.taxid)));
+        }
+        if (taxids.size > MAX_SOLR_QUERY) {
+            console.log("Too many taxids to query for up-to-date coordinates.");
+        }
+        if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
+            // Get up-to-date coordinates from lifemap-back solr
+            let coords = await get_coords(taxids);
+            // If query succeeded, update coordinates with new values
+            if (coords !== null) {
+                for (let k in deserialized_data) {
+                    deserialized_data[k].forEach((d) => {
+                        const taxid_coords = coords[d.taxid];
+                        if (taxid_coords !== undefined) {
+                            if (d.pylifemap_x !== undefined) {
+                                d.pylifemap_x = taxid_coords.x;
+                                d.pylifemap_y = taxid_coords.y;
+                            }
+                            if (d.pylifemap_x0 !== undefined) {
+                                d.pylifemap_x0 = taxid_coords.x;
+                                d.pylifemap_y0 = taxid_coords.y;
+                            }
+                        }
+                        if (d.pylifemap_parent !== undefined) {
+                            const taxid_parent_coords = coords[d.pylifemap_parent];
+                            if (taxid_parent_coords !== undefined) {
+                                d.pylifemap_x1 = taxid_parent_coords.x;
+                                d.pylifemap_y1 = taxid_parent_coords.y;
+                            }
+                        }
+                    });
+                }
+            }
         }
         map.data = deserialized_data;
     };
 
-    map.update_data(data);
-    map.update_layers(layers);
-    el.map = map;
-    return map;
+    map.update_data(data, layers).then(() => {
+        map.update_layers(layers);
+        el.map = map;
+        return map;
+    });
 }
