@@ -4,23 +4,21 @@ import "./styles.css";
 
 function render({ model, el }) {
     // Traitlets
+    let width = () => model.get("width");
+    let height = () => model.get("height");
     let data = () => model.get("data");
     let layers = () => model.get("layers");
     let options = () => model.get("options");
-    let width = () => model.get("width");
-    let height = () => model.get("height");
 
     // Add container div
     const container = document.createElement("div");
+    container.style.height = height();
+    container.style.width = width();
     container.classList.add("pylifemap-map");
+    el.appendChild(container);
 
     // Create map
     const map = lifemap(container, data(), layers(), options());
-
-    container.style.height = height();
-    container.style.width = width();
-
-    el.appendChild(container);
 
     // Add traitlets change callback
     model.on("change:data", () => _onDataChanged(model, map));
