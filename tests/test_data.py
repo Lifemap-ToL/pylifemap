@@ -195,8 +195,9 @@ class TestLinesData:
 
     def test_lines_data(self, lmd_num):
         tmp = lmd_num.lines_data({"width_col": "value"})
-        assert tmp.shape == (10, 6)
+        assert tmp.shape == (10, 7)
         assert sorted(tmp.columns) == [
+            "pylifemap_parent",
             "pylifemap_x0",
             "pylifemap_x1",
             "pylifemap_y0",
