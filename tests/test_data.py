@@ -2,6 +2,8 @@
 Tests for LifemapData class.
 """
 
+import logging
+
 import pandas as pd
 import polars as pl
 import pytest
@@ -101,13 +103,15 @@ class TestLifemapDataMethods:
             )
         )
 
-    def test_check_unknown_taxids(self, data_absent):
-        with pytest.warns():
-            LifemapData(data_absent)
+    def test_check_unknown_taxids(self, caplog, data_absent):
+        caplog.set_level(logging.INFO)
+        LifemapData(data_absent)
+        assert "taxids have not been found" in caplog.text
 
-    def test_check_duplicated_taxids(self, data_dupl):
-        with pytest.warns():
-            LifemapData(data_dupl)
+    def test_check_duplicated_taxids(self, caplog, data_dupl):
+        caplog.set_level(logging.INFO)
+        LifemapData(data_dupl)
+        assert "duplicated taxids have been found" in caplog.text
 
 
 class TestPointsData:
