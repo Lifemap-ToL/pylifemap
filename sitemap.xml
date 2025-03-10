@@ -2,90 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/getting_started.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_freq.html</loc>
-    <lastmod>2025-03-10T14:17:05.921Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.939Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.html</loc>
-    <lastmod>2025-03-10T14:17:05.878Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.897Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_num.html</loc>
-    <lastmod>2025-03-10T14:17:05.917Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.935Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.show.html</loc>
-    <lastmod>2025-03-10T14:17:05.905Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.924Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_lines.html</loc>
-    <lastmod>2025-03-10T14:17:05.891Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.909Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/index.html</loc>
-    <lastmod>2025-03-10T14:17:05.861Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.880Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/changelog.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.803Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_heatmap.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_screengrid.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/index.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/development.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.803Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_lines.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_points.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_donuts.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_donuts.html</loc>
-    <lastmod>2025-03-10T14:17:05.897Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.915Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_screengrid.html</loc>
-    <lastmod>2025-03-10T14:17:05.904Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.922Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_heatmap.html</loc>
-    <lastmod>2025-03-10T14:17:05.901Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.919Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_points.html</loc>
-    <lastmod>2025-03-10T14:17:05.885Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.904Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_count.html</loc>
-    <lastmod>2025-03-10T14:17:05.912Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.930Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.save.html</loc>
-    <lastmod>2025-03-10T14:17:05.908Z</lastmod>
+    <lastmod>2025-03-10T14:28:53.926Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/installation.html</loc>
-    <lastmod>2025-03-10T14:16:30.121Z</lastmod>
+    <lastmod>2025-03-10T14:28:24.804Z</lastmod>
   </url>
 </urlset>
