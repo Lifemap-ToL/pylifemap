@@ -7,35 +7,33 @@ name = "pylifemap"
 version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 keywords = []
-authors = [
-  { name = "Julien Barnier", email = "julien.barnier@cnrs.fr" },
-]
+authors = [{ name = "Julien Barnier", email = "julien.barnier@cnrs.fr" }]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "anywidget[dev]>=0.9.13",
-  "ipywidgets>=8.1.5",
-  "pandas>=2.0.0",
-  "pickleshare>=0.7.5",
-  "platformdirs>=4.3.6",
-  "polars>=1.17.0",
-  "pyarrow>=17.0.0",
-  "requests>=2.32.3",
+    "anywidget[dev]>=0.9.18",
+    "ipywidgets>=8.1.7",
+    "pandas>=2.0.0",
+    "pickleshare>=0.7.5",
+    "platformdirs>=4.3.6",
+    "polars>=1.17.0",
+    "pyarrow>=17.0.0",
+    "requests>=2.32.3",
 ]
 
 
 [tool.uv]
 dev-dependencies = [
-    "jupyterlab>=4.3.0",
+    "jupyterlab>=4.4.2",
     "nbstripout>=0.7.1",
     "pytest>=8.3.3",
     "quartodoc>=0.8.1",
@@ -48,8 +46,6 @@ dev-dependencies = [
 Documentation = "https://github.com/Lifemap-ToL/pylifemap#readme"
 Issues = "https://github.com/Lifemap-ToL/pylifemap/issues"
 Source = "https://github.com/Lifemap-ToL/pylifemap"
-
-
 
 
 [tool.black]
@@ -124,4 +120,3 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
-
