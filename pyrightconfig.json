@@ -1,0 +1,4 @@
+{
+  "exclude": ["app/*", "**/.ipynb_checkpoints", "**/.venv"],
+  "typeCheckingMode": "standard"
+}
