@@ -6,7 +6,7 @@ title: Installation
 
 As it provides a Jupyter widget, `pylifemap` is primarily designed to be used in a notebook environment such as [Jupyter](https://jupyter.org) or [VSCode](https://code.visualstudio.com/docs/datascience/jupyter-notebooks). 
 
-But it is also possible to use it in a Python script or in the Python REPL. In this case you can use the [save()](`~pylifemap.Lifemap.save`) method to export the widget to an HTML file that can be opened later. You can also use the [show()](`~pylifemap.Lifemap.show`) method, ins this case the widget is exported to a temporary file and opened in the user's browser.
+But it is also possible to use it in a Python script or in the Python REPL. In this case you can use the [save()](`~pylifemap.Lifemap.save`) method to export the widget to an HTML file that can be opened later. You can also use the [show()](`~pylifemap.Lifemap.show`) method, in this case the widget is exported to a temporary file and opened in the user's browser.
 
 ::: {.callout-note}
 `pylifemap` visualizations can also be embedded in [Quarto](https://quarto.org) documents in HTML format.
