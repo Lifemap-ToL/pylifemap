@@ -1,115 +1,124 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "pylifemap"
 version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-keywords = []
 authors = [{ name = "Julien Barnier", email = "julien.barnier@cnrs.fr" }]
+keywords = []
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-    "anywidget[dev]>=0.9.18",
-    "ipywidgets>=8.1.7",
-    "pandas>=2.0.0",
-    "pickleshare>=0.7.5",
-    "platformdirs>=4.3.6",
-    "polars>=1.17.0",
-    "pyarrow>=20.0.0",
-    "requests>=2.32.3",
+  "anywidget[dev]>=0.9.18",
+  "ipywidgets>=8.1.7",
+  "pandas>=2.0.0",
+  "pickleshare>=0.7.5",
+  "platformdirs>=4.3.6",
+  "polars>=1.17.0",
+  "pyarrow>=20.0.0",
+  "requests>=2.32.3",
 ]
-
-
-[tool.uv]
-dev-dependencies = [
-    "jupyterlab>=4.4.2",
-    "nbstripout>=0.7.1",
-    "pytest>=8.3.3",
-    "quartodoc>=0.8.1",
-    "rust-just>=1.36.0",
-    "watchfiles>=0.24.0",
-]
-
 
 [project.urls]
 Documentation = "https://github.com/Lifemap-ToL/pylifemap#readme"
 Issues = "https://github.com/Lifemap-ToL/pylifemap/issues"
 Source = "https://github.com/Lifemap-ToL/pylifemap"
 
+[dependency-groups]
+dev = [
+  "basedpyright>=1.31.5",
+  "jupyterlab>=4.4.2",
+  "marimo>=0.16.3",
+  "nbstripout>=0.7.1",
+  "pytest>=8.3.3",
+  "python-lsp-server>=1.13.1",
+  "quartodoc>=0.11.1",
+  "ruff>=0.13.2",
+  "rust-just>=1.36.0",
+  "ty>=0.0.1a21",
+  "watchfiles>=0.24.0",
+]
 
-[tool.black]
-target-version = ["py310"]
-line-length = 88
-skip-string-normalization = true
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.basedpyright]
+include = ["src"]
+exclude = ["**/__pycache__", "**/__marimo__", ".venv", "notebooks/**"]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
 
 [tool.pytest.ini_options]
-testpaths = "tests"
-pythonpath = "src"
 filterwarnings = "ignore::DeprecationWarning"
-
+pythonpath = "src"
+testpaths = "tests"
 
 [tool.ruff]
-exclude = ["__pycache__", "__pypackages__", ".git"]
+extend-exclude = ["notebooks"]
 target-version = "py310"
 line-length = 88
 lint.select = [
-    "A",
-    "ARG",
-    "B",
-    "C",
-    "DTZ",
-    "E",
-    "EM",
-    "F",
-    "FBT",
-    "I",
-    "ICN",
-    "ISC",
-    "N",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "Q",
-    "RUF",
-    "S",
-    "T",
-    "TID",
-    "UP",
-    "W",
-    "YTT",
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
 ]
 lint.ignore = [
-    # Allow non-abstract empty methods in abstract base classes
-    "B027",
-    # Allow boolean positional values in function calls, like `dict.get(... True)`
-    "FBT003",
-    # Ignore checks for possible passwords
-    "S105",
-    "S106",
-    "S107",
-    # Ignore complexity
-    "C901",
-    "PLR0911",
-    "PLR0912",
-    "PLR0913",
-    "PLR0915",
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
 ]
 lint.unfixable = [
-    # Don't touch unused imports
-    "F401",
+  # Don't touch unused imports
+  "F401",
 ]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 110
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.ruff.lint.isort]
 known-first-party = ["pylifemap"]
@@ -120,3 +129,15 @@ ban-relative-imports = "all"
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.src]
+include = [
+  "src",
+  "tests",
+]
