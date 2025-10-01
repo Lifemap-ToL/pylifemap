@@ -174,8 +174,10 @@ export function lifemap(el, data, layers, options = {}) {
     }
 
     map.update_layers = function (layers_list) {
+        map.spinner.show()
         update_deck_layers(layers_list);
         update_ol_layers(layers_list);
+        map.spinner.hide()
     };
 
     // Get up-to-date taxids coordinates from lifemap-back solr server
@@ -212,6 +214,7 @@ export function lifemap(el, data, layers, options = {}) {
     }
 
     map.update_data = async function (data, layers) {
+        map.spinner.show()
         let deserialized_data = {};
         let taxids = new Set();
         for (let k in data) {
@@ -252,6 +255,7 @@ export function lifemap(el, data, layers, options = {}) {
             }
         }
         map.data = deserialized_data;
+        map.spinner.hide()
     };
 
     map.update_data(data, layers).then(() => {
