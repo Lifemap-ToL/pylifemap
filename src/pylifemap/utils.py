@@ -25,7 +25,7 @@ def check_marimo() -> bool:
     """
 
     try:
-        import marimo  # noqa: F401
+        import marimo  # type: ignore # basedpyright: ignore[reportUnusedImport]  # noqa: F401, PLC0415
 
         return True
     except ImportError:
@@ -43,7 +43,7 @@ def check_jupyter() -> bool:
     """
 
     try:
-        _ = get_ipython().__class__.__name__
+        _ = get_ipython().__class__.__name__  # type: ignore
         return True
     except NameError:
         return False
