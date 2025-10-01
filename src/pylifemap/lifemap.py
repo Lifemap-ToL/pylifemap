@@ -177,9 +177,7 @@ class Lifemap:
         ... )
 
         """
-        embed_minimal_html(
-            path, views=[self._to_widget()], drop_defaults=False, title=title
-        )
+        embed_minimal_html(path, views=[self._to_widget()], drop_defaults=False, title=title)
 
     def layer_points(
         self,
@@ -242,15 +240,25 @@ class Lifemap:
         --------
         >>> import polars as pl
         >>> from pylifemap import Lifemap
-        >>> d = pl.DataFrame({
-        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
-        ...     "value": [ 7.4,  2.5,  8.3,     1.0,     1.4,     5.6,     4.6,     3.4,     2.3,     2.8,    3.1]
-        ... })
-        >>> (
-        ...     Lifemap(d)
-        ...     .layer_points(radius_col="value", fill_col="value", popup=True)
-        ...     .show()
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...         "value": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],
+        ...     }
         ... )
+        >>> (Lifemap(d).layer_points(radius_col="value", fill_col="value", popup=True).show())
 
 
         See also
@@ -258,7 +266,7 @@ class Lifemap:
         [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
-        """  # noqa: E501
+        """
         options = self._process_options(locals())
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
@@ -344,16 +352,26 @@ class Lifemap:
         --------
         >>> import polars as pl
         >>> from pylifemap import Lifemap, aggregate_freq
-        >>> d = pl.DataFrame({
-        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
-        ...     "category": ["a", "b", "b", "a", "a", "c", "a", "b", "b", "a", "b"]
-        ... })
-        >>> d = aggregate_freq(d, column="category")
-        >>> (
-        ...     Lifemap(d)
-        ...     .layer_donuts(counts_col="category", leaves="hide")
-        ...     .show()
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...         "category": ["a", "b", "b", "a", "a", "c", "a", "b", "b", "a", "b"],
+        ...     }
         ... )
+        >>> d = aggregate_freq(d, column="category")
+        >>> (Lifemap(d).layer_donuts(counts_col="category", leaves="hide").show())
 
 
         See also
@@ -361,7 +379,7 @@ class Lifemap:
         [](c) : aggregation of the values counts of a
         categorical variable.
 
-        """  # noqa: E501
+        """
         options = self._process_options(locals())
         leaves_values = ["show", "hide"]
         if options["leaves"] not in leaves_values:
@@ -437,16 +455,26 @@ class Lifemap:
         --------
         >>> import polars as pl
         >>> from pylifemap import Lifemap, aggregate_num
-        >>> d = pl.DataFrame({
-        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
-        ...     "value": [ 7.4,  2.5,  8.3,     1.0,     1.4,     5.6,     4.6,     3.4,     2.3,     2.8,    3.1]
-        ... })
-        >>> d = aggregate_num(d, column="value", fn="mean")
-        >>> (
-        ...     Lifemap(d)
-        ...     .layer_lines(width_col="value", color_col="value")
-        ...     .show()
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...         "value": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],
+        ...     }
         ... )
+        >>> d = aggregate_num(d, column="value", fn="mean")
+        >>> (Lifemap(d).layer_lines(width_col="value", color_col="value").show())
 
 
         See also
@@ -454,7 +482,7 @@ class Lifemap:
         [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
-        """  # noqa: E501
+        """
         options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
@@ -500,16 +528,26 @@ class Lifemap:
         --------
         >>> import polars as pl
         >>> from pylifemap import Lifemap
-        >>> d = pl.DataFrame({
-        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
-        ... })
-        >>> (
-        ...     Lifemap(d)
-        ...     .layer_heatmap()
-        ...     .show()
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...     }
         ... )
+        >>> (Lifemap(d).layer_heatmap().show())
 
-        """  # noqa: E501
+        """
 
         options = self._process_options(locals())
         layer = {"layer": "heatmap", "options": options}
@@ -563,16 +601,26 @@ class Lifemap:
         --------
         >>> import polars as pl
         >>> from pylifemap import Lifemap
-        >>> d = pl.DataFrame({
-        ...     "taxid": [9685, 9615, 9994, 2467430, 2514524, 2038938, 1021470, 1415565, 1928562, 1397240, 230741],
-        ... })
-        >>> (
-        ...     Lifemap(d)
-        ...     .layer_screengrid()
-        ...     .show()
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...     }
         ... )
+        >>> (Lifemap(d).layer_screengrid().show())
 
-        """  # noqa: E501
+        """
         options = self._process_options(locals())
         layer = {"layer": "screengrid", "options": options}
         self._layers.append(layer)

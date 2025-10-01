@@ -28,7 +28,7 @@ class LifemapWidget(anywidget.AnyWidget):
     width
         Widget width string traitlet.
     height
-        Widhet height string traitlet.
+        Widget height string traitlet.
     """
 
     # Static JS and CSS for widet are accessed through bundled files
@@ -46,9 +46,7 @@ class LifemapWidget(anywidget.AnyWidget):
     width = traitlets.Unicode().tag(sync=True)
     height = traitlets.Unicode().tag(sync=True)
 
-    def __init__(
-        self, data: dict, layers: list, options: dict, width: str, height: str
-    ) -> None:
+    def __init__(self, data: dict, layers: list, options: dict, width: str, height: str) -> None:
         """
         Widget class constructor.
 
@@ -66,6 +64,4 @@ class LifemapWidget(anywidget.AnyWidget):
             Widget height as CSS string.
         """
         data = {k: serialize_data(v) for k, v in data.items()}
-        super().__init__(
-            data=data, layers=layers, options=options, width=width, height=height
-        )
+        super().__init__(data=data, layers=layers, options=options, width=width, height=height)
