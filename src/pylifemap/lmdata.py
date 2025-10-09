@@ -34,7 +34,7 @@ class LmData:
 
         download = not self.lmdata_ok()
         if download:
-            logger.info("Newer data are available, downloading...")
+            logger.info("Newer data available, downloading...")
             self.download_timestamp()
             self.download_data()
             logger.info("Done.")
