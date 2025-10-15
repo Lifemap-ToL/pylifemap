@@ -163,10 +163,6 @@ export function lifemap(el, data, layers, options = {}) {
         const layers_list = layers_def.filter((d) => OL_LAYERS.includes(d.layer));
         const ol_layers = convert_layers(layers_list, map);
         if (layers_list.length == 0) return;
-        // for (let l of ol_layers) {
-        //     map.removeLayer(l);
-        //     l.dispose();
-        // }
         ol_layers.forEach((l) => {
             map.addLayer(l);
         });
@@ -175,6 +171,12 @@ export function lifemap(el, data, layers, options = {}) {
 
     map.update_layers = function (layers_list) {
         map.spinner.show()
+        map.getLayers().getArray().forEach((l)=> {
+            if (l.is_webgl) {
+                map.removeLayer(l)
+                l.dispose()
+            }
+        })
         update_deck_layers(layers_list);
         update_ol_layers(layers_list);
         map.spinner.hide()
