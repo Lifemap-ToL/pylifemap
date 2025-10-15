@@ -224,18 +224,26 @@ function create_spinner(el) {
 }
 
 function create_popup() {
-    const container = document.createElement("div");
-    container.id = "lifemap-popup";
-    const content = document.createElement("div");
-    content.id = "lifemap-popup-content";
-    container.appendChild(content);
-    const closer = document.createElement("div");
-    closer.id = "lifemap-popup-closer";
-    closer.innerHTML = "<a href='#'>✕</a>";
-    container.appendChild(closer);
+    const container = document.createElement("div")
+    container.id = "lifemap-popup"
+    const content = document.createElement("div")
+    content.id = "lifemap-popup-content"
+    container.appendChild(content)
+    const closer = document.createElement("div")
+    closer.id = "lifemap-popup-closer"
+    closer.innerHTML = "<a href='#'>✕</a>"
+    container.appendChild(closer)
 
-    container.content = content;
-    container.closer = closer;
+    container.content = content
+    container.closer = closer
 
-    return container;
+    container.addEventListener(
+        "wheel",
+        function (e) {
+            // Prevent the default scroll behavior
+            e.preventDefault()
+        },
+        { passive: false }
+    )
+    return container
 }
