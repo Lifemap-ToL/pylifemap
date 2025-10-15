@@ -2,6 +2,7 @@ import { layer_ol } from "./layers/layer_ol";
 import { layer_heatmap } from "./layers/layer_heatmap";
 import { layer_points } from "./layers/layer_points";
 import { layer_points_ol } from "./layers/layer_points_ol";
+import { layer_heatmap_ol } from "./layers/layer_heatmap_ol";
 import { layer_grid } from "./layers/layer_grid";
 import { layer_screengrid } from "./layers/layer_screen_grid";
 import { layer_lines } from "./layers/layer_lines";
@@ -16,7 +17,7 @@ import { Control, defaults as defaultControls } from "ol/control.js";
 import * as Plot from "@observablehq/plot";
 
 const SOLR_API_URL = "https://lifemap-back.univ-lyon1.fr/solr";
-const OL_LAYERS = ["donuts", "points_ol"];
+const OL_LAYERS = ["donuts", "points_ol", "heatmap_ol", "lines_ol"];
 const MAX_SOLR_QUERY = 100000;
 
 class LegendControl extends Control {
@@ -79,6 +80,8 @@ export function lifemap(el, data, layers, options = {}) {
         switch (layer_def.layer) {
             case "points_ol":
                 return layer_points_ol(map, layer_data, layer_def.options ?? {});
+            case "heatmap_ol":
+                return layer_heatmap_ol(map, layer_data, layer_def.options ?? {});
             case "points":
                 return layer_points(map, layer_data, layer_def.options ?? {});
             case "lines":
