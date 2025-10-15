@@ -31,13 +31,9 @@ class LifemapWidget(anywidget.AnyWidget):
         Widget height string traitlet.
     """
 
-    # Static JS and CSS for widet are accessed through bundled files
-    _esm = anywidget._file_contents.FileContents(  # type: ignore
-        BUNDLER_OUTPUT_DIR / "widget.js", start_thread=False
-    )
-    _css = anywidget._file_contents.FileContents(  # type: ignore
-        BUNDLER_OUTPUT_DIR / "widget.css", start_thread=False
-    )
+    # Static JS and CSS for widget are accessed through bundled files
+    _esm = pathlib.Path(BUNDLER_OUTPUT_DIR / "widget.js")
+    _css = pathlib.Path(BUNDLER_OUTPUT_DIR / "widget.css")
 
     # traitlets
     data = traitlets.Dict().tag(sync=True)
