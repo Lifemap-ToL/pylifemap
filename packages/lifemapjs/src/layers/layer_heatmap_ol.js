@@ -47,7 +47,6 @@ export function layer_heatmap_ol(map, data, options = {}) {
     layer.setOpacity(opacity)
 
     layer.lifemap_ol_id = id
-    layer.lifemap_ol_layer = true
     layer.lifemap_ol_scales = []
     layer.is_webgl = true
 

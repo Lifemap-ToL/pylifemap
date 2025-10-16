@@ -183,7 +183,6 @@ export function layer_points_ol(map, data, options = {}) {
         set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }
     layer.lifemap_ol_id = id
-    layer.lifemap_ol_layer = true
     layer.lifemap_ol_scales = scales
     layer.is_webgl = true
     return layer

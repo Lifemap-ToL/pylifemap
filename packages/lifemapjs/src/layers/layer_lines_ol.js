@@ -30,7 +30,6 @@ export function layer_lines_ol(map, data, options = {}) {
         opacity = 0.8,
         popup = false,
         hover = false,
-        scale_extent = null,
         width_range = [1, 20],
     } = options
 
@@ -170,7 +169,6 @@ export function layer_lines_ol(map, data, options = {}) {
     }
 
     layer.lifemap_ol_id = id
-    layer.lifemap_ol_layer = true
     layer.lifemap_ol_scales = scales
     layer.is_webgl = true
     return layer
