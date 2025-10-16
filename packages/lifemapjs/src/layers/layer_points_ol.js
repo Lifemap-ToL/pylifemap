@@ -1,4 +1,10 @@
-import { guidGenerator, DEFAULT_CAT_SCHEME, DEFAULT_NUM_SCHEME } from "../utils"
+import {
+    guidGenerator,
+    set_popup_event,
+    set_hover_event,
+    DEFAULT_CAT_SCHEME,
+    DEFAULT_NUM_SCHEME,
+} from "../utils"
 
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
@@ -144,42 +150,20 @@ export function layer_points_ol(map, data, options = {}) {
     const layer = new WebGLVectorLayer({
         source: source,
         style: style,
-        disableHitDetection: true,
+        disableHitDetection: false,
         declutter: false,
     })
     layer.setOpacity(opacity)
 
     // Hover
-    let selected_feature = null
     if (hover) {
-        map.on("pointermove", function (ev) {
-            if (selected_feature !== null) {
-                selected_feature.set("hover", 0)
-                selected_feature = null
-            }
-
-            map.forEachFeatureAtPixel(
-                ev.pixel,
-                function (feature) {
-                    feature.set("hover", 1)
-                    selected_feature = feature
-                    return true
-                },
-                { layerFilter: (d) => d.lifemap_ol_id == id }
-            )
-        })
+        let selected_feature = null
+        set_hover_event(map, id, selected_feature)
     }
 
     // Popup
     if (popup) {
-        map.on("click", function (ev) {
-            const feature = map.forEachFeatureAtPixel(ev.pixel, (feature) => feature, {
-                layerFilter: (d) => d.lifemap_ol_id == id,
-            })
-            if (!feature) {
-                return
-            }
-            map.dispose_popup()
+        const content_fn = (feature) => {
             let content = `<table><tbody><tr><td class='right'><strong>TaxId:</td><td>${feature.get("data").taxid}</td></tr>`
             content +=
                 radius_col !== null && radius_col != fill_col
@@ -189,16 +173,15 @@ export function layer_points_ol(map, data, options = {}) {
                 ? `<tr><td class='right'><strong>${fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
                 : ""
             content += "</tbody></table>"
-
-            const coordinates = [
-                feature.get("data").pylifemap_x,
-                feature.get("data").pylifemap_y,
-            ]
-            const offset = [0, -5]
-            map.show_popup(coordinates, content, offset)
-        })
+            return content
+        }
+        const coordinates_fn = (feature) => [
+            feature.get("data").pylifemap_x,
+            feature.get("data").pylifemap_y,
+        ]
+        const offset = [0, -5]
+        set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }
-
     layer.lifemap_ol_id = id
     layer.lifemap_ol_layer = true
     layer.lifemap_ol_scales = scales
