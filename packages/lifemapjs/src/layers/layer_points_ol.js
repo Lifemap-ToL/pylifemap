@@ -138,7 +138,6 @@ export function layer_points_ol(map, data, options = {}) {
     const style = {
         "circle-radius": circle_radius,
         "circle-fill-color": circle_fill_color,
-        "circle-opacity": opacity,
     }
 
     // Layer definition
@@ -148,6 +147,7 @@ export function layer_points_ol(map, data, options = {}) {
         disableHitDetection: false,
         declutter: true,
     })
+    layer.setOpacity(opacity)
 
     // Hover
     let selected_feature = null

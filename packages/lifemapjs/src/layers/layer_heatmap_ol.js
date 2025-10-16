@@ -41,10 +41,10 @@ export function layer_heatmap_ol(map, data, options = {}) {
         source: source,
         blur: blur,
         radius: radius,
-        opacity: opacity,
         weight: 1.0,
         gradient: gradient,
     })
+    layer.setOpacity(opacity)
 
     layer.lifemap_ol_id = id
     layer.lifemap_ol_layer = true
