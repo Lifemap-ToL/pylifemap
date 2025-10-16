@@ -27,10 +27,8 @@ export function layer_points_ol(map, data, options = {}) {
     } = options
 
     let scales = []
-    let popup_obj = map.popup
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    console.log(radius_range)
     // Radius function
     let get_radius_col_fn = function (data, radius_col) {
         if (radius_col == null) {
