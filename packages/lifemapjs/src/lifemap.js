@@ -6,6 +6,7 @@ import { layer_heatmap_ol } from "./layers/layer_heatmap_ol";
 import { layer_grid } from "./layers/layer_grid";
 import { layer_screengrid } from "./layers/layer_screen_grid";
 import { layer_lines } from "./layers/layer_lines";
+import { layer_lines_ol } from "./layers/layer_lines_ol";
 import { layer_donuts } from "./layers/layer_donuts";
 import { unserialize_data, stringify_scale } from "./utils";
 
@@ -86,6 +87,8 @@ export function lifemap(el, data, layers, options = {}) {
                 return layer_points(map, layer_data, layer_def.options ?? {});
             case "lines":
                 return layer_lines(map, layer_data, layer_def.options ?? {});
+            case "lines_ol":
+                return layer_lines_ol(map, layer_data, layer_def.options ?? {});
             case "heatmap":
                 return layer_heatmap(map, layer_data, layer_def.options ?? {});
             case "grid":
