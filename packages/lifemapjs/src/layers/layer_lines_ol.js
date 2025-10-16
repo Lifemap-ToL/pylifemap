@@ -131,8 +131,8 @@ export function layer_lines_ol(map, data, options = {}) {
     const layer = new WebGLVectorLayer({
         source: source,
         style: style,
-        disableHitDetection: false,
-        declutter: true,
+        disableHitDetection: true,
+        declutter: false,
     })
     layer.setOpacity(opacity)
 
