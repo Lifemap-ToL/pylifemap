@@ -283,7 +283,7 @@ class Lifemap:
         leaves: Literal["show", "only", "omit"] = "show",
         radius: float = 5,
         radius_col: str | None = None,
-        radius_range: tuple | list = (1, 20),
+        radius_range: tuple | list = (2, 30),
         fill_col: str | None = None,
         fill_col_cat: bool | None = None,
         scheme: str | None = None,
@@ -309,7 +309,7 @@ class Lifemap:
         radius_col : str | None, optional
             Name of a numeric DataFrame column to compute points radius, by default None
         radius_range : tuple | list
-            Range of values for points radius, only used if radius_col is not None, by default (1, 20)
+            Range of values for points radius, only used if radius_col is not None, by default (2, 30)
         fill_col : str | None, optional
             Name of a DataFrame column to determine points color, by default None
         fill_col_cat : bool | None, optional
@@ -655,7 +655,7 @@ class Lifemap:
         *,
         width: float = 3,
         width_col: str | None = None,
-        width_range: tuple | list = (1, 20),
+        width_range: tuple | list = (1, 30),
         color_col: str | None = None,
         scheme: str | None = None,
         opacity: float = 0.8,
@@ -676,7 +676,7 @@ class Lifemap:
         width_col : str | None, optional
             Name of numeric DataFrame column to compute line width, by default None
         width_range : tuple | list
-            Min and max values for line widths, only used if width_col is not None, by default (1, 20)
+            Min and max values for line widths, only used if width_col is not None, by default (1, 30)
         color_col : str | None, optional
             Name of numeric DataFrame column to determine line color, by default None
         scheme : str | None, optional
