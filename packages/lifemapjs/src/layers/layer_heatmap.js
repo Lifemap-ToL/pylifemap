@@ -1,41 +1,59 @@
-import { HeatmapLayer } from "@deck.gl/aggregation-layers";
-import { guidGenerator } from "../utils";
+import { guidGenerator } from "../utils"
+
+import Feature from "ol/Feature.js"
+import Point from "ol/geom/Point.js"
+import Vector from "ol/source/Vector.js"
+import HeatmapLayer from "ol/layer/Heatmap.js"
+import { fromLonLat } from "ol/proj.js"
 
 export function layer_heatmap(map, data, options = {}) {
     let {
-        id = undefined,
+        id = null,
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
-        radius = 30,
-        intensity = 5,
-        threshold = 0.05,
-        opacity = 0.5,
-        color_range = undefined,
-    } = options;
-
-    id = `lifemap-ol-${id ?? guidGenerator()}`;
-
-    const layer = new HeatmapLayer({
-        data: data,
-        id: id,
-        pickable: false,
-        getPosition: (d) => [d[x_col], d[y_col]],
-        getWeight: 1,
-        radiusPixels: radius,
-        intensity: intensity,
-        threshold: threshold,
-        opacity: opacity,
-        colorRange: color_range ?? [
-            [255, 255, 178],
-            [254, 217, 118],
-            [254, 178, 76],
-            [253, 141, 60],
-            [240, 59, 32],
-            [189, 0, 38],
+        radius = 5.0,
+        blur = 5.0,
+        opacity = 1.0,
+        gradient = [
+            "#4675ed",
+            "#39a2fc",
+            "#1bcfd4",
+            "#24eca6",
+            "#61fc6c",
+            "#a4fc3b",
+            "#d1e834",
+            "#f3363a",
         ],
-        debounceTimeout: 50,
-    });
+    } = options
 
-    layer.lifemap_ol_id = id;
-    return layer;
+    id = `lifemap-ol-${id ?? guidGenerator()}`
+
+    const n_features = data.length
+    const features = new Array(n_features)
+    for (let i = 0; i < n_features; i++) {
+        let line = data[i]
+        const coordinates = fromLonLat([line[x_col], line[y_col]])
+        features[i] = new Feature({
+            geometry: new Point(coordinates),
+        })
+    }
+    const source = new Vector({
+        features: features,
+    })
+
+    // Layer definition
+    const layer = new HeatmapLayer({
+        source: source,
+        blur: blur,
+        radius: radius,
+        weight: 1.0,
+        gradient: gradient,
+    })
+    layer.setOpacity(opacity)
+
+    layer.lifemap_ol_id = id
+    layer.lifemap_ol_scales = []
+    layer.is_webgl = true
+
+    return layer
 }

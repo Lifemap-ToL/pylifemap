@@ -1,7 +1,18 @@
-import { LineLayer } from "@deck.gl/layers";
-import { guidGenerator, DEFAULT_NUM_SCHEME } from "../utils";
-import * as d3 from "d3";
-import * as Plot from "@observablehq/plot";
+import {
+    guidGenerator,
+    set_popup_event,
+    set_hover_event,
+    DEFAULT_NUM_SCHEME,
+} from "../utils"
+
+import Feature from "ol/Feature.js"
+import WebGLVectorLayer from "ol/layer/WebGLVector.js"
+import { fromLonLat } from "ol/proj.js"
+
+import * as d3 from "d3"
+import * as Plot from "@observablehq/plot"
+import VectorSource from "ol/source/Vector.js"
+import { LineString } from "ol/geom"
 
 export function layer_lines(map, data, options = {}) {
     let {
@@ -15,46 +26,45 @@ export function layer_lines(map, data, options = {}) {
         color_col = null,
         label = null,
         scheme = null,
-        opacity = 0.6,
+        opacity = 0.8,
         popup = false,
-        scale_extent = null,
-    } = options;
+        hover = false,
+        width_range = [1, 20],
+    } = options
 
-    let scales = [];
-    let popup_obj = map.popup;
+    let scales = []
 
-    id = `lifemap-ol-${id ?? guidGenerator()}`;
+    id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    // Width column
-    let get_width, width_scale;
-    if (width_col !== null) {
-        const max_value =
-            scale_extent !== null
-                ? scale_extent[1]
-                : d3.max(data, (d) => Number(d[width_col]));
-        const min_value =
-            scale_extent !== null
-                ? scale_extent[0]
-                : d3.min(data, (d) => Number(d[width_col]));
-        get_width = (d) => (Number(d[width_col]) - min_value) / max_value;
-        width_scale = width ?? 20;
-    } else {
-        get_width = 1;
-        width_scale = width ?? 4;
+    // Width function
+    let get_width_col_fn = function (data, col) {
+        if (col == null) {
+            return null
+        }
+        const min_domain = d3.min(data, (d) => Number(d[col]))
+        const max_domain = d3.max(data, (d) => Number(d[col]))
+        const [min_range, max_range] = width_range
+
+        const fn = (d) => {
+            return (
+                min_range +
+                ((Number(d) - min_domain) / (max_domain - min_domain)) *
+                    (max_range - min_range)
+            )
+        }
+        return fn
     }
 
-    // Color column
-    let get_color;
-    if (color_col !== null) {
-        const max_value =
-            scale_extent !== null
-                ? scale_extent[1]
-                : d3.max(data, (d) => Number(d[color_col]));
-        const min_value =
-            scale_extent !== null
-                ? scale_extent[0]
-                : d3.min(data, (d) => Number(d[color_col]));
-        scheme = scheme ?? DEFAULT_NUM_SCHEME;
+    // Color function
+    let get_color_col_fn = function (data, col) {
+        if (col == null) {
+            return null
+        }
+        let fn
+        // Linear color scale
+        const max_value = d3.max(data, (d) => Number(d[col]))
+        const min_value = d3.min(data, (d) => Number(d[col]))
+        scheme = scheme ?? DEFAULT_NUM_SCHEME
         const scale = {
             color: {
                 type: "linear",
@@ -62,54 +72,103 @@ export function layer_lines(map, data, options = {}) {
                 domain: [min_value, max_value],
             },
             className: "lifemap-ol-lin-legend",
-            label: label ?? color_col,
-        };
-        scales.push(scale);
-        get_color = (d) => {
-            const col = d3.color(Plot.scale(scale).apply(Number(d[color_col]))).rgb();
-            return [col["r"], col["g"], col["b"]];
-        };
-    } else {
-        get_color = [200, 0, 0];
+            label: label ?? col,
+        }
+        scales.push(scale)
+        fn = (d) => Plot.scale(scale).apply(Number(d))
+        return fn
     }
 
-    // Popup
-    // TODO : doesn't work
-    if (popup) {
-        onclick = ({ object }) => {
-            if (object === undefined) return;
-            let content = `<p><strong>TaxId:</strong> ${object.taxid}<br>`;
-            content +=
-                width_col !== null
-                    ? `<strong>${width_col}:</strong> ${object[width_col]}<br>`
-                    : "";
-            content +=
-                fill_col !== null
-                    ? `<strong>${color_col}:</strong> ${object[color_col]}<br>`
-                    : "";
-            content += "</p>";
-            popup_obj = popup_obj.setLatLng([object.lat, object.lon]).setContent(content);
-            map.openPopup(popup_obj);
-        };
+    // Create features
+    const n_features = data.length
+    const features = new Array(n_features)
+    const width_col_fn = get_width_col_fn(data, width_col)
+    const color_col_fn = get_color_col_fn(data, color_col)
+
+    for (let i = 0; i < n_features; i++) {
+        let line = data[i]
+        features[i] = new Feature({
+            geometry: new LineString([
+                fromLonLat([line[x_col0], line[y_col0]]),
+                fromLonLat([line[x_col1], line[y_col1]]),
+            ]),
+            data: line,
+        })
+        if (width_col_fn != null) {
+            features[i].set("width_col", width_col_fn(line[width_col]))
+        }
+        if (color_col != null) {
+            features[i].set("color_col", color_col_fn(line[color_col]))
+        }
+    }
+    const source = new VectorSource({
+        features: features,
+    })
+
+    // Width style
+    let stroke_width
+    if (width_col !== null) {
+        stroke_width = ["get", "width_col"]
+    } else {
+        stroke_width = width
+    }
+    // Color style
+    let stroke_color
+    if (color_col !== null) {
+        stroke_color = ["get", "color_col"]
+    } else {
+        stroke_color = scheme ?? "#DD0000"
+    }
+    if (hover) {
+        stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]
+    }
+
+    const style = {
+        "stroke-width": stroke_width,
+        "stroke-color": stroke_color,
+        "stroke-line-cap": "round",
+        "stroke-line-join": "round",
     }
 
     // Layer definition
-    const layer = new LineLayer({
-        id: id,
-        data: data,
-        widthUnits: "pixels",
-        widthScale: width_scale,
-        widthMinPixels: 3,
-        getSourcePosition: (d) => [d[x_col0], d[y_col0], 0],
-        getTargetPosition: (d) => [d[x_col1], d[y_col1], 0],
-        getWidth: get_width,
-        getColor: get_color,
-        opacity: opacity,
-        pickable: popup,
-        autoHighlight: false,
-    });
+    const layer = new WebGLVectorLayer({
+        source: source,
+        style: style,
+        disableHitDetection: false,
+        declutter: false,
+    })
+    layer.setOpacity(opacity)
 
-    layer.lifemap_ol_id = id;
-    layer.lifemap_ol_scales = scales;
-    return layer;
+    // Hover
+    if (hover) {
+        let selected_feature = null
+        set_hover_event(map, id, selected_feature)
+    }
+
+    // Popup
+    if (popup) {
+        const content_fn = (feature) => {
+            let content = `<table><tbody><tr><td class='right'><strong>TaxId:</td><td>${feature.get("data").taxid}</td></tr>`
+            content +=
+                width_col !== null && width_col != color_col
+                    ? `<tr><td class='right'><strong>${width_col}:</strong></td><td>${feature.get("data")[width_col]}</td></tr>`
+                    : ""
+            content += color_col
+                ? `<tr><td class='right'><strong>${color_col}:</strong></td><td>${feature.get("data")[color_col]}</td></tr>`
+                : ""
+            content += "</tbody></table>"
+            return content
+        }
+        const coordinates_fn = (feature) => [
+            (feature.get("data").pylifemap_x0 + feature.get("data").pylifemap_x1) / 2,
+            (feature.get("data").pylifemap_y0 + feature.get("data").pylifemap_y1) / 2,
+        ]
+        const offset = [0, -5]
+        set_popup_event(map, id, coordinates_fn, content_fn, offset)
+    }
+
+    layer.lifemap_ol_id = id
+    layer.lifemap_ol_scales = scales
+    layer.is_webgl = true
+    return layer
 }

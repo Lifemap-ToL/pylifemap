@@ -1,9 +1,6 @@
 // OL
 import Map from "ol/Map"
-import { Tile as TileLayer } from "ol/layer"
-import { WebGLTile } from "ol/layer"
 import View from "ol/View"
-import XYZ from "ol/source/XYZ"
 import Overlay from "ol/Overlay.js"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { getBottomLeft, getTopRight } from "ol/extent.js"
@@ -16,11 +13,11 @@ import VectorTileLayer from "ol/layer/VectorTile"
 import VectorTileSource from "ol/source/VectorTile"
 import { MVT } from "ol/format"
 
-import { Style, Circle, Fill, Stroke } from "ol/style.js"
+import { Style, Fill, Stroke } from "ol/style.js"
 import Text from "ol/style/Text.js"
 import { createCompositeStyleFunction } from "../styles/ol_styles"
 
-export function layer_ol(el, deck_layer, options) {
+export function layer_basemap(el, deck_layer, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options
     const lang = "en"
 
