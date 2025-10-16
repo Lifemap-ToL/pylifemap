@@ -30,12 +30,12 @@ export function layer_points_ol(map, data, options = {}) {
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
     // Radius function
-    let get_radius_col_fn = function (data, radius_col) {
-        if (radius_col == null) {
+    let get_radius_col_fn = function (data, col) {
+        if (col == null) {
             return null
         }
-        const min_domain = d3.min(data, (d) => Number(d[radius_col]))
-        const max_domain = d3.max(data, (d) => Number(d[radius_col]))
+        const min_domain = d3.min(data, (d) => Number(d[col]))
+        const max_domain = d3.max(data, (d) => Number(d[col]))
         const [min_range, max_range] = radius_range
 
         const fn = (d) => {
@@ -49,22 +49,22 @@ export function layer_points_ol(map, data, options = {}) {
     }
 
     // Fill color function
-    let get_fill_col_fn = function (data, fill_col, fill_col_cat) {
-        if (fill_col == null) {
+    let get_fill_col_fn = function (data, col, cat) {
+        if (col == null) {
             return null
         }
         // Determine if scale is categorical or linear
-        if (fill_col_cat === null) {
-            fill_col_cat = !(
-                ["number", "bigint"].includes(typeof data[0][fill_col]) &
-                ([...new Set(data.map((d) => d[fill_col]))].length > 10)
+        if (cat === null) {
+            cat = !(
+                ["number", "bigint"].includes(typeof data[0][col]) &
+                ([...new Set(data.map((d) => d[col]))].length > 10)
             )
         }
         let fn
         // Linear color scale
-        if (!fill_col_cat) {
-            const max_value = d3.max(data, (d) => Number(d[fill_col]))
-            const min_value = d3.min(data, (d) => Number(d[fill_col]))
+        if (!cat) {
+            const max_value = d3.max(data, (d) => Number(d[col]))
+            const min_value = d3.min(data, (d) => Number(d[col]))
             scheme = scheme ?? DEFAULT_NUM_SCHEME
             const scale = {
                 color: {
@@ -73,7 +73,7 @@ export function layer_points_ol(map, data, options = {}) {
                     domain: [min_value, max_value],
                 },
                 className: "lifemap-ol-lin-legend",
-                label: label ?? fill_col,
+                label: label ?? col,
             }
             scales.push(scale)
             fn = (d) => Plot.scale(scale).apply(Number(d))
@@ -81,12 +81,12 @@ export function layer_points_ol(map, data, options = {}) {
         // Categorical color scale
         else {
             scheme = scheme ?? DEFAULT_CAT_SCHEME
-            const domain = [...new Set(data.map((d) => d[fill_col]))].sort()
+            const domain = [...new Set(data.map((d) => d[col]))].sort()
             const scale = {
                 color: { type: "categorical", scheme: scheme, domain: domain },
                 columns: 1,
                 className: "lifemap-ol-cat-legend",
-                label: label ?? fill_col,
+                label: label ?? col,
             }
             scales.push(scale)
             fn = (d) => Plot.scale(scale).apply(d)
