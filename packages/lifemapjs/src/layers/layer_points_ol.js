@@ -129,7 +129,7 @@ export function layer_points_ol(map, data, options = {}) {
     if (fill_col !== null) {
         circle_fill_color = ["get", "fill_col"]
     } else {
-        circle_fill_color = "#DD0000"
+        circle_fill_color = scheme ?? "#DD0000"
     }
     if (hover) {
         circle_fill_color = ["match", ["get", "hover"], 1, "#ff0000", circle_fill_color]
