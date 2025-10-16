@@ -158,18 +158,24 @@ export function layer_points_ol(map, data, options = {}) {
                 selected_feature = null
             }
 
-            map.forEachFeatureAtPixel(ev.pixel, function (feature) {
-                feature.set("hover", 1)
-                selected_feature = feature
-                return true
-            })
+            map.forEachFeatureAtPixel(
+                ev.pixel,
+                function (feature) {
+                    feature.set("hover", 1)
+                    selected_feature = feature
+                    return true
+                },
+                { layerFilter: (d) => d.lifemap_ol_id == id }
+            )
         })
     }
 
     // Popup
     if (popup) {
-        map.on("click", function (evt) {
-            const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => feature)
+        map.on("click", function (ev) {
+            const feature = map.forEachFeatureAtPixel(ev.pixel, (feature) => feature, {
+                layerFilter: (d) => d.lifemap_ol_id == id,
+            })
             if (!feature) {
                 return
             }
