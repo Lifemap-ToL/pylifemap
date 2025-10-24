@@ -2,9 +2,8 @@ import polars as pl
 import requests
 from platformdirs import user_cache_path
 
-from pylifemap.utils import logger
+from pylifemap.utils import LIFEMAP_BACK_URL, logger
 
-LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 LMDATA_DATA_URL = f"{LIFEMAP_BACK_URL}/data/lmdata.parquet"
 LMDATA_TIMESTAMP_URL = f"{LIFEMAP_BACK_URL}/data/timestamp.txt"
 

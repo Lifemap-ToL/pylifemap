@@ -7,6 +7,7 @@ import sys
 
 DEFAULT_WIDTH = "800px"
 DEFAULT_HEIGHT = "600px"
+LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 
 logger = logging.getLogger("LifemapBuilder")
 ch = logging.StreamHandler(stream=sys.stdout)
