@@ -8,7 +8,7 @@ import { layer_screengrid } from "./layers/layer_screen_grid"
 import { layer_lines_deck } from "./layers/layer_lines_deck"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
-import { unserialize_data, stringify_scale } from "./utils"
+import { get_coords, unserialize_data, stringify_scale } from "./utils"
 
 import { Deck } from "@deck.gl/core"
 import { Layer } from "ol/layer"
@@ -17,7 +17,6 @@ import { Control } from "ol/control.js"
 
 import * as Plot from "@observablehq/plot"
 
-const SOLR_API_URL = "https://lifemap-back.univ-lyon1.fr/solr"
 const OL_LAYERS = ["donuts", "points", "heatmap", "lines"]
 const MAX_SOLR_QUERY = 100000
 
@@ -190,61 +189,7 @@ export function lifemap(el, data, layers, options = {}) {
         map.spinner.hide()
     }
 
-    // Get up-to-date taxids coordinates from lifemap-back solr server
-    async function get_coords(taxids) {
-        console.log("Getting up-to-date taxids coordinates...")
-        const url_taxids = [...taxids].join(" ")
-        const cache_key = `taxids_${url_taxids}`
-        const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
-
-        // Check if cached data exists and is still valid
-        const cached_data = localStorage.getItem(cache_key)
-        if (cached_data) {
-            const { timestamp, data } = JSON.parse(cached_data)
-            if (Date.now() - timestamp < cache_duration) {
-                console.log("Returning cached data...")
-                return data
-            }
-        }
-
-        // If no valid cache, fetch from the backend
-        const url = `${SOLR_API_URL}/taxo/select`
-        const payload = {
-            params: {
-                q: "*:*",
-                fq: `taxid:(${url_taxids})`,
-                fl: "taxid,lat,lon",
-                wt: "json",
-                rows: taxids.size,
-            },
-        }
-        try {
-            const response = await fetch(url, {
-                method: "post",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            })
-            let data = await response.json()
-            data = data.response.docs
-            let result = {}
-            data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }))
-
-            // Store the result in localStorage with a timestamp
-            localStorage.setItem(
-                cache_key,
-                JSON.stringify({ timestamp: Date.now(), data: result })
-            )
-
-            return result
-        } catch (error) {
-            return null
-        }
-    }
-
-    map.update_data = async function (data, layers) {
+    map.update_data = async function (data) {
         map.spinner.show()
         let deserialized_data = {}
         let taxids = new Set()

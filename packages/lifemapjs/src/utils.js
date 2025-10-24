@@ -7,6 +7,60 @@ export const LIFEMAP_BACK_URL = "https://lifemap-temp.lhst.eu"
 export const DEFAULT_NUM_SCHEME = "viridis"
 export const DEFAULT_CAT_SCHEME = "observable10"
 
+// Get up-to-date taxids coordinates from lifemap-back solr server
+export async function get_coords(taxids) {
+    console.log("Getting up-to-date taxids coordinates...")
+    const url_taxids = [...taxids].join(" ")
+    const cache_key = `taxids_${url_taxids}`
+    const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
+
+    // Check if cached data exists and is still valid
+    const cached_data = localStorage.getItem(cache_key)
+    if (cached_data) {
+        const { timestamp, data } = JSON.parse(cached_data)
+        if (Date.now() - timestamp < cache_duration) {
+            console.log("Returning cached data...")
+            return data
+        }
+    }
+
+    // If no valid cache, fetch from the backend
+    const url = `${LIFEMAP_BACK_URL}/solr/taxo/select`
+    const payload = {
+        params: {
+            q: "*:*",
+            fq: `taxid:(${url_taxids})`,
+            fl: "taxid,lat,lon",
+            wt: "json",
+            rows: taxids.size,
+        },
+    }
+    try {
+        const response = await fetch(url, {
+            method: "post",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+        let data = await response.json()
+        data = data.response.docs
+        let result = {}
+        data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }))
+
+        // Store the result in localStorage with a timestamp
+        localStorage.setItem(
+            cache_key,
+            JSON.stringify({ timestamp: Date.now(), data: result })
+        )
+
+        return result
+    } catch (error) {
+        return null
+    }
+}
+
 // Unserialize data from Arrow IPC to JS Array
 export function unserialize_data(data) {
     if (data["serialized"]) {
