@@ -3,7 +3,8 @@
         "bundle": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/pylifemap/static src/js/widget.js",
         "build": "npm run bundle -- --minify",
         "dev": "npm run bundle -- --sourcemap=inline --watch",
-        "test": "uv run pytest"
+        "test": "uv run pytest",
+        "doc": "cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render"
     },
     "devDependencies": {
         "esbuild": "^0.25.10"
