@@ -20,10 +20,9 @@ export function layer_points(map, data, options = {}) {
         id = null,
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
-        radius = 5,
-        radius_col = null,
-        fill_col = null,
-        fill_col_cat = null,
+        radius = numm,
+        fill = null,
+        fill_cat = null,
         label = null,
         scheme = null,
         opacity = 0.8,
@@ -34,6 +33,18 @@ export function layer_points(map, data, options = {}) {
 
     let scales = []
     id = `lifemap-ol-${id ?? guidGenerator()}`
+
+    // Check if radius is a fixed radius or a data column
+    let radius_col = null
+    if (typeof radius === "string" && Object.keys(data[0]).includes(radius)) {
+        radius_col = radius
+    }
+
+    // Check if fill is a fixed color or a data column
+    let fill_col = null
+    if (typeof fill === "string" && Object.keys(data[0]).includes(fill)) {
+        fill_col = fill
+    }
 
     // Radius function
     let get_radius_col_fn = function (data, col) {
@@ -104,7 +115,7 @@ export function layer_points(map, data, options = {}) {
     const n_features = data.length
     const features = new Array(n_features)
     const radius_col_fn = get_radius_col_fn(data, radius_col)
-    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_col_cat)
+    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat)
     for (let i = 0; i < n_features; i++) {
         let line = data[i]
         const coordinates = fromLonLat([line[x_col], line[y_col]])
@@ -128,14 +139,14 @@ export function layer_points(map, data, options = {}) {
     if (radius_col !== null) {
         circle_radius = ["get", "radius_col"]
     } else {
-        circle_radius = radius
+        circle_radius = radius ?? 5
     }
     // Fill style
     let circle_fill_color
     if (fill_col !== null) {
         circle_fill_color = ["get", "fill_col"]
     } else {
-        circle_fill_color = scheme ?? "#DD0000"
+        circle_fill_color = fill ?? "#DD0000"
     }
     if (hover) {
         circle_fill_color = ["match", ["get", "hover"], 1, "#ff0000", circle_fill_color]

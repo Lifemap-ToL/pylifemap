@@ -22,8 +22,7 @@ export function layer_lines(map, data, options = {}) {
         x_col1 = "pylifemap_x1",
         y_col1 = "pylifemap_y1",
         width = null,
-        width_col = null,
-        color_col = null,
+        color = null,
         label = null,
         scheme = null,
         opacity = 0.8,
@@ -35,6 +34,18 @@ export function layer_lines(map, data, options = {}) {
     let scales = []
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
+
+    // Check if width is a fixed width or a data column
+    let width_col = null
+    if (typeof width === "string" && Object.keys(data[0]).includes(width)) {
+        width_col = width
+    }
+
+    // Check if color is a fixed color or a data column
+    let color_col = null
+    if (typeof color === "string" && Object.keys(data[0]).includes(color)) {
+        color_col = color
+    }
 
     // Width function
     let get_width_col_fn = function (data, col) {
@@ -110,14 +121,14 @@ export function layer_lines(map, data, options = {}) {
     if (width_col !== null) {
         stroke_width = ["get", "width_col"]
     } else {
-        stroke_width = width
+        stroke_width = width ?? 3
     }
     // Color style
     let stroke_color
     if (color_col !== null) {
         stroke_color = ["get", "color_col"]
     } else {
-        stroke_color = scheme ?? "#DD0000"
+        stroke_color = color ?? "#DD0000"
     }
     if (hover) {
         stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]

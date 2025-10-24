@@ -16,7 +16,7 @@ from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
 from pylifemap.data import LifemapData
-from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, check_jupyter, check_marimo
+from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, check_jupyter, check_marimo, is_hex_color
 from pylifemap.widget import LifemapWidget
 
 
@@ -183,15 +183,14 @@ class Lifemap:
         self,
         *,
         leaves: Literal["show", "only", "omit"] = "show",
-        radius: float = 5,
-        radius_col: str | None = None,
+        radius: int | float | str = 5,
         radius_range: tuple | list = (2, 30),
-        fill_col: str | None = None,
-        fill_col_cat: bool | None = None,
+        fill: str | None = None,
+        fill_cat: bool | None = None,
         scheme: str | None = None,
         opacity: float = 0.8,
-        popup: bool = False,
-        hover: bool = False,
+        popup: bool = True,
+        hover: bool = True,
         label: str | None = None,
     ) -> Lifemap:
         """
@@ -206,21 +205,20 @@ class Lifemap:
         leaves : Literal[&quot;show&quot;, &quot;only&quot;, &quot;omit&quot;], optional
             If `"only"`, only show tree leaves. If `"omit"`, only show nodes that are
             not leaves. If `"show"`, show all nodes, by default "show"
-        radius : float
-            Points radius, by default 5. Not used if radius_col is not None
-        radius_col : str | None, optional
-            Name of a numeric DataFrame column to compute points radius, by default None
+        radius : int | float | str, optional
+            If numeric, the fixed radius of the points. If a string, the name of a numerical DataFrame column
+            to compute radius width from.
         radius_range : tuple | list
             Range of values for points radius, only used if radius_col is not None, by default (2, 30)
-        fill_col : str | None, optional
-            Name of a DataFrame column to determine points color, by default None
-        fill_col_cat : bool | None, optional
+        fill : str | None, optional
+            Either the name of a numerical DataFrame column to determine points color, or a fixed CSS
+            color for points.
+        fill_cat : bool | None, optional
             If True, force color scheme to be categorical. If False, force it to be
             continuous. If None, let pylifemap decide. By default None.
         scheme : str | None, optional
-            Color scheme for points color. If `fill_col` is defined, it is the name of
+            Color scheme for points color. It is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
-            Otherwise, it is an hexadecimal color value. By default None
         opacity : float
             Points opacity as a floating number between 0 and 1, by default 0.8
         popup : bool
@@ -280,7 +278,12 @@ class Lifemap:
             raise ValueError(msg)
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.points_data(options)
+        data_columns = tuple(
+            options[k]
+            for k in ("radius", "fill")
+            if isinstance(options[k], str) and not is_hex_color(options[k])
+        )
+        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
         return self
 
     def layer_donuts(
@@ -468,14 +471,13 @@ class Lifemap:
     def layer_lines(
         self,
         *,
-        width: float = 3,
-        width_col: str | None = None,
+        width: int | float | str = 3,
         width_range: tuple | list = (1, 30),
-        color_col: str | None = None,
+        color: str | None = None,
         scheme: str | None = None,
         opacity: float = 0.8,
-        popup: bool = False,
-        hover: bool = False,
+        popup: bool = True,
+        hover: bool = True,
         label: str | None = None,
     ) -> Lifemap:
         """
@@ -486,18 +488,17 @@ class Lifemap:
 
         Parameters
         ----------
-        width : float
-            Fixed line width, ignored if width_col is not None, by default 3
-        width_col : str | None, optional
-            Name of numeric DataFrame column to compute line width, by default None
-        width_range : tuple | list
-            Min and max values for line widths, only used if width_col is not None, by default (1, 30)
-        color_col : str | None, optional
-            Name of numeric DataFrame column to determine line color, by default None
+        width : int | float | str, optional
+            If numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column
+            to compute line width from.
+        width_range : tuple | list, optional
+            Min and max values for line widths, only used if width is a data column, by default (1, 30)
+        color : str | None, optional
+            Either the name of a numerical DataFrame column to determine line color, or a fixed CSS color for
+            lines.
         scheme : str | None, optional
-            Color scheme for lines color. If `color_col` is defined, it is the name of
+            Color scheme for lines color. It is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
-            Otherwise, it is an hexadecimal color value, by default None
         opacity : float
             Line opacity as a floating number between 0 and 1, by default 0.8
         popup : bool
@@ -549,7 +550,12 @@ class Lifemap:
         options = self._process_options(locals())
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.lines_data(options)
+        data_columns = tuple(
+            options[k]
+            for k in ("width", "color")
+            if isinstance(options[k], str) and not is_hex_color(options[k])
+        )
+        self._layers_data[options["id"]] = self.data.lines_data(data_columns)
         return self
 
     def layer_heatmap_deck(

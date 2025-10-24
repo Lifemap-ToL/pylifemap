@@ -86,9 +86,7 @@ class LifemapData:
         """
         lmdata = LMDATA.select("taxid")
         data = self._data.select(self._taxid_col)
-        absent_ids = data.join(
-            lmdata, how="anti", left_on=self._taxid_col, right_on="taxid"
-        )
+        absent_ids = data.join(lmdata, how="anti", left_on=self._taxid_col, right_on="taxid")
         if (n := absent_ids.height) > 0:
             msg = f"Warning: {n} taxids have not been found in Lifemap database"
             if n < 10:  # noqa: PLR2004
@@ -120,15 +118,10 @@ class LifemapData:
         data = self._data
         if "pylifemap_parent" not in data.columns:
             lmdata = LMDATA.select(["taxid", "pylifemap_parent"])
-            data = data.join(
-                lmdata, how="inner", left_on=self._taxid_col, right_on="taxid"
-            )
+            data = data.join(lmdata, how="inner", left_on=self._taxid_col, right_on="taxid")
         return data
 
-    def points_data(
-        self,
-        options: dict | None = None,
-    ) -> pl.DataFrame:
+    def points_data(self, options: dict | None = None, data_columns: tuple = ()) -> pl.DataFrame:
         """
         Generate data for a points layer.
 
@@ -158,9 +151,7 @@ class LifemapData:
         needed_cols = [self._taxid_col, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
         data = self._data
 
-        leaves = (
-            options["leaves"] if options is not None and "leaves" in options else "show"
-        )
+        leaves = options["leaves"] if options is not None and "leaves" in options else "show"
         leaves_values = ["show", "only", "omit"]
         if leaves not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
@@ -203,6 +194,14 @@ class LifemapData:
             left_on=self._taxid_col,
             right_on="taxid",
         )
+
+        # Check and add data columns to needed columns if they are defined
+        for col in data_columns:
+            if col not in data.columns:
+                msg = f"{col} must be a column of data."
+                raise ValueError(msg)
+            needed_cols.append(col)
+
         # Only keep needed columns
         return data.select(set(needed_cols))
 
@@ -250,12 +249,10 @@ class LifemapData:
         levels = data.get_column(counts_col).unique().sort()
 
         # Store frequencies as a pl.Struct and encode as JSON
-        data = data.pivot(
-            index=self._taxid_col, on=counts_col, values="count"
-        ).fill_null(0)
-        data = data.with_columns(
-            pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)
-        ).select(pl.all().exclude(levels))
+        data = data.pivot(index=self._taxid_col, on=counts_col, values="count").fill_null(0)
+        data = data.with_columns(pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)).select(
+            pl.all().exclude(levels)
+        )
 
         # Add needed lifemap tree data
         data = data.join(
@@ -267,7 +264,7 @@ class LifemapData:
         # Only keep needed columns
         return data.select(set(needed_cols))
 
-    def lines_data(self, options: dict | None = None) -> pl.DataFrame:
+    def lines_data(self, data_columns: tuple = ()) -> pl.DataFrame:
         """
         Generate data for a lines layer.
 
@@ -275,6 +272,9 @@ class LifemapData:
         ----------
         options : dict | None, optional
             Options dictionary, by default None
+        data_columns : list | None, optional
+            List of data columns to add to output, by default None
+
 
         Returns
         -------
@@ -306,10 +306,7 @@ class LifemapData:
             left_on="pylifemap_parent",
             right_on="taxid",
             how="left",
-        ).filter(
-            (pl.col("pylifemap_x1").is_not_null())
-            & (pl.col("pylifemap_y1").is_not_null())
-        )
+        ).filter((pl.col("pylifemap_x1").is_not_null()) & (pl.col("pylifemap_y1").is_not_null()))
 
         needed_cols = [
             self._taxid_col,
@@ -320,20 +317,12 @@ class LifemapData:
             "pylifemap_y1",
         ]
 
-        # Check and add width and color columns to needed columns if they are defined
-        if options is not None:
-            if "width_col" in options and options["width_col"] is not None:
-                if options["width_col"] not in data.columns:
-                    msg = f"{options['width_col']} must be a column of data."
-                    raise ValueError(msg)
-                if not data.get_column(options["width_col"]).dtype.is_numeric():
-                    msg = f"{options['width_col']} must be numeric."
-                    raise ValueError(msg)
-                needed_cols.append(options["width_col"])
-            if "color_col" in options and options["color_col"] is not None:
-                if options["color_col"] not in data.columns:
-                    msg = f"{options['color_col']} must be a column of data."
-                    raise ValueError(msg)
-                needed_cols.append(options["color_col"])
+        # Check and add data columns to needed columns if they are defined
+        for col in data_columns:
+            if col not in data.columns:
+                msg = f"{col} must be a column of data."
+                raise ValueError(msg)
+            needed_cols.append(col)
+
         # Only keep needed columns
         return data.select(set(needed_cols))
