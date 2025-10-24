@@ -3,6 +3,7 @@ Misc utilities functions and values.
 """
 
 import logging
+import re
 import sys
 
 DEFAULT_WIDTH = "800px"
@@ -48,3 +49,21 @@ def check_jupyter() -> bool:
         return True
     except NameError:
         return False
+
+
+def is_hex_color(value: str) -> bool:
+    """
+    Check if a value is an hexadecimal color code.
+
+    Parameters
+    ----------
+    value : str
+        Value to be checked.
+
+    Returns
+    -------
+    bool
+        True if the value is an hexadecimal color code.
+    """
+    match = re.fullmatch(r"#([0-9a-f]{6}|[0-9a-f]{3})", value, flags=re.IGNORECASE)
+    return match is not None
