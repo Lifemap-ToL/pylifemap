@@ -2,8 +2,9 @@
 title: Heatmap layer
 ---
 
-The heatmap layer displays observations distribution as a heatmap overlay. 
+The heatmap layer displays observations distribution as a heatmap overlay.
 
+The `radius`, `blur` and `opacity` arguments can be used to customize the heatmap appearance.
 
 ```{python}
 import polars as pl
@@ -22,3 +23,5 @@ iucn = pl.read_csv(
 ```
 
 For a detailed list of `layer_heatmap` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_heatmap`).
+
+For an alternative heatmap visualization, see [layer_heatmap_deck](layer_heatmap_deck).

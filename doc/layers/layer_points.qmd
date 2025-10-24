@@ -2,9 +2,9 @@
 title: Points layer
 ---
 
-The points layer displays observations as points on the lifemap tree. 
+The points layer displays observations as points on the lifemap tree.
 
-It is possible to make the fill color and the radius of the points depending on a data variable.
+The `fill` and `radius` arguments allow to modify the size and color of the points. They can either be fixed values (numerical for `radius`, an hexadecimal color code for `fill`) or data column names. In this case, size or color will depend on the column values.
 
 ```{python}
 import polars as pl
@@ -20,7 +20,7 @@ iucn_agg = aggregate_count(iucn)
 
 (
     Lifemap(iucn_agg)
-    .layer_points(fill_col="n", radius_col="n", opacity=0.7, popup=True)
+    .layer_points(fill="n", radius="n", opacity=0.7, popup=True)
     .show()
 )
 ```

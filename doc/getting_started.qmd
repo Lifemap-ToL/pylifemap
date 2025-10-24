@@ -5,7 +5,7 @@ title: "Getting started"
 
 To create a Lifemap data visualization, you will have to follow these steps:
 
-1. Prepare and load your data, 
+1. Prepare and load your data,
 2. If needed, aggregate you data with an [aggregation function](reference/index.html#aggregation-functions)
 3. Initialize a [Lifemap](`~pylifemap.Lifemap`) object
 4. Add visualization layers
@@ -82,6 +82,7 @@ After initializing our `Lifemap` object, we have to add visualization layers to 
 | [layer_lines](layers/layer_lines.qmd)           | Using aggregated data, highlights branches of the tree with lines of varying width and color.                |
 | [layer_donuts](layers/layer_donuts.qmd)         | Displays aggregated categorical data as donut charts.                                                        |
 | [layer_heatmap](layers/layer_heatmap.qmd)       | Displays a heatmap of the observations distribution in the tree.                                             |
+| [layer_heatmap_deck](layers/layer_heatmap_deck.qmd)       | Displays a deck.gl heatmap of the observations distribution in the tree.                                             |
 | [layer_screengrid](layers/layer_screengrid.qmd) | Displays the observations distribution with a colored grid with fixed-size cells..                           |
 
 To add a layer, we just have to call the corresponding `layer_` method of our `Lifemap` object. For example, to add a points layer:
@@ -126,7 +127,17 @@ Each layer accepts a certain number of arguments to customize its appearance. Fo
 ```{python}
 (
     Lifemap(iucn, taxid_col="taxid")
-    .layer_points(fill_col="status", radius=3, opacity=0.5)
+    .layer_points(fill="#EFB118", radius=5, opacity=0.5)
+    .show()
+)
+```
+
+Instead of providing fixed values to `fill` or `radius`, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their `status`:
+
+```{python}
+(
+    Lifemap(iucn, taxid_col="taxid")
+    .layer_points(fill="status", radius=3, opacity=0.5)
     .show()
 )
 ```
@@ -181,10 +192,7 @@ Finally, we can represent this new dataset with a lines layer.
 ```{python}
 (
     Lifemap(iucn_extinct_agg)
-    .layer_lines(color_col="n", width_col="n", label="Extinct species")
+    .layer_lines(color="n", width="n", label="Extinct species")
     .show()
 )
 ```
-
-
-
