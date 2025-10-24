@@ -16,6 +16,7 @@ import { MVT } from "ol/format"
 import { Style, Fill, Stroke } from "ol/style.js"
 import Text from "ol/style/Text.js"
 import { createCompositeStyleFunction } from "../styles/ol_styles"
+import { LIFEMAP_BACK_URL } from "../utils"
 
 export function layer_basemap(el, deck_layer, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options
@@ -37,7 +38,7 @@ export function layer_basemap(el, deck_layer, options) {
         source: new VectorTileSource({
             maxZoom: 42,
             format: new MVT(),
-            url: "https://lifemap-back.univ-lyon1.fr/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf",
+            url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
         }),
         style: createCompositeStyleFunction(view, lang),
         declutter: false,
@@ -48,7 +49,7 @@ export function layer_basemap(el, deck_layer, options) {
         preload: Infinity,
     })
 
-    const API_URL = "https://lifemap-back.univ-lyon1.fr/solr"
+    const SOLR_API_URL = `${LIFEMAP_BACK_URL}/solr`
     const TEXT_COLOR = "rgba(255, 255, 255, 1)"
     const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
 
@@ -116,7 +117,7 @@ export function layer_basemap(el, deck_layer, options) {
 
     function list_for_extent(zoom, extent) {
         zoom = Math.round(zoom)
-        const url = `${API_URL}/taxo/select?q=*:*&fq=zoom:[0 TO ${zoom}]&fq=lat:[${extent[1]} TO ${extent[3]}]&fq=lon:[${extent[0]} TO ${extent[2]}]&wt=json&rows=1000`
+        const url = `${SOLR_API_URL}/taxo/select?q=*:*&fq=zoom:[0 TO ${zoom}]&fq=lat:[${extent[1]} TO ${extent[3]}]&fq=lon:[${extent[0]} TO ${extent[2]}]&wt=json&rows=1000`
         const list_taxa = () =>
             fetch(url)
                 .then((response) => response.json())
