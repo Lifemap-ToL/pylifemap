@@ -2,3 +2,4 @@
 /_inv/
 /reference/
 objects.json
+**/*.quarto_ipynb
