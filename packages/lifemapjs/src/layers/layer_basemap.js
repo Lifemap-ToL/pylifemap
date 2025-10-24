@@ -197,29 +197,9 @@ export function layer_basemap(el, deck_layer, options) {
         map.dispose_popup()
     }
 
-    // Spinner Overlay
-    const spinner = create_spinner(el)
-    map.spinner = spinner
-
     map.on("click", on_click)
 
     return map
-}
-
-function create_spinner(el) {
-    const spinner = document.createElement("div")
-    spinner.classList.add("lifemap-spinner")
-
-    spinner.show = function () {
-        spinner.style.display = "block"
-    }
-
-    spinner.hide = function () {
-        spinner.style.display = "none"
-    }
-
-    el.querySelector(".ol-viewport").appendChild(spinner)
-    return spinner
 }
 
 function create_popup() {

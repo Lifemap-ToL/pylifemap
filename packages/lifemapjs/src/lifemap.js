@@ -34,6 +34,23 @@ class LegendControl extends Control {
     }
 }
 
+// Spinner element creation
+function create_spinner(el) {
+    const spinner = document.createElement("div")
+    spinner.classList.add("lifemap-spinner")
+
+    spinner.show = function () {
+        spinner.style.display = "block"
+    }
+
+    spinner.hide = function () {
+        spinner.style.display = "none"
+    }
+
+    el.querySelector(".ol-viewport").appendChild(spinner)
+    return spinner
+}
+
 // Main function
 export function lifemap(el, data, layers, options = {}) {
     const { zoom = 5, legend_width = undefined } = options
@@ -62,6 +79,9 @@ export function lifemap(el, data, layers, options = {}) {
 
     // Base map object
     let map = layer_basemap(el, deck_layer, { zoom: zoom })
+
+    // Spinner Overlay
+    map.spinner = create_spinner(el)
 
     // Legend control
     map.legend = new LegendControl()
