@@ -133,3 +133,13 @@
     border-bottom-color: #ff3d00;
     animation: spinner-rotation 1s linear infinite;
 }
+
+/* Controls */
+
+.pylifemap-control {
+    top: 65px;
+    left: 0.5em;
+}
+.ol-touch .pylifemap-control {
+    top: 80px;
+}

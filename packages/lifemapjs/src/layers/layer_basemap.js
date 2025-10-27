@@ -7,16 +7,19 @@ import VectorTileLayer from "ol/layer/VectorTile"
 import VectorTileSource from "ol/source/VectorTile"
 import { MVT } from "ol/format"
 import { fromLonLat } from "ol/proj"
+import FullScreen from "ol/control/FullScreen.js"
+import { defaults as defaultControls } from "ol/control/defaults.js"
+import { ResetZoomControl } from "../controls"
 
 import { createCompositeStyleFunction } from "../styles/ol_styles"
-import { LIFEMAP_BACK_URL } from "../utils"
+import { DEFAULT_LON, DEFAULT_LAT, LIFEMAP_BACK_URL } from "../utils"
 
 export function layer_basemap(el, deck_layer, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options
     const lang = "en"
 
     const view = new View({
-        center: fromLonLat([0, -4.226497]),
+        center: fromLonLat([DEFAULT_LON, DEFAULT_LAT]),
         zoom: zoom,
         minZoom: minZoom,
         maxZoom: maxZoom,
@@ -42,7 +45,12 @@ export function layer_basemap(el, deck_layer, options) {
         preload: Infinity,
     })
 
+    const controls = defaultControls()
+    controls.extend([new FullScreen()])
+    controls.extend([new ResetZoomControl()])
+
     let map = new Map({
+        controls: controls,
         interactions: defaults({
             dragZoom: false,
             dragPan: false,

@@ -3,6 +3,9 @@ import { tableFromIPC } from "@apache-arrow/es2015-esm"
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-temp.lhst.eu"
 
+export const DEFAULT_LON = 0
+export const DEFAULT_LAT = -4.226497
+
 // Default color schemes
 export const DEFAULT_NUM_SCHEME = "viridis"
 export const DEFAULT_CAT_SCHEME = "observable10"

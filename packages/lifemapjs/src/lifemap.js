@@ -7,31 +7,23 @@ import { layer_grid } from "./layers/layer_grid"
 import { layer_screengrid } from "./layers/layer_screen_grid"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
-import { get_coords, unserialize_data, stringify_scale } from "./utils"
+import {
+    get_coords,
+    unserialize_data,
+    stringify_scale,
+    DEFAULT_LON,
+    DEFAULT_LAT,
+} from "./utils"
 
 import { Deck } from "@deck.gl/core"
 import { Layer } from "ol/layer"
 import { toLonLat } from "ol/proj"
-import { Control } from "ol/control.js"
+import { LegendControl } from "./controls"
 
 import * as Plot from "@observablehq/plot"
 
 const OL_LAYERS = ["donuts", "points", "heatmap", "lines"]
 const MAX_SOLR_QUERY = 100000
-
-class LegendControl extends Control {
-    constructor(opt_options) {
-        const options = opt_options || {}
-
-        const element = document.createElement("div")
-        element.className = "lifemap-legend ol-unselectable ol-control"
-
-        super({
-            element: element,
-            target: options.target,
-        })
-    }
-}
 
 // Spinner element creation
 function create_spinner(el) {
@@ -56,7 +48,7 @@ export function lifemap(el, data, layers, options = {}) {
 
     // Create deck.gl layer
     const deck = new Deck({
-        initialViewState: { longitude: 0, latitude: -4.226497, zoom: 5 },
+        initialViewState: { longitude: DEFAULT_LON, latitude: DEFAULT_LAT, zoom: zoom },
         controller: false,
         useDevicePixels: false,
         parent: el,
@@ -86,6 +78,8 @@ export function lifemap(el, data, layers, options = {}) {
     // Spinner Overlay
     map.spinner = create_spinner(el)
 
+    // Default zoom level
+    map.default_zoom = zoom
     // Legend control
     map.legend = new LegendControl()
     // Current scales
