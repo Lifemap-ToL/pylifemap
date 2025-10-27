@@ -5,6 +5,7 @@ Main Lifemap object.
 from __future__ import annotations
 
 import os
+import re
 import webbrowser
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -37,7 +38,7 @@ class Lifemap:
         Lifemap visualization height, in pixels or CSS units, by
         default `DEFAULT_HEIGHT`
     zoom : int, optional
-        Default Lifemap zoom level, by default 5
+        Default Lifemap zoom level, by default 4 or 5 depending on widget size
     legend_width : int | None, optional
         Legend width in pixels, by default None
 
@@ -57,7 +58,7 @@ class Lifemap:
         taxid_col: str = "taxid",
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
-        zoom: int = 5,
+        zoom: int | None = None,
         legend_width: int | None = None,
     ) -> None:
         # Init LifemapData object with data
@@ -66,6 +67,15 @@ class Lifemap:
         # Convert width and height to CSS pixels if integers
         self._width = width if isinstance(width, str) else f"{width}px"
         self._height = height if isinstance(height, str) else f"{height}px"
+
+        # Default zoom level
+        if zoom is None:
+            final_width = re.findall(r"^(\d+)px$", self._width)
+            final_height = re.findall(r"^(\d+)px$", self._height)
+            if (final_width and int(final_width[0]) < 800) or (final_height and int(final_height[0]) < 800):  # noqa: PLR2004
+                zoom = 4
+            else:
+                zoom = 5
 
         # Init layers attributes
         self._layers = []
