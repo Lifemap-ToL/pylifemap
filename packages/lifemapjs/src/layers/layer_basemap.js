@@ -176,6 +176,7 @@ export function layer_basemap(el, deck_layer, options) {
 
     map.popup = popup
     map.popup_overlay = popup_overlay
+    map.popup.is_shown = false
     map.addOverlay(popup_overlay)
 
     map.dispose_popup = function () {
@@ -185,16 +186,22 @@ export function layer_basemap(el, deck_layer, options) {
     }
 
     map.show_popup = function (coordinates, content, offset = [0, 0]) {
-        map.dispose_popup()
+        if (map.popup.is_shown) {
+            map.dispose_popup()
+        }
         map.popup.content.innerHTML = content
         map.popup_overlay.setPosition(fromLonLat(coordinates))
         map.popup_overlay.setOffset(offset)
+        map.popup.is_shown = true
     }
 
     map.popup.closer.onclick = map.dispose_popup
 
     function on_click() {
-        map.dispose_popup()
+        if (map.popup.is_shown) {
+            map.dispose_popup()
+            map.popup.is_shown = false
+        }
     }
 
     map.on("click", on_click)
