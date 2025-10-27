@@ -543,14 +543,14 @@
     "href": "development.html",
     "title": "Development notes",
     "section": "",
-    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add"
+    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git"
   },
   {
     "objectID": "development.html#install-from-git",
     "href": "development.html#install-from-git",
     "title": "Development notes",
     "section": "",
-    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add"
+    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git"
   },
   {
     "objectID": "development.html#install-fom-source",
@@ -571,14 +571,14 @@
     "href": "development.html#tests",
     "title": "Development notes",
     "section": "Tests",
-    "text": "Tests\nPython tests are in the tests directory and can be run with:\njust test"
+    "text": "Tests\nPython tests are in the tests directory and can be run with:\nnpm run test"
   },
   {
     "objectID": "development.html#documentation",
     "href": "development.html#documentation",
     "title": "Development notes",
     "section": "Documentation",
-    "text": "Documentation\nThe package documentation is in doc/. It is managed by quarto and quartodoc.\nTo build it in HTML format in doc/_site/you can run:\njust doc"
+    "text": "Documentation\nThe package documentation is in doc/. It is managed by quarto and quartodoc.\nTo build it in HTML format in doc/_site/you can run:\nnpm run doc"
   },
   {
     "objectID": "development.html#docker-image",
