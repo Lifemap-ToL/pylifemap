@@ -59,7 +59,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
@@ -322,6 +321,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Heatmap layer</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../layers/layer_heatmap_deck.html">
+ <span class="dropdown-text">Deck.gl heatmap layer</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../layers/layer_screengrid.html">
  <span class="dropdown-text">Screengrid layer</span></a>
   </li>  
@@ -388,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    taxid_col<span class="op">=</span><span class="st">'taxid'</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span>DEFAULT_WIDTH,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span>DEFAULT_HEIGHT,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    legend_width<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build visualization.</p>
@@ -431,8 +434,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Default Lifemap zoom level, by default 5</td>
-<td><code>5</code></td>
+<td>Default Lifemap zoom level, by default 4 or 5 depending on widget size</td>
+<td><code>None</code></td>
 </tr>
 <tr class="even">
 <td>legend_width</td>
@@ -448,11 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> pylifemap <span class="im">import</span> Lifemap</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> d <span class="op">=</span> pl.DataFrame({<span class="st">"taxid"</span>: [<span class="dv">9685</span>, <span class="dv">9615</span>, <span class="dv">9994</span>]})</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>...     Lifemap(d, width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"100vh"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>...     .layer_points()</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>...     .show()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> Lifemap(d, width<span class="op">=</span><span class="st">"100%"</span>, height<span class="op">=</span><span class="st">"100vh"</span>).layer_points().show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -466,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><a href="../reference/Lifemap.layer_points.html#pylifemap.Lifemap.layer_points"><code>layer_points</code></a></td>
-<td>Add a Deck.gl points layer.</td>
+<td>Add a points layer.</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/Lifemap.layer_lines.html#pylifemap.Lifemap.layer_lines"><code>layer_lines</code></a></td>
@@ -478,17 +477,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><a href="../reference/Lifemap.layer_heatmap.html#pylifemap.Lifemap.layer_heatmap"><code>layer_heatmap</code></a></td>
-<td>Add a heatmap layer.</td>
+<td>Add an heatmap layer.</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/Lifemap.layer_heatmap_deck.html#pylifemap.Lifemap.layer_heatmap_deck"><code>layer_heatmap_deck</code></a></td>
+<td>Add a deck.gl heatmap layer.</td>
+</tr>
+<tr class="even">
 <td><a href="../reference/Lifemap.layer_screengrid.html#pylifemap.Lifemap.layer_screengrid"><code>layer_screengrid</code></a></td>
 <td>Add a screengrid layer.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="../reference/Lifemap.show.html#pylifemap.Lifemap.show"><code>show</code></a></td>
 <td>Display the Jupyter widget for this instance.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="../reference/Lifemap.save.html#pylifemap.Lifemap.save"><code>save</code></a></td>
 <td>Save the Jupyter widget for this instance to an HTML file.</td>
 </tr>

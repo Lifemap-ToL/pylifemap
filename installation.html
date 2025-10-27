@@ -59,7 +59,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
@@ -322,6 +321,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Heatmap layer</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./layers/layer_heatmap_deck.html">
+ <span class="dropdown-text">Deck.gl heatmap layer</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./layers/layer_screengrid.html">
  <span class="dropdown-text">Screengrid layer</span></a>
   </li>  
@@ -401,8 +404,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="notebook-run-script-run" class="level2">
 <h2 class="anchored" data-anchor-id="notebook-run-script-run">Notebook run / script run</h2>
-<p>As it provides a Jupyter widget, <code>pylifemap</code> is primarily designed to be used in a notebook environment such as <a href="https://jupyter.org">Jupyter</a> or <a href="https://code.visualstudio.com/docs/datascience/jupyter-notebooks">VSCode</a>.</p>
-<p>But it is also possible to use it in a Python script or in the Python REPL. In this case you can use the <a href="./reference/Lifemap.save.html#pylifemap.Lifemap.save">save()</a> method to export the widget to an HTML file that can be opened later. You can also use the <a href="./reference/Lifemap.show.html#pylifemap.Lifemap.show">show()</a> method, in this case the widget is exported to a temporary file and opened in the user’s browser.</p>
+<p>As it provides a Jupyter widget, <code>pylifemap</code> is primarily designed to be used in a notebook environment such as <a href="https://jupyter.org">Jupyter</a> or <a href="https://marimo.io">Marimo</a>.</p>
+<p>It can also be used in a Python script or in the Python REPL. In this case you can use the <a href="./reference/Lifemap.save.html#pylifemap.Lifemap.save">save()</a> method to export the widget to an HTML file that can be opened later. You can also use the <a href="./reference/Lifemap.show.html#pylifemap.Lifemap.show">show()</a> method, in this case the widget is exported to a temporary file and opened in the user’s browser.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
