@@ -4,7 +4,8 @@
         "build": "npm run bundle -- --minify",
         "dev": "npm run bundle -- --sourcemap=inline --watch",
         "test": "uv run pytest",
-        "doc": "cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render"
+        "doc": "cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render",
+        "preview": "cd doc && uv run quarto preview"
     },
     "devDependencies": {
         "esbuild": "^0.25.10"
