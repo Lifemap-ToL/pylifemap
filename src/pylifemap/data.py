@@ -134,6 +134,8 @@ class LifemapData:
         ----------
         options : dict | None, optional
             Options dictionary, by default None.
+        data_columns: tuple
+            Data columns to keep in output data, by default ().
 
         Returns
         -------
@@ -145,11 +147,7 @@ class LifemapData:
         ValueError
             If `options["leaves"]` value is not allowed.
         ValueError
-            If `options["fill_col"]` is not a column of data.
-        ValueError
-            If `options["radius_col"]` is not a column of data.
-        ValueError
-            If `options["radius_col"]` is not numeric.
+            If `data_columns` columns are not in data.
 
         """
 
@@ -175,22 +173,6 @@ class LifemapData:
                 left_on=self._taxid_col,
                 right_on="taxid",
             )
-
-        # Check and add fill_col and radius_col to needed columns list if necessary
-        if options is not None:
-            if "fill_col" in options and options["fill_col"] is not None:
-                if options["fill_col"] not in data.columns:
-                    msg = f"{options['fill_col']} must be a column of data."
-                    raise ValueError(msg)
-                needed_cols.append(options["fill_col"])
-            if "radius_col" in options and options["radius_col"] is not None:
-                if options["radius_col"] not in data.columns:
-                    msg = f"{options['radius_col']} must be a column of data."
-                    raise ValueError(msg)
-                if not data.get_column(options["radius_col"]).dtype.is_numeric():
-                    msg = f"{options['radius_col']} must be numeric."
-                    raise ValueError(msg)
-                needed_cols.append(options["radius_col"])
 
         # Add needed lifemap tree data
         data = data.join(
@@ -275,10 +257,8 @@ class LifemapData:
 
         Parameters
         ----------
-        options : dict | None, optional
-            Options dictionary, by default None
         data_columns : list | None, optional
-            List of data columns to add to output, by default None
+            List of data columns to add to output, by default ()
 
 
         Returns
