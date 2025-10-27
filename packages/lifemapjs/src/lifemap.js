@@ -1,4 +1,5 @@
 import { layer_basemap } from "./layers/layer_basemap"
+import { layer_labels } from "./layers/layer_labels"
 import { layer_heatmap } from "./layers/layer_heatmap"
 import { layer_points } from "./layers/layer_points"
 import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
@@ -77,6 +78,10 @@ export function lifemap(el, data, layers, options = {}) {
 
     // Base map object
     let map = layer_basemap(el, deck_layer, { zoom: zoom })
+
+    // Labels layer
+    const labels_layer = layer_labels(map)
+    map.addLayer(labels_layer)
 
     // Spinner Overlay
     map.spinner = create_spinner(el)
