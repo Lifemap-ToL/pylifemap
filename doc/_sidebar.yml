@@ -8,6 +8,7 @@ website:
       - reference/Lifemap.layer_lines.qmd
       - reference/Lifemap.layer_donuts.qmd
       - reference/Lifemap.layer_heatmap.qmd
+      - reference/Lifemap.layer_heatmap_deck.qmd
       - reference/Lifemap.layer_screengrid.qmd
       - reference/Lifemap.show.qmd
       - reference/Lifemap.save.qmd

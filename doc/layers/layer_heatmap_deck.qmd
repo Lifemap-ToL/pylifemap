@@ -4,15 +4,15 @@ title: Deck.gl heatmap layer
 
 The heatmap layer displays observations distribution as a heatmap overlay provided by [deck.gl](https://deck.gl).
 
-The `radius`, `blur` and `opacity` arguments can be used to customize the heatmap appearance.
+The `radius`, `intensity`, `threshold` and `opacity` arguments can be used to customize the heatmap appearance.
 
 ```{python}
 import polars as pl
 from pylifemap import Lifemap
 
 # Load iucn dataset
-iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 
 (
@@ -24,4 +24,4 @@ iucn = pl.read_csv(
 
 For a detailed list of `layer_heatmap_deck` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_heatmap_deck`).
 
-For an alternative heatmap visualization, see [layer_heatmap](layer_heatmap).
+For an alternative heatmap visualization, see [layer_heatmap](layer_heatmap.qmd).

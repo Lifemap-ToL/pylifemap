@@ -65,6 +65,7 @@ quartodoc:
                         "layer_lines",
                         "layer_donuts",
                         "layer_heatmap",
+                        "layer_heatmap_deck",
                         "layer_screengrid",
                         "show",
                         "save",
@@ -73,6 +74,7 @@ quartodoc:
               - Lifemap.layer_lines
               - Lifemap.layer_donuts
               - Lifemap.layer_heatmap
+              - Lifemap.layer_heatmap_deck
               - Lifemap.layer_screengrid
               - Lifemap.show
               - Lifemap.save
@@ -104,3 +106,4 @@ format:
         grid:
             body-width: 900px
             gutter-width: 3rem
+        html-table-processing: none

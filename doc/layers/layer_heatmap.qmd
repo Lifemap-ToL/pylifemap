@@ -11,17 +11,17 @@ import polars as pl
 from pylifemap import Lifemap
 
 # Load iucn dataset
-iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 
 (
     Lifemap(iucn)
-    .layer_heatmap(opacity=0.5)
+    .layer_heatmap(radius=2, blur=10, opacity=0.9)
     .show()
 )
 ```
 
 For a detailed list of `layer_heatmap` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_heatmap`).
 
-For an alternative heatmap visualization, see [layer_heatmap_deck](layer_heatmap_deck).
+For an alternative heatmap visualization, see [layer_heatmap_deck](layer_heatmap_deck.qmd).

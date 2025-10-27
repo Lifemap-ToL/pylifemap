@@ -2,7 +2,7 @@
 title: Screengrid layer
 ---
 
-The screengrid layer displays observations distribution as a colored grid with fixed-size cells. 
+The screengrid layer displays observations distribution as a colored grid with fixed-size cells.
 
 
 ::: {.callout-note}
@@ -14,8 +14,8 @@ import polars as pl
 from pylifemap import Lifemap
 
 # Load iucn dataset
-iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 
 (

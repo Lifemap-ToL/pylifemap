@@ -9,8 +9,8 @@ import polars as pl
 from pylifemap import Lifemap, aggregate_freq
 
 # Load iucn dataset
-iucn = pl.read_csv(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.csv"
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 
 # Aggregate observations count along branches
@@ -21,6 +21,7 @@ iucn_freq = aggregate_freq(iucn, column="status")
     .layer_donuts(counts_col="status", opacity=1, leaves="show")
     .show()
 )
+
 ```
 
 The `leaves` argument allows to `"show"` or `"hide"` individual leaves values.
