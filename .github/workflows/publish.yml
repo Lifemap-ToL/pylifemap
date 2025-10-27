@@ -17,7 +17,7 @@ jobs:
             - name: Setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 22
                   cache: "npm"
 
             - name: Install node dependencies
@@ -35,9 +35,6 @@ jobs:
             - name: Bundle
               run: npm run build
 
-            - name: Install just
-              uses: extractions/setup-just@v2
-
             - name: Render and Publish
               shell: bash
               env:
@@ -45,5 +42,5 @@ jobs:
               run: |
                   git config --global user.email "julien.barnier@cnrs.fr"
                   git config --global user.name "Julien Barnier"
-                  just doc
+                  npm run doc
                   uv run quarto publish gh-pages doc

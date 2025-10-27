@@ -42,7 +42,6 @@ dev = [
   "python-lsp-server>=1.13.1",
   "quartodoc>=0.11.1",
   "ruff>=0.13.2",
-  "rust-just>=1.36.0",
   "ty>=0.0.1a21",
   "watchfiles>=0.24.0",
 ]
