@@ -7,11 +7,11 @@ title: "Development notes"
 
 To install `pylifemap` from git:
 
-```sh 
+```sh
 # With pip
 pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 # Add to a project with uv
-uv add 
+uv add git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
 ## Install fom source
@@ -38,14 +38,14 @@ npm run build
 npm run dev
 ```
 
-The result is put into `src/pylifemap/static`. 
+The result is put into `src/pylifemap/static`.
 
 ## Tests
 
 Python tests are in the `tests` directory and can be run with:
 
 ```sh
-just test
+npm run test
 ```
 
 ## Documentation
@@ -55,7 +55,7 @@ The package documentation is in `doc/`. It is managed by [quarto](https://quarto
 To build it in HTML format in `doc/_site/`you can run:
 
 ```sh
-just doc
+npm run doc
 ```
 
 ## Docker image
@@ -76,4 +76,3 @@ docker build . -t pylifemap
 - Tag the version in git
 - Create a release on Github
 - Bump to dev version in `pyproject.toml` and `NEWS.md`
-
