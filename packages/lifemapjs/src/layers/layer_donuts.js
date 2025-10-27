@@ -81,7 +81,8 @@ export function layer_donuts(map, data, options = {}) {
     const donuts_source = new VectorSource({})
     const layer = new VectorLayer({
         declutter: id,
-        zIndex: 4,
+        // Donuts are above labels
+        zIndex: 6,
         source: donuts_source,
         style: donut_style,
     })
