@@ -46,11 +46,7 @@ class Lifemap:
     >>> import polars as pl
     >>> from pylifemap import Lifemap
     >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
-    >>> (
-    ...     Lifemap(d, width="100%", height="100vh")
-    ...     .layer_points()
-    ...     .show()
-    >>> )
+    >>> Lifemap(d, width="100%", height="100vh").layer_points().show()
 
     """
 
@@ -262,7 +258,7 @@ class Lifemap:
         ...         "value": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],
         ...     }
         ... )
-        >>> (Lifemap(d).layer_points_ol(radius_col="value", fill_col="value", popup=True).show())
+        >>> Lifemap(d).layer_points_ol(radius_col="value", fill_col="value", popup=True).show()
 
 
         See also
@@ -362,7 +358,7 @@ class Lifemap:
         ...     }
         ... )
         >>> d = aggregate_freq(d, column="category")
-        >>> (Lifemap(d).layer_donuts(counts_col="category", leaves="hide").show())
+        >>> Lifemap(d).layer_donuts(counts_col="category", leaves="hide").show()
 
 
         See also
@@ -458,7 +454,7 @@ class Lifemap:
         ...         ],
         ...     }
         ... )
-        >>> (Lifemap(d).layer_heatmap_ol().show())
+        >>> Lifemap(d).layer_heatmap_ol().show()
 
         """
 
@@ -538,7 +534,7 @@ class Lifemap:
         ...     }
         ... )
         >>> d = aggregate_num(d, column="value", fn="mean")
-        >>> (Lifemap(d).layer_lines(width_col="value", color_col="value").show())
+        >>> Lifemap(d).layer_lines(width_col="value", color_col="value").show()
 
 
         See also
@@ -609,7 +605,7 @@ class Lifemap:
         ...         ],
         ...     }
         ... )
-        >>> (Lifemap(d).layer_heatmap().show())
+        >>> Lifemap(d).layer_heatmap_deck().show()
 
         """
 
@@ -668,7 +664,7 @@ class Lifemap:
         ...         ],
         ...     }
         ... )
-        >>> (Lifemap(d).layer_screengrid().show())
+        >>> Lifemap(d).layer_screengrid().show()
 
         """
         options = self._process_options(locals())
