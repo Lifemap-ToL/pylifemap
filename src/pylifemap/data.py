@@ -198,7 +198,7 @@ class LifemapData:
             how="inner",
             left_on=self._taxid_col,
             right_on="taxid",
-        )
+        ).sort("pylifemap_zoom", descending=True)
 
         # Check and add data columns to needed columns if they are defined
         for col in data_columns:
@@ -289,17 +289,18 @@ class LifemapData:
         # Add ancestors info to data
         data = self.data_with_parents()
 
-        # Get points coordinates as x0 and y0
+        # Get points coordinates as x0 and y0 and sort by zoom level
         data = data.join(
             LMDATA.select(
                 pl.col("taxid"),
                 pl.col("pylifemap_x").alias("pylifemap_x0"),
                 pl.col("pylifemap_y").alias("pylifemap_y0"),
+                pl.col("pylifemap_zoom"),
             ),
             how="inner",
             left_on=self._taxid_col,
             right_on="taxid",
-        )
+        ).sort("pylifemap_zoom", descending=True)
 
         # Get parent point coordinates as x1 and y1
         data = data.join(
