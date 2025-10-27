@@ -1,11 +1,9 @@
 import { layer_basemap } from "./layers/layer_basemap"
 import { layer_heatmap } from "./layers/layer_heatmap"
-import { layer_points_deck } from "./layers/layer_points_deck"
 import { layer_points } from "./layers/layer_points"
 import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
 import { layer_grid } from "./layers/layer_grid"
 import { layer_screengrid } from "./layers/layer_screen_grid"
-import { layer_lines_deck } from "./layers/layer_lines_deck"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
 import { get_coords, unserialize_data, stringify_scale } from "./utils"
@@ -104,10 +102,6 @@ export function lifemap(el, data, layers, options = {}) {
                 return layer_lines(map, layer_data, layer_def.options ?? {})
             case "heatmap":
                 return layer_heatmap(map, layer_data, layer_def.options ?? {})
-            case "points_deck":
-                return layer_points_deck(map, layer_data, layer_def.options ?? {})
-            case "lines_deck":
-                return layer_lines_deck(map, layer_data, layer_def.options ?? {})
             case "heatmap_deck":
                 return layer_heatmap_deck(map, layer_data, layer_def.options ?? {})
             case "grid":
