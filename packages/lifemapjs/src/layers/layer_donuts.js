@@ -1,4 +1,4 @@
-import { guidGenerator, DEFAULT_CAT_SCHEME } from "../utils"
+import { guidGenerator, DEFAULT_CAT_SCHEME, get_popup_title } from "../utils"
 import VectorLayer from "ol/layer/Vector"
 import VectorSource from "ol/source/Vector"
 import Point from "ol/geom/Point.js"
@@ -105,15 +105,18 @@ export function layer_donuts(map, data, options = {}) {
 
     map.on("moveend", on_move_end)
 
-    map.on("click", function (evt) {
+    map.on("click", async function (evt) {
         const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => feature)
         if (!feature) {
             return
         }
+        const taxid = feature.get("data")["taxid"]
+        let content = get_popup_title(taxid)
+
         const data = feature.get("data")[counts_col]
         const total = data.map((d) => d.value).reduce((acc, val) => acc + val, 0)
         data.sort((a, b) => (a.key > b.key ? 1 : -1))
-        let content = "<table><tbody>"
+        content += "<table><tbody>"
         for (let d of data) {
             content += `<tr><td><svg width="15" height="15" fill="${scale_fn(
                 d.key

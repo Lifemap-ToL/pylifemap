@@ -2,6 +2,7 @@ import {
     guidGenerator,
     set_popup_event,
     set_hover_event,
+    get_popup_title,
     DEFAULT_CAT_SCHEME,
     DEFAULT_NUM_SCHEME,
 } from "../utils"
@@ -174,8 +175,12 @@ export function layer_points(map, data, options = {}) {
 
     // Popup
     if (popup) {
-        const content_fn = (feature) => {
-            let content = `<table><tbody><tr><td class='right'><strong>TaxId:</td><td>${feature.get("data").taxid}</td></tr>`
+        const content_fn = async (feature) => {
+            const taxid = feature.get("data")["taxid"]
+            let content = await get_popup_title(taxid)
+            console.log(content)
+
+            content += "<table><tbody>"
             content +=
                 radius_col !== null && radius_col != fill_col
                     ? `<tr><td class='right'><strong>${radius_col}:</strong></td><td>${feature.get("data")[radius_col]}</td></tr>`
@@ -191,7 +196,7 @@ export function layer_points(map, data, options = {}) {
             feature.get("data").pylifemap_y,
         ]
         const offset = [0, -5]
-        set_popup_event(map, id, coordinates_fn, content_fn, offset)
+        set_popup_event(map, id, coordinates_fn, content_fn)
     }
     layer.lifemap_ol_id = id
     layer.lifemap_ol_scales = scales

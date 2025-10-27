@@ -1,7 +1,7 @@
 import { tableFromIPC } from "@apache-arrow/es2015-esm"
 
 // Lifemap backend URL
-export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
+export const LIFEMAP_BACK_URL = "https://lifemap-temp.lhst.eu"
 
 // Default color schemes
 export const DEFAULT_NUM_SCHEME = "viridis"
@@ -61,6 +61,51 @@ export async function get_coords(taxids) {
     }
 }
 
+// Get sci_name and common_name of a taxid
+export async function get_names(taxid) {
+    if (taxid == 0) {
+        return { taxid: 0, sci_name: "LUCA" }
+    }
+    const url = `${LIFEMAP_BACK_URL}/solr/taxo/select`
+    const payload = {
+        params: {
+            q: "*:*",
+            fq: `taxid:${taxid}`,
+            fl: "taxid,sci_name",
+            wt: "json",
+            rows: 1,
+        },
+    }
+    try {
+        const response = await fetch(url, {
+            method: "post",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+        let data = await response.json()
+        data = data.response.docs
+
+        return data[0]
+    } catch (error) {
+        return null
+    }
+}
+
+// Get popup title for taxid by querying scientific name from solr API
+export async function get_popup_title(taxid) {
+    const names = await get_names(taxid)
+    let out = ""
+    if (names !== null) {
+        out += `<h2>${names["sci_name"]} <span>(${taxid})</span></h2>`
+    } else {
+        out += `<h2>${taxid}</h2>`
+    }
+    return out
+}
+
 // Unserialize data from Arrow IPC to JS Array
 export function unserialize_data(data) {
     if (data["serialized"]) {
@@ -116,8 +161,8 @@ export function set_hover_event(map, id, selected_feature) {
 }
 
 // Add popup click event to a layer
-export function set_popup_event(map, id, coordinates_fn, content_fn, offset) {
-    map.on("click", function (ev) {
+export function set_popup_event(map, id, coordinates_fn, content_fn) {
+    map.on("click", async function (ev) {
         const feature = map.forEachFeatureAtPixel(ev.pixel, (feature) => feature, {
             layerFilter: (d) => d.lifemap_ol_id == id,
         })
@@ -125,7 +170,7 @@ export function set_popup_event(map, id, coordinates_fn, content_fn, offset) {
             return
         }
         map.dispose_popup()
-        const content = content_fn(feature)
+        const content = await content_fn(feature)
         const coordinates = coordinates_fn(feature)
         const offset = [0, -5]
         map.show_popup(coordinates, content, offset)

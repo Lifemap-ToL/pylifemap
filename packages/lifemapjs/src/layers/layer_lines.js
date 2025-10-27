@@ -2,6 +2,7 @@ import {
     guidGenerator,
     set_popup_event,
     set_hover_event,
+    get_popup_title,
     DEFAULT_NUM_SCHEME,
 } from "../utils"
 
@@ -158,8 +159,11 @@ export function layer_lines(map, data, options = {}) {
 
     // Popup
     if (popup) {
-        const content_fn = (feature) => {
-            let content = `<table><tbody><tr><td class='right'><strong>TaxId:</td><td>${feature.get("data").taxid}</td></tr>`
+        const content_fn = async (feature) => {
+            const taxid = feature.get("data")["taxid"]
+            let content = await get_popup_title(taxid)
+
+            content += "<table><tbody>"
             content +=
                 width_col !== null && width_col != color_col
                     ? `<tr><td class='right'><strong>${width_col}:</strong></td><td>${feature.get("data")[width_col]}</td></tr>`
@@ -175,7 +179,7 @@ export function layer_lines(map, data, options = {}) {
             (feature.get("data").pylifemap_y0 + feature.get("data").pylifemap_y1) / 2,
         ]
         const offset = [0, -5]
-        set_popup_event(map, id, coordinates_fn, content_fn, offset)
+        set_popup_event(map, id, coordinates_fn, content_fn)
     }
 
     layer.lifemap_ol_id = id

@@ -61,6 +61,16 @@
     color: auto;
 }
 
+#lifemap-popup h2 {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+#lifemap-popup h2 span {
+    font-size: 12px;
+}
+
 #lifemap-popup table {
     border: none;
 }
