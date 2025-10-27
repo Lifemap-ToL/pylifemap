@@ -17,7 +17,7 @@ website:
     navbar:
         foreground: "#FFF"
         background: "#333"
-        pinned: false
+        pinned: true
         left:
             - installation.qmd
             - getting_started.qmd
