@@ -10,10 +10,10 @@ DEFAULT_WIDTH = "800px"
 DEFAULT_HEIGHT = "600px"
 LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 
-logger = logging.getLogger("LifemapBuilder")
+logger = logging.getLogger("pylifemap")
 ch = logging.StreamHandler(stream=sys.stdout)
 logger.addHandler(ch)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 def check_marimo() -> bool:
