@@ -1,7 +1,7 @@
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import { guidGenerator } from "../utils"
 
-export function layer_heatmap_deck(map, data, options = {}) {
+export function layer_heatmap_deck(data, options = {}) {
     let {
         id = undefined,
         x_col = "pylifemap_x",

@@ -6,7 +6,7 @@ import Vector from "ol/source/Vector.js"
 import HeatmapLayer from "ol/layer/Heatmap.js"
 import { fromLonLat } from "ol/proj.js"
 
-export function layer_heatmap(map, data, options = {}) {
+export function layer_heatmap(data, options = {}) {
     let {
         id = null,
         x_col = "pylifemap_x",
