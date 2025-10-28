@@ -1,7 +1,6 @@
 import {
     guidGenerator,
     set_hover_event,
-    get_popup_title,
     DEFAULT_CAT_SCHEME,
     DEFAULT_NUM_SCHEME,
 } from "../utils"
@@ -14,7 +13,7 @@ import { fromLonLat } from "ol/proj.js"
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
-
+import { get_popup_title } from "../api"
 import { set_popup_event } from "../elements/popup"
 
 export function layer_points(map, data, options = {}) {

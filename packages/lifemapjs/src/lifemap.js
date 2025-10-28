@@ -8,7 +8,8 @@ import { layer_screengrid } from "./layers/layer_screen_grid"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
 import { layer_deck } from "./layers/layer_deck"
-import { get_coords, unserialize_data, stringify_scale } from "./utils"
+import { get_coords } from "./api"
+import { unserialize_data, stringify_scale } from "./utils"
 
 import { LegendControl } from "./elements/controls"
 

@@ -1,4 +1,5 @@
-import { guidGenerator, DEFAULT_CAT_SCHEME, get_popup_title } from "../utils"
+import { guidGenerator, DEFAULT_CAT_SCHEME } from "../utils"
+import { get_popup_title } from "../api"
 import VectorLayer from "ol/layer/Vector"
 import VectorSource from "ol/source/Vector"
 import Point from "ol/geom/Point.js"

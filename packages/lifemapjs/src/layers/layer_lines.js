@@ -1,9 +1,5 @@
-import {
-    guidGenerator,
-    set_hover_event,
-    get_popup_title,
-    DEFAULT_NUM_SCHEME,
-} from "../utils"
+import { guidGenerator, set_hover_event, DEFAULT_NUM_SCHEME } from "../utils"
+import { get_popup_title } from "../api"
 
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
