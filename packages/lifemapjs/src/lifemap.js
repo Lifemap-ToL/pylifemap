@@ -19,23 +19,6 @@ const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const MAX_SOLR_QUERY = 100000
 const LANG = "en"
 
-// Spinner element creation
-function create_spinner(el) {
-    const spinner = document.createElement("div")
-    spinner.classList.add("lifemap-spinner")
-
-    spinner.show = function () {
-        spinner.style.display = "block"
-    }
-
-    spinner.hide = function () {
-        spinner.style.display = "none"
-    }
-
-    el.querySelector(".ol-viewport").appendChild(spinner)
-    return spinner
-}
-
 // Main function
 export function lifemap(el, data, layers, options = {}) {
     const { zoom = 5, legend_width = undefined } = options
@@ -54,9 +37,6 @@ export function lifemap(el, data, layers, options = {}) {
     // Labels layer
     const labels_layer = layer_labels(map)
     map.addLayer(labels_layer)
-
-    // Spinner Overlay
-    map.spinner = create_spinner(el)
 
     // Default zoom level
     map.default_zoom = zoom

@@ -2,6 +2,7 @@
 import Map from "ol/Map"
 import View from "ol/View"
 import { Popup } from "../elements/popup"
+import { Spinner } from "../elements/spinner"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat } from "ol/proj"
 import FullScreen from "ol/control/FullScreen.js"
@@ -49,10 +50,13 @@ export function layer_basemap(el, options) {
         layers: [],
     })
 
-    // Popup object
+    // Popup
     map.popup = new Popup()
     map.addOverlay(map.popup.overlay)
     map.on("click", () => map.popup.dispose())
+
+    // Spinner
+    map.spinner = new Spinner(el)
 
     return map
 }
