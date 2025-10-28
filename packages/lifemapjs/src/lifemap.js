@@ -1,4 +1,4 @@
-import { layer_basemap } from "./layers/layer_basemap"
+import { create_map } from "./map"
 import { layer_labels } from "./layers/layer_labels"
 import { layer_heatmap } from "./layers/layer_heatmap"
 import { layer_points } from "./layers/layer_points"
@@ -25,7 +25,7 @@ export function lifemap(el, data, layers, options = {}) {
     const { zoom = 5, legend_width = undefined } = options
 
     // Base map object
-    let map = layer_basemap(el, { zoom: zoom })
+    let map = create_map(el, { zoom: zoom })
 
     // Tiles layer
     const tiles_layer = layer_tiles(map.getView(), LANG)
