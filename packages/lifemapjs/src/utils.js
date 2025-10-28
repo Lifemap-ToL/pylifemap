@@ -5,6 +5,7 @@ export const LIFEMAP_BACK_URL = "https://lifemap-temp.lhst.eu"
 
 export const DEFAULT_LON = 0
 export const DEFAULT_LAT = -4.226497
+export const MAP_EXTENT = [-74.203515625, -33.7091796875, 68.003515625, 35.1091796875]
 
 // Default color schemes
 export const DEFAULT_NUM_SCHEME = "viridis"
