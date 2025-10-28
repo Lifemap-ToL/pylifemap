@@ -17,7 +17,7 @@ export function layer_tiles(view, lang) {
             url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
         }),
         style: createCompositeStyleFunction(view, lang),
-        declutter: false,
+        declutter: true,
         renderMode: "vector",
         updateWhileAnimating: true,
         updateWhileInteracting: true,
