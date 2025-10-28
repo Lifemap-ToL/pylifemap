@@ -1,6 +1,7 @@
 import Control from "ol/control/Control.js"
 import { DEFAULT_LAT, DEFAULT_LON } from "../utils"
 import { fromLonLat } from "ol/proj"
+import { snapdom } from "@zumer/snapdom"
 
 export class ResetZoomControl extends Control {
     constructor(opt_options) {
@@ -56,9 +57,13 @@ export class PngExportControl extends Control {
         button.addEventListener("click", this.handlePngExport.bind(this), false)
     }
 
-    handlePngExport() {
-        const map = this.getMap()
-        const canvases = map.getTargetElement().querySelectorAll(".ol-viewport canvas")
+    async handlePngExport() {
+        const el = this.getMap().getTargetElement()
+
+        const legend_element = el.querySelector(".lifemap-legend")
+        const legend_canvas = await snapdom.toCanvas(legend_element)
+
+        const canvases = el.querySelectorAll(".ol-viewport canvas")
 
         const result_canvas = document.createElement("canvas")
         result_canvas.width = canvases[0].width
@@ -72,6 +77,11 @@ export class PngExportControl extends Control {
         canvases.forEach((c) => {
             result_ctx.drawImage(c, 0, 0)
         })
+
+        // Draw legend
+        const legend_x = result_canvas.width - legend_canvas.width - 10
+        const legend_y = result_canvas.height - legend_canvas.height - 10
+        result_ctx.drawImage(legend_canvas, legend_x, legend_y)
 
         result_canvas.toBlob((blob) => {
             const [, year, month, day] = new Date()
