@@ -15,7 +15,7 @@ import { LegendControl } from "./elements/controls"
 import * as Plot from "@observablehq/plot"
 import { layer_tiles } from "./layers/layer_tiles"
 
-const OL_LAYERS = ["donuts", "points", "heatmap", "lines"]
+const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const MAX_SOLR_QUERY = 100000
 const LANG = "en"
 
@@ -148,7 +148,7 @@ export function lifemap(el, data, layers, options = {}) {
 
     // Update deck layers from layers definition list
     function update_deck_layers(layers_def) {
-        const list = layers_def.filter((d) => !OL_LAYERS.includes(d.layer))
+        const list = layers_def.filter((d) => DECK_LAYERS.includes(d.layer))
         let layers = list.length == 0 ? [] : convert_layers(list, map)
         deck.setProps({ layers: layers })
         update_scales(layers)
@@ -156,7 +156,7 @@ export function lifemap(el, data, layers, options = {}) {
 
     // Update OL layers from layers definition list
     function update_ol_layers(layers_def) {
-        const layers_list = layers_def.filter((d) => OL_LAYERS.includes(d.layer))
+        const layers_list = layers_def.filter((d) => !DECK_LAYERS.includes(d.layer))
         const ol_layers = convert_layers(layers_list, map)
         if (layers_list.length == 0) return
         ol_layers.forEach((l) => {
