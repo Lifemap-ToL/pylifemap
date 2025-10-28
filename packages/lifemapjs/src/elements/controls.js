@@ -58,9 +58,22 @@ export class PngExportControl extends Control {
 
     handlePngExport() {
         const map = this.getMap()
-        const canvas = map.getTargetElement().querySelector(".ol-viewport canvas")
-        console.log(canvas)
-        canvas.toBlob((blob) => {
+        const canvases = map.getTargetElement().querySelectorAll(".ol-viewport canvas")
+
+        const result_canvas = document.createElement("canvas")
+        result_canvas.width = canvases[0].width
+        result_canvas.height = canvases[0].height
+
+        const result_ctx = result_canvas.getContext("2d")
+        result_ctx.fillStyle = "black"
+        result_ctx.fillRect(0, 0, result_canvas.width, result_canvas.height)
+
+        // Draw each canvas onto the result canvas in order
+        canvases.forEach((c) => {
+            result_ctx.drawImage(c, 0, 0)
+        })
+
+        result_canvas.toBlob((blob) => {
             const [, year, month, day] = new Date()
                 .toISOString()
                 .match(/^(\d{4})-(\d{2})-(\d{2})/)
