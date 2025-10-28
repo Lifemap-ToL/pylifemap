@@ -7,23 +7,17 @@ import { layer_grid } from "./layers/layer_grid"
 import { layer_screengrid } from "./layers/layer_screen_grid"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
-import {
-    get_coords,
-    unserialize_data,
-    stringify_scale,
-    DEFAULT_LON,
-    DEFAULT_LAT,
-} from "./utils"
+import { layer_deck } from "./layers/layer_deck"
+import { get_coords, unserialize_data, stringify_scale } from "./utils"
 
-import { Deck } from "@deck.gl/core"
-import { Layer } from "ol/layer"
-import { toLonLat } from "ol/proj"
-import { LegendControl } from "./controls"
+import { LegendControl } from "./elements/controls"
 
 import * as Plot from "@observablehq/plot"
+import { layer_tiles } from "./layers/layer_tiles"
 
 const OL_LAYERS = ["donuts", "points", "heatmap", "lines"]
 const MAX_SOLR_QUERY = 100000
+const LANG = "en"
 
 // Spinner element creation
 function create_spinner(el) {
@@ -46,30 +40,16 @@ function create_spinner(el) {
 export function lifemap(el, data, layers, options = {}) {
     const { zoom = 5, legend_width = undefined } = options
 
-    // Create deck.gl layer
-    const deck = new Deck({
-        initialViewState: { longitude: DEFAULT_LON, latitude: DEFAULT_LAT, zoom: zoom },
-        controller: false,
-        useDevicePixels: false,
-        parent: el,
-        style: { pointerEvents: "none", "z-index": 1 },
-        layers: [],
-    })
-
-    const deck_layer = new Layer({
-        render({ size, viewState }) {
-            const [width, height] = size
-            const [longitude, latitude] = toLonLat(viewState.center)
-            const zoom = viewState.zoom - 1
-            const bearing = 0
-            const deckViewState = { bearing, longitude, latitude, zoom }
-            deck.setProps({ width, height, viewState: deckViewState })
-            deck.redraw()
-        },
-    })
-
     // Base map object
-    let map = layer_basemap(el, deck_layer, { zoom: zoom })
+    let map = layer_basemap(el, { zoom: zoom })
+
+    // Tiles layer
+    const tiles_layer = layer_tiles(map.getView(), LANG)
+    map.addLayer(tiles_layer)
+
+    // Deck.gl layer
+    const { deck_layer, deck } = layer_deck(el, zoom)
+    map.addLayer(deck_layer)
 
     // Labels layer
     const labels_layer = layer_labels(map)
@@ -86,8 +66,6 @@ export function lifemap(el, data, layers, options = {}) {
     map.scales = undefined
     // Data
     map.data = undefined
-    // OL layers
-    map.ol_layers = undefined
 
     // Create layer from layer definition object
     function create_layer(layer_def) {

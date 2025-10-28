@@ -3,20 +3,15 @@ import Map from "ol/Map"
 import View from "ol/View"
 import Overlay from "ol/Overlay.js"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
-import VectorTileLayer from "ol/layer/VectorTile"
-import VectorTileSource from "ol/source/VectorTile"
-import { MVT } from "ol/format"
 import { fromLonLat } from "ol/proj"
 import FullScreen from "ol/control/FullScreen.js"
 import { defaults as defaultControls } from "ol/control/defaults.js"
 import { ResetZoomControl } from "../controls"
 
-import { createCompositeStyleFunction } from "../styles/ol_styles"
-import { DEFAULT_LON, DEFAULT_LAT, LIFEMAP_BACK_URL } from "../utils"
+import { DEFAULT_LON, DEFAULT_LAT } from "../utils"
 
-export function layer_basemap(el, deck_layer, options) {
+export function layer_basemap(el, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42 } = options
-    const lang = "en"
 
     const view = new View({
         center: fromLonLat([DEFAULT_LON, DEFAULT_LAT]),
@@ -26,23 +21,6 @@ export function layer_basemap(el, deck_layer, options) {
         enableRotation: false,
         constrainResolution: false,
         smoothResolutionConstraint: false,
-    })
-
-    const composite_layer = new VectorTileLayer({
-        id: "base-layer",
-        background: "#000",
-        source: new VectorTileSource({
-            maxZoom: 42,
-            format: new MVT(),
-            url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
-        }),
-        style: createCompositeStyleFunction(view, lang),
-        declutter: false,
-        renderMode: "vector",
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        renderBuffer: 256,
-        preload: Infinity,
     })
 
     const controls = defaultControls()
@@ -68,7 +46,7 @@ export function layer_basemap(el, deck_layer, options) {
         overlays: [],
         target: el,
         view,
-        layers: [composite_layer, deck_layer],
+        layers: [],
     })
 
     // Popup object
