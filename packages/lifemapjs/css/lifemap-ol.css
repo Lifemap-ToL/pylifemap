@@ -137,9 +137,17 @@
 /* Controls */
 
 .pylifemap-control {
-    top: 65px;
+    position: absolute;
     left: 0.5em;
 }
-.ol-touch .pylifemap-control {
-    top: 80px;
+.pylifemap-control button svg {
+    margin: 3px;
+}
+
+.ol-control {
+    cursor: default;
+}
+
+.ol-control button {
+    cursor: pointer;
 }
