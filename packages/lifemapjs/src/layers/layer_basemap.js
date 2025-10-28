@@ -7,7 +7,7 @@ import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat } from "ol/proj"
 import FullScreen from "ol/control/FullScreen.js"
 import { defaults as defaultControls } from "ol/control/defaults.js"
-import { ResetZoomControl } from "../controls"
+import { PngExportControl, ResetZoomControl } from "../elements/controls"
 
 import { DEFAULT_LON, DEFAULT_LAT } from "../utils"
 
