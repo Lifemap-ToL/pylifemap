@@ -2,9 +2,7 @@ import Overlay from "ol/Overlay"
 import { fromLonLat } from "ol/proj"
 
 export class Popup {
-    constructor(opt_options) {
-        const options = opt_options || {}
-
+    constructor() {
         this.popup = this.create_popup()
         this.overlay = new Overlay({
             element: this.popup,
