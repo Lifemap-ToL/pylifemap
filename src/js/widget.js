@@ -1,11 +1,14 @@
-import { lifemap } from "lifemapjs"
+import { Lifemap } from "lifemapjs"
 
 import "./styles.css"
 
 // Data value change callback
 function _onDataChanged(model, map) {
     let data = () => model.get("data")
-    map.update_data(data())
+    let layers = () => model.get("layers")
+    map.update_data(data()).then(() => {
+        map.update_layers(layers())
+    })
 }
 
 // Layers value change callback
@@ -47,7 +50,10 @@ export default {
         el.appendChild(container)
 
         // Create map
-        const map = lifemap(container, data(), layers(), options())
+        const map = new Lifemap(container, data(), layers(), options())
+        map.update_data(data()).then(() => {
+            map.update_layers(layers())
+        })
 
         // Add traitlets change callback
         model.on("change:data", () => _onDataChanged(model, map))

@@ -7,161 +7,47 @@ import { layer_screengrid } from "./layers/layer_screengrid"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
 import { layer_deck } from "./layers/layer_deck"
+import { layer_tiles } from "./layers/layer_tiles"
+import { LegendControl } from "./elements/controls"
 import { get_coords } from "./api"
 import { unserialize_data, stringify_scale } from "./utils"
 
-import { LegendControl } from "./elements/controls"
-
 import * as Plot from "@observablehq/plot"
-import { layer_tiles } from "./layers/layer_tiles"
 
 const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const MAX_SOLR_QUERY = 100000
 const LANG = "en"
 
-// Main function
-export function lifemap(el, data, layers, options = {}) {
-    const { zoom = 5, legend_width = undefined } = options
+export class Lifemap {
+    constructor(el, options = {}) {
+        const { zoom = 5, legend_width = undefined } = options
 
-    // Base map object
-    let map = create_map(el, { zoom: zoom })
+        // Base map object
+        this.map = create_map(el, { zoom: zoom })
 
-    // Tiles layer
-    const tiles_layer = layer_tiles(map.getView(), LANG)
-    map.addLayer(tiles_layer)
+        // Tiles layer
+        const tiles_layer = layer_tiles(this.map.getView(), LANG)
+        // Labels layer
+        const labels_layer = layer_labels(this.map)
+        this.base_layers = [tiles_layer, labels_layer]
 
-    // Deck.gl layer
-    const { deck_layer, deck } = layer_deck(el, zoom)
-    map.addLayer(deck_layer)
+        // Deck.gl init
+        const { deck_layer, deck } = layer_deck(el, zoom)
+        this.deck = deck
+        this.deck.base_layer = deck_layer
 
-    // Labels layer
-    const labels_layer = layer_labels(map)
-    map.addLayer(labels_layer)
+        this.deck_layers = []
+        this.ol_layers = []
 
-    // Default zoom level
-    map.default_zoom = zoom
-    // Legend control
-    map.legend = new LegendControl()
-    // Current scales
-    map.scales = undefined
-    // Data
-    map.data = undefined
-
-    // Create layer from layer definition object
-    function create_layer(layer_def) {
-        // Get data
-        const layer_id = layer_def.options.id
-        let layer_data = map.data[layer_id]
-        switch (layer_def.layer) {
-            case "points":
-                return layer_points(map, layer_data, layer_def.options ?? {})
-            case "lines":
-                return layer_lines(map, layer_data, layer_def.options ?? {})
-            case "heatmap":
-                return layer_heatmap(map, layer_data, layer_def.options ?? {})
-            case "heatmap_deck":
-                return layer_heatmap_deck(map, layer_data, layer_def.options ?? {})
-            case "grid":
-                return layer_grid(map, layer_data, layer_def.options ?? {})
-            case "screengrid":
-                return layer_screengrid(map, layer_data, layer_def.options ?? {})
-            case "donuts":
-                return layer_donuts(map, layer_data, layer_def.options ?? {})
-            default:
-                console.warn(`Invalid layer type: ${layer_def.layer}`)
-                return undefined
-        }
+        this.map.default_zoom = zoom
+        this.legend = new LegendControl()
+        this.legend_width = legend_width
+        this.scales = []
+        this.data = undefined
     }
 
-    // Convert layer definitions to layers
-    function convert_layers(layers_list, map) {
-        layers_list = Array.isArray(layers_list) ? layers_list : [layers_list]
-        layers_list = layers_list.map((l) => create_layer(l, map))
-        return layers_list.flat()
-    }
-
-    // Create legend from scales
-    function update_legend(scales) {
-        if (scales.length == 0) {
-            map.removeControl(map.legend)
-            return
-        }
-
-        let div_legend = document.createElement("div")
-        if (legend_width) {
-            div_legend.style.width = legend_width
-        }
-        // Add legends
-        for (let scale of Object.values(scales)) {
-            if (scale.color.type == "categorical") {
-                const legend_label = document.createElement("div")
-                legend_label.classList.add("legend-title")
-                legend_label.innerHTML = scale.label
-                div_legend.append(legend_label)
-            }
-            div_legend.append(Plot.legend(scale))
-        }
-        map.legend.element.appendChild(div_legend)
-        map.addControl(map.legend)
-    }
-
-    // Update scales from layers
-    function update_scales(layers) {
-        let scales = layers
-            .filter((d) => d.lifemap_ol_scales)
-            .map((d) => d.lifemap_ol_scales)
-            .flat()
-
-        // Remove duplicated scales
-        let unique_scales = {}
-        scales.forEach((scale) => {
-            if (legend_width) scale.width = legend_width
-            const key = stringify_scale(scale)
-            unique_scales[key] = scale
-        })
-        unique_scales = Object.values(unique_scales)
-        if (map.scales != stringify_scale(unique_scales)) {
-            update_legend(unique_scales)
-            map.scales = stringify_scale(unique_scales)
-        }
-    }
-
-    // Update deck layers from layers definition list
-    function update_deck_layers(layers_def) {
-        const list = layers_def.filter((d) => DECK_LAYERS.includes(d.layer))
-        let layers = list.length == 0 ? [] : convert_layers(list, map)
-        deck.setProps({ layers: layers })
-        update_scales(layers)
-    }
-
-    // Update OL layers from layers definition list
-    function update_ol_layers(layers_def) {
-        const layers_list = layers_def.filter((d) => !DECK_LAYERS.includes(d.layer))
-        const ol_layers = convert_layers(layers_list, map)
-        if (layers_list.length == 0) return
-        ol_layers.forEach((l) => {
-            map.addLayer(l)
-        })
-        update_scales(ol_layers)
-    }
-
-    map.update_layers = function (layers_list) {
-        map.spinner.show()
-        map.getLayers()
-            .getArray()
-            .forEach((l) => {
-                if (l.is_webgl) {
-                    map.removeLayer(l)
-                    l.dispose()
-                }
-            })
-        update_deck_layers(layers_list)
-        update_ol_layers(layers_list)
-        map.spinner.hide()
-    }
-
-    map.update_data = async function (data) {
-        map.spinner.show()
+    async update_data(data) {
+        this.map.spinner.show()
         let deserialized_data = {}
         let taxids = new Set()
         for (let k in data) {
@@ -201,13 +87,122 @@ export function lifemap(el, data, layers, options = {}) {
                 }
             }
         }
-        map.data = deserialized_data
-        map.spinner.hide()
+        this.data = deserialized_data
+        this.map.spinner.hide()
     }
 
-    map.update_data(data).then(() => {
-        map.update_layers(layers)
-        el.map = map
-        return map
-    })
+    create_layers(layers_def_list) {
+        layers_def_list = Array.isArray(layers_def_list)
+            ? layers_def_list
+            : [layers_def_list]
+        let layers_list = layers_def_list.map((l) => {
+            // Get data
+            const layer_id = l.options.id
+            let layer_data = this.data[layer_id]
+            switch (l.layer) {
+                case "points":
+                    return layer_points(this.map, layer_data, l.options ?? {})
+                case "lines":
+                    return layer_lines(this.map, layer_data, l.options ?? {})
+                case "heatmap":
+                    return layer_heatmap(layer_data, l.options ?? {})
+                case "heatmap_deck":
+                    return layer_heatmap_deck(layer_data, l.options ?? {})
+                case "screengrid":
+                    return layer_screengrid(layer_data, l.options ?? {})
+                case "donuts":
+                    return layer_donuts(this.map, layer_data, l.options ?? {})
+                default:
+                    console.warn(`Invalid layer type: ${l.layer}`)
+                    return undefined
+            }
+        })
+        return layers_list.flat()
+    }
+
+    update_layers(layers_def_list) {
+        this.map.spinner.show()
+        this.dispose_webgl_layers()
+
+        const deck_layers_def = layers_def_list.filter((d) =>
+            DECK_LAYERS.includes(d.layer)
+        )
+        this.deck_layers =
+            deck_layers_def.length == 0 ? [] : this.create_layers(deck_layers_def)
+
+        const ol_layers_def = layers_def_list.filter(
+            (d) => !DECK_LAYERS.includes(d.layer)
+        )
+        this.ol_layers =
+            ol_layers_def.length == 0 ? [] : this.create_layers(ol_layers_def)
+
+        let layers = [...this.base_layers, ...this.ol_layers]
+        if (this.deck_layers.length > 0) {
+            layers = [this.deck.base_layer, ...layers]
+            this.deck.setProps({ layers: this.deck_layers })
+        }
+
+        this.map.setLayers(layers)
+        this.update_scales()
+
+        this.map.spinner.hide()
+    }
+
+    dispose_webgl_layers() {
+        this.map
+            .getLayers()
+            .getArray()
+            .forEach((l) => {
+                if (l.is_webgl) {
+                    this.map.removeLayer(l)
+                    l.dispose()
+                }
+            })
+    }
+
+    // Update scales from layers
+    update_scales() {
+        let scales = this.ol_layers
+            .filter((d) => d.lifemap_ol_scales)
+            .map((d) => d.lifemap_ol_scales)
+            .flat()
+
+        // Remove duplicated scales
+        let unique_scales = {}
+        scales.forEach((scale) => {
+            if (this.legend_width) scale.width = this.legend_width
+            const key = stringify_scale(scale)
+            unique_scales[key] = scale
+        })
+        unique_scales = Object.values(unique_scales)
+        if (stringify_scale(this.scales) != stringify_scale(unique_scales)) {
+            this.scales = unique_scales
+            this.update_legend()
+        }
+    }
+
+    // Create legend from scales
+    update_legend() {
+        this.map.removeControl(this.legend)
+        if (this.scales.length == 0) {
+            return
+        }
+
+        let legend_container = document.createElement("div")
+        if (this.legend_width) {
+            legend_container.style.width = this.legend_width
+        }
+        // Add legends
+        for (let scale of Object.values(this.scales)) {
+            if (scale.color.type == "categorical") {
+                const legend_label = document.createElement("div")
+                legend_label.classList.add("legend-title")
+                legend_label.innerHTML = scale.label
+                legend_container.append(legend_label)
+            }
+            legend_container.append(Plot.legend(scale))
+        }
+        this.legend.element.appendChild(legend_container)
+        this.map.addControl(this.legend)
+    }
 }
