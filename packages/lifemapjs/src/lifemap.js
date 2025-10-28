@@ -225,7 +225,7 @@ export function lifemap(el, data, layers, options = {}) {
         map.spinner.hide()
     }
 
-    map.update_data(data, layers).then(() => {
+    map.update_data(data).then(() => {
         map.update_layers(layers)
         el.map = map
         return map
