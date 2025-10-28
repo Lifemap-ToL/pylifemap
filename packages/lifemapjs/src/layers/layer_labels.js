@@ -1,5 +1,5 @@
 import { getBottomLeft, getTopRight } from "ol/extent.js"
-import { fromLonLat, toLonLat } from "ol/proj"
+import { fromLonLat, toLonLat, transformExtent } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import { Vector } from "ol/source.js"
@@ -45,7 +45,6 @@ function to_taxon(doc, zoom) {
 }
 
 function list_for_extent(zoom, extent) {
-    zoom = Math.round(zoom)
     const url = `${SOLR_API_URL}/taxo/select?q=*:*&fq=zoom:[0 TO ${zoom}]&fq=lat:[${extent[1]} TO ${extent[3]}]&fq=lon:[${extent[0]} TO ${extent[2]}]&wt=json&rows=1000`
     const list_taxa = () =>
         fetch(url)
@@ -81,10 +80,14 @@ export function layer_labels(map) {
 
     async function on_move_end(ev) {
         const map = ev.map
-        let extent = map.getView().calculateExtent()
-        extent = [...toLonLat(getBottomLeft(extent)), ...toLonLat(getTopRight(extent))]
-        const zoom = map.getView().getZoom()
-        let labels = await list_for_extent(zoom + 3, extent)
+        const extent = transformExtent(
+            map.getView().calculateExtent(),
+            "EPSG:3857",
+            "EPSG:4326"
+        )
+        //extent = [...toLonLat(getBottomLeft(extent)), ...toLonLat(getTopRight(extent))]
+        const zoom = Math.round(map.getView().getZoom())
+        let labels = await list_for_extent(zoom + 4, extent)
         labels_source.clear()
         labels_source.addFeatures(labels)
         map.render()
