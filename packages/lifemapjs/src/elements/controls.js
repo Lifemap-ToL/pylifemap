@@ -14,7 +14,7 @@ export class ResetZoomControl extends Control {
 
         const element = document.createElement("div")
         element.className = "reset-zoom pylifemap-control ol-unselectable ol-control"
-        element.style.top = "65px"
+        element.style.top = "60px"
         element.appendChild(button)
 
         super({
