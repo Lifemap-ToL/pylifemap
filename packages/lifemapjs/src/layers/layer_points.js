@@ -1,6 +1,5 @@
 import {
     guidGenerator,
-    set_popup_event,
     set_hover_event,
     get_popup_title,
     DEFAULT_CAT_SCHEME,
@@ -15,6 +14,8 @@ import { fromLonLat } from "ol/proj.js"
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
+
+import { set_popup_event } from "../elements/popup"
 
 export function layer_points(map, data, options = {}) {
     let {
@@ -178,7 +179,6 @@ export function layer_points(map, data, options = {}) {
         const content_fn = async (feature) => {
             const taxid = feature.get("data")["taxid"]
             let content = await get_popup_title(taxid)
-            console.log(content)
 
             content += "<table><tbody>"
             content +=
@@ -195,7 +195,6 @@ export function layer_points(map, data, options = {}) {
             feature.get("data").pylifemap_x,
             feature.get("data").pylifemap_y,
         ]
-        const offset = [0, -5]
         set_popup_event(map, id, coordinates_fn, content_fn)
     }
     layer.lifemap_ol_id = id

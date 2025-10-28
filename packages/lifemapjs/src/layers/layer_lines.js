@@ -1,6 +1,5 @@
 import {
     guidGenerator,
-    set_popup_event,
     set_hover_event,
     get_popup_title,
     DEFAULT_NUM_SCHEME,
@@ -9,6 +8,7 @@ import {
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
 import { fromLonLat } from "ol/proj.js"
+import { set_popup_event } from "../elements/popup"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"

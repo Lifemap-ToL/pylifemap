@@ -1,7 +1,7 @@
 // OL
 import Map from "ol/Map"
 import View from "ol/View"
-import Overlay from "ol/Overlay.js"
+import { Popup } from "../elements/popup"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat } from "ol/proj"
 import FullScreen from "ol/control/FullScreen.js"
@@ -50,72 +50,9 @@ export function layer_basemap(el, options) {
     })
 
     // Popup object
-    const popup = create_popup()
-    const popup_overlay = new Overlay({
-        element: popup,
-        autoPan: {
-            animation: {
-                duration: 250,
-            },
-        },
-    })
-
-    map.popup = popup
-    map.popup_overlay = popup_overlay
-    map.popup.is_shown = false
-    map.addOverlay(popup_overlay)
-
-    map.dispose_popup = function () {
-        map.popup_overlay.setPosition(undefined)
-        map.popup.closer.blur()
-        return false
-    }
-
-    map.show_popup = function (coordinates, content, offset = [0, 0]) {
-        if (map.popup.is_shown) {
-            map.dispose_popup()
-        }
-        map.popup.content.innerHTML = content
-        map.popup_overlay.setPosition(fromLonLat(coordinates))
-        map.popup_overlay.setOffset(offset)
-        map.popup.is_shown = true
-    }
-
-    map.popup.closer.onclick = map.dispose_popup
-
-    function on_click() {
-        if (map.popup.is_shown) {
-            map.dispose_popup()
-            map.popup.is_shown = false
-        }
-    }
-
-    map.on("click", on_click)
+    map.popup = new Popup()
+    map.addOverlay(map.popup.overlay)
+    map.on("click", () => map.popup.dispose())
 
     return map
-}
-
-function create_popup() {
-    const container = document.createElement("div")
-    container.id = "lifemap-popup"
-    const content = document.createElement("div")
-    content.id = "lifemap-popup-content"
-    container.appendChild(content)
-    const closer = document.createElement("div")
-    closer.id = "lifemap-popup-closer"
-    closer.innerHTML = "<a href='#'>✕</a>"
-    container.appendChild(closer)
-
-    container.content = content
-    container.closer = closer
-
-    container.addEventListener(
-        "wheel",
-        function (e) {
-            // Prevent the default scroll behavior
-            e.preventDefault()
-        },
-        { passive: false }
-    )
-    return container
 }
