@@ -34,10 +34,10 @@ You can run `pylifemap` directly with `uv run` using a `--with` argument:
 
 ```sh
 # Run a Jupyter session
-uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with jupyter jupyter-lab
 
 # Run a marimo session
-uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with marimo marimo edit
 
 # Run a custom script
 uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py
