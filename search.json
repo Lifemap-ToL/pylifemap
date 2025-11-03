@@ -627,7 +627,7 @@
     "href": "installation.html#run-directly-with-uv",
     "title": "Installation",
     "section": "Run directly with uv",
-    "text": "Run directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab\n\n# Run a marimo session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit\n\n# Run a custom script\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py"
+    "text": "Run directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with jupyter jupyter-lab\n\n# Run a marimo session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with marimo marimo edit\n\n# Run a custom script\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py"
   },
   {
     "objectID": "installation.html#run-in-google-colab",

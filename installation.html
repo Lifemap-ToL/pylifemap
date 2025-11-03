@@ -433,10 +433,10 @@ Note
 <h2 class="anchored" data-anchor-id="run-directly-with-uv">Run directly with <code>uv</code></h2>
 <p>You can run <code>pylifemap</code> directly with <code>uv run</code> using a <code>--with</code> argument:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a Jupyter session</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git <span class="at">--with</span> jupyter jupyter-lab</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a marimo session</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git <span class="at">--with</span> marimo marimo edit</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a custom script</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
