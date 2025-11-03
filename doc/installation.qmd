@@ -28,6 +28,23 @@ You can also install it (preferably in a virtual environment) with [pip](https:/
 pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
+## Run directly with `uv`
+
+You can run `pylifemap` directly with `uv run` using a `--with` argument:
+
+```sh
+# Run a Jupyter session
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab
+
+# Run a marimo session
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit
+
+# Run a custom script
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py
+```
+
+
+
 ## Run in Google Colab
 
 You can try the package (without installing anything) in [Google Colab](https://colab.research.google.com/).
@@ -49,17 +66,19 @@ juv run notebook.ipynb
 
 ## Run with Docker
 
-### Run in Jupyter
-
 Another way to use the package without having to install it is to use our [Docker image](https://github.com/Lifemap-ToL/pylifemap/pkgs/container/pylifemap).
 
-To use `pylifemap` in a Jupyter environment, you have to [install Docker](https://docs.docker.com/engine/install/), open a terminal in the directory containing your data and notebook files, and run:
+### Run in Jupyter
+
+To use `pylifemap` in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:
 
 ```sh
 docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
 ```
 
 Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
+
+
 
 ### Run a script
 
