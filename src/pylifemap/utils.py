@@ -26,28 +26,24 @@ def check_marimo() -> bool:
         True if we are running in a marimo notebook environment, False otherwise.
     """
 
-    try:
-        import marimo  # type: ignore # basedpyright: ignore[reportUnusedImport]  # noqa: F401, PLC0415
-
-        return True
-    except ImportError:
-        return False
+    return globals().get("__marimo__", False)
 
 
 def check_jupyter() -> bool:
     """
-    Check if we are currently in a jupyter notebook.
+    Check if we are currently in a jupyter notebook or IPython shell.
 
     Returns
     -------
     bool
-        True if we are running in a jupyter notebook environment, False otherwise.
+        True if we are running in a jupyter notebook environment or IPython shell, False otherwise.
     """
 
     try:
-        _ = get_ipython().__class__.__name__  # type: ignore
-        return True
-    except NameError:
+        from IPython import get_ipython  # noqa: PLC0415
+
+        return get_ipython() is not None
+    except (ImportError, NameError):
         return False
 
 
