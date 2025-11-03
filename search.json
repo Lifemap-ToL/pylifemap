@@ -39,7 +39,7 @@
     "href": "getting_started.html#show-or-save-the-visualization",
     "title": "Getting started",
     "section": "Show or save the visualization",
-    "text": "Show or save the visualization\nJust adding layers is not sufficient to see our visualization. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\nWarning: 777 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nWe can also save it to an HTML file which can be opened later in a browser by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")"
+    "text": "Show or save the visualization\nJust adding layers is not sufficient to see our visualization. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\nWarning: 777 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nWe can also save it to an HTML file which can be opened later in a browser by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")\n\nYou can also use the Export to PNG button on the widget to export the currently displayed view to an image file in PNG format."
   },
   {
     "objectID": "getting_started.html#customize-the-layers",
@@ -54,6 +54,13 @@
     "title": "Getting started",
     "section": "Aggregate data",
     "text": "Aggregate data\npylifemap provides several functions that allow to aggregate data along the branches of the tree:\n\n\n\nFunction\nDescription\n\n\n\n\naggregate_count\nAggregates the number of children of each tree node.\n\n\naggregate_num\nAggregates a numerical variable along the tree branches with a given function (sum , mean, max…).\n\n\naggregate_freq\nAggregates the frequencies of the levels of a categorical variable.\n\n\n\nFor example, we could filter our dataset to only keep the species with an “extinct” status:\n\nPolarsPandas\n\n\n\niucn_extinct = iucn.filter(pl.col(\"status\") == \"Extinct\")\n\n\n\n\niucn_extinct = iucn[iucn[\"status\"] == \"Extinct\"]\n\n\n\n\nWe can then aggregate their count along the branches with aggregate_count:\n\nfrom pylifemap import aggregate_count\niucn_extinct_agg = aggregate_count(iucn_extinct)\niucn_extinct_agg\n\n\nshape: (774, 2)taxidni32u32null20196275919631932132681……30762441307811476313602313410119134101211\n\n\nFinally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.\n\n(\n    Lifemap(iucn_extinct_agg)\n    .layer_lines(color=\"n\", width=\"n\", label=\"Extinct species\")\n    .show()\n)\n\nWarning: 3 taxids have not been found in Lifemap database: [None, 1914395, 3041918]."
+  },
+  {
+    "objectID": "getting_started.html#customize-map-controls",
+    "href": "getting_started.html#customize-map-controls",
+    "title": "Getting started",
+    "section": "Customize map controls",
+    "text": "Customize map controls\nBy default, the Lifemap widgets displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a controls argument to Lifemap:\n\nLifemap(iucn, taxid_col=\"taxid\", controls=(\"zoom\", \"full_screen\"))\n\nThe following values are available:\n\n\"zoom\": zoom in and zoom out buttons\n\"reset_zoom\": zoom reset button\n\"png_export\": button to export the current view to a PNG file\n\"full_screen\": full screen toggle button"
   },
   {
     "objectID": "getting_started.html#footnotes",
