@@ -2,8 +2,33 @@ import Control from "ol/control/Control.js"
 import { DEFAULT_LAT, DEFAULT_LON } from "../utils"
 import { fromLonLat } from "ol/proj"
 import { snapdom } from "@zumer/snapdom"
+import { defaults as defaultControls } from "ol/control/defaults.js"
+import FullScreen from "ol/control/FullScreen"
 
-export class ResetZoomControl extends Control {
+export function get_controls(controls_list) {
+    const default_controls_options = {
+        zoom: controls_list.includes("zoom"),
+        rotate: false,
+        attribution: false,
+    }
+    let controls = defaultControls(default_controls_options)
+    let top = controls_list.includes("zoom") ? 75 : 10
+
+    if (controls_list.includes("zoom") && controls_list.includes("reset_zoom")) {
+        controls.extend([new ResetZoomControl()])
+        top += 25
+    }
+    if (controls_list.includes("png_export")) {
+        controls.extend([new PngExportControl({ top: top })])
+    }
+    if (controls_list.includes("full_screen")) {
+        controls.extend([new FullScreen()])
+    }
+
+    return controls
+}
+
+class ResetZoomControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {}
 
@@ -35,9 +60,10 @@ export class ResetZoomControl extends Control {
     }
 }
 
-export class PngExportControl extends Control {
+class PngExportControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {}
+        const { top = 10 } = options
 
         const button = document.createElement("button")
         button.setAttribute("title", "Export to PNG")
@@ -46,7 +72,7 @@ export class PngExportControl extends Control {
 
         const element = document.createElement("div")
         element.className = "png-export pylifemap-control ol-unselectable ol-control"
-        element.style.top = "95px"
+        element.style.top = `${top}px`
         element.appendChild(button)
 
         super({

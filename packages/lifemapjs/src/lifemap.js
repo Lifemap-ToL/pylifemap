@@ -20,10 +20,9 @@ const LANG = "en"
 
 export class Lifemap {
     constructor(el, options = {}) {
-        const { zoom = 5, legend_width = undefined } = options
-
+        const { zoom = 5, legend_width = undefined, controls = [] } = options
         // Base map object
-        this.map = create_map(el, { zoom: zoom })
+        this.map = create_map(el, { zoom: zoom, controls_list: controls })
 
         // Tiles layer
         const tiles_layer = layer_tiles(this.map.getView(), LANG)

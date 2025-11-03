@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 import re
 import webbrowser
+from collections.abc import Sequence
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Literal
@@ -39,6 +40,13 @@ class Lifemap:
         default `DEFAULT_HEIGHT`
     zoom : int, optional
         Default Lifemap zoom level, by default 4 or 5 depending on widget size
+    controls : Sequence[str]
+        List of controls to be displayed on the widget. By default all controls are displayed.
+        Available controls are:
+            - "zoom": zoom in and zoom out buttons
+            - "reset_zoom": zoom reset button
+            - "png_export": button to export current view to a PNG file
+            - "full_screen": full screen toggle button
     legend_width : int | None, optional
         Legend width in pixels, by default None
 
@@ -59,6 +67,7 @@ class Lifemap:
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
         zoom: int | None = None,
+        controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "full_screen"),
         legend_width: int | None = None,
     ) -> None:
         # Init LifemapData object with data
@@ -86,6 +95,7 @@ class Lifemap:
         self._map_options = {
             "zoom": zoom,
             "legend_width": legend_width,
+            "controls": controls,
         }
 
     def __repr__(self) -> str:
