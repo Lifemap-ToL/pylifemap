@@ -50,7 +50,7 @@ export default {
         el.appendChild(container)
 
         // Create map
-        const map = new Lifemap(container, data(), layers(), options())
+        const map = new Lifemap(container, options())
         map.update_data(data()).then(() => {
             map.update_layers(layers())
         })
