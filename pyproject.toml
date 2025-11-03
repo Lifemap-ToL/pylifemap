@@ -23,7 +23,7 @@ dependencies = [
   "pickleshare>=0.7.5",
   "platformdirs>=4.3.6",
   "polars>=1.17.0",
-  "pyarrow>=20.0.0",
+  "pyarrow>=22.0.0",
   "requests>=2.32.3",
 ]
 
@@ -36,7 +36,7 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 dev = [
   "basedpyright>=1.31.5",
   "jupyterlab>=4.4.2",
-  "marimo>=0.17.0",
+  "marimo>=0.17.6",
   "nbstripout>=0.7.1",
   "pytest>=8.3.3",
   "python-lsp-server>=1.13.1",
