@@ -623,6 +623,13 @@
     "text": "Install locally\nFor the moment only the development version can be installed from Github.\nYou can add the package to a script or project with uv:\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git\nYou can also install it (preferably in a virtual environment) with pip:\npip install git+https://github.com/Lifemap-ToL/pylifemap.git"
   },
   {
+    "objectID": "installation.html#run-directly-with-uv",
+    "href": "installation.html#run-directly-with-uv",
+    "title": "Installation",
+    "section": "Run directly with uv",
+    "text": "Run directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab\n\n# Run a marimo session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit\n\n# Run a custom script\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py"
+  },
+  {
     "objectID": "installation.html#run-in-google-colab",
     "href": "installation.html#run-in-google-colab",
     "title": "Installation",
@@ -641,6 +648,6 @@
     "href": "installation.html#run-with-docker",
     "title": "Installation",
     "section": "Run with Docker",
-    "text": "Run with Docker\n\nRun in Jupyter\nAnother way to use the package without having to install it is to use our Docker image.\nTo use pylifemap in a Jupyter environment, you have to install Docker, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
+    "text": "Run with Docker\nAnother way to use the package without having to install it is to use our Docker image.\n\nRun in Jupyter\nTo use pylifemap in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
   }
 ]

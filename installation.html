@@ -369,6 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#notebook-run-script-run" id="toc-notebook-run-script-run" class="nav-link active" data-scroll-target="#notebook-run-script-run">Notebook run / script run</a></li>
   <li><a href="#install-locally" id="toc-install-locally" class="nav-link" data-scroll-target="#install-locally">Install locally</a></li>
+  <li><a href="#run-directly-with-uv" id="toc-run-directly-with-uv" class="nav-link" data-scroll-target="#run-directly-with-uv">Run directly with <code>uv</code></a></li>
   <li><a href="#run-in-google-colab" id="toc-run-in-google-colab" class="nav-link" data-scroll-target="#run-in-google-colab">Run in Google Colab</a></li>
   <li><a href="#run-with-juv" id="toc-run-with-juv" class="nav-link" data-scroll-target="#run-with-juv">Run with <code>juv</code></a></li>
   <li><a href="#run-with-docker" id="toc-run-with-docker" class="nav-link" data-scroll-target="#run-with-docker">Run with Docker</a>
@@ -428,6 +429,18 @@ Note
 <p>You can also install it (preferably in a virtual environment) with <a href="https://pypi.org/project/pip/">pip</a>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/Lifemap-ToL/pylifemap.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="run-directly-with-uv" class="level2">
+<h2 class="anchored" data-anchor-id="run-directly-with-uv">Run directly with <code>uv</code></h2>
+<p>You can run <code>pylifemap</code> directly with <code>uv run</code> using a <code>--with</code> argument:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a Jupyter session</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git jupyter-lab</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a marimo session</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git marimo edit</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run a custom script</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
 <section id="run-in-google-colab" class="level2">
 <h2 class="anchored" data-anchor-id="run-in-google-colab">Run in Google Colab</h2>
 <p>You can try the package (without installing anything) in <a href="https://colab.research.google.com/">Google Colab</a>.</p>
@@ -437,23 +450,23 @@ Note
 <h2 class="anchored" data-anchor-id="run-with-juv">Run with <code>juv</code></h2>
 <p><a href="https://github.com/manzt/juv">juv</a> is a toolkit for reproducible Jupyter notebooks, powered by <a href="https://docs.astral.sh/uv/">uv</a>.</p>
 <p>You can easily create and run a notebook with <code>pylifemap</code> with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> init notebook.ipynb</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> add notebook.ipynb git+https://github.com/Lifemap-ToL/pylifemap.git</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> run notebook.ipynb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> init notebook.ipynb</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> add notebook.ipynb git+https://github.com/Lifemap-ToL/pylifemap.git</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">juv</span> run notebook.ipynb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="run-with-docker" class="level2">
 <h2 class="anchored" data-anchor-id="run-with-docker">Run with Docker</h2>
+<p>Another way to use the package without having to install it is to use our <a href="https://github.com/Lifemap-ToL/pylifemap/pkgs/container/pylifemap">Docker image</a>.</p>
 <section id="run-in-jupyter" class="level3">
 <h3 class="anchored" data-anchor-id="run-in-jupyter">Run in Jupyter</h3>
-<p>Another way to use the package without having to install it is to use our <a href="https://github.com/Lifemap-ToL/pylifemap/pkgs/container/pylifemap">Docker image</a>.</p>
-<p>To use <code>pylifemap</code> in a Jupyter environment, you have to <a href="https://docs.docker.com/engine/install/">install Docker</a>, open a terminal in the directory containing your data and notebook files, and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">-p</span> 8899:8899 <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To use <code>pylifemap</code> in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">-p</span> 8899:8899 <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Open the following URL in your browser: <a href="http://127.0.0.1:8899/lab" class="uri">http://127.0.0.1:8899/lab</a>, and you will have access to a Jupyter notebook environment with <code>pylifemap</code> and its dependencies preinstalled.</p>
 </section>
 <section id="run-a-script" class="level3">
 <h3 class="anchored" data-anchor-id="run-a-script">Run a script</h3>
 <p>If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> <span class="va">$PWD</span>:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In this case, if you use <a href="./reference/Lifemap.show.html#pylifemap.Lifemap.show">show()</a> in your script the result will not be opened in your browser but will instead be saved in a <code>lifemap.html</code> file in your working directory.</p>
 
 
