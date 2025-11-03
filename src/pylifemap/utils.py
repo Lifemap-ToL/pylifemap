@@ -26,7 +26,7 @@ def check_marimo() -> bool:
         True if we are running in a marimo notebook environment, False otherwise.
     """
 
-    return globals().get("__marimo__", False)
+    return "marimo" in sys.modules
 
 
 def check_jupyter() -> bool:
