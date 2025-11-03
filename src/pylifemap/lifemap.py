@@ -168,7 +168,7 @@ class Lifemap:
                 temp_path = Path(tempdir) / "lifemap.html"
                 self.save(temp_path)
                 webbrowser.open(str(temp_path))
-                input("Press Enter when finished.\n")
+                input("Opening widget in browser, press Enter when finished.\n")
 
     def save(self, path: str | Path, title: str = "Lifemap") -> None:
         """
