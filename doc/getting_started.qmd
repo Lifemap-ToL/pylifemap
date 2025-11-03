@@ -130,6 +130,8 @@ We can also save it to an HTML file which can be opened later in a browser by us
 Lifemap(iucn, taxid_col="taxid").layer_points().save("lifemap.html")
 ```
 
+You can also use the `Export to PNG` button on the widget to export the currently displayed view to an image file in PNG format.
+
 
 ## Customize the layers
 
@@ -208,3 +210,19 @@ Finally, we can represent this new dataset with a lines layer, making the lines 
     .show()
 )
 ```
+
+## Customize map controls
+
+By default, the Lifemap widgets displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a `controls` argument to `Lifemap`:
+
+```{python}
+#|eval: false
+Lifemap(iucn, taxid_col="taxid", controls=("zoom", "full_screen"))
+```
+
+The following values are available:
+
+- `"zoom"`: zoom in and zoom out buttons
+- `"reset_zoom"`: zoom reset button
+- `"png_export"`: button to export the current view to a PNG file
+- `"full_screen"`: full screen toggle button
