@@ -159,15 +159,19 @@ export function layer_lines(map, data, options = {}) {
             const taxid = feature.get("data")["taxid"]
             let content = await get_popup_title(taxid)
 
-            content += "<table><tbody>"
-            content +=
+            let table_content = ""
+            table_content +=
                 width_col !== null && width_col != color_col
                     ? `<tr><td class='right'><strong>${width_col}:</strong></td><td>${feature.get("data")[width_col]}</td></tr>`
                     : ""
-            content += color_col
+            table_content += color_col
                 ? `<tr><td class='right'><strong>${label ?? color_col}:</strong></td><td>${feature.get("data")[color_col]}</td></tr>`
                 : ""
-            content += "</tbody></table>"
+
+            if (table_content != "") {
+                content += `<table><tbody>${table_content}</tbody></table>`
+            }
+
             return content
         }
         const coordinates_fn = (feature) => [

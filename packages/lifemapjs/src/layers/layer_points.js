@@ -179,15 +179,19 @@ export function layer_points(map, data, options = {}) {
             const taxid = feature.get("data")["taxid"]
             let content = await get_popup_title(taxid)
 
-            content += "<table><tbody>"
-            content +=
+            let table_content = ""
+            table_content +=
                 radius_col !== null && radius_col != fill_col
                     ? `<tr><td class='right'><strong>${radius_col}:</strong></td><td>${feature.get("data")[radius_col]}</td></tr>`
                     : ""
-            content += fill_col
+            table_content += fill_col
                 ? `<tr><td class='right'><strong>${label ?? fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
                 : ""
-            content += "</tbody></table>"
+
+            if (table_content != "") {
+                content += `<table><tbody>${table_content}</tbody></table>`
+            }
+
             return content
         }
         const coordinates_fn = (feature) => [

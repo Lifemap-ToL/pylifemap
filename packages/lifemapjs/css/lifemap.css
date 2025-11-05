@@ -65,7 +65,7 @@
     font-weight: 700;
     font-size: 14px;
     margin-top: 0px;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
 }
 
 #lifemap-popup h2 span {
@@ -73,6 +73,7 @@
 }
 
 #lifemap-popup table {
+    margin-top: 8px;
     border: none;
 }
 
