@@ -35,6 +35,7 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 [dependency-groups]
 dev = [
   "basedpyright>=1.31.5",
+  "jupyter-cache>=1.0.1",
   "jupyterlab>=4.4.2",
   "marimo>=0.17.6",
   "nbstripout>=0.7.1",
