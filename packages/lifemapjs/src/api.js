@@ -2,7 +2,6 @@ import { LIFEMAP_BACK_URL } from "./utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
 export async function get_coords(taxids) {
-    console.log("Getting up-to-date taxids coordinates...")
     const url_taxids = [...taxids].join(" ")
     const cache_key = `taxids_${url_taxids}`
     const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
@@ -28,6 +27,7 @@ export async function get_coords(taxids) {
             rows: taxids.size,
         },
     }
+    let data = null
     try {
         const response = await fetch(url, {
             method: "post",
@@ -37,21 +37,26 @@ export async function get_coords(taxids) {
             },
             body: JSON.stringify(payload),
         })
-        let data = await response.json()
+        data = await response.json()
         data = data.response.docs
-        let result = {}
-        data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }))
+    } catch (error) {
+        console.error(error)
+        return null
+    }
+    let result = {}
+    data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }))
 
+    try {
         // Store the result in localStorage with a timestamp
         localStorage.setItem(
             cache_key,
             JSON.stringify({ timestamp: Date.now(), data: result })
         )
-
-        return result
     } catch (error) {
-        return null
+        console.warn("Can't store coordinates in local storage.")
     }
+
+    return result
 }
 
 // Get sci_name and common_name of a taxid
