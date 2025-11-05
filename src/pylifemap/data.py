@@ -72,6 +72,9 @@ class LifemapData:
         self.check_unknown_taxids()
         self.check_duplicated_taxids()
 
+    def __len__(self) -> int:
+        return self._data.height
+
     @property
     def data(self) -> pl.DataFrame:
         """
