@@ -17,3 +17,4 @@ lifemap.html
 .venv/
 __marimo__/
 .virtual_documents/
+.jupyter_cache/
