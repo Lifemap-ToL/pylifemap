@@ -165,7 +165,7 @@ export function layer_lines(map, data, options = {}) {
                     ? `<tr><td class='right'><strong>${width_col}:</strong></td><td>${feature.get("data")[width_col]}</td></tr>`
                     : ""
             content += color_col
-                ? `<tr><td class='right'><strong>${color_col}:</strong></td><td>${feature.get("data")[color_col]}</td></tr>`
+                ? `<tr><td class='right'><strong>${label ?? color_col}:</strong></td><td>${feature.get("data")[color_col]}</td></tr>`
                 : ""
             content += "</tbody></table>"
             return content

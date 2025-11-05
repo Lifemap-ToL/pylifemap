@@ -185,7 +185,7 @@ export function layer_points(map, data, options = {}) {
                     ? `<tr><td class='right'><strong>${radius_col}:</strong></td><td>${feature.get("data")[radius_col]}</td></tr>`
                     : ""
             content += fill_col
-                ? `<tr><td class='right'><strong>${fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
+                ? `<tr><td class='right'><strong>${label ?? fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
                 : ""
             content += "</tbody></table>"
             return content
