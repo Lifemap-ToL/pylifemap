@@ -243,8 +243,8 @@ class Lifemap:
         hover : bool
             If True, highlight points on mouse hovering. By default False.
         label : str | None, optional
-            Legend title for this layer if `fill_col` is defined. If `None`, the value
-            of `fill_col` is used.
+            Legend title for this layer if `fill` is defined. If `None`, the value
+            of `fill` is used.
 
         Returns
         -------
@@ -278,7 +278,7 @@ class Lifemap:
         ...         "value": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],
         ...     }
         ... )
-        >>> Lifemap(d).layer_points(radius_col="value", fill_col="value", popup=True).show()
+        >>> Lifemap(d).layer_points(radius="value", fill="value", popup=True).show()
 
 
         See also
@@ -341,8 +341,8 @@ class Lifemap:
         hover : bool
             If True, highlight points on mouse hovering. By default False.
         label : str | None, optional
-            Legend title for this layer if `color_col` is defined. If `None`, the value
-            of `color_col` is used.
+            Legend title for this layer if `color` is defined. If `None`, the value
+            of `color` is used.
 
         Returns
         -------
@@ -372,7 +372,7 @@ class Lifemap:
         ...     }
         ... )
         >>> d = aggregate_num(d, column="value", fn="mean")
-        >>> Lifemap(d).layer_lines(width_col="value", color_col="value").show()
+        >>> Lifemap(d).layer_lines(width="value", color="value").show()
 
 
         See also
