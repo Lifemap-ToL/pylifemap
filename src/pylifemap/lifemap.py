@@ -18,7 +18,14 @@ from IPython.display import display
 from ipywidgets.embed import embed_minimal_html
 
 from pylifemap.data import LifemapData
-from pylifemap.utils import DEFAULT_HEIGHT, DEFAULT_WIDTH, check_jupyter, check_marimo, is_hex_color
+from pylifemap.utils import (
+    DEFAULT_HEIGHT,
+    DEFAULT_WIDTH,
+    MAX_HOVER_DATA_LEN,
+    check_jupyter,
+    check_marimo,
+    is_hex_color,
+)
 from pylifemap.widget import LifemapWidget
 
 
@@ -206,7 +213,7 @@ class Lifemap:
         scheme: str | None = None,
         opacity: float = 0.8,
         popup: bool = True,
-        hover: bool = True,
+        hover: bool | None = None,
         label: str | None = None,
     ) -> Lifemap:
         """
@@ -240,8 +247,9 @@ class Lifemap:
         popup : bool
             If True, display informations in a popup when a point is clicked,
             by default False
-        hover : bool
-            If True, highlight points on mouse hovering. By default False.
+        hover : bool | None, optional
+            If True, highlight points on mouse hovering. By default True if less than 10_000 data points,
+            False otherwise.
         label : str | None, optional
             Legend title for this layer if `fill` is defined. If `None`, the value
             of `fill` is used.
@@ -292,6 +300,8 @@ class Lifemap:
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
+        if options["hover"] is None:
+            options["hover"] = len(self.data) < MAX_HOVER_DATA_LEN
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)
         data_columns = tuple(
@@ -311,7 +321,7 @@ class Lifemap:
         scheme: str | None = None,
         opacity: float = 0.8,
         popup: bool = True,
-        hover: bool = True,
+        hover: bool | None = None,
         label: str | None = None,
     ) -> Lifemap:
         """
@@ -338,8 +348,9 @@ class Lifemap:
         popup : bool
             If True, display informations in a popup when a point is clicked,
             by default False
-        hover : bool
-            If True, highlight points on mouse hovering. By default False.
+        hover : bool | None, optional
+            If True, highlight points on mouse hovering. By default True if less than 10_000 data points,
+            False otherwise.
         label : str | None, optional
             Legend title for this layer if `color` is defined. If `None`, the value
             of `color` is used.
@@ -382,6 +393,8 @@ class Lifemap:
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
         """
         options = self._process_options(locals())
+        if options["hover"] is None:
+            options["hover"] = len(self.data) < MAX_HOVER_DATA_LEN
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
         data_columns = tuple(

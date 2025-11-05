@@ -10,6 +10,8 @@ DEFAULT_WIDTH = "800px"
 DEFAULT_HEIGHT = "600px"
 LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 
+MAX_HOVER_DATA_LEN = 10_000
+
 logger = logging.getLogger("pylifemap")
 ch = logging.StreamHandler(stream=sys.stdout)
 logger.addHandler(ch)
@@ -40,7 +42,7 @@ def check_jupyter() -> bool:
     """
 
     try:
-        from IPython import get_ipython  # noqa: PLC0415
+        from IPython import get_ipython  # noqa: PLC0415  # pyright: ignore[reportAttributeAccessIssue]
 
         return get_ipython() is not None
     except (ImportError, NameError):
