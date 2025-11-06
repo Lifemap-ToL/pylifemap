@@ -709,3 +709,70 @@ class Lifemap:
         self._layers.append(layer)
         self._layers_data[options["id"]] = self.data.points_data()
         return self
+
+    def layer_text(
+        self,
+        *,
+        text: str,
+        font_size: int = 12,
+        font_family: str = "Segoe UI, Helvetica, sans-serif",
+        color: str = "#FFFFFF",
+        stroke: str = "#000000",
+        opacity: float = 1.0,
+    ) -> Lifemap:
+        """
+        Add a text labels layer.
+
+        It can be used to display text labels alongside species identified by their taxids.
+
+        Parameters
+        ----------
+        text : str
+            Name of a column of the data containing text to be displayed.
+        font_size: int
+            Text font size, by default 12.
+        font_family : str
+            CSS-like font family definition, by default "Segoe UI, Helvetica, sans-serif".
+        color : str
+            CSS text color specification, by default "#FFFFFF".
+        stroke : str
+            CSS stroke color specification, by default "#000000".
+        opacity : float
+            Text opacity as a floating number between 0 and 1, by default 1.0.
+
+        Returns
+        -------
+        Lifemap
+            A Lifemap visualization object.
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...         "value": list("ABCDEFGHIJK"),
+        ...     }
+        ... )
+        >>> Lifemap(d).layer_text(text="value", font_size=14).show()
+
+        """
+        options = self._process_options(locals())
+        layer = {"layer": "text", "options": options}
+        self._layers.append(layer)
+        data_columns = (text,)
+        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
+        return self

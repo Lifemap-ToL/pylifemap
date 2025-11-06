@@ -8,6 +8,7 @@ import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
 import { layer_deck } from "./layers/layer_deck"
 import { layer_tiles } from "./layers/layer_tiles"
+import { layer_text } from "./layers/layer_text"
 import { LegendControl } from "./elements/controls"
 import { get_coords } from "./api"
 import { unserialize_data, stringify_scale } from "./utils"
@@ -120,6 +121,8 @@ export class Lifemap {
                     return layer_screengrid(layer_data, l.options ?? {})
                 case "donuts":
                     return layer_donuts(this.map, layer_data, l.options ?? {})
+                case "text":
+                    return layer_text(this.map, layer_data, l.options ?? {})
                 default:
                     console.warn(`Invalid layer type: ${l.layer}`)
                     return undefined

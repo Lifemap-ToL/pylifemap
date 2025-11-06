@@ -29,6 +29,7 @@ website:
                   - layers/layer_heatmap.qmd
                   - layers/layer_heatmap_deck.qmd
                   - layers/layer_screengrid.qmd
+                  - layers/layer_text.qmd
             - reference/index.qmd
             - text: "Development"
               menu:
@@ -67,6 +68,7 @@ quartodoc:
                         "layer_heatmap",
                         "layer_heatmap_deck",
                         "layer_screengrid",
+                        "layer_text",
                         "show",
                         "save",
                     ]
@@ -76,6 +78,7 @@ quartodoc:
               - Lifemap.layer_heatmap
               - Lifemap.layer_heatmap_deck
               - Lifemap.layer_screengrid
+              - Lifemap.layer_text
               - Lifemap.show
               - Lifemap.save
         - title: Data aggregation

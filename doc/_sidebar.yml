@@ -10,6 +10,7 @@ website:
       - reference/Lifemap.layer_heatmap.qmd
       - reference/Lifemap.layer_heatmap_deck.qmd
       - reference/Lifemap.layer_screengrid.qmd
+      - reference/Lifemap.layer_text.qmd
       - reference/Lifemap.show.qmd
       - reference/Lifemap.save.qmd
       section: Visualization

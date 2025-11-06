@@ -1,0 +1,27 @@
+---
+title: Text layer
+---
+
+The text layer displays text labels associated to taxid values.
+
+In this example we display the taxid values of all species in the `iucn` dataset. The `text` argument allows to specify the data column containing the text to be displayed. Text size, font and colors cen be defined by additional arguments `font_size`, `color`, `stroke` or `font_family`.
+
+You can add `hide_labels=True` to your `Lifemap` call if you want to hide the default taxa names layer.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+)
+
+(
+    Lifemap(iucn, hide_labels=True)
+    .layer_text(text="taxid", font_size=14, color="#F5D770", stroke="#000")
+    .show()
+)
+```
+
+For a detailed list of `layer_text` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_text`).
