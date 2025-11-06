@@ -20,15 +20,23 @@ const LANG = "en"
 
 export class Lifemap {
     constructor(el, options = {}) {
-        const { zoom = 5, legend_width = undefined, controls = [] } = options
+        const {
+            zoom = 5,
+            legend_width = undefined,
+            controls = [],
+            hide_labels = false,
+        } = options
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
 
         // Tiles layer
         const tiles_layer = layer_tiles(this.map.getView(), LANG)
+        this.base_layers = [tiles_layer]
         // Labels layer
-        const labels_layer = layer_labels(this.map)
-        this.base_layers = [tiles_layer, labels_layer]
+        if (!hide_labels) {
+            const labels_layer = layer_labels(this.map)
+            this.base_layers.push(labels_layer)
+        }
 
         // Deck.gl init
         const { deck_layer, deck } = layer_deck(el, zoom)

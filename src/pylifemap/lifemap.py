@@ -56,6 +56,8 @@ class Lifemap:
             - "full_screen": full screen toggle button
     legend_width : int | None, optional
         Legend width in pixels, by default None
+    hide_labels : bool
+        If True, hide the taxa name labels. Defaults to False.
 
     Examples
     --------
@@ -76,6 +78,7 @@ class Lifemap:
         zoom: int | None = None,
         controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "full_screen"),
         legend_width: int | None = None,
+        hide_labels: bool = False,
     ) -> None:
         # Init LifemapData object with data
         self.data = LifemapData(data, taxid_col=taxid_col)
@@ -103,6 +106,7 @@ class Lifemap:
             "zoom": zoom,
             "legend_width": legend_width,
             "controls": controls,
+            "hide_labels": hide_labels,
         }
 
     def __repr__(self) -> str:
