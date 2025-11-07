@@ -1,31 +1,16 @@
 import { fromLonLat } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
-import { Vector } from "ol/source.js"
 import VectorSource from "ol/source/Vector"
 import VectorLayer from "ol/layer/Vector.js"
 import { Style, Fill, Stroke, Icon } from "ol/style.js"
 import Text from "ol/style/Text.js"
+import { guidGenerator } from "../utils"
 
-const TEXT_COLOR = "rgba(255, 255, 255, 1)"
-const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
+import { get_popup_title } from "../api"
+import { set_popup_event } from "../elements/popup"
 
-function create_text(text, font_family, font_size, color, stroke) {
-    const text_font = `${font_size}px ${font_family}`
-    const text_obj = [text, text_font]
-
-    const text_style = new Text({
-        fill: new Fill({ color: color }),
-        stroke: new Stroke({ width: 2, color: stroke }),
-        text: text_obj,
-        offsetY: 10,
-        textBaseline: "top",
-    })
-
-    return text_style
-}
-
-export function layer_icons(data, options = {}) {
+export function layer_icons(map, data, options = {}) {
     let {
         id = null,
         width = null,
@@ -39,6 +24,7 @@ export function layer_icons(data, options = {}) {
         x_anchor = 0.5,
         y_anchor = 0.5,
         opacity = 1.0,
+        popup = false,
     } = options
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
@@ -58,6 +44,7 @@ export function layer_icons(data, options = {}) {
         features[i] = new Feature({
             geometry: new Point(coordinates),
             icon: icon_col === null ? icon : line[icon_col],
+            data: line,
         })
     }
     const source = new VectorSource({
@@ -87,6 +74,20 @@ export function layer_icons(data, options = {}) {
         declutter: id,
         opacity: opacity,
     })
+
+    // Popup
+    if (popup) {
+        const content_fn = async (feature) => {
+            const taxid = feature.get("data")["taxid"]
+            let content = await get_popup_title(taxid)
+            return content
+        }
+        const coordinates_fn = (feature) => [
+            feature.get("data").pylifemap_x,
+            feature.get("data").pylifemap_y,
+        ]
+        set_popup_event(map, id, coordinates_fn, content_fn)
+    }
 
     layer.lifemap_ol_id = id
 

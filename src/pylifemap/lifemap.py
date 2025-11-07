@@ -418,7 +418,7 @@ class Lifemap:
         leaves: Literal["show", "hide"] = "hide",
         scheme: str | None = None,
         opacity: float | None = 1,
-        popup: bool | None = True,
+        popup: bool = True,
         label: str | None = None,
     ) -> Lifemap:
         """
@@ -445,9 +445,9 @@ class Lifemap:
             by default None
         opacity : float | None, optional
             Donut charts and points opacity, by default 1
-        popup : bool | None, optional
+        popup : bool, optional
             If True, display informations in a popup when a point is clicked,
-            by default False, by default True
+            by default True
         label : str | None, optional
             Legend title for this layer. If `None`, the value of `counts_col` is used.
 
@@ -793,6 +793,7 @@ class Lifemap:
         x_anchor: float = 0.5,
         y_anchor: float = 0.5,
         opacity: float = 1.0,
+        popup: bool = False,
     ) -> Lifemap:
         """
         Add an icons layer.
@@ -820,6 +821,10 @@ class Lifemap:
             Vertical icon anchor, as a number between 0 and 1, by default 0.5.
         opacity : float
             Text opacity as a floating number between 0 and 1, by default 1.0.
+        popup : bool, optional
+            If True, display informations in a popup when an icon is clicked,
+            by default False.
+
 
         Returns
         -------

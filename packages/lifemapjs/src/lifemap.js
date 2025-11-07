@@ -125,7 +125,7 @@ export class Lifemap {
                 case "text":
                     return layer_text(layer_data, l.options ?? {})
                 case "icons":
-                    return layer_icons(layer_data, l.options ?? {})
+                    return layer_icons(this.map, layer_data, l.options ?? {})
                 default:
                     console.warn(`Invalid layer type: ${l.layer}`)
                     return undefined
