@@ -65,3 +65,21 @@ def is_hex_color(value: str) -> bool:
     """
     match = re.fullmatch(r"#([0-9a-f]{6}|[0-9a-f]{3})", value, flags=re.IGNORECASE)
     return match is not None
+
+
+def is_icon_url(value: str) -> bool:
+    """
+    Check if a value is an icon URL.
+
+    Parameters
+    ----------
+    value : str
+        Value to be checked.
+
+    Returns
+    -------
+    bool
+        True if the value is an icon URL.
+    """
+    res = re.search(r"^(https?:|data:)", value, flags=re.IGNORECASE)
+    return res is not None
