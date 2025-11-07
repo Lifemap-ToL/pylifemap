@@ -8,6 +8,7 @@ notebooks/work/
 app/
 doc/_site
 doc/_freeze
+doc/_sidebar.yml
 TODO.md
 test.py
 out.html
