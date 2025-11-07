@@ -25,6 +25,7 @@ from pylifemap.utils import (
     check_jupyter,
     check_marimo,
     is_hex_color,
+    is_icon_url,
 )
 from pylifemap.widget import LifemapWidget
 
@@ -777,5 +778,85 @@ class Lifemap:
         layer = {"layer": "text", "options": options}
         self._layers.append(layer)
         data_columns = (text,)
+        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
+        return self
+
+    def layer_icons(
+        self,
+        *,
+        icon: str,
+        width: int | None = None,
+        height: int | None = None,
+        color: str | None = None,
+        x_offset: int = 0,
+        y_offset: int = 0,
+        x_anchor: float = 0.5,
+        y_anchor: float = 0.5,
+        opacity: float = 1.0,
+    ) -> Lifemap:
+        """
+        Add an icons layer.
+
+        It can be used to display icons associated to taxids.
+
+        Parameters
+        ----------
+        icon : str
+            Either the URL to an image file to use as icon, or the name of a column of the data containing
+            urls of icons to be displayed.
+        width : int | None, optional
+            Image width, in pixels. If None, use native image width, by default None.
+        height : int | None, optional
+            Image height, in pixels. If None, use native image height, by default None.
+        color : str | None, optional
+            CSS color to tint the icon, by default None.
+        x_offset : int
+            Horizontal offset in pixels, by default 0.
+        y_offset : int
+            Vertical offset in pixels, by default 0.
+        x_anchor : float
+            Horizontal icon anchor, as a number between 0 and 1, by default 0.5.
+        y_anchor : float
+            Vertical icon anchor, as a number between 0 and 1, by default 0.5.
+        opacity : float
+            Text opacity as a floating number between 0 and 1, by default 1.0.
+
+        Returns
+        -------
+        Lifemap
+            A Lifemap visualization object.
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ]
+        ...     }
+        ... )
+        >>> Lifemap(d).layer_icons(icon="https://openlayers.org/en/latest/examples/data/icon.png").show()
+
+        """
+        options = self._process_options(locals())
+        layer = {"layer": "icons", "options": options}
+        self._layers.append(layer)
+        data_columns = (
+            (options["icon"],)
+            if isinstance(options["icon"], str) and not is_icon_url(options["icon"])
+            else ()
+        )
         self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
         return self
