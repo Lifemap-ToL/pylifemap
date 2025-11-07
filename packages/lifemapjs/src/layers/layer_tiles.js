@@ -8,8 +8,9 @@ import { LIFEMAP_BACK_URL } from "../utils"
 /* --- LAYER --- */
 
 export function layer_tiles(view, lang) {
+    const id = "base-layer"
     const layer = new VectorTileLayer({
-        id: "base-layer",
+        id: id,
         background: "#000",
         source: new VectorTileSource({
             maxZoom: 42,
@@ -17,7 +18,7 @@ export function layer_tiles(view, lang) {
             url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
         }),
         style: createCompositeStyleFunction(view, lang),
-        declutter: true,
+        declutter: id,
         renderMode: "vector",
         updateWhileAnimating: true,
         updateWhileInteracting: true,

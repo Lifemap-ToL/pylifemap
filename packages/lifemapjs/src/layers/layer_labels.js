@@ -58,6 +58,7 @@ function list_for_extent(zoom, extent) {
 }
 
 export function layer_labels(map) {
+    const id = "labels-layer"
     const label_style_function = (feature) => {
         const label_style = new Style({
             text: create_taxon_text(
@@ -72,9 +73,10 @@ export function layer_labels(map) {
 
     const labels_source = new Vector()
     const labels_layer = new VectorLayer({
+        id: id,
         source: labels_source,
         style: label_style_function,
-        declutter: true,
+        declutter: id,
         zIndex: 5,
     })
 

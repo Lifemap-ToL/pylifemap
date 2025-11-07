@@ -67,7 +67,6 @@ export function layer_donuts(map, data, options = {}) {
 
         const style = {
             image: new Icon({
-                //declutterMode: "declutter",
                 src: src,
                 opacity: 1,
                 width: radius,

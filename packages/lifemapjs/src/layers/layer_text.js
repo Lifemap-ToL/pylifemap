@@ -25,7 +25,7 @@ function create_text(text, font_family, font_size, color, stroke) {
     return text_style
 }
 
-export function layer_text(map, data, options = {}) {
+export function layer_text(data, options = {}) {
     let {
         id = null,
         x_col = "pylifemap_x",
@@ -38,6 +38,8 @@ export function layer_text(map, data, options = {}) {
         opacity = 1.0,
     } = options
 
+    id = `lifemap-ol-${id ?? guidGenerator()}`
+
     // Create features
     const n_features = data.length
     const features = new Array(n_features)
@@ -49,25 +51,27 @@ export function layer_text(map, data, options = {}) {
             text: line[text],
         })
     }
-    const text_source = new VectorSource({
+    const source = new VectorSource({
         features: features,
     })
 
-    const text_style_function = (feature) => {
-        const text_style = new Style({
+    const style_function = (feature) => {
+        const style = new Style({
             text: create_text(feature.get("text"), font_family, font_size, color, stroke),
         })
 
-        return text_style
+        return style
     }
 
-    const text_layer = new VectorLayer({
-        source: text_source,
-        style: text_style_function,
-        declutter: true,
+    const layer = new VectorLayer({
+        source: source,
+        style: style_function,
+        declutter: id,
         opacity: opacity,
         zIndex: 5,
     })
 
-    return text_layer
+    layer.lifemap_ol_id = id
+
+    return layer
 }
