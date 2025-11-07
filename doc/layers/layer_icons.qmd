@@ -1,0 +1,62 @@
+---
+title: Icons layer
+---
+
+The icons layer displays images associated to taxid values.
+
+Icons are specified by either an `http` or `https` URL, or by a `data` URI.
+
+In the following example we use an svg icon encoded into a data URI. We specify an icon `width`, `height`, a vertical anchor and a `color` to tint it (`color` only works for certain type of SVG images).
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+).sample(n=5000)
+
+(
+    Lifemap(iucn).layer_icons(
+        icon="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%2C11.5A2.5%2C2.5%200%200%2C1%209.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C6.5A2.5%2C2.5%200%200%2C1%2014.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C11.5M12%2C2A7%2C7%200%200%2C0%205%2C9C5%2C14.25%2012%2C22%2012%2C22C12%2C22%2019%2C14.25%2019%2C9A7%2C7%200%200%2C0%2012%2C2Z%22%20style%3D%22fill%3A%20%23FFFFFF%22%2F%3E%3C%2Fsvg%3E",
+        y_anchor=1.0,
+        width=24,
+        height=24,
+        color="#FF4488",
+    ).show()
+)
+```
+
+The `icon` parameter can also be a data column containing image URLs.
+
+```{python}
+d = pl.DataFrame(
+     {
+         "taxid": [
+             9994,
+             1021470,
+             1397240,
+             1415565,
+         ],
+         "taxid_icon": [
+             "https://openlayers.org/en/latest/examples/data/square.svg",
+             "https://openlayers.org/en/latest/examples/data/dot.svg",
+             "https://openlayers.org/en/latest/examples/data/dot.svg",
+             "https://openlayers.org/en/latest/examples/data/square.svg",
+         ]
+     }
+ )
+
+(
+    Lifemap(d).layer_icons(
+        icon="taxid_icon",
+        width=24,
+        height=24,
+        color="#FF4488",
+        popup=True
+    ).show()
+)
+```
+
+For a detailed list of `layer_icons` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_icons`).

@@ -97,6 +97,7 @@ Here are the available layers:
 | [layer_heatmap_deck](layers/layer_heatmap_deck.qmd)       | Displays a deck.gl heatmap of the observations distribution in the tree.                                             |
 | [layer_screengrid](layers/layer_screengrid.qmd) | Displays the observations distribution with a colored grid with fixed-size cells..                           |
 | [layer_text](layers/layer_text.qmd)             | Displays text labels by taxid                           |
+| [layer_icons](layers/layer_icons.qmd)           | Displays icons associated to taxids                           |
 
 To add a layer, we call the corresponding `layer_` method of our `Lifemap` object. For example, to add a points layer:
 
