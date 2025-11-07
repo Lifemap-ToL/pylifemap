@@ -328,6 +328,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../layers/layer_screengrid.html">
  <span class="dropdown-text">Screengrid layer</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../layers/layer_text.html">
+ <span class="dropdown-text">Text layer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../layers/layer_icons.html">
+ <span class="dropdown-text">Icons layer</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -394,7 +402,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    controls<span class="op">=</span>(<span class="st">'zoom'</span>, <span class="st">'reset_zoom'</span>, <span class="st">'png_export'</span>, <span class="st">'full_screen'</span>),</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    legend_width<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    hide_labels<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build visualization.</p>
 <section id="parameters" class="level2 doc-section doc-section-parameters">
 <h2 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h2>
@@ -450,6 +459,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Legend width in pixels, by default None</td>
 <td><code>None</code></td>
 </tr>
+<tr class="even">
+<td>hide_labels</td>
+<td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
+<td>If True, hide the taxa name labels. Defaults to False.</td>
+<td><code>False</code></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -493,6 +508,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><a href="../reference/Lifemap.layer_screengrid.html#pylifemap.Lifemap.layer_screengrid"><code>layer_screengrid</code></a></td>
 <td>Add a screengrid layer.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/Lifemap.layer_text.html#pylifemap.Lifemap.layer_text"><code>layer_text</code></a></td>
+<td>Add a text labels layer.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/Lifemap.layer_icons.html#pylifemap.Lifemap.layer_icons"><code>layer_icons</code></a></td>
+<td>Add an icons layer.</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/Lifemap.show.html#pylifemap.Lifemap.show"><code>show</code></a></td>
