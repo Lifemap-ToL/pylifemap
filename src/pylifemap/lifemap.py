@@ -615,6 +615,9 @@ class Lifemap:
             Heatmap threshold, by default 0.05
         opacity : float, optional
             Heatmap opacity as a floating number between 0 and 1, by default 0.5
+        color_range : list | None, optional
+            List of colors to define a custom color gradient.
+
 
         Returns
         -------
