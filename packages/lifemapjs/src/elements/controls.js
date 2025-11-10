@@ -2,6 +2,7 @@ import Control from "ol/control/Control.js"
 import { DEFAULT_LAT, DEFAULT_LON } from "../utils"
 import { fromLonLat } from "ol/proj"
 import { snapdom } from "@zumer/snapdom"
+import Attribution from "ol/control/Attribution.js"
 import { defaults as defaultControls } from "ol/control/defaults.js"
 import FullScreen from "ol/control/FullScreen"
 
@@ -11,7 +12,13 @@ export function get_controls(controls_list) {
         rotate: false,
         attribution: false,
     }
-    let controls = defaultControls(default_controls_options)
+
+    const attribution = new Attribution({
+        collapsible: false,
+        attributions: `Base map by <a href="https://lifemap.cnrs.fr">Lifemap</a>`,
+    })
+
+    let controls = defaultControls(default_controls_options).extend([attribution])
     let top = controls_list.includes("zoom") ? 75 : 10
 
     if (controls_list.includes("zoom") && controls_list.includes("reset_zoom")) {
