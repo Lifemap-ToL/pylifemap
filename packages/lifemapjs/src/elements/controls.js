@@ -15,7 +15,7 @@ export function get_controls(controls_list) {
 
     const attribution = new Attribution({
         collapsible: false,
-        attributions: `Base map by <a href="https://lifemap.cnrs.fr">Lifemap</a>`,
+        attributions: `Basemap from <a href="https://lifemap.cnrs.fr">Lifemap</a>`,
     })
 
     let controls = defaultControls(default_controls_options).extend([attribution])
