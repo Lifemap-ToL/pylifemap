@@ -1,5 +1,7 @@
 import { guidGenerator, DEFAULT_CAT_SCHEME } from "../utils"
 import { get_popup_title } from "../api"
+import { set_popup_event } from "../elements/popup"
+
 import VectorLayer from "ol/layer/Vector"
 import VectorSource from "ol/source/Vector"
 import Point from "ol/geom/Point.js"
@@ -28,6 +30,7 @@ export function layer_donuts(map, data, options = {}) {
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
     // Get levels
+    console.log(data[0][counts_col])
     const levels = Object.keys(JSON.parse(data[0][counts_col])).sort()
     // Convert to array of {key: , value: } objects
     data.forEach((d) => {
@@ -105,20 +108,19 @@ export function layer_donuts(map, data, options = {}) {
 
     map.on("moveend", on_move_end)
 
-    map.on("click", async function (evt) {
-        const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => feature)
-        if (!feature) {
-            return
-        }
+    /* Popup  */
+
+    const content_fn = async (feature) => {
         const taxid = feature.get("data")["taxid"]
-        let content = get_popup_title(taxid)
+        let content = await get_popup_title(taxid)
 
         const data = feature.get("data")[counts_col]
         const total = data.map((d) => d.value).reduce((acc, val) => acc + val, 0)
         data.sort((a, b) => (a.key > b.key ? 1 : -1))
-        content += "<table><tbody>"
+
+        let table_content = ""
         for (let d of data) {
-            content += `<tr><td><svg width="15" height="15" fill="${scale_fn(
+            table_content += `<tr><td><svg width="15" height="15" fill="${scale_fn(
                 d.key
             )}"><rect width="100%" height="100%"></rect></svg></td><td>${
                 d.key
@@ -127,14 +129,18 @@ export function layer_donuts(map, data, options = {}) {
                 100
             ).toFixed(1)}%)</td></tr>`
         }
-        content += "</tbody></table>"
-        const coordinates = [
-            feature.get("data").pylifemap_x,
-            feature.get("data").pylifemap_y,
-        ]
-        const offset = [0, -radius / 2]
-        map.show_popup(coordinates, content, offset)
-    })
+
+        if (table_content != "") {
+            content += `<table><tbody>${table_content}</tbody></table>`
+        }
+        return content
+    }
+    const coordinates_fn = (feature) => [
+        feature.get("data").pylifemap_x,
+        feature.get("data").pylifemap_y,
+    ]
+    const offset = [0, -radius / 2]
+    set_popup_event(map, id, coordinates_fn, content_fn, offset)
 
     layer.lifemap_ol_id = id
     layer.lifemap_ol_scales = scales

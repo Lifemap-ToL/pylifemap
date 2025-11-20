@@ -62,7 +62,7 @@ export class Popup {
 }
 
 // Add popup click event to a layer
-export function set_popup_event(map, id, coordinates_fn, content_fn) {
+export function set_popup_event(map, id, coordinates_fn, content_fn, offset = [0, -5]) {
     map.on("click", async function (ev) {
         const feature = map.forEachFeatureAtPixel(ev.pixel, (feature) => feature, {
             layerFilter: (d) => d.lifemap_ol_id == id,
@@ -72,7 +72,6 @@ export function set_popup_event(map, id, coordinates_fn, content_fn) {
         }
         const content = await content_fn(feature)
         const coordinates = coordinates_fn(feature)
-        const offset = [0, -5]
         map.popup.show(coordinates, content, offset)
     })
 }
