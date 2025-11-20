@@ -14,15 +14,16 @@ pip install git+https://github.com/Lifemap-ToL/pylifemap.git
 uv add git+https://github.com/Lifemap-ToL/pylifemap.git
 ```
 
-## Install fom source
+## Install the development version (from source)
 
-If you want to build `pylifemap` from source, you'll have to follow these steps:
+If you want to install `pylifemap` from source, you'll have to follow these steps:
 
 - Install [node.js](https://nodejs.org/en)
-- Install [uv](https://docs.astral.sh/uv/) dependency management system
+- Install [uv](https://docs.astral.sh/uv/)
 - Clone the [pylifemap](https://github.com/Lifemap-ToL/pylifemap) repository
 - Install Python dependencies with : `uv sync`
 - Install JavaScript dependencies with : `npm install --workspaces --include-root-workspace`
+- Bundle JavaScript and CSS code with `npm run bundle`
 
 
 ## Widget JavaScript modification and bundling
@@ -32,8 +33,6 @@ Each time the widget JavaScript or CSS code is modified in the `src/js/` or `pac
 ```sh
 # Bundle
 npm run bundle
-# Build (bundle + minify)
-npm run build
 # Bundle and watch for code change
 npm run dev
 ```
@@ -71,8 +70,11 @@ docker build . -t pylifemap
 
 ### Releases
 
-- Change version in `NEWS.md` and `src/pylifemap/__about__.py`
-- Release the Python package with `uv build` and `uv publish` in `pylifemap`
+
+- Change version in `NEWS.md` and `pyproject.toml`
+- Cleanup the previous builds in `dist/`
+- Bundle and minify JS and CSS and build package with `npm run build`
+- Release the Python package with `uv publish` in `pylifemap`
 - Tag the version in git
 - Create a release on Github
 - Bump to dev version in `pyproject.toml` and `NEWS.md`
