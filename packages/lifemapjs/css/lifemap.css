@@ -1,3 +1,9 @@
+/* Border for light theme */
+
+.pylifemap-map {
+    border: 1px solid #ccc;
+}
+
 /* Legend */
 
 .lifemap-legend {
@@ -148,6 +154,7 @@
 
 .ol-control {
     cursor: default;
+    background-color: #ccc;
 }
 
 .ol-control button {
@@ -161,4 +168,5 @@
     right: auto;
     left: 0;
     border-radius: 0 4px 0 0;
+    background-color: rgba(250, 250, 250, 0.8);
 }

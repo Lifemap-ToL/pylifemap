@@ -13,6 +13,7 @@ import { layer_icons } from "./layers/layer_icons"
 import { LegendControl } from "./elements/controls"
 import { get_coords } from "./api"
 import { unserialize_data, stringify_scale } from "./utils"
+import { THEMES } from "./elements/themes"
 
 import * as Plot from "@observablehq/plot"
 
@@ -27,12 +28,15 @@ export class Lifemap {
             legend_width = undefined,
             controls = [],
             hide_labels = false,
+            theme = "dark",
         } = options
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
+        this.map.default_zoom = zoom
+        this.map.theme = THEMES[theme]
 
         // Tiles layer
-        const tiles_layer = layer_tiles(this.map.getView(), LANG)
+        const tiles_layer = layer_tiles(this.map, LANG)
         this.base_layers = [tiles_layer]
         // Labels layer
         if (!hide_labels) {
@@ -48,7 +52,6 @@ export class Lifemap {
         this.deck_layers = []
         this.ol_layers = []
 
-        this.map.default_zoom = zoom
         this.legend = new LegendControl()
         this.legend_width = legend_width
         this.scales = []
@@ -123,7 +126,7 @@ export class Lifemap {
                 case "donuts":
                     return layer_donuts(this.map, layer_data, l.options ?? {})
                 case "text":
-                    return layer_text(layer_data, l.options ?? {})
+                    return layer_text(this.map, layer_data, l.options ?? {})
                 case "icons":
                     return layer_icons(this.map, layer_data, l.options ?? {})
                 default:

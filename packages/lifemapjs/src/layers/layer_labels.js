@@ -9,10 +9,16 @@ import Text from "ol/style/Text.js"
 import { LIFEMAP_BACK_URL } from "../utils"
 
 const SOLR_API_URL = `${LIFEMAP_BACK_URL}/solr`
-const TEXT_COLOR = "rgba(255, 255, 255, 1)"
-const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
 
-function create_taxon_text(taxonName, taxonNameLabelFontSize, taxonCommonName) {
+function create_taxon_text(options) {
+    let {
+        taxonName,
+        taxonNameLabelFontSize,
+        taxonCommonName,
+        text_color,
+        text_stroke,
+        text_stroke_width,
+    } = options
     const taxonNameLabelFont = `${taxonNameLabelFontSize}px Segoe UI, Helvetica, sans-serif`
     const taxonCommonNameLabelFontSize = taxonNameLabelFontSize - 8
     const taxonCommonNameLabelFont = `${taxonCommonNameLabelFontSize}px Segoe UI, Helvetica, sans-serif`
@@ -24,8 +30,8 @@ function create_taxon_text(taxonName, taxonNameLabelFontSize, taxonCommonName) {
     const text = [...nameText, ...commonNameText]
 
     const text_style = new Text({
-        fill: new Fill({ color: TEXT_COLOR }),
-        stroke: new Stroke({ width: 2, color: TEXT_STROKE_COLOR }),
+        fill: new Fill({ color: text_color }),
+        stroke: new Stroke({ width: text_stroke_width, color: text_stroke }),
         text: text,
         offsetY: 10,
         textBaseline: "top",
@@ -61,11 +67,14 @@ export function layer_labels(map) {
     const id = "labels-layer"
     const label_style_function = (feature) => {
         const label_style = new Style({
-            text: create_taxon_text(
-                feature.get("sci_name"),
-                feature.get("label_font_size"),
-                feature.get("common_name")
-            ),
+            text: create_taxon_text({
+                taxonName: feature.get("sci_name"),
+                taxonNameLabelFontSize: feature.get("label_font_size"),
+                taxonCommonName: feature.get("common_name"),
+                text_color: map.theme.label_text_color,
+                text_stroke: map.theme.label_stroke_color,
+                text_stroke_width: map.theme.label_stroke_width,
+            }),
         })
 
         return label_style

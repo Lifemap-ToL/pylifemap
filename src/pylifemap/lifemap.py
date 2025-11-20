@@ -48,6 +48,9 @@ class Lifemap:
         default `DEFAULT_HEIGHT`
     zoom : int, optional
         Default Lifemap zoom level, by default 4 or 5 depending on widget size
+    theme : str, optional
+        Color theme for the basemap. Can be one of "light", "dark", "lightblue", "lightgrey", or "lightgreen".
+        Defaults to "dark".
     controls : Sequence[str]
         List of controls to be displayed on the widget. By default all controls are displayed.
         Available controls are:
@@ -77,6 +80,7 @@ class Lifemap:
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
         zoom: int | None = None,
+        theme: str = "dark",
         controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "full_screen"),
         legend_width: int | None = None,
         hide_labels: bool = False,
@@ -102,9 +106,15 @@ class Lifemap:
         self._layers_counter = 0
         self._layers_data = {}
 
+        available_themes = ("light", "dark", "lightblue", "lightgrey", "lightgreen")
+        if theme not in available_themes:
+            msg = f"{theme} is not one of the available themes: {available_themes}"
+            raise ValueError(msg)
+
         # Store global map options
         self._map_options = {
             "zoom": zoom,
+            "theme": theme,
             "legend_width": legend_width,
             "controls": controls,
             "hide_labels": hide_labels,
