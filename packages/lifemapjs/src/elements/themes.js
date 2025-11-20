@@ -5,7 +5,7 @@ export const THEMES = {
         background_color: "#000",
         label_text_color: "#FFF",
         label_stroke_color: "#000",
-        label_stroke_width: 2,
+        label_stroke_width: 3,
         branches_stroke_color: "#cacaca",
         branches_width: 0.8,
         polygon_fill_color: {
