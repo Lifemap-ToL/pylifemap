@@ -18,6 +18,7 @@ import { THEMES } from "./elements/themes"
 import * as Plot from "@observablehq/plot"
 
 const DECK_LAYERS = ["heatmap_deck", "screengrid"]
+const DARK_THEMES = ["dark"]
 const MAX_SOLR_QUERY = 100000
 const LANG = "en"
 
@@ -34,6 +35,7 @@ export class Lifemap {
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
+        el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
 
         // Tiles layer
         const tiles_layer = layer_tiles(this.map, LANG)
