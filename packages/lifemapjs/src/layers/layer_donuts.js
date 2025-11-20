@@ -30,7 +30,6 @@ export function layer_donuts(map, data, options = {}) {
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
     // Get levels
-    console.log(data[0][counts_col])
     const levels = Object.keys(JSON.parse(data[0][counts_col])).sort()
     // Convert to array of {key: , value: } objects
     data.forEach((d) => {
