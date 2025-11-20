@@ -11,7 +11,7 @@ from pylifemap.lifemap import Lifemap
 
 __all__ = [
     "Lifemap",
-    "aggregate_freq",
     "aggregate_count",
+    "aggregate_freq",
     "aggregate_num",
 ]
