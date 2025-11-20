@@ -27,9 +27,9 @@ from pylifemap import Lifemap
 
 The data you want to visualize on the Lifemap tree of life must be in a [pandas](https://pandas.pydata.org) or [polars](https://pola.rs) DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.
 
-`pylifemap` includes an example dataset generated from [The IUCN Red List of Threatened Species](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3). It is a CSV file with the Red List category (in 2022) of more than 84000 species.
+`pylifemap` includes an example dataset generated from [The IUCN Red List of Threatened Species](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3). It is a parquet file with the Red List category (in 2022) of more than 84000 species.
 
-We can import it as a polars or pandas DataFrame with the following code:
+We can import it as a polars or pandas DataFrame and draw a sample with the following code:
 
 ::: {.panel-tabset}
 
@@ -55,6 +55,7 @@ iucn = pd.read_parquet(
 ```
 
 :::
+
 
 The resulting table only has two columns: `taxid`, which contains the species identifiers, and `status`, with the Red List category of each species.
 
@@ -228,3 +229,14 @@ The following values are available:
 - `"reset_zoom"`: zoom reset button
 - `"png_export"`: button to export the current view to a PNG file
 - `"full_screen"`: full screen toggle button
+
+
+## Change map theme
+
+By default Lifemap displays its base map in a dark theme with a black background, but you can switch to a light theme by adding a `theme` argument to your `Lifemap` call:
+
+```{python}
+Lifemap(iucn, theme="light").layer_points().show()
+```
+
+Available themes are currently `dark`, `light`, `lightgrey`, `lightblue` and `lightgreen`.
