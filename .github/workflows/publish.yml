@@ -33,7 +33,7 @@ jobs:
               run: uv python install
 
             - name: Bundle
-              run: npm run build
+              run: npm run bundle
 
             - name: Render and Publish
               shell: bash

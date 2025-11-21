@@ -1,9 +1,10 @@
 {
     "scripts": {
-        "bundle": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/pylifemap/static src/js/widget.js",
-        "dev": "npm run bundle -- --sourcemap=inline --watch",
+        "bundle_nominify": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/pylifemap/static src/js/widget.js",
+        "dev": "npm run bundle_nominify -- --sourcemap=inline --watch",
+        "bundle": "npm run bundle_nominify -- --minify",
         "test": "uv run pytest",
-        "build": "npm run bundle -- --minify && uv build",
+        "build": "npm run bundle && uv build",
         "doc": "cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render",
         "preview": "cd doc && uv run quarto preview"
     },
