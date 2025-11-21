@@ -3,33 +3,93 @@ title: "Getting started"
 ---
 
 
-To create a Lifemap data visualization, you will have to follow these steps:
+## Presentation
+
+::: {.callout-note}
+This is a quick introduction to the features and usage of the package. See the [usage](usage.qmd) page for more detailed informations.
+:::
+
+
+### What is it?
+
+`pylifemap` is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by [Lifemap](https://lifemap.cnrs.fr).
+
+It allows to create this type of interactive visualization:
+
+```{python}
+#| warning: false
+
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+)
+
+Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
+```
+
+
+### How do I use it?
+
+`pylifemap` visualizations are [jupyter widgets](https://ipywidgets.readthedocs.io/en/latest/) and are better created inside a notebook environment, such as [Jupyter](https://jupyter.org), [marimo](https://marimo.io) or [Quarto](https://quarto.org). These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.
+
+It is also possible to generate `pylifemap` visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser.
+
+
+## Installation
+
+You can install `pylifemap` like any other Python package. The recommended way is via `pip` or [uv](https://docs.astral.sh/uv/):
+
+::: {.panel-tabset}
+
+## pip
+
+```sh
+# Install pylifemap, preferably in a virtual environment
+pip install pylifemap
+```
+
+## uv
+
+```sh
+# Add pylifemap to a python project
+uv add pylifemap
+```
+:::
+
+To have an overview of the package without installing anything, you can also open our introduction notebook in Google Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb)
+
+
+
+
+
+## Creating a visualization
+
+To create a Lifemap data visualization, you must follow these steps:
 
 1. Import `Lifemap`
 2. Prepare and load your data
-3. If needed, aggregate you data with an [aggregation function](reference/index.html#aggregation-functions)
-4. Initialize a [Lifemap](`~pylifemap.Lifemap`) object
-5. Add visualization layers
-6. [show()](`~pylifemap.Lifemap.show`) or [save()](`~pylifemap.Lifemap.save`) the result
+3. Initialize a [Lifemap](`~pylifemap.Lifemap`) object
+4. Add visualization layers
 
+### 1. Import Lifemap
 
-## Import Lifemap
-
-To be able to use `pylifemap` in a script or notebook you have to import `Lifemap` from the package:
+To be able to use `pylifemap` in a script or notebook you have to import `Lifemap` from the package with the following line:
 
 ```{python}
 from pylifemap import Lifemap
 ```
 
+### 2. Prepare your data
 
-
-## Prepare your data
 
 The data you want to visualize on the Lifemap tree of life must be in a [pandas](https://pandas.pydata.org) or [polars](https://pola.rs) DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.
 
-`pylifemap` includes an example dataset generated from [The IUCN Red List of Threatened Species](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3). It is a parquet file with the Red List category (in 2022) of more than 84000 species.
+In the following we will use an example dataset generated from [The IUCN Red List of Threatened Species](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3). It is a parquet file with the Red List category (in 2022) of more than 84000 species.
 
-We can import it as a polars or pandas DataFrame and draw a sample with the following code:
+We can import it as a polars or pandas DataFrame with the following code:
 
 ::: {.panel-tabset}
 
@@ -56,187 +116,52 @@ iucn = pd.read_parquet(
 
 :::
 
-
 The resulting table only has two columns: `taxid`, which contains the species identifiers, and `status`, with the Red List category of each species.
 
 ```{python}
 iucn
 ```
 
+For some visualizations you will have to aggregate a count of species or the values of a numerical or categorical variable along the tree branches. For this you can use one of the provided [aggregation functions](reference/index.html#aggregation-functions).
 
-## Initialize a `Lifemap` object
 
-The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]:
 
-```{python}
-#| eval: false
-Lifemap(iucn, taxid_col="taxid")
-```
 
-We could have passed other arguments such as the `width` and `height` of our visualization, either as a number of pixels or as a CSS unit.
+### 3. Initialize a `Lifemap` object
 
-For example, the following intiialization would make the visualization take the full available width, and an height of 800 pixels.
+The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]. We will also add `.show()`, which is needed to display the visualization.
 
 ```{python}
-#| eval: false
-Lifemap(iucn, taxid_col="taxid", width="100%", height=800)
+Lifemap(iucn, taxid_col="taxid").show()
 ```
 
+For the moment this only displays the Lifemap base map.
 
-## Add visualization layers
+## 4. Add visualization layers
 
-After initializing our `Lifemap` object, we must add visualization layers to create graphical representations.
-
-Here are the available layers:
-
-| Layer                                           | Description                                                                                                  |
-| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| [layer_points](layers/layer_points.qmd)         | Displays each observation with a point. Radius and color can be dependent of an  attribute in the DataFrame. |
-| [layer_lines](layers/layer_lines.qmd)           | Using aggregated data, highlights branches of the tree with lines of varying width and color.                |
-| [layer_donuts](layers/layer_donuts.qmd)         | Displays aggregated categorical data as donut charts.                                                        |
-| [layer_heatmap](layers/layer_heatmap.qmd)       | Displays a heatmap of the observations distribution in the tree.                                             |
-| [layer_heatmap_deck](layers/layer_heatmap_deck.qmd)       | Displays a deck.gl heatmap of the observations distribution in the tree.                                             |
-| [layer_screengrid](layers/layer_screengrid.qmd) | Displays the observations distribution with a colored grid with fixed-size cells..                           |
-| [layer_text](layers/layer_text.qmd)             | Displays text labels by taxid                           |
-| [layer_icons](layers/layer_icons.qmd)           | Displays icons associated to taxids                           |
-
-To add a layer, we call the corresponding `layer_` method of our `Lifemap` object. For example, to add a points layer:
-
-```{python}
-#| eval: false
-Lifemap(iucn, taxid_col="taxid").layer_points()
-```
-
-We can add several layers by calling several methods. For example we could display a heatmap layer, and a points layer above it:
-
-```{python}
-#| eval: false
-Lifemap(iucn, taxid_col="taxid").layer_heatmap().layer_points()
-```
-
-## Show or save the visualization
-
-Just adding layers is not sufficient to see our visualization. For it to appear, we have to call the [show()](`~pylifemap.Lifemap.show`) method:
+After initializing our `Lifemap` object, we must add visualization layers to create graphical representations of our data. For example, we can add a points layer which will add a colored point over each species in our dataset. To do that, we can add a call to `layer_points()`:
 
 ```{python}
 Lifemap(iucn, taxid_col="taxid").layer_points().show()
 ```
 
+Some layers allow to represent the values of one of our dataset columns. For example, we can color our points depending on the values in the `status` column of `iucn`:
+
+```{python}
+Lifemap(iucn, taxid_col="taxid").layer_points(fill="status").show()
+```
+
+
 ::: {.callout-note}
-When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user's browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.
-:::
-
-We can also save it to an HTML file which can be opened later in a browser by using the [save()](`~pylifemap.Lifemap.save`) method:
-
-```{python}
-#| eval: false
-Lifemap(iucn, taxid_col="taxid").layer_points().save("lifemap.html")
-```
-
-You can also use the `Export to PNG` button on the widget to export the currently displayed view to an image file in PNG format.
-
-
-## Customize the layers
-
-Each layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:
-
-
-```{python}
-(
-    Lifemap(iucn, taxid_col="taxid")
-    .layer_points(fill="#EFB118", radius=5, opacity=0.5)
-    .show()
-)
-```
-
-Instead of providing fixed values to `fill` or `radius`, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their `status`:
-
-```{python}
-(
-    Lifemap(iucn, taxid_col="taxid")
-    .layer_points(fill="status", radius=4, opacity=0.9)
-    .show()
-)
-```
-
-
-
-## Aggregate data
-
-`pylifemap` provides several functions that allow to aggregate data along the branches of the tree:
-
-
-
-| Function                                                     | Description                                                                                         |
-| :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| [aggregate_count](`~pylifemap.aggregations.aggregate_count`) | Aggregates the number of children of each tree node.                                                |
-| [aggregate_num](`~pylifemap.aggregations.aggregate_num`)     | Aggregates a numerical variable along the tree branches with a given function (sum , mean, max...). |
-| [aggregate_freq](`~pylifemap.aggregations.aggregate_freq`)   | Aggregates the frequencies of the levels of a categorical variable.                                 |
-
-
-
-For example, we could filter our dataset to only keep the species with an "extinct" status:
-
-
-::: {.panel-tabset}
-
-## Polars
-
-```{python}
-iucn_extinct = iucn.filter(pl.col("status") == "Extinct")
-```
-
-## Pandas
-
-```{python}
-#| eval: false
-iucn_extinct = iucn[iucn["status"] == "Extinct"]
-```
-
+There are many options to customize the base map or the layers, see the [usage](usage.qmd) page for more informations.
 :::
 
 
-We can then aggregate their count along the branches with [aggregate_count](`~pylifemap.aggregations.aggregate_count`):
+## Exporting a visualization
 
-```{python}
-from pylifemap import aggregate_count
-iucn_extinct_agg = aggregate_count(iucn_extinct)
-iucn_extinct_agg
-```
+Once you are satisfied with a visualization, there are several ways to export it:
 
-Finally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.
-
-```{python}
-(
-    Lifemap(iucn_extinct_agg)
-    .layer_lines(color="n", width="n", label="Extinct species")
-    .show()
-)
-```
-
-## Customize map controls
-
-By default, the Lifemap widgets displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a `controls` argument to `Lifemap`:
-
-```{python}
-#|eval: false
-Lifemap(iucn, taxid_col="taxid", controls=("zoom", "full_screen"))
-```
-
-The following values are available:
-
-- `"zoom"`: zoom in and zoom out buttons
-- `"reset_zoom"`: zoom reset button
-- `"png_export"`: button to export the current view to a PNG file
-- `"full_screen"`: full screen toggle button
-
-
-## Change map theme
-
-By default Lifemap displays its base map in a dark theme with a black background, but you can switch to a light theme by adding a `theme` argument to your `Lifemap` call:
-
-```{python}
-Lifemap(iucn, theme="light").layer_points().show()
-```
-
-Available themes are currently `dark`, `light`, `lightgrey`, `lightblue` and `lightgreen`.
+- at any time, you can use the "Export PNG" button on the widget to export the current view as a PNG image. You can use the "Fullscreen" button first to generate bigger images if needed
+- you can use `.save("file.html")` instead of `.show()` to save the widget to an HTML file
+- if in a Jupyter notebook, you can save it to HTML, which will include the widgets in the output
+- you can also use [Quarto](https://quarto.org) to generate an HTML document embedding pylifemap widgets, or to convert a Jupyter notebook to an HTML file

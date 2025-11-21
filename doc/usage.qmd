@@ -1,0 +1,281 @@
+---
+title: Usage
+---
+
+
+::: {.callout-note}
+See the [Getting started](getting_started.qmd) page for a more gentle introduction.
+:::
+
+In the following we will use the example [IUCN](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3) dataset. It is a parquet file with the Red List category (in 2022) of more than 84000 species.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+)
+```
+
+
+## Installation
+
+### Install locally
+
+You can add the package to a project with [uv](https://docs.astral.sh/uv/) or to a virtual environment with `pip`:
+
+::: {.panel-tabset}
+
+## pip
+
+```sh
+# Install pylifemap, preferably in a virtual environment
+pip install pylifemap
+```
+
+## uv
+
+```sh
+# Add pylifemap to a python project
+uv add pylifemap
+```
+
+:::
+
+### Run directly with `uv`
+
+You can run `pylifemap` directly with `uv run` using a `--with` argument:
+
+```sh
+# Run a Jupyter session
+uv run --with pylifemap --with jupyter jupyter-lab
+
+# Run a marimo session
+uv run --with pylifemap --with marimo marimo edit
+
+# Run a custom script
+uv run --with pylifemap my_script.py
+```
+
+### Run with `juv`
+
+[juv](https://github.com/manzt/juv) is a toolkit for reproducible Jupyter notebooks, powered by [uv](https://docs.astral.sh/uv/).
+
+You can easily create and run a notebook with `pylifemap` with:
+
+```sh
+juv init notebook.ipynb
+juv add notebook.ipynb pylifemap
+juv run notebook.ipynb
+```
+
+### Run with Docker
+
+Another way to use the package without having to install it is to use our [Docker image](https://github.com/Lifemap-ToL/pylifemap/pkgs/container/pylifemap).
+
+#### Run in Jupyter
+
+To use `pylifemap` in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:
+
+```sh
+docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
+```
+
+Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
+
+
+#### Run a script
+
+If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:
+
+```sh
+docker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py
+```
+
+In this case, if you use [show()](`~pylifemap.Lifemap.show`) in your script the result will not be opened in your browser but will instead be saved in a `lifemap.html` file in your working directory.
+
+
+
+## Base map customization
+
+Several arguments can be passed to `Lifemap()` when initializing the visualization.
+
+::: {.callout-note}
+For a complete list of `Lifemap` arguments, see its [documentation](`~pylifemap.Lifemap`).
+:::
+
+### Widget size
+
+The `width` and `height` arguments allow to modify the widget size. They can be given in any CSS unit.
+
+For example, the following initialization would make the visualization take the full available width, and an height of 800 pixels.
+
+```{python}
+#| eval: false
+Lifemap(iucn, taxid_col="taxid", width="100%", height=800)
+```
+
+
+### Map theme
+
+By default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a `theme` argument:
+
+```{python}
+Lifemap(iucn, theme="light").layer_points().show()
+```
+
+Available themes are currently `dark`, `light`, `lightgrey`, `lightblue` and `lightgreen`.
+
+### Map controls
+
+By default, the Lifemap widget displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a `controls` argument to `Lifemap`:
+
+```{python}
+#|eval: false
+Lifemap(iucn, taxid_col="taxid", controls=("zoom", "full_screen"))
+```
+
+The following values are available:
+
+- `"zoom"`: zoom in and zoom out buttons
+- `"reset_zoom"`: zoom reset button
+- `"png_export"`: button to export the current view to a PNG file
+- `"full_screen"`: full screen toggle button
+
+
+
+
+## Visualization layers
+
+Here are the currently available layers:
+
+| Layer                                           | Description                                                                                                  |
+| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| [layer_points](layers/layer_points.qmd)         | Displays each observation with a point. Radius and color can be dependent of an  attribute in the DataFrame. |
+| [layer_lines](layers/layer_lines.qmd)           | Using aggregated data, highlights branches of the tree with lines of varying width and color.                |
+| [layer_donuts](layers/layer_donuts.qmd)         | Displays aggregated categorical data as donut charts.                                                        |
+| [layer_heatmap](layers/layer_heatmap.qmd)       | Displays a heatmap of the observations distribution in the tree.                                             |
+| [layer_heatmap_deck](layers/layer_heatmap_deck.qmd)       | Displays a deck.gl heatmap of the observations distribution in the tree.                                             |
+| [layer_screengrid](layers/layer_screengrid.qmd) | Displays the observations distribution with a colored grid with fixed-size cells..                           |
+| [layer_text](layers/layer_text.qmd)             | Displays text labels by taxid                           |
+| [layer_icons](layers/layer_icons.qmd)           | Displays icons associated to taxids                           |
+
+
+Several layers can be added to the same map by chaining several methods:
+
+```{python}
+#| eval: false
+Lifemap(iucn, taxid_col="taxid").layer_heatmap().layer_points().show()
+```
+
+### Layers customization
+
+Each layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:
+
+```{python}
+(
+    Lifemap(iucn)
+    .layer_points(fill="#EFB118", radius=5, opacity=0.5)
+    .show()
+)
+```
+
+Instead of providing fixed values to `fill` or `radius`, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their `status`:
+
+```{python}
+(
+    Lifemap(iucn)
+    .layer_points(fill="status", radius=4, opacity=0.9)
+    .show()
+)
+```
+
+::: {.callout-note}
+See each layer documentation page for a complete list of its arguments.
+:::
+
+
+## Widget display and export
+
+`Lifemap` and layer methods create a widget object but don't display it. For it to appear, we have to call the [show()](`~pylifemap.Lifemap.show`) method:
+
+```{python}
+Lifemap(iucn, taxid_col="taxid").layer_points().show()
+```
+
+::: {.callout-note}
+When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user's browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.
+:::
+
+The widget can also be saved to an HTML file by using the [save()](`~pylifemap.Lifemap.save`) method:
+
+```{python}
+#| eval: false
+Lifemap(iucn, taxid_col="taxid").layer_points().save("lifemap.html")
+```
+
+You can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive pylifemap widgets.
+
+::: {.callout-important}
+Lifemap is updated weekly from the latest NCBI data. During these updates, the precise coordinates of each taxon can change slightly.
+
+If you export your widget to HTML and your data includes less than 100 000 data points, the up to date coordinates are retrieved from our API each time the widget is displayed, so the coordinates of the base map and of your dataset should still match. But if you have more than 100 000 data points, they may not correspond anymore if the base map has been updated since the widget creation.
+:::
+
+You can also use the `Export to PNG` button on the widget to export the currently displayed view to an image file in PNG format.
+
+
+
+
+## Data aggregation
+
+`pylifemap` provides several functions that allow to aggregate data along the branches of the tree:
+
+
+| Function                                                     | Description                                                                                         |
+| :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| [aggregate_count](`~pylifemap.aggregations.aggregate_count`) | Aggregates the number of children of each tree node.                                                |
+| [aggregate_num](`~pylifemap.aggregations.aggregate_num`)     | Aggregates a numerical variable along the tree branches with a given function (sum , mean, max...). |
+| [aggregate_freq](`~pylifemap.aggregations.aggregate_freq`)   | Aggregates the frequencies of the levels of a categorical variable.                                 |
+
+
+
+For example, if we filter our dataset to only keep the species with an "extinct" status:
+
+
+::: {.panel-tabset}
+
+## Polars
+
+```{python}
+iucn_extinct = iucn.filter(pl.col("status") == "Extinct")
+```
+
+## Pandas
+
+```{python}
+#| eval: false
+iucn_extinct = iucn[iucn["status"] == "Extinct"]
+```
+
+:::
+
+
+We can then aggregate their count along the branches with [aggregate_count](`~pylifemap.aggregations.aggregate_count`):
+
+```{python}
+from pylifemap import aggregate_count
+iucn_extinct_agg = aggregate_count(iucn_extinct)
+iucn_extinct_agg
+```
+
+Finally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.
+
+```{python}
+(
+    Lifemap(iucn_extinct_agg)
+    .layer_lines(color="n", width="n", label="Extinct species")
+    .show()
+)
+```

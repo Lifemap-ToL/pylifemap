@@ -19,8 +19,8 @@ website:
         background: "#333"
         pinned: true
         left:
-            - installation.qmd
             - getting_started.qmd
+            - usage.qmd
             - text: "Layers"
               menu:
                   - layers/layer_points.qmd
