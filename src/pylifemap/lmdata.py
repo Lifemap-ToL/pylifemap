@@ -2,7 +2,7 @@ import polars as pl
 import requests
 from platformdirs import user_cache_path
 
-from pylifemap.utils import LIFEMAP_BACK_URL, logger
+from pylifemap.utils import LIFEMAP_BACK_URL
 
 LMDATA_DATA_URL = f"{LIFEMAP_BACK_URL}/data/lmdata.parquet"
 LMDATA_TIMESTAMP_URL = f"{LIFEMAP_BACK_URL}/data/timestamp.txt"
@@ -33,10 +33,8 @@ class LmData:
 
         download = not self.lmdata_ok()
         if download:
-            logger.info("Newer data available, downloading...")
             self.download_timestamp()
             self.download_data()
-            logger.info("Done.")
 
         self._data = pl.read_parquet(LMDATA_DATA_PATH)
 
