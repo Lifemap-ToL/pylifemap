@@ -1,11 +1,11 @@
 import { fromLonLat } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
-import { Vector } from "ol/source.js"
 import VectorSource from "ol/source/Vector"
 import VectorLayer from "ol/layer/Vector.js"
 import { Style, Fill, Stroke } from "ol/style.js"
 import Text from "ol/style/Text.js"
+import { guidGenerator } from "../utils"
 
 const TEXT_COLOR = "rgba(255, 255, 255, 1)"
 const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
