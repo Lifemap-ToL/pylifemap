@@ -8,6 +8,7 @@ import * as lz4 from "lz4js"
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 
+// Map defaults
 export const DEFAULT_LON = 0
 export const DEFAULT_LAT = -4.226497
 export const MAP_EXTENT = [-74.203515625, -33.7091796875, 68.003515625, 35.1091796875]
@@ -16,6 +17,7 @@ export const MAP_EXTENT = [-74.203515625, -33.7091796875, 68.003515625, 35.10917
 export const DEFAULT_NUM_SCHEME = "viridis"
 export const DEFAULT_CAT_SCHEME = "observable10"
 
+// Arrow IPC lz4 compression
 const lz4Codec = {
     encode(data) {
         return lz4.compress(data)
@@ -24,7 +26,6 @@ const lz4Codec = {
         return lz4.decompress(data)
     },
 }
-
 compressionRegistry.set(CompressionType.LZ4_FRAME, lz4Codec)
 
 // Unserialize data from Arrow IPC to JS Array
