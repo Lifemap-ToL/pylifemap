@@ -4,70 +4,42 @@
     "href": "getting_started.html",
     "title": "Getting started",
     "section": "",
-    "text": "To create a Lifemap data visualization, you will have to follow these steps:"
+    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
   },
   {
-    "objectID": "getting_started.html#import-lifemap",
-    "href": "getting_started.html#import-lifemap",
+    "objectID": "getting_started.html#presentation",
+    "href": "getting_started.html#presentation",
     "title": "Getting started",
-    "section": "Import Lifemap",
-    "text": "Import Lifemap\nTo be able to use pylifemap in a script or notebook you have to import Lifemap from the package:\n\nfrom pylifemap import Lifemap"
+    "section": "",
+    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
   },
   {
-    "objectID": "getting_started.html#prepare-your-data",
-    "href": "getting_started.html#prepare-your-data",
+    "objectID": "getting_started.html#installation",
+    "href": "getting_started.html#installation",
     "title": "Getting started",
-    "section": "Prepare your data",
-    "text": "Prepare your data\nThe data you want to visualize on the Lifemap tree of life must be in a pandas or polars DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.\npylifemap includes an example dataset generated from The IUCN Red List of Threatened Species. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nWe can import it as a polars or pandas DataFrame and draw a sample with the following code:\n\nPolarsPandas\n\n\n\nimport polars as pl\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\n\n\n\nimport pandas as pd\n\niucn = pd.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\n\n\n\nThe resulting table only has two columns: taxid, which contains the species identifiers, and status, with the Red List category of each species.\n\niucn\n\n\nshape: (84_981, 2)taxidstatusi32str651506\"Data Deficient\"2803960\"Critically Endangered\"143610\"Critically Endangered\"2760993\"Least Concern\"72259\"Least Concern\"……337230\"Least Concern\"442623\"Vulnerable\"2303643\"Critically Endangered\"442625\"Critically Endangered\"442626\"Least Concern\""
+    "section": "Installation",
+    "text": "Installation\nYou can install pylifemap like any other Python package. The recommended way is via pip or uv:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\nTo have an overview of the package without installing anything, you can also open our introduction notebook in Google Colab:"
   },
   {
-    "objectID": "getting_started.html#initialize-a-lifemap-object",
-    "href": "getting_started.html#initialize-a-lifemap-object",
+    "objectID": "getting_started.html#creating-a-visualization",
+    "href": "getting_started.html#creating-a-visualization",
     "title": "Getting started",
-    "section": "Initialize a Lifemap object",
-    "text": "Initialize a Lifemap object\nThe next step is to create a new Lifemap object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers1:\n\nLifemap(iucn, taxid_col=\"taxid\")\n\nWe could have passed other arguments such as the width and height of our visualization, either as a number of pixels or as a CSS unit.\nFor example, the following intiialization would make the visualization take the full available width, and an height of 800 pixels.\n\nLifemap(iucn, taxid_col=\"taxid\", width=\"100%\", height=800)"
+    "section": "Creating a visualization",
+    "text": "Creating a visualization\nTo create a Lifemap data visualization, you must follow these steps:\n\nImport Lifemap\nPrepare and load your data\nInitialize a Lifemap object\nAdd visualization layers\n\n\n1. Import Lifemap\nTo be able to use pylifemap in a script or notebook you have to import Lifemap from the package with the following line:\n\nfrom pylifemap import Lifemap\n\n\n\n2. Prepare your data\nThe data you want to visualize on the Lifemap tree of life must be in a pandas or polars DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.\nIn the following we will use an example dataset generated from The IUCN Red List of Threatened Species. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nWe can import it as a polars or pandas DataFrame with the following code:\n\nPolarsPandas\n\n\n\nimport polars as pl\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\n\n\n\nimport pandas as pd\n\niucn = pd.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\n\n\n\nThe resulting table only has two columns: taxid, which contains the species identifiers, and status, with the Red List category of each species.\n\niucn\n\n\nshape: (84_981, 2)taxidstatusi32str651506\"Data Deficient\"2803960\"Critically Endangered\"143610\"Critically Endangered\"2760993\"Least Concern\"72259\"Least Concern\"……337230\"Least Concern\"442623\"Vulnerable\"2303643\"Critically Endangered\"442625\"Critically Endangered\"442626\"Least Concern\"\n\n\nFor some visualizations you will have to aggregate a count of species or the values of a numerical or categorical variable along the tree branches. For this you can use one of the provided aggregation functions.\n\n\n3. Initialize a Lifemap object\nThe next step is to create a new Lifemap object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers1. We will also add .show(), which is needed to display the visualization.\n\nLifemap(iucn, taxid_col=\"taxid\").show()\n\n\n\n\nFor the moment this only displays the Lifemap base map."
   },
   {
     "objectID": "getting_started.html#add-visualization-layers",
     "href": "getting_started.html#add-visualization-layers",
     "title": "Getting started",
-    "section": "Add visualization layers",
-    "text": "Add visualization layers\nAfter initializing our Lifemap object, we must add visualization layers to create graphical representations.\nHere are the available layers:\n\n\n\nLayer\nDescription\n\n\n\n\nlayer_points\nDisplays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame.\n\n\nlayer_lines\nUsing aggregated data, highlights branches of the tree with lines of varying width and color.\n\n\nlayer_donuts\nDisplays aggregated categorical data as donut charts.\n\n\nlayer_heatmap\nDisplays a heatmap of the observations distribution in the tree.\n\n\nlayer_heatmap_deck\nDisplays a deck.gl heatmap of the observations distribution in the tree.\n\n\nlayer_screengrid\nDisplays the observations distribution with a colored grid with fixed-size cells..\n\n\nlayer_text\nDisplays text labels by taxid\n\n\nlayer_icons\nDisplays icons associated to taxids\n\n\n\nTo add a layer, we call the corresponding layer_ method of our Lifemap object. For example, to add a points layer:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points()\n\nWe can add several layers by calling several methods. For example we could display a heatmap layer, and a points layer above it:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_heatmap().layer_points()"
+    "section": "4. Add visualization layers",
+    "text": "4. Add visualization layers\nAfter initializing our Lifemap object, we must add visualization layers to create graphical representations of our data. For example, we can add a points layer which will add a colored point over each species in our dataset. To do that, we can add a call to layer_points():\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\n\n\n\nSome layers allow to represent the values of one of our dataset columns. For example, we can color our points depending on the values in the status column of iucn:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points(fill=\"status\").show()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThere are many options to customize the base map or the layers, see the usage page for more informations."
   },
   {
-    "objectID": "getting_started.html#show-or-save-the-visualization",
-    "href": "getting_started.html#show-or-save-the-visualization",
+    "objectID": "getting_started.html#exporting-a-visualization",
+    "href": "getting_started.html#exporting-a-visualization",
     "title": "Getting started",
-    "section": "Show or save the visualization",
-    "text": "Show or save the visualization\nJust adding layers is not sufficient to see our visualization. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\nWarning: 778 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nWe can also save it to an HTML file which can be opened later in a browser by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")\n\nYou can also use the Export to PNG button on the widget to export the currently displayed view to an image file in PNG format."
-  },
-  {
-    "objectID": "getting_started.html#customize-the-layers",
-    "href": "getting_started.html#customize-the-layers",
-    "title": "Getting started",
-    "section": "Customize the layers",
-    "text": "Customize the layers\nEach layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:\n\n(\n    Lifemap(iucn, taxid_col=\"taxid\")\n    .layer_points(fill=\"#EFB118\", radius=5, opacity=0.5)\n    .show()\n)\n\n\n\n\nInstead of providing fixed values to fill or radius, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their status:\n\n(\n    Lifemap(iucn, taxid_col=\"taxid\")\n    .layer_points(fill=\"status\", radius=4, opacity=0.9)\n    .show()\n)"
-  },
-  {
-    "objectID": "getting_started.html#aggregate-data",
-    "href": "getting_started.html#aggregate-data",
-    "title": "Getting started",
-    "section": "Aggregate data",
-    "text": "Aggregate data\npylifemap provides several functions that allow to aggregate data along the branches of the tree:\n\n\n\nFunction\nDescription\n\n\n\n\naggregate_count\nAggregates the number of children of each tree node.\n\n\naggregate_num\nAggregates a numerical variable along the tree branches with a given function (sum , mean, max…).\n\n\naggregate_freq\nAggregates the frequencies of the levels of a categorical variable.\n\n\n\nFor example, we could filter our dataset to only keep the species with an “extinct” status:\n\nPolarsPandas\n\n\n\niucn_extinct = iucn.filter(pl.col(\"status\") == \"Extinct\")\n\n\n\n\niucn_extinct = iucn[iucn[\"status\"] == \"Extinct\"]\n\n\n\n\nWe can then aggregate their count along the branches with aggregate_count:\n\nfrom pylifemap import aggregate_count\niucn_extinct_agg = aggregate_count(iucn_extinct)\niucn_extinct_agg\n\n\nshape: (774, 2)taxidni32u32null20196275919631932132681……30762441307811476313602313410119134101211\n\n\nFinally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.\n\n(\n    Lifemap(iucn_extinct_agg)\n    .layer_lines(color=\"n\", width=\"n\", label=\"Extinct species\")\n    .show()\n)\n\nWarning: 3 taxids have not been found in Lifemap database: [None, 1914395, 3041918]."
-  },
-  {
-    "objectID": "getting_started.html#customize-map-controls",
-    "href": "getting_started.html#customize-map-controls",
-    "title": "Getting started",
-    "section": "Customize map controls",
-    "text": "Customize map controls\nBy default, the Lifemap widgets displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a controls argument to Lifemap:\n\nLifemap(iucn, taxid_col=\"taxid\", controls=(\"zoom\", \"full_screen\"))\n\nThe following values are available:\n\n\"zoom\": zoom in and zoom out buttons\n\"reset_zoom\": zoom reset button\n\"png_export\": button to export the current view to a PNG file\n\"full_screen\": full screen toggle button"
-  },
-  {
-    "objectID": "getting_started.html#change-map-theme",
-    "href": "getting_started.html#change-map-theme",
-    "title": "Getting started",
-    "section": "Change map theme",
-    "text": "Change map theme\nBy default Lifemap displays its base map in a dark theme with a black background, but you can switch to a light theme by adding a theme argument to your Lifemap call:\n\nLifemap(iucn, theme=\"light\").layer_points().show()\n\n\n\n\nAvailable themes are currently dark, light, lightgrey, lightblue and lightgreen."
+    "section": "Exporting a visualization",
+    "text": "Exporting a visualization\nOnce you are satisfied with a visualization, there are several ways to export it:\n\nat any time, you can use the “Export PNG” button on the widget to export the current view as a PNG image. You can use the “Fullscreen” button first to generate bigger images if needed\nyou can use .save(\"file.html\") instead of .show() to save the widget to an HTML file\nif in a Jupyter notebook, you can save it to HTML, which will include the widgets in the output\nyou can also use Quarto to generate an HTML document embedding pylifemap widgets, or to convert a Jupyter notebook to an HTML file"
   },
   {
     "objectID": "getting_started.html#footnotes",
@@ -354,21 +326,21 @@
     "href": "index.html",
     "title": "pylifemap",
     "section": "",
-    "text": "pylifemap is a jupyter widget allowing to visualize taxonomy data on Lifemap. It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.\nHere is a simple example:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\nNewer data available, downloading...\nDone."
+    "text": "pylifemap is a Python package for visualizing taxonomy data on Lifemap, the interactive tree of life. It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.\nHere is a simple example:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\nNewer data available, downloading...\nDone."
   },
   {
     "objectID": "index.html#overview",
     "href": "index.html#overview",
     "title": "pylifemap",
     "section": "",
-    "text": "pylifemap is a jupyter widget allowing to visualize taxonomy data on Lifemap. It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.\nHere is a simple example:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\nNewer data available, downloading...\nDone."
+    "text": "pylifemap is a Python package for visualizing taxonomy data on Lifemap, the interactive tree of life. It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.\nHere is a simple example:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\nNewer data available, downloading...\nDone."
   },
   {
     "objectID": "index.html#installation-and-usage",
     "href": "index.html#installation-and-usage",
     "title": "pylifemap",
     "section": "Installation and usage",
-    "text": "Installation and usage\n\nInstallation describes different ways to install and use the package.\nGetting started gives general usage instructions.\nThe Layers section shows visual interactive examples of the different available layers.\nReference provides detailed documentation of the different methods and functions."
+    "text": "Installation and usage\n\nGetting started gives an overview of the package usage and features.\nUsage describes how to use the package and the available features and options.\nThe Layers section shows examples of the different available layers.\nReference provides detailed documentation of the different methods and functions."
   },
   {
     "objectID": "index.html#credits",
@@ -389,7 +361,7 @@
     "href": "layers/layer_icons.html",
     "title": "Icons layer",
     "section": "",
-    "text": "The icons layer displays images associated to taxid values.\nIcons are specified by either an http or https URL, or by a data URI.\nIn the following example we use an svg icon encoded into a data URI. We specify an icon width, height, a vertical anchor and a color to tint it (color only works for certain type of SVG images).\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n).sample(n=5000)\n\n(\n    Lifemap(iucn).layer_icons(\n        icon=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%2C11.5A2.5%2C2.5%200%200%2C1%209.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C6.5A2.5%2C2.5%200%200%2C1%2014.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C11.5M12%2C2A7%2C7%200%200%2C0%205%2C9C5%2C14.25%2012%2C22%2012%2C22C12%2C22%2019%2C14.25%2019%2C9A7%2C7%200%200%2C0%2012%2C2Z%22%20style%3D%22fill%3A%20%23FFFFFF%22%2F%3E%3C%2Fsvg%3E\",\n        y_anchor=1.0,\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n    ).show()\n)\n\nWarning: 32 taxids have not been found in Lifemap database.\nWarning: 1 duplicated taxids have been found in the data: [857696].\n\n\n\n\n\nThe icon parameter can also be a data column containing image URLs.\n\nd = pl.DataFrame(\n     {\n         \"taxid\": [\n             9994,\n             1021470,\n             1397240,\n             1415565,\n         ],\n         \"taxid_icon\": [\n             \"https://openlayers.org/en/latest/examples/data/square.svg\",\n             \"https://openlayers.org/en/latest/examples/data/dot.svg\",\n             \"https://openlayers.org/en/latest/examples/data/dot.svg\",\n             \"https://openlayers.org/en/latest/examples/data/square.svg\",\n         ]\n     }\n )\n\n(\n    Lifemap(d).layer_icons(\n        icon=\"taxid_icon\",\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n        popup=True\n    ).show()\n)\n\n\n\n\nFor a detailed list of layer_icons arguments you can take a look at its documentation."
+    "text": "The icons layer displays images associated to taxid values.\nIcons are specified by either an http or https URL, or by a data URI.\nIn the following example we use an svg icon encoded into a data URI. We specify an icon width, height, a vertical anchor and a color to tint it (color only works for certain type of SVG images).\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n).sample(n=5000)\n\n(\n    Lifemap(iucn).layer_icons(\n        icon=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%2C11.5A2.5%2C2.5%200%200%2C1%209.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C6.5A2.5%2C2.5%200%200%2C1%2014.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C11.5M12%2C2A7%2C7%200%200%2C0%205%2C9C5%2C14.25%2012%2C22%2012%2C22C12%2C22%2019%2C14.25%2019%2C9A7%2C7%200%200%2C0%2012%2C2Z%22%20style%3D%22fill%3A%20%23FFFFFF%22%2F%3E%3C%2Fsvg%3E\",\n        y_anchor=1.0,\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n    ).show()\n)\n\nWarning: 52 taxids have not been found in Lifemap database.\nWarning: 1 duplicated taxids have been found in the data: [1903374].\n\n\n\n\n\nThe icon parameter can also be a data column containing image URLs.\n\nd = pl.DataFrame(\n     {\n         \"taxid\": [\n             9994,\n             1021470,\n             1397240,\n             1415565,\n         ],\n         \"taxid_icon\": [\n             \"https://openlayers.org/en/latest/examples/data/square.svg\",\n             \"https://openlayers.org/en/latest/examples/data/dot.svg\",\n             \"https://openlayers.org/en/latest/examples/data/dot.svg\",\n             \"https://openlayers.org/en/latest/examples/data/square.svg\",\n         ]\n     }\n )\n\n(\n    Lifemap(d).layer_icons(\n        icon=\"taxid_icon\",\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n        popup=True\n    ).show()\n)\n\n\n\n\nFor a detailed list of layer_icons arguments you can take a look at its documentation."
   },
   {
     "objectID": "layers/layer_donuts.html",
@@ -627,28 +599,21 @@
     "href": "development.html",
     "title": "Development notes",
     "section": "",
-    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git"
-  },
-  {
-    "objectID": "development.html#install-from-git",
-    "href": "development.html#install-from-git",
-    "title": "Development notes",
-    "section": "",
-    "text": "To install pylifemap from git:\n# With pip\npip install git+https://github.com/Lifemap-ToL/pylifemap.git\n# Add to a project with uv\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git"
+    "text": "If you want to install pylifemap from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall uv\nClone the pylifemap repository\nInstall Python dependencies with : uv sync\nInstall JavaScript dependencies with : npm install --workspaces --include-root-workspace\nBundle JavaScript and CSS code with npm run bundle"
   },
   {
     "objectID": "development.html#install-the-development-version-from-source",
     "href": "development.html#install-the-development-version-from-source",
     "title": "Development notes",
-    "section": "Install the development version (from source)",
-    "text": "Install the development version (from source)\nIf you want to install pylifemap from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall uv\nClone the pylifemap repository\nInstall Python dependencies with : uv sync\nInstall JavaScript dependencies with : npm install --workspaces --include-root-workspace\nBundle JavaScript and CSS code with npm run bundle"
+    "section": "",
+    "text": "If you want to install pylifemap from source, you’ll have to follow these steps:\n\nInstall node.js\nInstall uv\nClone the pylifemap repository\nInstall Python dependencies with : uv sync\nInstall JavaScript dependencies with : npm install --workspaces --include-root-workspace\nBundle JavaScript and CSS code with npm run bundle"
   },
   {
     "objectID": "development.html#widget-javascript-modification-and-bundling",
     "href": "development.html#widget-javascript-modification-and-bundling",
     "title": "Development notes",
     "section": "Widget JavaScript modification and bundling",
-    "text": "Widget JavaScript modification and bundling\nEach time the widget JavaScript or CSS code is modified in the src/js/ or packages/lifemapjs/ directories, it must be bundled with one of the following commands in pylifemap:\n# Bundle\nnpm run bundle\n# Bundle and watch for code change\nnpm run dev\nThe result is put into src/pylifemap/static."
+    "text": "Widget JavaScript modification and bundling\nEach time the widget JavaScript or CSS code is modified in the src/js/ or packages/lifemapjs/ directories, it must be bundled with one of the following commands:\n# Bundle\nnpm run bundle\n# Bundle and watch for code change\nnpm run dev\nThe result is put into src/pylifemap/static."
   },
   {
     "objectID": "development.html#tests",
@@ -669,62 +634,55 @@
     "href": "development.html#docker-image",
     "title": "Development notes",
     "section": "Docker image",
-    "text": "Docker image\nTo build the docker image manually, run the following at the root of the repisotory:\ndocker build . -t pylifemap"
+    "text": "Docker image\nTo build the docker image manually, run the following at the root of the repository:\ndocker build . -t pylifemap"
   },
   {
-    "objectID": "development.html#maintenance-notes",
-    "href": "development.html#maintenance-notes",
+    "objectID": "development.html#release-notes",
+    "href": "development.html#release-notes",
     "title": "Development notes",
-    "section": "Maintenance notes",
-    "text": "Maintenance notes\n\nReleases\n\nChange version in NEWS.md and pyproject.toml\nCleanup the previous builds in dist/\nBundle and minify JS and CSS and build package with npm run build\nRelease the Python package with uv publish in pylifemap\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md"
+    "section": "Release notes",
+    "text": "Release notes\n\nChange version in NEWS.md and pyproject.toml\nCleanup the previous builds in dist/\nBundle and minify JS and CSS and build package with npm run build\nRelease the Python package with uv publish in pylifemap\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md"
   },
   {
-    "objectID": "installation.html",
-    "href": "installation.html",
-    "title": "Installation",
+    "objectID": "usage.html",
+    "href": "usage.html",
+    "title": "Usage",
     "section": "",
-    "text": "As it provides a Jupyter widget, pylifemap is primarily designed to be used in a notebook environment such as Jupyter or Marimo.\nIt can also be used in a Python script or in the Python REPL. In this case you can use the save() method to export the widget to an HTML file that can be opened later. You can also use the show() method, in this case the widget is exported to a temporary file and opened in the user’s browser.\n\n\n\n\n\n\nNote\n\n\n\npylifemap visualizations can also be embedded in Quarto documents in HTML format."
+    "text": "Note\n\n\n\nSee the Getting started page for a more gentle introduction.\nIn the following we will use the example IUCN dataset. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nimport polars as pl\nfrom pylifemap import Lifemap\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)"
   },
   {
-    "objectID": "installation.html#notebook-run-script-run",
-    "href": "installation.html#notebook-run-script-run",
-    "title": "Installation",
-    "section": "",
-    "text": "As it provides a Jupyter widget, pylifemap is primarily designed to be used in a notebook environment such as Jupyter or Marimo.\nIt can also be used in a Python script or in the Python REPL. In this case you can use the save() method to export the widget to an HTML file that can be opened later. You can also use the show() method, in this case the widget is exported to a temporary file and opened in the user’s browser.\n\n\n\n\n\n\nNote\n\n\n\npylifemap visualizations can also be embedded in Quarto documents in HTML format."
+    "objectID": "usage.html#installation",
+    "href": "usage.html#installation",
+    "title": "Usage",
+    "section": "Installation",
+    "text": "Installation\n\nInstall locally\nYou can add the package to a project with uv or to a virtual environment with pip:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\n\n\nRun directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with pylifemap --with jupyter jupyter-lab\n\n# Run a marimo session\nuv run --with pylifemap --with marimo marimo edit\n\n# Run a custom script\nuv run --with pylifemap my_script.py\n\n\nRun with juv\njuv is a toolkit for reproducible Jupyter notebooks, powered by uv.\nYou can easily create and run a notebook with pylifemap with:\njuv init notebook.ipynb\njuv add notebook.ipynb pylifemap\njuv run notebook.ipynb\n\n\nRun with Docker\nAnother way to use the package without having to install it is to use our Docker image.\n\nRun in Jupyter\nTo use pylifemap in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
   },
   {
-    "objectID": "installation.html#install-locally",
-    "href": "installation.html#install-locally",
-    "title": "Installation",
-    "section": "Install locally",
-    "text": "Install locally\nFor the moment only the development version can be installed from Github.\nYou can add the package to a script or project with uv:\nuv add git+https://github.com/Lifemap-ToL/pylifemap.git\nYou can also install it (preferably in a virtual environment) with pip:\npip install git+https://github.com/Lifemap-ToL/pylifemap.git"
+    "objectID": "usage.html#base-map-customization",
+    "href": "usage.html#base-map-customization",
+    "title": "Usage",
+    "section": "Base map customization",
+    "text": "Base map customization\nSeveral arguments can be passed to Lifemap() when initializing the visualization.\n\n\n\n\n\n\nNote\n\n\n\nFor a complete list of Lifemap arguments, see its documentation.\n\n\n\nWidget size\nThe width and height arguments allow to modify the widget size. They can be given in any CSS unit.\nFor example, the following initialization would make the visualization take the full available width, and an height of 800 pixels.\n\nLifemap(iucn, taxid_col=\"taxid\", width=\"100%\", height=800)\n\n\n\nMap theme\nBy default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a theme argument:\n\nLifemap(iucn, theme=\"light\").layer_points().show()\n\nWarning: 778 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data.\n\n\n\n\n\nAvailable themes are currently dark, light, lightgrey, lightblue and lightgreen.\n\n\nMap controls\nBy default, the Lifemap widget displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a controls argument to Lifemap:\n\nLifemap(iucn, taxid_col=\"taxid\", controls=(\"zoom\", \"full_screen\"))\n\nThe following values are available:\n\n\"zoom\": zoom in and zoom out buttons\n\"reset_zoom\": zoom reset button\n\"png_export\": button to export the current view to a PNG file\n\"full_screen\": full screen toggle button"
   },
   {
-    "objectID": "installation.html#run-directly-with-uv",
-    "href": "installation.html#run-directly-with-uv",
-    "title": "Installation",
-    "section": "Run directly with uv",
-    "text": "Run directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with jupyter jupyter-lab\n\n# Run a marimo session\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git --with marimo marimo edit\n\n# Run a custom script\nuv run --with git+https://github.com/Lifemap-ToL/pylifemap.git my_script.py"
+    "objectID": "usage.html#visualization-layers",
+    "href": "usage.html#visualization-layers",
+    "title": "Usage",
+    "section": "Visualization layers",
+    "text": "Visualization layers\nHere are the currently available layers:\n\n\n\nLayer\nDescription\n\n\n\n\nlayer_points\nDisplays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame.\n\n\nlayer_lines\nUsing aggregated data, highlights branches of the tree with lines of varying width and color.\n\n\nlayer_donuts\nDisplays aggregated categorical data as donut charts.\n\n\nlayer_heatmap\nDisplays a heatmap of the observations distribution in the tree.\n\n\nlayer_heatmap_deck\nDisplays a deck.gl heatmap of the observations distribution in the tree.\n\n\nlayer_screengrid\nDisplays the observations distribution with a colored grid with fixed-size cells..\n\n\nlayer_text\nDisplays text labels by taxid\n\n\nlayer_icons\nDisplays icons associated to taxids\n\n\n\nSeveral layers can be added to the same map by chaining several methods:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_heatmap().layer_points().show()\n\n\nLayers customization\nEach layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"#EFB118\", radius=5, opacity=0.5)\n    .show()\n)\n\n\n\n\nInstead of providing fixed values to fill or radius, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their status:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"status\", radius=4, opacity=0.9)\n    .show()\n)\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nSee each layer documentation page for a complete list of its arguments."
   },
   {
-    "objectID": "installation.html#run-in-google-colab",
-    "href": "installation.html#run-in-google-colab",
-    "title": "Installation",
-    "section": "Run in Google Colab",
-    "text": "Run in Google Colab\nYou can try the package (without installing anything) in Google Colab.\nThe easiest way is by using our introduction notebook directly in Colab: ."
+    "objectID": "usage.html#widget-display-and-export",
+    "href": "usage.html#widget-display-and-export",
+    "title": "Usage",
+    "section": "Widget display and export",
+    "text": "Widget display and export\nLifemap and layer methods create a widget object but don’t display it. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nThe widget can also be saved to an HTML file by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")\n\nYou can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive pylifemap widgets.\n\n\n\n\n\n\nImportant\n\n\n\nLifemap is updated weekly from the latest NCBI data. During these updates, the precise coordinates of each taxon can change slightly.\nIf you export your widget to HTML and your data includes less than 100 000 data points, the up to date coordinates are retrieved from our API each time the widget is displayed, so the coordinates of the base map and of your dataset should still match. But if you have more than 100 000 data points, they may not correspond anymore if the base map has been updated since the widget creation.\n\n\nYou can also use the Export to PNG button on the widget to export the currently displayed view to an image file in PNG format."
   },
   {
-    "objectID": "installation.html#run-with-juv",
-    "href": "installation.html#run-with-juv",
-    "title": "Installation",
-    "section": "Run with juv",
-    "text": "Run with juv\njuv is a toolkit for reproducible Jupyter notebooks, powered by uv.\nYou can easily create and run a notebook with pylifemap with:\njuv init notebook.ipynb\njuv add notebook.ipynb git+https://github.com/Lifemap-ToL/pylifemap.git\njuv run notebook.ipynb"
-  },
-  {
-    "objectID": "installation.html#run-with-docker",
-    "href": "installation.html#run-with-docker",
-    "title": "Installation",
-    "section": "Run with Docker",
-    "text": "Run with Docker\nAnother way to use the package without having to install it is to use our Docker image.\n\nRun in Jupyter\nTo use pylifemap in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
+    "objectID": "usage.html#data-aggregation",
+    "href": "usage.html#data-aggregation",
+    "title": "Usage",
+    "section": "Data aggregation",
+    "text": "Data aggregation\npylifemap provides several functions that allow to aggregate data along the branches of the tree:\n\n\n\nFunction\nDescription\n\n\n\n\naggregate_count\nAggregates the number of children of each tree node.\n\n\naggregate_num\nAggregates a numerical variable along the tree branches with a given function (sum , mean, max…).\n\n\naggregate_freq\nAggregates the frequencies of the levels of a categorical variable.\n\n\n\nFor example, if we filter our dataset to only keep the species with an “extinct” status:\n\nPolarsPandas\n\n\n\niucn_extinct = iucn.filter(pl.col(\"status\") == \"Extinct\")\n\n\n\n\niucn_extinct = iucn[iucn[\"status\"] == \"Extinct\"]\n\n\n\n\nWe can then aggregate their count along the branches with aggregate_count:\n\nfrom pylifemap import aggregate_count\niucn_extinct_agg = aggregate_count(iucn_extinct)\niucn_extinct_agg\n\n\nshape: (774, 2)taxidni32u32null20196275919631932132681……30762441307811476313602313410119134101211\n\n\nFinally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.\n\n(\n    Lifemap(iucn_extinct_agg)\n    .layer_lines(color=\"n\", width=\"n\", label=\"Extinct species\")\n    .show()\n)\n\nWarning: 3 taxids have not been found in Lifemap database: [None, 1914395, 3041918]."
   }
 ]
