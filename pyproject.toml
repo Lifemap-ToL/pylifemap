@@ -4,7 +4,10 @@ version = "0.1-dev"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-authors = [{ name = "Julien Barnier", email = "julien.barnier@cnrs.fr" }]
+authors = [
+  { name = "Julien Barnier", email = "julien.barnier@cnrs.fr" },
+  { name = "Damien de Vienne", email = "damien.de-vienne@cnrs.fr" }
+]
 keywords = []
 classifiers = [
   "Development Status :: 3 - Alpha",
