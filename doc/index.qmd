@@ -4,7 +4,7 @@ title: "pylifemap"
 
 ## Overview
 
-`pylifemap` is a jupyter widget allowing to visualize taxonomy data on [Lifemap](https://lifemap-ncbi.univ-lyon1.fr). It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.
+`pylifemap` is a jupyter widget allowing to visualize taxonomy data on [Lifemap](https://lifemap.cnrs.fr). It provides several visualisation layers, as well as aggregation functions allowing to aggregate data along the tree branches.
 
 Here is a simple example:
 
