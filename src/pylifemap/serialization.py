@@ -55,7 +55,7 @@ def pd_to_arrow(df: pd.DataFrame) -> bytes:
         Arrow IPC bytes
     """
     f = io.BytesIO()
-    df.to_feather(f, compression="uncompressed")
+    df.to_feather(f, compression="lz4")
     return f.getvalue()
 
 
@@ -74,5 +74,5 @@ def pl_to_arrow(df: pl.DataFrame) -> bytes:
         Arrow IPC bytes
     """
     f = io.BytesIO()
-    pf.write_feather(df.to_arrow(), f, compression="uncompressed")
+    pf.write_feather(df.to_arrow(), f, compression="lz4")
     return f.getvalue()

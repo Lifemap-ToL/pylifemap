@@ -1,4 +1,9 @@
-import { tableFromIPC } from "@apache-arrow/es2015-esm"
+import {
+    tableFromIPC,
+    compressionRegistry,
+    CompressionType,
+} from "@apache-arrow/es2015-esm"
+import * as lz4 from "lz4js"
 
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
@@ -10,6 +15,17 @@ export const MAP_EXTENT = [-74.203515625, -33.7091796875, 68.003515625, 35.10917
 // Default color schemes
 export const DEFAULT_NUM_SCHEME = "viridis"
 export const DEFAULT_CAT_SCHEME = "observable10"
+
+const lz4Codec = {
+    encode(data) {
+        return lz4.compress(data)
+    },
+    decode(data) {
+        return lz4.decompress(data)
+    },
+}
+
+compressionRegistry.set(CompressionType.LZ4_FRAME, lz4Codec)
 
 // Unserialize data from Arrow IPC to JS Array
 export function unserialize_data(data) {
