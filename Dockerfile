@@ -1,5 +1,5 @@
-# Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+# Use a uv image
+FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
 
 # Copy package files
@@ -16,4 +16,3 @@ WORKDIR /app
 RUN uv sync --frozen --dev --no-editable
 
 ENTRYPOINT ["bash", "/opt/start.sh"]
-
