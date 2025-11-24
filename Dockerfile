@@ -1,5 +1,5 @@
 # Use a uv image
-FROM ghcr.io/astral-sh/uv:python3.13-alpine
+FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim
 
 
 # Copy package files
