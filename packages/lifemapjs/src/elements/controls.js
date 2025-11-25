@@ -91,7 +91,8 @@ class PngExportControl extends Control {
     }
 
     async handlePngExport() {
-        const el = this.getMap().getTargetElement()
+        const map = this.getMap()
+        const el = map.getTargetElement()
 
         const canvases = el.querySelectorAll(".ol-viewport canvas")
 
@@ -100,7 +101,7 @@ class PngExportControl extends Control {
         result_canvas.height = canvases[0].height
 
         const result_ctx = result_canvas.getContext("2d")
-        result_ctx.fillStyle = "black"
+        result_ctx.fillStyle = map.theme.background_color
         result_ctx.fillRect(0, 0, result_canvas.width, result_canvas.height)
 
         // Draw each canvas onto the result canvas in order
