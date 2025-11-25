@@ -424,7 +424,7 @@ class Lifemap:
         self,
         counts_col: str,
         *,
-        radius: float | None = None,
+        radius: int = 40,
         leaves: Literal["show", "hide"] = "hide",
         scheme: str | None = None,
         opacity: float | None = 1,
@@ -444,8 +444,8 @@ class Lifemap:
         ----------
         counts_col : str
             DataFrame column containing the counts.
-        radius : float | None, optional
-            Donut charts radius, by default None
+        radius : int, optional
+            Donut charts radius, by default 40
         leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
             If `"show"`, add a points layer with individual leaves values, by
             default "hide"

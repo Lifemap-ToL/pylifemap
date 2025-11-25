@@ -22,7 +22,7 @@ export function layer_donuts(map, data, options = {}) {
         counts_col,
         scheme = undefined,
         label = undefined,
-        radius = 50,
+        radius = 40,
         opacity = 0.9,
     } = options
 
@@ -40,7 +40,6 @@ export function layer_donuts(map, data, options = {}) {
     })
 
     label = label ?? counts_col
-    radius = radius ?? 50
 
     // Color scale
     scheme = scheme ?? DEFAULT_CAT_SCHEME
@@ -153,7 +152,7 @@ function donut_chart(counts, size, color_scale_fn, opacity) {
 
     const arc = d3
         .arc()
-        .innerRadius(10)
+        .innerRadius(8)
         .outerRadius(Math.min(width, height) / 2 - 1)
 
     let svg = d3
