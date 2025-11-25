@@ -15,7 +15,7 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 from IPython.display import display
-from ipywidgets.embed import embed_minimal_html
+from ipywidgets.embed import dependency_state, embed_minimal_html
 
 from pylifemap.data import LifemapData
 from pylifemap.utils import (
@@ -133,6 +133,7 @@ class Lifemap:
         LifemapWidget
             An Anywidget widget.
         """
+
         return LifemapWidget(
             data=self._layers_data,
             layers=self._layers,
@@ -215,7 +216,16 @@ class Lifemap:
         ... )
 
         """
-        embed_minimal_html(path, views=[self._to_widget()], drop_defaults=False, title=title)
+
+        w = self._to_widget()
+
+        embed_minimal_html(
+            path,
+            views=[w],
+            state=dependency_state([w], drop_defaults=False),
+            drop_defaults=False,
+            title=title,
+        )
 
     def layer_points(
         self,
