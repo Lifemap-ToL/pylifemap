@@ -93,9 +93,6 @@ class PngExportControl extends Control {
     async handlePngExport() {
         const el = this.getMap().getTargetElement()
 
-        const legend_element = el.querySelector(".lifemap-legend")
-        const legend_canvas = await snapdom.toCanvas(legend_element)
-
         const canvases = el.querySelectorAll(".ol-viewport canvas")
 
         const result_canvas = document.createElement("canvas")
@@ -112,9 +109,13 @@ class PngExportControl extends Control {
         })
 
         // Draw legend
-        const legend_x = result_canvas.width - legend_canvas.width - 10
-        const legend_y = result_canvas.height - legend_canvas.height - 10
-        result_ctx.drawImage(legend_canvas, legend_x, legend_y)
+        const legend_element = el.querySelector(".lifemap-legend")
+        if (legend_element) {
+            const legend_canvas = await snapdom.toCanvas(legend_element)
+            const legend_x = result_canvas.width - legend_canvas.width - 10
+            const legend_y = result_canvas.height - legend_canvas.height - 10
+            result_ctx.drawImage(legend_canvas, legend_x, legend_y)
+        }
 
         result_canvas.toBlob((blob) => {
             const [, year, month, day] = new Date()
