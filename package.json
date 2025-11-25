@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "bundle_nominify": "esbuild --format=esm --bundle --define:define.amd=false --loader:.png=dataurl --outdir=src/pylifemap/static src/js/widget.js",
+        "bundle_nominify": "esbuild --format=esm --bundle --define:define.amd=false --outdir=src/pylifemap/static src/js/widget.js",
         "dev": "npm run bundle_nominify -- --sourcemap=inline --watch",
         "bundle": "npm run bundle_nominify -- --minify",
         "test": "uv run pytest",
