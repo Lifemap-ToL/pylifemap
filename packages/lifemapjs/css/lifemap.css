@@ -1,7 +1,11 @@
-/* Border for light theme */
+/* Global border */
 
-.pylifemap-map {
+.pylifemap-map.light {
     border: 1px solid #ccc;
+}
+
+.pylifemap-map.dark {
+    border: 1px solid #555;
 }
 
 /* Legend */
