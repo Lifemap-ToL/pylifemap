@@ -1,0 +1,48 @@
+---
+title: Phylopic - Tree of Life
+author: "D. de Vienne"
+date: 2025-11-25
+description: Silhouettes of some species from Phylopic mapped at their exact location in Lifemap (lightgrey theme).
+image: img/phylopic.png
+categories: [icons, lightgrey]
+format:
+  html:
+    theme: default
+    toc: false
+    layout: full
+    sidebar: false
+---
+     
+
+```{python}
+#| title: "Some Phylopic example"
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
+import pandas as pd
+from pylifemap import Lifemap
+
+# Define data
+data = pd.DataFrame({
+    'taxid': ['1005039','9544','41956','35128','74311','58838','3311','95972','431291','31380','1462422','160232'],
+    'name' : ['Fimbriimonas ginsengisoli','Macaca mulatta','Amanita muscaria','Thalassiosira pseudonana',
+    'Brevundimonas bacteroides','Hymenophyllum tunbrigense','Ginkgo biloba', 'Aphidoletes aphidimyza','Platanthera bifolia','Ceramium','Parvarchaeota','Nanoarchaeum equitans'],
+    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/b5339968-e357-4515-9e27-479d25eb09f4/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/57556718-e114-45ff-b091-af62aeea410c/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/0ce74a6e-ea88-45f0-9103-20e05f6a4624/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/4128df49-da1c-4759-86c2-e4242acecbdf/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/250dc359-24d1-49fd-9403-f7c9a7077135/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/a78574ec-fed5-41cc-98ce-a2104dbc1232/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/ac77eca2-e484-4ab4-9cef-9e7dd38ddbb8/thumbnail/64x64.png']
+})
+
+# Show the Lifemap heatmap
+Lifemap(data, theme="lightgrey", width="100%").layer_icons(icon="imageurl", popup=True).show()
+```
+

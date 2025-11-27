@@ -113,3 +113,31 @@ td:first-child {
     text-wrap: nowrap;
     text-size-adjust: 100%;
 }
+
+
+/* Gallery styles (Damien) */
+
+.quarto-listing-category-title {
+  font-size: .875rem !important;
+  font-weight: 500 !important;
+  margin-bottom: .2rem;
+  margin-top: 34px;
+  font-family: inherit;
+  border-bottom: 0;
+  padding-bottom: 0;
+  padding-top: 0px;  
+}
+
+.quarto-listing-category {
+  font-family: "Source Sans 3", "Source Sans Pro", "Segoe UI", Roboto, Helvetica, sans-serif !important;
+  font-size: 14.875px !important;
+  font-weight: 400;
+  color: #212529;
+  line-height: 1.1rem;
+  padding-left: 17.850px !important;
+}
+
+.category {
+  padding-bottom: .2rem;
+  padding-top: .2rem;
+}

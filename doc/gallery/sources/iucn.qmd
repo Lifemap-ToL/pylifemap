@@ -1,0 +1,33 @@
+---
+title: IUCN Categories
+author: "D. de Vienne"
+date: 2025-11-25
+description: IUCN status categories for all species that have one.
+image: img/iucn.png
+categories: [points, dark theme]
+format:
+  html:
+    theme: default
+    toc: false
+    layout: full
+    sidebar: false
+---
+     
+
+```{python}
+#| title: "Some Phylopic example"
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+)
+
+Lifemap(iucn, taxid_col="taxid", width="100%").layer_points(fill="status").show()
+```
+

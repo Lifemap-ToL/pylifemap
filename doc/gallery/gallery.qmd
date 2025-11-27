@@ -1,0 +1,22 @@
+---
+title: "Gallery"
+listing:
+  id: main-listing
+  contents: sources  
+  type: grid
+  sort: "date"
+  fields: [date, title, author, description, categories, image]
+  categories: true
+  filter-ui: false
+---
+
+::: {.callout-note}
+If you want to have your visualisation listed here, please click [here](https://github.com/Lifemap-ToL/pylifemap/issues/new?title=Gallery request&body=Hello,%0AHere is my code to reproduce my visualization:%0A&labels=gallery) to give us your script.
+:::
+
+
+:::{#main-listing}
+:::
+
+
+
