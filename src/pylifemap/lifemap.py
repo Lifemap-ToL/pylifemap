@@ -105,6 +105,7 @@ class Lifemap:
         self._layers = []
         self._layers_counter = 0
         self._layers_data = {}
+        self._color_ranges = {}
 
         available_themes = ("light", "dark", "lightblue", "lightgrey", "lightgreen")
         if theme not in available_themes:
@@ -138,6 +139,7 @@ class Lifemap:
             data=self._layers_data,
             layers=self._layers,
             options=self._map_options,
+            color_ranges=self._color_ranges,
             width=self._width,
             height=self._height,
         )
@@ -334,7 +336,19 @@ class Lifemap:
             for k in ("radius", "fill")
             if isinstance(options[k], str) and not is_hex_color(options[k])
         )
-        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
+        d = self.data.points_data(options, data_columns)
+        self._layers_data[options["id"]] = d
+        # Compute color range
+        key = options["fill"]
+        if key in data_columns:
+            min_value = d.get_column(key).min()
+            max_value = d.get_column(key).max()
+            if key in self._color_ranges:
+                self._color_ranges[key]["min"] = min(self._color_ranges[key]["min"], min_value)  # type: ignore
+                self._color_ranges[key]["max"] = max(self._color_ranges[key]["max"], max_value)  # type: ignore
+            else:
+                self._color_ranges[key] = {"min": min_value, "max": max_value}
+
         return self
 
     def layer_lines(
@@ -427,7 +441,19 @@ class Lifemap:
             for k in ("width", "color")
             if isinstance(options[k], str) and not is_hex_color(options[k])
         )
-        self._layers_data[options["id"]] = self.data.lines_data(data_columns)
+        d = self.data.lines_data(data_columns)
+        self._layers_data[options["id"]] = d
+        # Compute color range
+        key = options["color"]
+        if key in data_columns:
+            min_value = d.get_column(key).min()
+            max_value = d.get_column(key).max()
+            if key in self._color_ranges:
+                self._color_ranges[key]["min"] = min(self._color_ranges[key]["min"], min_value)  # type: ignore
+                self._color_ranges[key]["max"] = max(self._color_ranges[key]["max"], max_value)  # type: ignore
+            else:
+                self._color_ranges[key] = {"min": min_value, "max": max_value}
+
         return self
 
     def layer_donuts(

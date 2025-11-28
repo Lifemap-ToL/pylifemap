@@ -16,7 +16,7 @@ import VectorSource from "ol/source/Vector.js"
 import { get_popup_title } from "../api"
 import { set_popup_event } from "../elements/popup"
 
-export function layer_points(map, data, options = {}) {
+export function layer_points(map, data, options = {}, color_ranges = {}) {
     let {
         id = null,
         x_col = "pylifemap_x",
@@ -67,7 +67,7 @@ export function layer_points(map, data, options = {}) {
     }
 
     // Fill color function
-    let get_fill_col_fn = function (data, col, cat) {
+    let get_fill_col_fn = function (data, col, cat, color_ranges) {
         if (col == null) {
             return null
         }
@@ -81,8 +81,14 @@ export function layer_points(map, data, options = {}) {
         let fn
         // Linear color scale
         if (!cat) {
-            const max_value = d3.max(data, (d) => Number(d[col]))
-            const min_value = d3.min(data, (d) => Number(d[col]))
+            let min_value, max_value
+            if (color_ranges[col] !== undefined) {
+                min_value = color_ranges[col].min
+                max_value = color_ranges[col].max
+            } else {
+                max_value = d3.max(data, (d) => Number(d[col]))
+                min_value = d3.min(data, (d) => Number(d[col]))
+            }
             scheme = scheme ?? DEFAULT_NUM_SCHEME
             const scale = {
                 color: {
@@ -116,7 +122,7 @@ export function layer_points(map, data, options = {}) {
     const n_features = data.length
     const features = new Array(n_features)
     const radius_col_fn = get_radius_col_fn(data, radius_col)
-    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat)
+    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat, color_ranges)
     for (let i = 0; i < n_features; i++) {
         let line = data[i]
         const coordinates = fromLonLat([line[x_col], line[y_col]])

@@ -6,15 +6,17 @@ import "./styles.css"
 function _onDataChanged(model, map) {
     let data = () => model.get("data")
     let layers = () => model.get("layers")
+    let color_ranges = () => model.get("color_ranges")
     map.update_data(data()).then(() => {
-        map.update_layers(layers())
+        map.update_layers(layers(), color_ranges())
     })
 }
 
 // Layers value change callback
 function _onLayersChanged(model, map) {
     let layers = () => model.get("layers")
-    map.update_layers(layers())
+    let color_ranges = () => model.get("color_ranges")
+    map.update_layers(layers(), color_ranges())
 }
 
 // Width value change callback
@@ -41,6 +43,7 @@ export default {
         let data = () => model.get("data")
         let layers = () => model.get("layers")
         let options = () => model.get("options")
+        let color_ranges = () => model.get("color_ranges")
 
         // Add container div
         const container = document.createElement("div")
@@ -52,7 +55,7 @@ export default {
         // Create map
         const map = new Lifemap(container, options())
         map.update_data(data()).then(() => {
-            map.update_layers(layers())
+            map.update_layers(layers(), color_ranges())
         })
 
         // Add traitlets change callback

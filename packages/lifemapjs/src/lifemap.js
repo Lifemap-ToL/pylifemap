@@ -35,6 +35,7 @@ export class Lifemap {
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
+
         el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
 
         // Tiles layer
@@ -106,7 +107,7 @@ export class Lifemap {
         this.map.spinner.hide()
     }
 
-    create_layers(layers_def_list) {
+    create_layers(layers_def_list, color_ranges) {
         layers_def_list = Array.isArray(layers_def_list)
             ? layers_def_list
             : [layers_def_list]
@@ -116,9 +117,19 @@ export class Lifemap {
             let layer_data = this.data[layer_id]
             switch (l.layer) {
                 case "points":
-                    return layer_points(this.map, layer_data, l.options ?? {})
+                    return layer_points(
+                        this.map,
+                        layer_data,
+                        l.options ?? {},
+                        color_ranges
+                    )
                 case "lines":
-                    return layer_lines(this.map, layer_data, l.options ?? {})
+                    return layer_lines(
+                        this.map,
+                        layer_data,
+                        l.options ?? {},
+                        color_ranges
+                    )
                 case "heatmap":
                     return layer_heatmap(layer_data, l.options ?? {})
                 case "heatmap_deck":
@@ -139,7 +150,7 @@ export class Lifemap {
         return layers_list.flat()
     }
 
-    update_layers(layers_def_list) {
+    update_layers(layers_def_list, color_ranges) {
         this.map.spinner.show()
         this.dispose_webgl_layers()
 
@@ -153,7 +164,9 @@ export class Lifemap {
             (d) => !DECK_LAYERS.includes(d.layer)
         )
         this.ol_layers =
-            ol_layers_def.length == 0 ? [] : this.create_layers(ol_layers_def)
+            ol_layers_def.length == 0
+                ? []
+                : this.create_layers(ol_layers_def, color_ranges)
 
         let layers = [...this.base_layers, ...this.ol_layers]
         if (this.deck_layers.length > 0) {

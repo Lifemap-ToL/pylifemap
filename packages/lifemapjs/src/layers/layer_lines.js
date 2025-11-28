@@ -11,7 +11,7 @@ import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
 import { LineString } from "ol/geom"
 
-export function layer_lines(map, data, options = {}) {
+export function layer_lines(map, data, options = {}, color_ranges = {}) {
     let {
         id = null,
         x_col0 = "pylifemap_x0",
@@ -64,14 +64,19 @@ export function layer_lines(map, data, options = {}) {
     }
 
     // Color function
-    let get_color_col_fn = function (data, col) {
+    let get_color_col_fn = function (data, col, color_ranges) {
         if (col == null) {
             return null
         }
-        let fn
+        let fn, min_value, max_value
         // Linear color scale
-        const max_value = d3.max(data, (d) => Number(d[col]))
-        const min_value = d3.min(data, (d) => Number(d[col]))
+        if (color_ranges[col] !== undefined) {
+            min_value = color_ranges[col].min
+            max_value = color_ranges[col].max
+        } else {
+            max_value = d3.max(data, (d) => Number(d[col]))
+            min_value = d3.min(data, (d) => Number(d[col]))
+        }
         scheme = scheme ?? DEFAULT_NUM_SCHEME
         const scale = {
             color: {
@@ -91,7 +96,7 @@ export function layer_lines(map, data, options = {}) {
     const n_features = data.length
     const features = new Array(n_features)
     const width_col_fn = get_width_col_fn(data, width_col)
-    const color_col_fn = get_color_col_fn(data, color_col)
+    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
 
     for (let i = 0; i < n_features; i++) {
         let line = data[i]
