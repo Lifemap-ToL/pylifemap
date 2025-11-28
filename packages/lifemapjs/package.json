@@ -4,11 +4,6 @@
     "private": true,
     "license": "MIT",
     "main": "src/lifemap.js",
-    "scripts": {
-        "build": "esbuild --format=esm --bundle --loader:.png=dataurl --outdir=dist/ src/lifemap.js",
-        "watch": "npm run build -- --watch",
-        "serve": "esbuild --format=esm --bundle --loader:.png=dataurl --outdir=example/dist/ src/lifemap.js --watch --servedir=example"
-    },
     "dependencies": {
         "@apache-arrow/es2015-esm": "^21.1.0",
         "@deck.gl/aggregation-layers": "^9.2.2",
