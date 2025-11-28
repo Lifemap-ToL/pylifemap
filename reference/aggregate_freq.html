@@ -436,9 +436,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 5%">
-<col style="width: 33%">
-<col style="width: 61%">
+<col style="width: 3%">
+<col style="width: 44%">
+<col style="width: 52%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -450,8 +450,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td></td>
-<td><code>pl</code>.<code>DataFrame</code></td>
-<td>Aggregated DataFrame. The “count” column contains the value counts as a polars struct.</td>
+<td><code>pl</code>.<code>DataFrame</code> | <code>pd</code>.<code>DataFrame</code></td>
+<td>Aggregated DataFrame in the same format as input. The “count” column contains the value counts as a polars struct.</td>
 </tr>
 </tbody>
 </table>
@@ -465,25 +465,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-section doc-section-examples anchored" data-anchor-id="examples">Examples</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> pylifemap <span class="im">import</span> aggregate_freq</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> d <span class="op">=</span> pl.DataFrame({</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>...     <span class="st">"taxid"</span>: [<span class="dv">33154</span>, <span class="dv">33090</span>, <span class="dv">2</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>...     <span class="st">"value"</span>: [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"a"</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>... })</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> aggregate_freq(d, column<span class="op">=</span><span class="st">"value"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>shape: (<span class="dv">7</span>, <span class="dv">3</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>┌───────┬───────┬───────┐</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>│ taxid ┆ value ┆ count │</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>│ <span class="op">---</span>   ┆ <span class="op">---</span>   ┆ <span class="op">---</span>   │</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>│ i32   ┆ <span class="bu">str</span>   ┆ u32   │</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>╞═══════╪═══════╪═══════╡</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">0</span>     ┆ a     ┆ <span class="dv">2</span>     │</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">0</span>     ┆ b     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2</span>     ┆ a     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2759</span>  ┆ a     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2759</span>  ┆ b     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">33090</span> ┆ b     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">33154</span> ┆ a     ┆ <span class="dv">1</span>     │</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>└───────┴───────┴───────┘</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> d <span class="op">=</span> pl.DataFrame({<span class="st">"taxid"</span>: [<span class="dv">33154</span>, <span class="dv">33090</span>, <span class="dv">2</span>], <span class="st">"value"</span>: [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"a"</span>]})</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> aggregate_freq(d, column<span class="op">=</span><span class="st">"value"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>shape: (<span class="dv">7</span>, <span class="dv">3</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>┌───────┬───────┬───────┐</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>│ taxid ┆ value ┆ count │</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>│ <span class="op">---</span>   ┆ <span class="op">---</span>   ┆ <span class="op">---</span>   │</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>│ i32   ┆ <span class="bu">str</span>   ┆ u32   │</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>╞═══════╪═══════╪═══════╡</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">0</span>     ┆ a     ┆ <span class="dv">2</span>     │</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">0</span>     ┆ b     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2</span>     ┆ a     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2759</span>  ┆ a     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">2759</span>  ┆ b     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">33090</span> ┆ b     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>│ <span class="dv">33154</span> ┆ a     ┆ <span class="dv">1</span>     │</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>└───────┴───────┴───────┘</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
