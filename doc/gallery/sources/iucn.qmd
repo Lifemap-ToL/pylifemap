@@ -24,4 +24,3 @@ iucn = pl.read_parquet(
 
 Lifemap(iucn, taxid_col="taxid", width="100%").layer_points(fill="status").show()
 ```
-
