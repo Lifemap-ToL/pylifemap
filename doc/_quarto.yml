@@ -21,6 +21,7 @@ website:
         left:
             - getting_started.qmd
             - usage.qmd
+            - gallery/gallery.qmd
             - text: "Layers"
               menu:
                   - layers/layer_points.qmd
