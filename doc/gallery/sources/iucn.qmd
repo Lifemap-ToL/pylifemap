@@ -5,12 +5,6 @@ date: 2025-11-25
 description: IUCN status categories for all species that have one.
 image: img/iucn.png
 categories: [points, dark theme]
-format:
-  html:
-    theme: default
-    toc: false
-    layout: full
-    sidebar: false
 ---
      
 

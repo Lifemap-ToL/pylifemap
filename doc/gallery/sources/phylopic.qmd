@@ -5,14 +5,7 @@ date: 2025-11-25
 description: Silhouettes of some species from Phylopic mapped at their exact location in Lifemap (lightgrey theme).
 image: img/phylopic.png
 categories: [icons, lightgrey]
-format:
-  html:
-    theme: default
-    toc: false
-    layout: full
-    sidebar: false
 ---
-     
 
 ```{python}
 #| title: "Some Phylopic example"
@@ -27,7 +20,8 @@ from pylifemap import Lifemap
 data = pd.DataFrame({
     'taxid': ['1005039','9544','41956','35128','74311','58838','3311','95972','431291','31380','1462422','160232'],
     'name' : ['Fimbriimonas ginsengisoli','Macaca mulatta','Amanita muscaria','Thalassiosira pseudonana',
-    'Brevundimonas bacteroides','Hymenophyllum tunbrigense','Ginkgo biloba', 'Aphidoletes aphidimyza','Platanthera bifolia','Ceramium','Parvarchaeota','Nanoarchaeum equitans'],
+    'Brevundimonas bacteroides','Hymenophyllum tunbrigense','Ginkgo biloba', 'Aphidoletes aphidimyza','Platanthera bifolia',
+    'Ceramium','Parvarchaeota','Nanoarchaeum equitans'],
     'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',
                  'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',
                  'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',
@@ -45,4 +39,9 @@ data = pd.DataFrame({
 # Show the Lifemap heatmap
 Lifemap(data, theme="lightgrey", width="100%").layer_icons(icon="imageurl", popup=True).show()
 ```
+::: {.callout-note}
+All images come from the Phylopic website [https://www.phylopic.org/](https://www.phylopic.org/). 
 
+For attribution and license information, follow 
+[this link](https://www.phylopic.org/permalinks/d34007439733ff57ec80c775ccb61c2218e0133255e43cf30af08f839e5447eb). 
+:::

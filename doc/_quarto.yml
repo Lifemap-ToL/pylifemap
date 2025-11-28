@@ -32,11 +32,11 @@ website:
                   - layers/layer_text.qmd
                   - layers/layer_icons.qmd
             - reference/index.qmd
+            - gallery/gallery.qmd
             - text: "Development"
               menu:
                   - changelog.md
                   - development.qmd
-            - gallery/gallery.qmd
         tools:
             - icon: github
               href: https://github.com/Lifemap-ToL/pylifemap/
