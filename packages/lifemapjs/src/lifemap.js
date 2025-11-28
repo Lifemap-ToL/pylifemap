@@ -232,6 +232,15 @@ export class Lifemap {
                 legend_label.innerHTML = scale.label
                 legend_container.append(legend_label)
             }
+            if (scale.color.type == "linear") {
+                if (
+                    (Math.min(...scale.color.domain) <= -1e9) |
+                    (Math.max(...scale.color.domain) >= 1e9)
+                ) {
+                    scale.color.tickFormat = (d) => d.toExponential(1)
+                }
+            }
+            console.log(scale)
             legend_container.append(Plot.legend(scale))
         }
         this.legend.element.appendChild(legend_container)
