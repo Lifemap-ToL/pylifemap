@@ -52,18 +52,22 @@ export function layer_icons(map, data, options = {}) {
     })
 
     const style_function = (feature) => {
-        const style = new Style({
-            image: new Icon({
-                anchor: [x_anchor, y_anchor],
-                anchorXUnits: "fraction",
-                anchorYUnitsUnits: "fraction",
-                width: width ?? undefined,
-                height: height ?? undefined,
-                displacement: [x_offset, y_offset],
-                src: feature.get("icon"),
-                color: color ?? undefined,
-            }),
-        })
+        const icon = feature.get("icon")
+        const style =
+            icon === null
+                ? null
+                : new Style({
+                      image: new Icon({
+                          anchor: [x_anchor, y_anchor],
+                          anchorXUnits: "fraction",
+                          anchorYUnitsUnits: "fraction",
+                          width: width ?? undefined,
+                          height: height ?? undefined,
+                          displacement: [x_offset, y_offset],
+                          src: icon,
+                          color: color ?? undefined,
+                      }),
+                  })
 
         return style
     }
