@@ -240,7 +240,6 @@ export class Lifemap {
                     scale.color.tickFormat = (d) => d.toExponential(1)
                 }
             }
-            console.log(scale)
             legend_container.append(Plot.legend(scale))
         }
         this.legend.element.appendChild(legend_container)
