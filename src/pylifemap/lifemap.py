@@ -24,6 +24,7 @@ from pylifemap.utils import (
     MAX_HOVER_DATA_LEN,
     check_jupyter,
     check_marimo,
+    icon_url_to_data_uri,
     is_hex_color,
     is_icon_url,
 )
@@ -909,8 +910,8 @@ class Lifemap:
         taxid_col : str, optional
             If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         icon : str
-            Either the URL to an image file to use as icon, or the name of a column of the data containing
-            urls of icons to be displayed.
+            Either the URL to an image file or data uri to use as icon, or the name of a column of the data
+            containing urls or data uris of icons to be displayed.
         width : int | None, optional
             Image width, in pixels.
         height : int | None, optional
@@ -967,12 +968,25 @@ class Lifemap:
         if options["scale"] is not None and (options["width"] is not None or options["height"] is not None):
             msg = "You cannot specify both a 'scale' and  a 'width' or 'height'."
             raise ValueError(msg)
+
+        is_icon_column = isinstance(options["icon"], str) and not is_icon_url(options["icon"])
+
+        data_columns = (options["icon"],) if is_icon_column else ()
+        layer_data = df.points_data(options, data_columns)
+        self._layers_data[options["id"]] = layer_data
+
+        # Convert icons url to data uri
+        if is_icon_url(options["icon"]):
+            options["icons_cache"] = {options["icon"]: icon_url_to_data_uri(options["icon"])}
+        else:
+            # If icon is a data column, build a cache dictionary of urls => data uris
+            icon_values = layer_data.get_column(options["icon"]).unique().to_list()
+
+            options["icons_cache"] = {
+                uri: icon_url_to_data_uri(uri) for uri in icon_values if uri is not None
+            }
+
         layer = {"layer": "icons", "options": options}
         self._layers.append(layer)
-        data_columns = (
-            (options["icon"],)
-            if isinstance(options["icon"], str) and not is_icon_url(options["icon"])
-            else ()
-        )
-        self._layers_data[options["id"]] = df.points_data(options, data_columns)
+
         return self

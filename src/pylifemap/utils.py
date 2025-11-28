@@ -2,9 +2,13 @@
 Misc utilities functions and values.
 """
 
+import base64
 import logging
 import re
 import sys
+from pathlib import Path
+
+import requests
 
 DEFAULT_WIDTH = "800px"
 DEFAULT_HEIGHT = "600px"
@@ -83,3 +87,41 @@ def is_icon_url(value: str) -> bool:
     """
     res = re.search(r"^(https?:|data:)", value, flags=re.IGNORECASE)
     return res is not None
+
+
+def mime_type_from_url(url: str) -> str:
+    extension_to_mime = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".svg": "image/svg+xml",
+    }
+
+    # Extract the file extension from the URL
+    ext = Path(url).suffix.lower()
+
+    if ext not in extension_to_mime.keys():
+        msg = f"Unknown image extension: {ext}."
+        raise ValueError(msg)
+
+    return extension_to_mime.get(ext, "")
+
+
+def icon_url_to_data_uri(image_url: str) -> str:
+    if image_url.startswith("data:"):
+        return image_url
+
+    response = requests.get(image_url, timeout=5000)
+    if response.status_code != 200:  # noqa: PLR2004
+        msg = f"Failed to fetch icon at {image_url} : HTTP {response.status_code}"
+        raise ValueError(msg)
+
+    image_data = response.content
+    mime_type = mime_type_from_url(image_url)
+
+    # Encode the image data in base64
+    base64_data = base64.b64encode(image_data).decode("utf-8")
+
+    data_uri = f"data:{mime_type};base64,{base64_data}"
+    return data_uri

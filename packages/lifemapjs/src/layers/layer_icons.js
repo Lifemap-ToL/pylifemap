@@ -26,6 +26,7 @@ export function layer_icons(map, data, options = {}) {
         y_anchor = 0.5,
         opacity = 1.0,
         popup = false,
+        icons_cache = {},
     } = options
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
@@ -66,7 +67,7 @@ export function layer_icons(map, data, options = {}) {
                           height: height ?? undefined,
                           scale: scale ?? undefined,
                           displacement: [x_offset, y_offset],
-                          src: icon,
+                          src: icons_cache[icon],
                           color: color ?? undefined,
                       }),
                   })
