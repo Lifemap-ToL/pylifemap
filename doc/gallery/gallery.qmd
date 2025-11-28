@@ -12,12 +12,9 @@ listing:
 ---   
 
 ::: {.callout-note}
-If you want to have your visualisation listed here, please click [here](https://github.com/Lifemap-ToL/pylifemap/issues/new?title=Gallery request&body=Hello,%0AHere is my code to reproduce my visualization:%0A&labels=gallery) to give us your script.
+If you want to have your visualisation listed here, please [open a new issue](https://github.com/Lifemap-ToL/pylifemap/issues/new?title=Gallery request&body=Hello,%0AHere is my code to reproduce my visualization:%0A&labels=gallery) to give us your script.
 :::
 
 
 :::{#main-listing}
 :::
-
-
-
