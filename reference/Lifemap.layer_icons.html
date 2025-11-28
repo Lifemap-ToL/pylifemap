@@ -399,14 +399,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    icon,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    x_offset<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    y_offset<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    x_anchor<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    y_anchor<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">1.0</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    popup<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    scale<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    x_offset<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    y_offset<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    x_anchor<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    y_anchor<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    popup<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Add an icons layer.</p>
 <p>It can be used to display icons associated to taxids.</p>
 <section id="parameters" class="level2 doc-section doc-section-parameters">
@@ -430,52 +431,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>width</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | None</td>
-<td>Image width, in pixels. If None, use native image width, by default None.</td>
+<td>Image width, in pixels.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>height</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | None</td>
-<td>Image height, in pixels. If None, use native image height, by default None.</td>
+<td>Image height, in pixels.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
+<td>scale</td>
+<td><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</td>
+<td>Factor with which to scale the original icon size. Cannot be used with width or height.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
 <td>color</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
 <td>CSS color to tint the icon, by default None.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>x_offset</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
 <td>Horizontal offset in pixels, by default 0.</td>
 <td><code>0</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>y_offset</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
 <td>Vertical offset in pixels, by default 0.</td>
 <td><code>0</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>x_anchor</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
 <td>Horizontal icon anchor, as a number between 0 and 1, by default 0.5.</td>
 <td><code>0.5</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>y_anchor</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
 <td>Vertical icon anchor, as a number between 0 and 1, by default 0.5.</td>
 <td><code>0.5</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>opacity</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
 <td>Text opacity as a floating number between 0 and 1, by default 1.0.</td>
 <td><code>1.0</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>popup</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
 <td>If True, display informations in a popup when an icon is clicked, by default False.</td>
