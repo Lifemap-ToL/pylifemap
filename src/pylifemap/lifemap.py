@@ -36,7 +36,7 @@ class Lifemap:
 
     Parameters
     ----------
-    data : pl.DataFrame | pd.DataFrame
+    data : pl.DataFrame | pd.DataFrame | None, optional
         Visualization data.
     taxid_col : str, optional
         Name of the `data` column with taxonomy ids, by default `"taxid"`
@@ -74,7 +74,7 @@ class Lifemap:
 
     def __init__(
         self,
-        data: pl.DataFrame | pd.DataFrame,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
         width: int | str = DEFAULT_WIDTH,
@@ -86,7 +86,10 @@ class Lifemap:
         hide_labels: bool = False,
     ) -> None:
         # Init LifemapData object with data
-        self.data = LifemapData(data, taxid_col=taxid_col)
+        if data is not None:
+            self.data = LifemapData(data, taxid_col=taxid_col)
+        else:
+            self.data = None
 
         # Convert width and height to CSS pixels if integers
         self._width = width if isinstance(width, str) else f"{width}px"
@@ -144,7 +147,7 @@ class Lifemap:
             height=self._height,
         )
 
-    def _process_options(self, options: dict) -> dict:
+    def _process_options(self, options: dict) -> tuple[dict, LifemapData]:
         """
         Process a layer options dictionary.
 
@@ -164,7 +167,15 @@ class Lifemap:
         self._layers_counter += 1
         options["id"] = f"layer{self._layers_counter}"
         del options["self"]
-        return options
+        if options["data"] is not None:
+            taxid_col = options["taxid_col"] if options["taxid_col"] is not None else "taxid"
+            data = LifemapData(options["data"], taxid_col=taxid_col)
+        else:
+            data = self.data
+        if data is None:
+            msg = "Layer doesn't have any data"
+            raise ValueError(msg)
+        return options, data
 
     def show(self) -> None | LifemapWidget:
         """
@@ -231,7 +242,9 @@ class Lifemap:
 
     def layer_points(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         leaves: Literal["show", "only", "omit"] = "show",
         radius: int | float | str = 5,
         radius_range: tuple | list = (2, 30),
@@ -252,6 +265,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         leaves : Literal[&quot;show&quot;, &quot;only&quot;, &quot;omit&quot;], optional
             If `"only"`, only show tree leaves. If `"omit"`, only show nodes that are
             not leaves. If `"show"`, show all nodes, by default "show"
@@ -322,13 +339,13 @@ class Lifemap:
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
         if options["hover"] is None:
-            options["hover"] = len(self.data) < MAX_HOVER_DATA_LEN
+            options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)
         data_columns = tuple(
@@ -336,7 +353,7 @@ class Lifemap:
             for k in ("radius", "fill")
             if isinstance(options[k], str) and not is_hex_color(options[k])
         )
-        d = self.data.points_data(options, data_columns)
+        d = df.points_data(options, data_columns)
         self._layers_data[options["id"]] = d
         # Compute color range
         key = options["fill"]
@@ -353,7 +370,9 @@ class Lifemap:
 
     def layer_lines(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         width: int | float | str = 3,
         width_range: tuple | list = (1, 30),
         color: str | None = None,
@@ -371,6 +390,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         width : int | float | str, optional
             If numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column
             to compute line width from.
@@ -431,9 +454,9 @@ class Lifemap:
 
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         if options["hover"] is None:
-            options["hover"] = len(self.data) < MAX_HOVER_DATA_LEN
+            options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
         data_columns = tuple(
@@ -441,7 +464,7 @@ class Lifemap:
             for k in ("width", "color")
             if isinstance(options[k], str) and not is_hex_color(options[k])
         )
-        d = self.data.lines_data(data_columns)
+        d = df.lines_data(data_columns)
         self._layers_data[options["id"]] = d
         # Compute color range
         key = options["color"]
@@ -458,8 +481,10 @@ class Lifemap:
 
     def layer_donuts(
         self,
-        counts_col: str,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
+        counts_col: str,
         radius: int = 40,
         leaves: Literal["show", "hide"] = "hide",
         scheme: str | None = None,
@@ -478,6 +503,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         counts_col : str
             DataFrame column containing the counts.
         radius : int, optional
@@ -541,7 +570,7 @@ class Lifemap:
         categorical variable.
 
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         leaves_values = ["show", "hide"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
@@ -549,7 +578,7 @@ class Lifemap:
         options["label"] = counts_col if options["label"] is None else options["label"]
         layer = {"layer": "donuts", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.donuts_data(options)
+        self._layers_data[options["id"]] = df.donuts_data(options)
 
         # If leaves is "show", add a specific points layer
         if leaves == "show":
@@ -564,13 +593,15 @@ class Lifemap:
             points_layer = {"layer": "points", "options": points_options}
             self._layers.append(points_layer)
             points_options["leaves"] = "only"
-            self._layers_data[points_id] = self.data.points_data(points_options)
+            self._layers_data[points_id] = df.points_data(points_options)
 
         return self
 
     def layer_heatmap(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         radius: float = 5.0,
         blur: float = 5.0,
         opacity: float = 1.0,
@@ -592,6 +623,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         radius : float
             Heatmap radius, by default 5.0
         blur : float
@@ -632,15 +667,17 @@ class Lifemap:
 
         """
 
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         layer = {"layer": "heatmap", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.points_data(options)
+        self._layers_data[options["id"]] = df.points_data(options)
         return self
 
     def layer_heatmap_deck(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         radius: float = 30,
         intensity: float = 5,
         threshold: float = 0.05,
@@ -654,6 +691,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         radius : float, optional
             Heatmap radius, by default 30
         intensity : float, optional
@@ -696,15 +737,17 @@ class Lifemap:
 
         """
 
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         layer = {"layer": "heatmap_deck", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.points_data()
+        self._layers_data[options["id"]] = df.points_data()
         return self
 
     def layer_screengrid(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         cell_size: int = 30,
         extruded: bool = False,
         opacity: float = 0.5,
@@ -717,6 +760,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         cell_size : int, optional
             Screen grid cell size, in pixels, by default 30
         extruded : bool, optionals
@@ -754,15 +801,17 @@ class Lifemap:
         >>> Lifemap(d).layer_screengrid().show()
 
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         layer = {"layer": "screengrid", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = self.data.points_data()
+        self._layers_data[options["id"]] = df.points_data()
         return self
 
     def layer_text(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         text: str,
         font_size: int = 12,
         font_family: str = "Segoe UI, Helvetica, sans-serif",
@@ -777,6 +826,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         text : str
             Name of a column of the data containing text to be displayed.
         font_size: int
@@ -820,16 +873,18 @@ class Lifemap:
         >>> Lifemap(d).layer_text(text="value", font_size=14).show()
 
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         layer = {"layer": "text", "options": options}
         self._layers.append(layer)
         data_columns = (text,)
-        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
+        self._layers_data[options["id"]] = df.points_data(options, data_columns)
         return self
 
     def layer_icons(
         self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
         *,
+        taxid_col: str = "taxid",
         icon: str,
         width: int | None = None,
         height: int | None = None,
@@ -849,6 +904,10 @@ class Lifemap:
 
         Parameters
         ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         icon : str
             Either the URL to an image file to use as icon, or the name of a column of the data containing
             urls of icons to be displayed.
@@ -904,7 +963,7 @@ class Lifemap:
         >>> Lifemap(d).layer_icons(icon="https://openlayers.org/en/latest/examples/data/icon.png").show()
 
         """
-        options = self._process_options(locals())
+        options, df = self._process_options(locals())
         if options["scale"] is not None and (options["width"] is not None or options["height"] is not None):
             msg = "You cannot specify both a 'scale' and  a 'width' or 'height'."
             raise ValueError(msg)
@@ -915,5 +974,5 @@ class Lifemap:
             if isinstance(options["icon"], str) and not is_icon_url(options["icon"])
             else ()
         )
-        self._layers_data[options["id"]] = self.data.points_data(options, data_columns)
+        self._layers_data[options["id"]] = df.points_data(options, data_columns)
         return self

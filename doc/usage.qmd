@@ -195,6 +195,29 @@ Instead of providing fixed values to `fill` or `radius`, we can also pass data c
 See each layer documentation page for a complete list of its arguments.
 :::
 
+### Layers data
+
+By default, layers use the data provided when calling `Lifemap`, but it is possible to give a specific dataset to a layer. To do this, just pass a `data` and optionally a `taxid_col` argument to the layer function.
+
+```{python}
+icons_data = pl.DataFrame({
+    'taxid': ['1005039','9544','41956','35128','74311'],
+    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',
+                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png']
+})
+
+(
+    Lifemap(iucn, theme="lightgrey")
+    .layer_points(radius=4, opacity=0.9)
+    .layer_icons(data=icons_data, icon="imageurl")
+    .show()
+)
+```
+
+
 
 ## Widget display and export
 
