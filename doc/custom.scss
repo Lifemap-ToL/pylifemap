@@ -1,12 +1,17 @@
 /*-- scss:defaults --*/
 
-$toc-color: #337AB7;
-$toc-active-border: #337AB7;
-$code-color: #C7254E;
+$toc-color: #337ab7;
+$toc-active-border: #337ab7;
+$code-color: #c7254e;
 $dropdown-link-color: #333;
 
 /*-- scss:rules --*/
 
+/* Navbar padding */
+
+#quarto-header > nav {
+    padding: 0.6em 1em;
+}
 
 /* Sidebar */
 
@@ -22,14 +27,12 @@ $dropdown-link-color: #333;
     margin-top: 2em;
 }
 
-
 /* General styles */
 
 a:hover {
     color: #67a9df;
     text-decoration: none;
 }
-
 
 /* Tables */
 
@@ -42,7 +45,6 @@ table.table {
 .table td {
     padding: 0.25rem 1rem;
 }
-
 
 /* Headings */
 
@@ -70,7 +72,7 @@ h4 code {
 
 /* Callouts */
 
-div.callout-note.callout-style-default>.callout-header {
+div.callout-note.callout-style-default > .callout-header {
     background-color: #e9f2fc;
 }
 
@@ -78,13 +80,11 @@ div.callout-note.callout {
     border-left-color: #2780e3;
 }
 
-
 /* Source code */
 
 div.sourceCode {
     margin: 1em 0 2em 0;
 }
-
 
 pre.sourceCode {
     code.sourceCode {
@@ -93,19 +93,17 @@ pre.sourceCode {
 }
 
 .cell-output {
-
-    &>p>img,
-    &>p>svg,
+    & > p > img,
+    & > p > svg,
     .figure {
         display: block;
         margin: 0 auto 3em auto;
     }
 
     .figure {
-        width: fit-content
+        width: fit-content;
     }
 }
-
 
 /* quartodoc */
 
@@ -114,29 +112,29 @@ td:first-child {
     text-size-adjust: 100%;
 }
 
-
 /* Gallery styles (Damien) */
 
 .quarto-listing-category-title {
-  font-size: .875rem !important;
-  font-weight: 500 !important;
-  margin-bottom: .2rem;
-  margin-top: 34px;
-  font-family: inherit;
-  border-bottom: 0;
-  padding-bottom: 0;
-  padding-top: 0px;  
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 0.2rem;
+    margin-top: 34px;
+    font-family: inherit;
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0px;
 }
 
 .quarto-listing-category {
-  font-family: "Source Sans 3", "Source Sans Pro", "Segoe UI", Roboto, Helvetica, sans-serif !important;
-  font-size: 14.875px !important;
-  font-weight: 400;
-  line-height: 1.1rem;
-  padding-left: 17.850px !important;
+    font-family:
+        "Source Sans 3", "Source Sans Pro", "Segoe UI", Roboto, Helvetica, sans-serif !important;
+    font-size: 14.875px !important;
+    font-weight: 400;
+    line-height: 1.1rem;
+    padding-left: 17.85px !important;
 }
 
 .category {
-  padding-bottom: .2rem;
-  padding-top: .2rem;
+    padding-bottom: 0.2rem;
+    padding-top: 0.2rem;
 }
