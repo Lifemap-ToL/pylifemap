@@ -8,9 +8,7 @@ import pytest
 
 from pylifemap import aggregate_num
 
-df1 = pd.DataFrame(
-    {"taxid": [33213, 33154, 33208, 33090, 33208, 2], "value": [1, 2, 3, 4, 5, 6]}
-)
+df1 = pd.DataFrame({"taxid": [33213, 33154, 33208, 33090, 33208, 2], "value": [1, 2, 3, 4, 5, 6]})
 
 
 df1_agg_sum = pl.DataFrame(
@@ -82,43 +80,42 @@ class TestAggregateNumErrors:
 
 
 class TestAggregateNumResults:
-
     def test_num_df1_pl_sum(self, df1_pl):
         tmp = aggregate_num(df1_pl, column="value", fn="sum")
-        assert pl.DataFrame(df1_agg_sum).equals(tmp)
+        assert pl.DataFrame(df1_agg_sum).equals(tmp)  # type: ignore
 
     def test_num_df1_pd_sum(self, df1_pd):
         tmp = aggregate_num(df1_pd, column="value", fn="sum")
-        assert df1_agg_sum.equals(tmp)
+        pd.testing.assert_frame_equal(tmp, df1_agg_sum.to_pandas(), check_dtype=False)
 
     def test_num_df1_pl_mean(self, df1_pl):
         tmp = aggregate_num(df1_pl, column="value", fn="mean")
-        assert pl.DataFrame(df1_agg_mean).equals(tmp)
+        assert pl.DataFrame(df1_agg_mean).equals(tmp)  # type: ignore
 
     def test_num_df1_pd_mean(self, df1_pd):
         tmp = aggregate_num(df1_pd, column="value", fn="mean")
-        assert df1_agg_mean.equals(tmp)
+        pd.testing.assert_frame_equal(tmp, df1_agg_mean.to_pandas(), check_dtype=False)
 
     def test_num_df1_pl_min(self, df1_pl):
         tmp = aggregate_num(df1_pl, column="value", fn="min")
-        assert pl.DataFrame(df1_agg_min).equals(tmp)
+        assert pl.DataFrame(df1_agg_min).equals(tmp)  # type: ignore
 
     def test_num_df1_pd_min(self, df1_pd):
         tmp = aggregate_num(df1_pd, column="value", fn="min")
-        assert df1_agg_min.equals(tmp)
+        pd.testing.assert_frame_equal(tmp, df1_agg_min.to_pandas(), check_dtype=False)
 
     def test_num_df1_pl_max(self, df1_pl):
         tmp = aggregate_num(df1_pl, column="value", fn="max")
-        assert pl.DataFrame(df1_agg_max).equals(tmp)
+        assert pl.DataFrame(df1_agg_max).equals(tmp)  # type: ignore
 
     def test_num_df1_pd_max(self, df1_pd):
         tmp = aggregate_num(df1_pd, column="value", fn="max")
-        assert df1_agg_max.equals(tmp)
+        pd.testing.assert_frame_equal(tmp, df1_agg_max.to_pandas(), check_dtype=False)
 
     def test_num_df1_pl_median(self, df1_pl):
         tmp = aggregate_num(df1_pl, column="value", fn="median")
-        assert pl.DataFrame(df1_agg_median).equals(tmp)
+        assert pl.DataFrame(df1_agg_median).equals(tmp)  # type: ignore
 
     def test_num_df1_pd_median(self, df1_pd):
         tmp = aggregate_num(df1_pd, column="value", fn="median")
-        assert df1_agg_median.equals(tmp)
+        pd.testing.assert_frame_equal(tmp, df1_agg_median.to_pandas(), check_dtype=False)

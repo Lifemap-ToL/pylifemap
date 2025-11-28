@@ -41,12 +41,13 @@ class TestAggregateCountErrors:
 class TestAggregateCountResults:
     def test_count_df1_pl(self, df1_pl):
         tmp = aggregate_count(df1_pl)
-        assert pl.DataFrame(df1_agg).equals(tmp)
+        assert pl.DataFrame(df1_agg).equals(tmp)  # type:ignore
 
     def test_count_df1_pd(self, df1_pd):
         tmp = aggregate_count(df1_pd)
-        assert df1_agg.equals(tmp)
+        res = df1_agg.to_pandas()
+        pd.testing.assert_frame_equal(tmp, res, check_dtype=False)
 
     def test_count_df1_result_col(self, df1_pl):
         tmp = aggregate_count(df1_pl, result_col="out")
-        assert pl.DataFrame(df1_agg).rename({"n": "out"}).equals(tmp)
+        assert pl.DataFrame(df1_agg).rename({"n": "out"}).equals(tmp)  # type:ignore

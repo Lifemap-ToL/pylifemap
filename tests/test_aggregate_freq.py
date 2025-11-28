@@ -66,8 +66,9 @@ class TestAggregateFreqErrors:
 class TestAggregateFreqResults:
     def test_freq_df1_pl(self, df1_pl):
         tmp = aggregate_freq(df1_pl, column="value")
-        assert pl.DataFrame(df1_agg).equals(tmp)
+        assert pl.DataFrame(df1_agg).equals(tmp)  # type:ignore
 
     def test_freq_df1_pd(self, df1_pd):
         tmp = aggregate_freq(df1_pd, column="value")
-        assert df1_agg.equals(tmp)
+        res = df1_agg.to_pandas()
+        pd.testing.assert_frame_equal(tmp, res, check_dtype=False)

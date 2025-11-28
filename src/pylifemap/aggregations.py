@@ -84,7 +84,7 @@ def aggregate_num(
     *,
     fn: Literal["sum", "mean", "min", "max", "median"] = "sum",
     taxid_col: str = "taxid",
-) -> pl.DataFrame:
+) -> pl.DataFrame | pd.DataFrame:
     """
     Numerical variable aggregation along branches.
 
@@ -104,8 +104,8 @@ def aggregate_num(
 
     Returns
     -------
-    pl.DataFrame
-        Aggregated DataFrame.
+    pl.DataFrame | pd.DataFrame
+        Aggregated DataFrame in the same format as input.
 
     Raises
     ------
@@ -125,10 +125,7 @@ def aggregate_num(
     --------
     >>> from pylifemap import aggregate_num
     >>> import polars as pl
-    >>> d = pl.DataFrame({
-    ...     "taxid": [33154, 33090, 2],
-    ...     "value": [10, 5, 100]
-    ... })
+    >>> d = pl.DataFrame({"taxid": [33154, 33090, 2], "value": [10, 5, 100]})
     >>> aggregate_num(d, column="value", fn="sum")
     shape: (5, 2)
     ┌───────┬───────┐
@@ -143,6 +140,7 @@ def aggregate_num(
     │ 33154 ┆ 10    │
     └───────┴───────┘
     """
+    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, column)
     ensure_column_exists(d, taxid_col)
@@ -150,10 +148,7 @@ def aggregate_num(
 
     # Column can't be taxid to avoid conflicts later
     if column == "taxid":
-        msg = (
-            "Can't aggregate on the taxid column, please make a copy and"
-            " rename it before."
-        )
+        msg = "Can't aggregate on the taxid column, please make a copy and rename it before."
         raise ValueError(msg)
     # Check aggregation function
     fn_dict = {
@@ -170,27 +165,27 @@ def aggregate_num(
         agg_fn = fn_dict[fn]
     # Generate dataframe of parent values
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(
-        LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left"
-    ).explode("pylifemap_ascend")
+    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+        "pylifemap_ascend"
+    )
     # Get original nodes data with itself as parent in order to take into account
     # the nodes values
     obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and aggregate values
-    res = (
-        res.group_by(["pylifemap_ascend"])
-        .agg(agg_fn(column))
-        .rename({"pylifemap_ascend": "taxid"})
-    )
+    res = res.group_by(["pylifemap_ascend"]).agg(agg_fn(column)).rename({"pylifemap_ascend": "taxid"})
     res = res.sort("taxid")
+
+    if pandas_result:
+        res = res.to_pandas()
+
     return res
 
 
 def aggregate_count(
     d: pd.DataFrame | pl.DataFrame, *, result_col: str = "n", taxid_col: str = "taxid"
-) -> pl.DataFrame:
+) -> pl.DataFrame | pd.DataFrame:
     """
     Nodes count aggregation along branches.
 
@@ -208,8 +203,8 @@ def aggregate_count(
 
     Returns
     -------
-    pl.DataFrame
-        Aggregated DataFrame.
+    pl.DataFrame | pd.DataFrame
+        Aggregated DataFrame in the same format as input.
 
     See also
     --------
@@ -237,26 +232,27 @@ def aggregate_count(
     │ 33154 ┆ 1   │
     └───────┴─────┘
     """
+    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
     d = d.select(pl.col(taxid_col).alias("taxid"))
-    res = d.join(
-        LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left"
-    ).explode("pylifemap_ascend")
+    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+        "pylifemap_ascend"
+    )
     # Get original nodes with itself as parent in order to take into account
     # the nodes themselves
     obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and count
-    res = (
-        res.group_by("pylifemap_ascend")
-        .len(name=result_col)
-        .rename({"pylifemap_ascend": "taxid"})
-    )
+    res = res.group_by("pylifemap_ascend").len(name=result_col).rename({"pylifemap_ascend": "taxid"})
     res = res.sort("taxid")
+
+    if pandas_result:
+        res = res.to_pandas()
+
     return res
 
 
@@ -265,7 +261,7 @@ def aggregate_freq(
     column: str,
     *,
     taxid_col: str = "taxid",
-) -> pl.DataFrame:
+) -> pl.DataFrame | pd.DataFrame:
     """
     Categorical variable frequencies aggregation along branches.
 
@@ -283,8 +279,8 @@ def aggregate_freq(
 
     Returns
     -------
-    pl.DataFrame
-        Aggregated DataFrame. The "count" column contains the value
+    pl.DataFrame | pd.DataFrame
+        Aggregated DataFrame in the same format as input. The "count" column contains the value
         counts as a polars struct.
 
     See also
@@ -297,10 +293,7 @@ def aggregate_freq(
     --------
     >>> from pylifemap import aggregate_freq
     >>> import polars as pl
-    >>> d = pl.DataFrame({
-    ...     "taxid": [33154, 33090, 2],
-    ...     "value": ["a", "b", "a"]
-    ... })
+    >>> d = pl.DataFrame({"taxid": [33154, 33090, 2], "value": ["a", "b", "a"]})
     >>> aggregate_freq(d, column="value")
     shape: (7, 3)
     ┌───────┬───────┬───────┐
@@ -317,25 +310,26 @@ def aggregate_freq(
     │ 33154 ┆ a     ┆ 1     │
     └───────┴───────┴───────┘
     """
+    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
     ensure_column_exists(d, column)
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(
-        LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left"
-    ).explode("pylifemap_ascend")
+    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+        "pylifemap_ascend"
+    )
     # Get original nodes with itself as parent in order to take into account
     # the nodes themselves
     obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and value, and count
-    res = (
-        res.group_by(["pylifemap_ascend", column])
-        .len(name="count")
-        .rename({"pylifemap_ascend": "taxid"})
-    )
+    res = res.group_by(["pylifemap_ascend", column]).len(name="count").rename({"pylifemap_ascend": "taxid"})
     res = res.sort(["taxid", column])
+
+    if pandas_result:
+        res = res.to_pandas()
+
     return res
