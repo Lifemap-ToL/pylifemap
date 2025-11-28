@@ -833,6 +833,7 @@ class Lifemap:
         icon: str,
         width: int | None = None,
         height: int | None = None,
+        scale: float | None = None,
         color: str | None = None,
         x_offset: int = 0,
         y_offset: int = 0,
@@ -852,9 +853,11 @@ class Lifemap:
             Either the URL to an image file to use as icon, or the name of a column of the data containing
             urls of icons to be displayed.
         width : int | None, optional
-            Image width, in pixels. If None, use native image width, by default None.
+            Image width, in pixels.
         height : int | None, optional
-            Image height, in pixels. If None, use native image height, by default None.
+            Image height, in pixels.
+        scale : float | None, optional
+            Factor with which to scale the original icon size. Cannot be used with width or height.
         color : str | None, optional
             CSS color to tint the icon, by default None.
         x_offset : int
@@ -902,6 +905,9 @@ class Lifemap:
 
         """
         options = self._process_options(locals())
+        if options["scale"] is not None and (options["width"] is not None or options["height"] is not None):
+            msg = "You cannot specify both a 'scale' and  a 'width' or 'height'."
+            raise ValueError(msg)
         layer = {"layer": "icons", "options": options}
         self._layers.append(layer)
         data_columns = (

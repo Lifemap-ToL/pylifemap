@@ -28,7 +28,7 @@ iucn = pl.read_parquet(
 )
 ```
 
-The `icon` parameter can also be a data column containing image URLs.
+The `icon` parameter can also be a data column containing image URLs. Here we use the `scale` argument to resize the icons by a given factor.
 
 ```{python}
 d= pl.DataFrame({
@@ -55,7 +55,7 @@ d= pl.DataFrame({
         ],
     })
 
-Lifemap(d, theme="lightgrey").layer_icons(icon="imageurl", popup=True).show()
+Lifemap(d, theme="lightgrey").layer_icons(icon="imageurl", scale=0.8, popup=True).show()
 ```
 
 For a detailed list of `layer_icons` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_icons`).
