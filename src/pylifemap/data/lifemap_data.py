@@ -13,6 +13,8 @@ from pylifemap.data.backend_data import BACKEND_DATA
 # in order to be able to filter them in quarto.
 warnings.formatwarning = lambda msg, *args, **kwargs: f"Warning: {msg}.\n"  # type: ignore  # noqa: ARG005
 
+TAXID_COL = "pylifemap_taxid"
+
 
 class LifemapData:
     """
@@ -60,10 +62,10 @@ class LifemapData:
             msg = f"{taxid_col} is not a column of data."
             raise ValueError(msg)
 
-        self._taxid_col = taxid_col
+        data = data.with_columns(pl.col(taxid_col).alias(TAXID_COL))
 
         # Convert taxid column to Int32 for join compatibility with lmdata
-        data = data.with_columns(pl.col(self._taxid_col).cast(pl.Int32))
+        data = data.with_columns(pl.col(TAXID_COL).cast(pl.Int32))
 
         # Store data as attribute
         self._data = data
@@ -93,12 +95,12 @@ class LifemapData:
         Lifemap data.
         """
         lmdata = BACKEND_DATA.select("taxid")
-        data = self._data.select(self._taxid_col)
-        absent_ids = data.join(lmdata, how="anti", left_on=self._taxid_col, right_on="taxid")
+        data = self._data.select(TAXID_COL)
+        absent_ids = data.join(lmdata, how="anti", left_on=TAXID_COL, right_on="taxid")
         if (n := absent_ids.height) > 0:
             msg = f"{n} taxids have not been found in Lifemap database"
             if n < 10:  # noqa: PLR2004
-                ids = absent_ids.get_column(self._taxid_col).to_list()
+                ids = absent_ids.get_column(TAXID_COL).to_list()
                 msg = msg + f": {ids}"
             warnings.warn(msg, stacklevel=0)
 
@@ -106,7 +108,7 @@ class LifemapData:
         """
         Check and display a warning if their are duplicated taxids in user data.
         """
-        taxids = self._data.get_column(self._taxid_col)
+        taxids = self._data.get_column(TAXID_COL)
         duplicates = taxids.filter(taxids.is_duplicated()).unique()
         if (n := duplicates.len()) > 0:
             msg = f"{n} duplicated taxids have been found in the data"
@@ -126,7 +128,7 @@ class LifemapData:
         data = self._data
         if "pylifemap_parent" not in data.columns:
             lmdata = BACKEND_DATA.select(["taxid", "pylifemap_parent"])
-            data = data.join(lmdata, how="inner", left_on=self._taxid_col, right_on="taxid")
+            data = data.join(lmdata, how="inner", left_on=TAXID_COL, right_on="taxid")
         return data
 
     def points_data(self, options: dict | None = None, data_columns: tuple = ()) -> pl.DataFrame:
@@ -154,7 +156,7 @@ class LifemapData:
 
         """
 
-        needed_cols = [self._taxid_col, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
+        needed_cols = [TAXID_COL, "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]
         data = self._data
 
         leaves = options["leaves"] if options is not None and "leaves" in options else "show"
@@ -173,7 +175,7 @@ class LifemapData:
             data = data.join(
                 to_keep,
                 how="inner",
-                left_on=self._taxid_col,
+                left_on=TAXID_COL,
                 right_on="taxid",
             )
 
@@ -181,7 +183,7 @@ class LifemapData:
         data = data.join(
             BACKEND_DATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
             how="inner",
-            left_on=self._taxid_col,
+            left_on=TAXID_COL,
             right_on="taxid",
         ).sort("pylifemap_zoom", descending=True)
 
@@ -213,7 +215,7 @@ class LifemapData:
         counts_col = options["counts_col"]
 
         needed_cols = [
-            self._taxid_col,
+            TAXID_COL,
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
@@ -231,7 +233,7 @@ class LifemapData:
         data = data.join(
             to_keep,
             how="inner",
-            left_on=self._taxid_col,
+            left_on=TAXID_COL,
             right_on="taxid",
         )
 
@@ -239,7 +241,7 @@ class LifemapData:
         levels = data.get_column(counts_col).unique().sort()
 
         # Store frequencies as a pl.Struct and encode as JSON
-        data = data.pivot(index=self._taxid_col, on=counts_col, values="count").fill_null(0)
+        data = data.pivot(index=TAXID_COL, on=counts_col, values="count").fill_null(0)
         data = data.with_columns(pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)).select(
             pl.all().exclude(levels)
         )
@@ -248,7 +250,7 @@ class LifemapData:
         data = data.join(
             BACKEND_DATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
             how="inner",
-            left_on=self._taxid_col,
+            left_on=TAXID_COL,
             right_on="taxid",
         )
         # Only keep needed columns
@@ -281,7 +283,7 @@ class LifemapData:
                 pl.col("pylifemap_zoom"),
             ),
             how="inner",
-            left_on=self._taxid_col,
+            left_on=TAXID_COL,
             right_on="taxid",
         ).sort("pylifemap_zoom", descending=True)
 
@@ -298,7 +300,7 @@ class LifemapData:
         ).filter((pl.col("pylifemap_x1").is_not_null()) & (pl.col("pylifemap_y1").is_not_null()))
 
         needed_cols = [
-            self._taxid_col,
+            TAXID_COL,
             "pylifemap_x0",
             "pylifemap_y0",
             "pylifemap_parent",

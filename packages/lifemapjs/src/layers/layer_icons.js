@@ -85,7 +85,7 @@ export function layer_icons(map, data, options = {}) {
     // Popup
     if (popup) {
         const content_fn = async (feature) => {
-            const taxid = feature.get("data")["taxid"]
+            const taxid = feature.get("data")["pylifemap_taxid"]
             let content = await get_popup_title(taxid)
             return content
         }

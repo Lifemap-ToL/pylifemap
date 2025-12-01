@@ -109,7 +109,7 @@ export function layer_donuts(map, data, options = {}) {
     /* Popup  */
 
     const content_fn = async (feature) => {
-        const taxid = feature.get("data")["taxid"]
+        const taxid = feature.get("data")["pylifemap_taxid"]
         let content = await get_popup_title(taxid)
 
         const data = feature.get("data")[counts_col]

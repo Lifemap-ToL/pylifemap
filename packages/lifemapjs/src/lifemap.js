@@ -68,7 +68,7 @@ export class Lifemap {
         for (let k in data) {
             let current_data = unserialize_data(data[k])
             deserialized_data[k] = current_data
-            taxids = taxids.union(new Set(current_data.map((d) => d.taxid)))
+            taxids = taxids.union(new Set(current_data.map((d) => d.pylifemap_taxid)))
         }
         if (taxids.size > MAX_SOLR_QUERY) {
             console.log("Too many taxids to query for up-to-date coordinates.")
@@ -81,7 +81,7 @@ export class Lifemap {
             if (coords !== null) {
                 for (let k in deserialized_data) {
                     deserialized_data[k].forEach((d) => {
-                        const taxid_coords = coords[d.taxid]
+                        const taxid_coords = coords[d.pylifemap_taxid]
                         if (taxid_coords !== undefined) {
                             if (d.pylifemap_x !== undefined) {
                                 d.pylifemap_x = taxid_coords.x

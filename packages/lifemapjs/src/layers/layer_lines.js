@@ -161,7 +161,7 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
     // Popup
     if (popup) {
         const content_fn = async (feature) => {
-            const taxid = feature.get("data")["taxid"]
+            const taxid = feature.get("data")["pylifemap_taxid"]
             let content = await get_popup_title(taxid)
 
             let table_content = ""

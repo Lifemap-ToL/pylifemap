@@ -19,12 +19,12 @@ d_cat = pl.DataFrame(d).with_columns(pl.col("value").cast(pl.Utf8))
 
 @pytest.fixture
 def data_pl():
-    return pl.DataFrame(d)
+    return pl.DataFrame(d).with_columns(pl.col("tid").alias("pylifemap_taxid"))
 
 
 @pytest.fixture
 def data_pl_int64():
-    return d_pl_int64
+    return d_pl_int64.with_columns(pl.col("tid").alias("pylifemap_taxid"))
 
 
 @pytest.fixture
@@ -79,7 +79,7 @@ class TestLifemapDataInit:
 
     def test_convert_taxid_int32(self, data_pl_int64):
         lmd = LifemapData(data_pl_int64, taxid_col="tid")
-        assert lmd.data.get_column("tid").dtype == pl.Int32
+        assert lmd.data.get_column("pylifemap_taxid").dtype == pl.Int32
 
 
 class TestLifemapDataMethods:
@@ -90,6 +90,7 @@ class TestLifemapDataMethods:
                 {
                     "tid": [33090, 33208, 2, 2944257],
                     "value": [1, 2, 3, 4],
+                    "pylifemap_taxid": [33090, 33208, 2, 2944257],
                     "pylifemap_parent": [2759, 33154, 0, 1923837],
                 }
             )
@@ -109,10 +110,10 @@ class TestPointsData:
         tmp = lmd.points_data(data_columns=("value",))
         assert tmp.shape == (4, 5)
         assert sorted(tmp.columns) == [
+            "pylifemap_taxid",
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
-            "tid",
             "value",
         ]
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [6, 8, 8, 20]
@@ -128,10 +129,10 @@ class TestPointsData:
         tmp = lmd.points_data(options={"leaves": "omit"}, data_columns=("value",))
         assert tmp.shape == (3, 5)
         assert sorted(tmp.columns) == [
+            "pylifemap_taxid",
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
-            "tid",
             "value",
         ]
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [6, 8, 8]
@@ -140,10 +141,10 @@ class TestPointsData:
         tmp = lmd.points_data(options={"leaves": "only"}, data_columns=("value",))
         assert tmp.shape == (1, 5)
         assert sorted(tmp.columns) == [
+            "pylifemap_taxid",
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
-            "tid",
             "value",
         ]
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [20]
@@ -160,13 +161,16 @@ class TestDonutsData:
         tmp = lmd_cat.donuts_data({"counts_col": "value"})
         assert tmp.shape == (10, 5)
         assert sorted(tmp.columns) == [
+            "pylifemap_taxid",
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
-            "taxid",
             "value",
         ]
-        assert tmp.filter(pl.col("taxid") == 0).get_column("value").item() == '{"1":1,"2":1,"3":1,"4":1}'
+        assert (
+            tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("value").item()
+            == '{"1":1,"2":1,"3":1,"4":1}'
+        )
 
 
 class TestLinesData:
@@ -179,11 +183,11 @@ class TestLinesData:
         assert tmp.shape == (10, 7)
         assert sorted(tmp.columns) == [
             "pylifemap_parent",
+            "pylifemap_taxid",
             "pylifemap_x0",
             "pylifemap_x1",
             "pylifemap_y0",
             "pylifemap_y1",
-            "taxid",
             "value",
         ]
         assert tmp.get_column("value").sort().to_list() == [
