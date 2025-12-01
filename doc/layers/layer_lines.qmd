@@ -6,7 +6,6 @@ The lines layer displays aggregated observations (count or numerical variable) b
 
 The `color` and `width` arguments allow to modify the size and color of the lines. They can either be fixed values (numerical for `width`, an hexadecimal color code for `color`) or data column names. In this case, width or color will depend on the column values.
 
-
 ```{python}
 import polars as pl
 from pylifemap import Lifemap, aggregate_count
@@ -21,7 +20,7 @@ iucn_agg = aggregate_count(iucn)
 
 (
     Lifemap(iucn_agg)
-    .layer_lines(color="n", width="n", opacity=0.6)
+    .layer_lines(color="n", width="n", opacity=0.9)
     .show()
 )
 ```

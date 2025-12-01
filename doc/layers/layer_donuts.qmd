@@ -18,7 +18,7 @@ iucn_freq = aggregate_freq(iucn, column="status")
 
 (
     Lifemap(iucn_freq)
-    .layer_donuts(counts_col="status", opacity=1, leaves="show")
+    .layer_donuts(counts_col="status", opacity=0.9, leaves="show")
     .show()
 )
 

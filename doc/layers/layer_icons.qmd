@@ -31,7 +31,7 @@ iucn = pl.read_parquet(
 The `icon` parameter can also be a data column containing image URLs. Here we use the `scale` argument to resize the icons by a given factor.
 
 ```{python}
-d= pl.DataFrame({
+d = pl.DataFrame({
         "taxid": [
             "1005039",
             "9544",
