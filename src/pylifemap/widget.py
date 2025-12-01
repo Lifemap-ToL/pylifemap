@@ -7,7 +7,7 @@ import pathlib
 import anywidget
 import traitlets
 
-from pylifemap.serialization import serialize_data
+from pylifemap.data.serialization import serialize_data
 
 # Output directory for bundled js and css files
 BUNDLER_OUTPUT_DIR = pathlib.Path(__file__).parent / "static"

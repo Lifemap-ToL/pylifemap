@@ -1,0 +1,126 @@
+from typing import Literal
+
+import pandas as pd
+import polars as pl
+
+from pylifemap.layers.base import LayersBase
+
+
+class LayerDonuts(LayersBase):
+    def layer_donuts(
+        self,
+        data: pl.DataFrame | pd.DataFrame | None = None,
+        *,
+        taxid_col: str = "taxid",
+        counts_col: str,
+        radius: int = 40,
+        leaves: Literal["show", "hide"] = "hide",
+        scheme: str | None = None,
+        opacity: float | None = 1,
+        popup: bool = True,
+        label: str | None = None,
+    ) -> LayersBase:
+        """
+        Add a donuts layer.
+
+        This layer displays the distribution of a categorical variable values among
+        each nodes children. Optionally it can also represent leaves values as a
+        point layer.
+
+        It should be applied to data computed with [](`~pylifemap.aggregate_freq`).
+
+        Parameters
+        ----------
+        data : pl.DataFrame | pd.DataFrame | None, optional
+            Layer data. If not provided, use the base widget data.
+        taxid_col : str, optional
+            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+        counts_col : str
+            DataFrame column containing the counts.
+        radius : int, optional
+            Donut charts radius, by default 40
+        leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
+            If `"show"`, add a points layer with individual leaves values, by
+            default "hide"
+        scheme : str | None, optional
+            Color scheme for donut charts ans points. It is the name of
+            a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),
+            by default None
+        opacity : float | None, optional
+            Donut charts and points opacity, by default 1
+        popup : bool, optional
+            If True, display informations in a popup when a point is clicked,
+            by default True
+        label : str | None, optional
+            Legend title for this layer. If `None`, the value of `counts_col` is used.
+
+
+        Returns
+        -------
+        Lifemap
+            A Lifemap visualization object.
+
+
+        Raises
+        ------
+        ValueError
+            If leaves is not one of the allowed values.
+
+        Examples
+        --------
+        >>> import polars as pl
+        >>> from pylifemap import Lifemap, aggregate_freq
+        >>> d = pl.DataFrame(
+        ...     {
+        ...         "taxid": [
+        ...             9685,
+        ...             9615,
+        ...             9994,
+        ...             2467430,
+        ...             2514524,
+        ...             2038938,
+        ...             1021470,
+        ...             1415565,
+        ...             1928562,
+        ...             1397240,
+        ...             230741,
+        ...         ],
+        ...         "category": ["a", "b", "b", "a", "a", "c", "a", "b", "b", "a", "b"],
+        ...     }
+        ... )
+        >>> d = aggregate_freq(d, column="category")
+        >>> Lifemap(d).layer_donuts(counts_col="category", leaves="hide").show()
+
+
+        See also
+        --------
+        [](c) : aggregation of the values counts of a
+        categorical variable.
+
+        """
+        options, df = self._process_options(locals())
+        leaves_values = ["show", "hide"]
+        if options["leaves"] not in leaves_values:
+            msg = f"leaves must be one of {leaves_values}"
+            raise ValueError(msg)
+        options["label"] = counts_col if options["label"] is None else options["label"]
+        layer = {"layer": "donuts", "options": options}
+        self._layers.append(layer)
+        self._layers_data[options["id"]] = df.donuts_data(options)
+
+        # If leaves is "show", add a specific points layer
+        if leaves == "show":
+            points_id = f"{options['id']}-points"
+            points_options = {
+                "id": points_id,
+                "scheme": scheme,
+                "opacity": 1,
+                "popup": popup,
+                "fill_col": options["counts_col"],
+            }
+            points_layer = {"layer": "points", "options": points_options}
+            self._layers.append(points_layer)
+            points_options["leaves"] = "only"
+            self._layers_data[points_id] = df.points_data(points_options)
+
+        return self

@@ -50,6 +50,7 @@ quartodoc:
     package: pylifemap
     sidebar: _sidebar.yml
     parser: numpy
+    dynamic: true
     render_interlinks: true
     renderer:
         style: markdown

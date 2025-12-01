@@ -6,8 +6,8 @@ import pandas as pd
 import polars as pl
 import pytest
 
-from pylifemap.aggregations import aggregate_freq, aggregate_num
-from pylifemap.data import LifemapData
+from pylifemap import aggregate_freq, aggregate_num
+from pylifemap.data.lifemap_data import LifemapData
 
 d = pd.DataFrame({"tid": [33090, 33208, 2, 2944257], "value": [1, 2, 3, 4]})
 d_absent = pd.DataFrame({"taxid": [33090, 33208, 2, -12, -834], "value": [1, 2, 3, 4, 5]})

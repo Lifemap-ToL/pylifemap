@@ -7,7 +7,7 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.data import LMDATA
+from pylifemap.data.backend_data import BACKEND_DATA
 
 
 def ensure_polars(d: pd.DataFrame | pl.DataFrame) -> pl.DataFrame:
@@ -165,7 +165,7 @@ def aggregate_num(
         agg_fn = fn_dict[fn]
     # Generate dataframe of parent values
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
         "pylifemap_ascend"
     )
     # Get original nodes data with itself as parent in order to take into account
@@ -238,7 +238,7 @@ def aggregate_count(
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
     d = d.select(pl.col(taxid_col).alias("taxid"))
-    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
         "pylifemap_ascend"
     )
     # Get original nodes with itself as parent in order to take into account
@@ -317,7 +317,7 @@ def aggregate_freq(
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
     d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(LMDATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
+    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
         "pylifemap_ascend"
     )
     # Get original nodes with itself as parent in order to take into account

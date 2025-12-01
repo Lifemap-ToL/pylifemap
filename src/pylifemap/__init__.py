@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from pylifemap.aggregations import (
+from pylifemap.data.aggregation import (
     aggregate_count,
     aggregate_freq,
     aggregate_num,

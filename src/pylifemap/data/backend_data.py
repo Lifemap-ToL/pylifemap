@@ -4,15 +4,15 @@ from platformdirs import user_cache_path
 
 from pylifemap.utils import LIFEMAP_BACK_URL
 
-LMDATA_DATA_URL = f"{LIFEMAP_BACK_URL}/data/lmdata.parquet"
-LMDATA_TIMESTAMP_URL = f"{LIFEMAP_BACK_URL}/data/timestamp.txt"
+BACKEND_DATA_URL = f"{LIFEMAP_BACK_URL}/data/lmdata.parquet"
+BACKEND_DATA_TIMESTAMP_URL = f"{LIFEMAP_BACK_URL}/data/timestamp.txt"
 
-LMDATA_PATH = user_cache_path("pylifemap") / "data"
-LMDATA_DATA_PATH = LMDATA_PATH / "lmdata.parquet"
-LMDATA_TIMESTAMP_PATH = LMDATA_PATH / "timestamp.txt"
+BACKEND_DATA_DIR = user_cache_path("pylifemap") / "data"
+BACKEND_DATA_PATH = BACKEND_DATA_DIR / "lmdata.parquet"
+BACKEND_DATA_TIMESTAMP_PATH = BACKEND_DATA_DIR / "timestamp.txt"
 
 
-class LmData:
+class BackendData:
     """
     A class to manage NCBI data for Lifemap hosted on lifemap-back.
 
@@ -29,14 +29,14 @@ class LmData:
         """
         self._data: pl.DataFrame | None = None
 
-        LMDATA_PATH.mkdir(exist_ok=True, parents=True)
+        BACKEND_DATA_DIR.mkdir(exist_ok=True, parents=True)
 
         download = not self.lmdata_ok()
         if download:
             self.download_timestamp()
             self.download_data()
 
-        self._data = pl.read_parquet(LMDATA_DATA_PATH)
+        self._data = pl.read_parquet(BACKEND_DATA_PATH)
 
     def lmdata_ok(self) -> bool:
         """
@@ -51,9 +51,9 @@ class LmData:
             True if local data is up-to-date, False otherwise.
         """
         cache_timestamp = 0
-        if LMDATA_TIMESTAMP_PATH.exists():
-            cache_timestamp = int(LMDATA_TIMESTAMP_PATH.read_text())
-        remote_timestamp = int(requests.get(LMDATA_TIMESTAMP_URL, timeout=10).text)
+        if BACKEND_DATA_TIMESTAMP_PATH.exists():
+            cache_timestamp = int(BACKEND_DATA_TIMESTAMP_PATH.read_text())
+        remote_timestamp = int(requests.get(BACKEND_DATA_TIMESTAMP_URL, timeout=10).text)
         return cache_timestamp == remote_timestamp
 
     def download_data(self) -> None:
@@ -63,8 +63,8 @@ class LmData:
         Fetches the data from the remote server and saves it locally.
         """
 
-        response = requests.get(LMDATA_DATA_URL, timeout=10)
-        LMDATA_DATA_PATH.write_bytes(response.content)
+        response = requests.get(BACKEND_DATA_URL, timeout=10)
+        BACKEND_DATA_PATH.write_bytes(response.content)
 
     def download_timestamp(self) -> None:
         """
@@ -73,8 +73,8 @@ class LmData:
         Fetches the current timestamp from the remote server and saves it locally.
         """
 
-        response = requests.get(LMDATA_TIMESTAMP_URL, timeout=10)
-        LMDATA_TIMESTAMP_PATH.write_text(response.text)
+        response = requests.get(BACKEND_DATA_TIMESTAMP_URL, timeout=10)
+        BACKEND_DATA_TIMESTAMP_PATH.write_text(response.text)
 
     @property
     def data(self) -> pl.DataFrame:
@@ -95,4 +95,4 @@ class LmData:
 
 
 # Load lifemap-back NCBI data
-LMDATA = LmData().data
+BACKEND_DATA = BackendData().data

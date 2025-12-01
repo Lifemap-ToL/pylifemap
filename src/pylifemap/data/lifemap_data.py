@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 import polars as pl
 
-from pylifemap.lmdata import LMDATA
+from pylifemap.data.backend_data import BACKEND_DATA
 
 # Custom warning message formatting. We use warnings.warn() to display warnings
 # in order to be able to filter them in quarto.
@@ -92,7 +92,7 @@ class LifemapData:
         Check and display a warning if taxids in user data are not found in
         Lifemap data.
         """
-        lmdata = LMDATA.select("taxid")
+        lmdata = BACKEND_DATA.select("taxid")
         data = self._data.select(self._taxid_col)
         absent_ids = data.join(lmdata, how="anti", left_on=self._taxid_col, right_on="taxid")
         if (n := absent_ids.height) > 0:
@@ -125,7 +125,7 @@ class LifemapData:
         """
         data = self._data
         if "pylifemap_parent" not in data.columns:
-            lmdata = LMDATA.select(["taxid", "pylifemap_parent"])
+            lmdata = BACKEND_DATA.select(["taxid", "pylifemap_parent"])
             data = data.join(lmdata, how="inner", left_on=self._taxid_col, right_on="taxid")
         return data
 
@@ -169,7 +169,7 @@ class LifemapData:
             if leaves == "omit":
                 # If leaves is "omit", remove them
                 keep_expr = keep_expr.not_()
-            to_keep = LMDATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
+            to_keep = BACKEND_DATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
             data = data.join(
                 to_keep,
                 how="inner",
@@ -179,7 +179,7 @@ class LifemapData:
 
         # Add needed lifemap tree data
         data = data.join(
-            LMDATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
+            BACKEND_DATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
             how="inner",
             left_on=self._taxid_col,
             right_on="taxid",
@@ -227,7 +227,7 @@ class LifemapData:
 
         # Remove leaves
         keep_expr = pl.col("pylifemap_leaf").not_()
-        to_keep = LMDATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
+        to_keep = BACKEND_DATA.select(["taxid", "pylifemap_leaf"]).filter(keep_expr)
         data = data.join(
             to_keep,
             how="inner",
@@ -246,7 +246,7 @@ class LifemapData:
 
         # Add needed lifemap tree data
         data = data.join(
-            LMDATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
+            BACKEND_DATA.select(["taxid", "pylifemap_x", "pylifemap_y", "pylifemap_zoom"]),
             how="inner",
             left_on=self._taxid_col,
             right_on="taxid",
@@ -274,7 +274,7 @@ class LifemapData:
 
         # Get points coordinates as x0 and y0 and sort by zoom level
         data = data.join(
-            LMDATA.select(
+            BACKEND_DATA.select(
                 pl.col("taxid"),
                 pl.col("pylifemap_x").alias("pylifemap_x0"),
                 pl.col("pylifemap_y").alias("pylifemap_y0"),
@@ -287,7 +287,7 @@ class LifemapData:
 
         # Get parent point coordinates as x1 and y1
         data = data.join(
-            LMDATA.select(
+            BACKEND_DATA.select(
                 pl.col("taxid"),
                 pl.col("pylifemap_x").alias("pylifemap_x1"),
                 pl.col("pylifemap_y").alias("pylifemap_y1"),
