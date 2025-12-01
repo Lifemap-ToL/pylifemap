@@ -47,7 +47,7 @@ class LayerLines(LayersBase):
             Line opacity as a floating number between 0 and 1, by default 0.8
         popup : bool
             If True, display informations in a popup when a point is clicked,
-            by default False
+            by default True
         hover : bool | None, optional
             If True, highlight points on mouse hovering. By default True if less than 10_000 data points,
             False otherwise.

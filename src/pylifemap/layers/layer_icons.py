@@ -21,7 +21,7 @@ class LayerIcons(LayersBase):
         x_anchor: float = 0.5,
         y_anchor: float = 0.5,
         opacity: float = 1.0,
-        popup: bool = False,
+        popup: bool = True,
     ) -> LayersBase:
         """
         Add an icons layer.
@@ -57,7 +57,7 @@ class LayerIcons(LayersBase):
             Text opacity as a floating number between 0 and 1, by default 1.0.
         popup : bool, optional
             If True, display informations in a popup when an icon is clicked,
-            by default False.
+            by default True.
 
 
         Returns
