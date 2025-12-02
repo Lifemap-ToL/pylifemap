@@ -26,6 +26,7 @@ export function layer_icons(map, data, options = {}) {
         y_anchor = 0.5,
         opacity = 1.0,
         popup = false,
+        popup_col = null,
         icons_cache = {},
     } = options
 
@@ -84,11 +85,13 @@ export function layer_icons(map, data, options = {}) {
 
     // Popup
     if (popup) {
-        const content_fn = async (feature) => {
-            const taxid = feature.get("data")["pylifemap_taxid"]
-            let content = await get_popup_title(taxid)
-            return content
-        }
+        const content_fn = popup_col
+            ? (feature) => feature.get("data")[popup_col]
+            : async (feature) => {
+                  const taxid = feature.get("data")["pylifemap_taxid"]
+                  let content = await get_popup_title(taxid)
+                  return content
+              }
         const coordinates_fn = (feature) => [
             feature.get("data").pylifemap_x,
             feature.get("data").pylifemap_y,

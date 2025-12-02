@@ -18,6 +18,7 @@ class LayerDonuts(LayersBase):
         scheme: str | None = None,
         opacity: float | None = 1,
         popup: bool = True,
+        popup_col: str | None = None,
         label: str | None = None,
     ) -> LayersBase:
         """
@@ -51,6 +52,8 @@ class LayerDonuts(LayersBase):
         popup : bool, optional
             If True, display informations in a popup when a point is clicked,
             by default True
+        popup_col : str | None
+            Name of a data column containing custom popup content. By default None.
         label : str | None, optional
             Legend title for this layer. If `None`, the value of `counts_col` is used.
 
@@ -106,7 +109,8 @@ class LayerDonuts(LayersBase):
         options["label"] = counts_col if options["label"] is None else options["label"]
         layer = {"layer": "donuts", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = df.donuts_data(options)
+        data_columns = (options["popup_col"],) if popup_col is not None else ()
+        self._layers_data[options["id"]] = df.donuts_data(options, data_columns=data_columns)
 
         # If leaves is "show", add a specific points layer
         if leaves == "show":

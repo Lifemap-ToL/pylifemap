@@ -28,6 +28,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         scheme = null,
         opacity = 0.8,
         popup = false,
+        popup_col = null,
         hover = false,
         radius_range = [1, 20],
     } = options
@@ -181,25 +182,27 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
 
     // Popup
     if (popup) {
-        const content_fn = async (feature) => {
-            const taxid = feature.get("data")["pylifemap_taxid"]
-            let content = await get_popup_title(taxid)
+        const content_fn = popup_col
+            ? (feature) => feature.get("data")[popup_col]
+            : async (feature) => {
+                  const taxid = feature.get("data")["pylifemap_taxid"]
+                  let content = await get_popup_title(taxid)
 
-            let table_content = ""
-            table_content +=
-                radius_col !== null && radius_col != fill_col
-                    ? `<tr><td class='right'><strong>${radius_col}:</strong></td><td>${feature.get("data")[radius_col]}</td></tr>`
-                    : ""
-            table_content += fill_col
-                ? `<tr><td class='right'><strong>${label ?? fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
-                : ""
+                  let table_content = ""
+                  table_content +=
+                      radius_col !== null && radius_col != fill_col
+                          ? `<tr><td class='right'><strong>${radius_col}:</strong></td><td>${feature.get("data")[radius_col]}</td></tr>`
+                          : ""
+                  table_content += fill_col
+                      ? `<tr><td class='right'><strong>${label ?? fill_col}:</strong></td><td>${feature.get("data")[fill_col]}</td></tr>`
+                      : ""
 
-            if (table_content != "") {
-                content += `<table><tbody>${table_content}</tbody></table>`
-            }
+                  if (table_content != "") {
+                      content += `<table><tbody>${table_content}</tbody></table>`
+                  }
 
-            return content
-        }
+                  return content
+              }
         const coordinates_fn = (feature) => [
             feature.get("data").pylifemap_x,
             feature.get("data").pylifemap_y,

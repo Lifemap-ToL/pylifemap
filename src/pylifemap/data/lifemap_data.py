@@ -169,7 +169,7 @@ class LifemapData:
             data = data.join(lmdata, how="inner", left_on=TAXID_COL, right_on="taxid")
         return data
 
-    def points_data(self, options: dict | None = None, data_columns: tuple = ()) -> pl.DataFrame:
+    def points_data(self, options: dict | None = None, data_columns: tuple | list = ()) -> pl.DataFrame:
         """
         Generate data for a points layer.
 
@@ -177,7 +177,7 @@ class LifemapData:
         ----------
         options : dict | None, optional
             Options dictionary, by default None.
-        data_columns: tuple
+        data_columns: tuple | list, optional
             Data columns to keep in output data, by default ().
 
         Returns
@@ -235,7 +235,7 @@ class LifemapData:
         # Only keep needed columns
         return data.select(set(needed_cols))
 
-    def donuts_data(self, options: dict) -> pl.DataFrame:
+    def donuts_data(self, options: dict, data_columns: tuple | list = ()) -> pl.DataFrame:
         """
         Generate data for a donuts layer.
 
@@ -243,6 +243,9 @@ class LifemapData:
         ----------
         options : dict
             Options dictionary.
+        data_columns: tuple | list, optional
+            Data columns to keep in output data, by default ().
+
 
         Returns
         -------
@@ -290,17 +293,26 @@ class LifemapData:
             how="inner",
             left_on=TAXID_COL,
             right_on="taxid",
-        )
-        # Only keep needed columns
-        return data.select(set(needed_cols))
+        ).select(set(needed_cols))
 
-    def lines_data(self, data_columns: tuple = ()) -> pl.DataFrame:
+        # Add back needed data columns from original data
+        needed_data_cols = []
+        for col in data_columns:
+            if col not in self._data.columns:
+                msg = f"{col} must be a column of data."
+                raise ValueError(msg)
+            needed_data_cols.append(col)
+        data = data.join(self._data.select([TAXID_COL, *needed_data_cols]).unique(), how="left", on=TAXID_COL)
+
+        return data
+
+    def lines_data(self, data_columns: tuple | list = ()) -> pl.DataFrame:
         """
         Generate data for a lines layer.
 
         Parameters
         ----------
-        data_columns : list | None, optional
+        data_columns : tuple | list, optional
             List of data columns to add to output, by default ()
 
 

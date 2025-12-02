@@ -2,7 +2,6 @@
 title: Usage
 ---
 
-
 ::: {.callout-note}
 See the [Getting started](getting_started.qmd) page for a more gentle introduction.
 :::
@@ -17,7 +16,6 @@ iucn = pl.read_parquet(
     "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 ```
-
 
 ## Installation
 
@@ -84,7 +82,6 @@ docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
 
 Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
 
-
 #### Run a script
 
 If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:
@@ -94,8 +91,6 @@ docker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py
 ```
 
 In this case, if you use [show()](`~pylifemap.Lifemap.show`) in your script the result will not be opened in your browser but will instead be saved in a `lifemap.html` file in your working directory.
-
-
 
 ## Base map customization
 
@@ -115,7 +110,6 @@ For example, the following initialization would make the visualization take the 
 #| eval: false
 Lifemap(iucn, taxid_col="taxid", width="100%", height=800)
 ```
-
 
 ### Map theme
 
@@ -143,24 +137,20 @@ The following values are available:
 - `"png_export"`: button to export the current view to a PNG file
 - `"full_screen"`: full screen toggle button
 
-
-
-
 ## Visualization layers
 
 Here are the currently available layers:
 
-| Layer                                           | Description                                                                                                  |
-| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| [layer_points](layers/layer_points.qmd)         | Displays each observation with a point. Radius and color can be dependent of an  attribute in the DataFrame. |
-| [layer_lines](layers/layer_lines.qmd)           | Using aggregated data, highlights branches of the tree with lines of varying width and color.                |
-| [layer_donuts](layers/layer_donuts.qmd)         | Displays aggregated categorical data as donut charts.                                                        |
-| [layer_heatmap](layers/layer_heatmap.qmd)       | Displays a heatmap of the observations distribution in the tree.                                             |
-| [layer_heatmap_deck](layers/layer_heatmap_deck.qmd)       | Displays a deck.gl heatmap of the observations distribution in the tree.                                             |
-| [layer_screengrid](layers/layer_screengrid.qmd) | Displays the observations distribution with a colored grid with fixed-size cells..                           |
-| [layer_text](layers/layer_text.qmd)             | Displays text labels by taxid                           |
-| [layer_icons](layers/layer_icons.qmd)           | Displays icons associated to taxids                           |
-
+| Layer                                               | Description                                                                                                 |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| [layer_points](layers/layer_points.qmd)             | Displays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame. |
+| [layer_lines](layers/layer_lines.qmd)               | Using aggregated data, highlights branches of the tree with lines of varying width and color.               |
+| [layer_donuts](layers/layer_donuts.qmd)             | Displays aggregated categorical data as donut charts.                                                       |
+| [layer_heatmap](layers/layer_heatmap.qmd)           | Displays a heatmap of the observations distribution in the tree.                                            |
+| [layer_heatmap_deck](layers/layer_heatmap_deck.qmd) | Displays a deck.gl heatmap of the observations distribution in the tree.                                    |
+| [layer_screengrid](layers/layer_screengrid.qmd)     | Displays the observations distribution with a colored grid with fixed-size cells..                          |
+| [layer_text](layers/layer_text.qmd)                 | Displays text labels by taxid                                                                               |
+| [layer_icons](layers/layer_icons.qmd)               | Displays icons associated to taxids                                                                         |
 
 Several layers can be added to the same map by chaining several methods:
 
@@ -212,12 +202,24 @@ icons_data = pl.DataFrame({
 (
     Lifemap(iucn, theme="lightgrey")
     .layer_points(radius=4, opacity=0.9)
-    .layer_icons(data=icons_data, icon="imageurl")
+    .layer_icons(data=icons_data, icon="imageurl", popup=True)
     .show()
 )
 ```
 
+### Popups customization
 
+For layers like `layer_points`, `layer_lines` or `layer_icons` that support popups, it is possible to customize the popup content by adding a `popup_col` argument. This argument must be the name of a data column containing the popup content for each data point.
+
+```{python}
+icons_data = icons_data.with_columns(popup="The taxid of this node is <strong>" + pl.col("taxid") + "</strong>")
+
+(
+    Lifemap(icons_data, theme="light")
+    .layer_icons(icon="imageurl", popup=True, popup_col="popup")
+    .show()
+)
+```
 
 ## Widget display and export
 
@@ -248,13 +250,9 @@ If you export your widget to HTML and your data includes less than 100 000 data 
 
 You can also use the `Export to PNG` button on the widget to export the currently displayed view to an image file in PNG format.
 
-
-
-
 ## Data aggregation
 
 `pylifemap` provides several functions that allow to aggregate data along the branches of the tree:
-
 
 | Function                                                     | Description                                                                                         |
 | :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
@@ -262,10 +260,7 @@ You can also use the `Export to PNG` button on the widget to export the currentl
 | [aggregate_num](`~pylifemap.aggregations.aggregate_num`)     | Aggregates a numerical variable along the tree branches with a given function (sum , mean, max...). |
 | [aggregate_freq](`~pylifemap.aggregations.aggregate_freq`)   | Aggregates the frequencies of the levels of a categorical variable.                                 |
 
-
-
 For example, if we filter our dataset to only keep the species with an "extinct" status:
-
 
 ::: {.panel-tabset}
 
@@ -283,7 +278,6 @@ iucn_extinct = iucn[iucn["status"] == "Extinct"]
 ```
 
 :::
-
 
 We can then aggregate their count along the branches with [aggregate_count](`~pylifemap.aggregations.aggregate_count`):
 

@@ -21,6 +21,7 @@ class LayerPoints(LayersBase):
         scheme: str | None = None,
         opacity: float = 0.8,
         popup: bool = True,
+        popup_col: str | None = None,
         hover: bool | None = None,
         label: str | None = None,
     ) -> LayersBase:
@@ -59,6 +60,8 @@ class LayerPoints(LayersBase):
         popup : bool
             If True, display informations in a popup when a point is clicked,
             by default True
+        popup_col : str | None
+            Name of a data column containing custom popup content. By default None.
         hover : bool | None, optional
             If True, highlight points on mouse hovering. By default True if less than 10_000 data points,
             False otherwise.
@@ -116,11 +119,13 @@ class LayerPoints(LayersBase):
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)
-        data_columns = tuple(
+        data_columns = [
             options[k]
             for k in ("radius", "fill")
             if isinstance(options[k], str) and not is_hex_color(options[k])
-        )
+        ]
+        if popup_col is not None:
+            data_columns.append(options["popup_col"])
         d = df.points_data(options, data_columns)
         self._layers_data[options["id"]] = d
         # Compute color range

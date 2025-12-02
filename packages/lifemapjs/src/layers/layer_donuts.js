@@ -24,6 +24,8 @@ export function layer_donuts(map, data, options = {}) {
         label = undefined,
         radius = 40,
         opacity = 0.9,
+        popup = true,
+        popup_col = null,
     } = options
 
     // Layer id
@@ -88,9 +90,8 @@ export function layer_donuts(map, data, options = {}) {
         style: donut_style,
     })
 
-    // Refresh features after move or zoom
-    function on_move_end(ev) {
-        const map = ev.map
+    // Display donuts for current zoom and extent
+    function display_for_extent(map) {
         const zoom = map.getView().getZoom()
         let extent = map.getView().calculateExtent()
         extent = [...toLonLat(getBottomLeft(extent)), ...toLonLat(getTopRight(extent))]
@@ -104,41 +105,55 @@ export function layer_donuts(map, data, options = {}) {
         map.render()
     }
 
+    display_for_extent(map)
+
+    // Refresh features after move or zoom
+    function on_move_end(ev) {
+        const map = ev.map
+        display_for_extent(map)
+    }
+
     map.on("moveend", on_move_end)
 
     /* Popup  */
 
-    const content_fn = async (feature) => {
-        const taxid = feature.get("data")["pylifemap_taxid"]
-        let content = await get_popup_title(taxid)
+    if (popup) {
+        const content_fn = popup_col
+            ? (feature) => feature.get("data")[popup_col]
+            : async (feature) => {
+                  const taxid = feature.get("data")["pylifemap_taxid"]
+                  let content = await get_popup_title(taxid)
 
-        const data = feature.get("data")[counts_col]
-        const total = data.map((d) => d.value).reduce((acc, val) => acc + val, 0)
-        data.sort((a, b) => (a.key > b.key ? 1 : -1))
+                  const data = feature.get("data")[counts_col]
+                  const total = data
+                      .map((d) => d.value)
+                      .reduce((acc, val) => acc + val, 0)
+                  data.sort((a, b) => (a.key > b.key ? 1 : -1))
 
-        let table_content = ""
-        for (let d of data) {
-            table_content += `<tr><td><svg width="15" height="15" fill="${scale_fn(
-                d.key
-            )}"><rect width="100%" height="100%"></rect></svg></td><td>${
-                d.key
-            }</td><td class="right">${d.value}</td><td class="right">(${(
-                (d.value / total) *
-                100
-            ).toFixed(1)}%)</td></tr>`
-        }
+                  let table_content = ""
+                  for (let d of data) {
+                      table_content += `<tr><td><svg width="15" height="15" fill="${scale_fn(
+                          d.key
+                      )}"><rect width="100%" height="100%"></rect></svg></td><td>${
+                          d.key
+                      }</td><td class="right">${d.value}</td><td class="right">(${(
+                          (d.value / total) *
+                          100
+                      ).toFixed(1)}%)</td></tr>`
+                  }
 
-        if (table_content != "") {
-            content += `<table><tbody>${table_content}</tbody></table>`
-        }
-        return content
+                  if (table_content != "") {
+                      content += `<table><tbody>${table_content}</tbody></table>`
+                  }
+                  return content
+              }
+        const coordinates_fn = (feature) => [
+            feature.get("data").pylifemap_x,
+            feature.get("data").pylifemap_y,
+        ]
+        const offset = [0, -radius / 2]
+        set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }
-    const coordinates_fn = (feature) => [
-        feature.get("data").pylifemap_x,
-        feature.get("data").pylifemap_y,
-    ]
-    const offset = [0, -radius / 2]
-    set_popup_event(map, id, coordinates_fn, content_fn, offset)
 
     layer.lifemap_ol_id = id
     layer.lifemap_ol_scales = scales

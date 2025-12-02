@@ -22,6 +22,7 @@ class LayerIcons(LayersBase):
         y_anchor: float = 0.5,
         opacity: float = 1.0,
         popup: bool = True,
+        popup_col: str | None = None,
     ) -> LayersBase:
         """
         Add an icons layer.
@@ -58,7 +59,8 @@ class LayerIcons(LayersBase):
         popup : bool, optional
             If True, display informations in a popup when an icon is clicked,
             by default True.
-
+        popup_col : str | None
+            Name of a data column containing custom popup content. By default None.
 
         Returns
         -------
@@ -96,7 +98,15 @@ class LayerIcons(LayersBase):
 
         is_icon_column = isinstance(options["icon"], str) and not is_icon_url(options["icon"])
 
-        data_columns = (options["icon"],) if is_icon_column else ()
+        data_columns = (
+            [
+                options["icon"],
+            ]
+            if is_icon_column
+            else []
+        )
+        if popup_col is not None:
+            data_columns.append(options["popup_col"])
         layer_data = df.points_data(options, data_columns)
         self._layers_data[options["id"]] = layer_data
 
