@@ -31,7 +31,7 @@ from pylifemap.utils import (
     check_jupyter,
     check_marimo,
 )
-from pylifemap.widget import LifemapWidget
+from pylifemap.widget import LifemapWidget, LifemapWidgetDeck, LifemapWidgetNoDeck
 
 
 class Lifemap(
@@ -133,9 +133,14 @@ class Lifemap(
             "hide_labels": hide_labels,
         }
 
+        self._has_deck_layers = False
+
     def __repr__(self) -> str:
         # Override default __repr__ to avoid very long and slow text output
-        return "<LifemapWidget>"
+        if self._has_deck_layers:
+            return "<LifemapWidget with deck.gl>"
+        else:
+            return "<LifemapWidget without deck.gl>"
 
     def _to_widget(self) -> LifemapWidget:
         """
@@ -147,7 +152,12 @@ class Lifemap(
             An Anywidget widget.
         """
 
-        return LifemapWidget(
+        if self._has_deck_layers:
+            widget_class = LifemapWidgetDeck
+        else:
+            widget_class = LifemapWidgetNoDeck
+
+        return widget_class(
             data=self._layers_data,
             layers=self._layers,
             options=self._map_options,

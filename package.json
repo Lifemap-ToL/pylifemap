@@ -1,11 +1,13 @@
 {
     "scripts": {
-        "bundle_nominify": "esbuild --format=esm --bundle --define:define.amd=false --outdir=src/pylifemap/static src/js/widget.js",
-        "dev": "npm run bundle_nominify -- --sourcemap=inline --watch",
-        "bundle": "npm run bundle_nominify -- --minify",
+        "bundle_deck": "esbuild --format=esm --bundle --define:define.amd=false --outdir=src/pylifemap/static/deck src/js/widget.js",
+        "bundle_nodeck": "npm run bundle_deck -- '--external:@deck.gl' --outdir=src/pylifemap/static/nodeck",
+        "dev_deck": "npm run bundle_deck -- --sourcemap=inline --watch",
+        "dev_nodeck": "npm run bundle_nodeck -- --sourcemap=inline --watch",
+        "bundle": "npm run bundle_deck -- --minify && npm run bundle_nodeck -- --minify",
         "test": "uv run pytest",
         "build": "npm run bundle && uv build",
-        "doc": "cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render",
+        "doc": "npm run bundle && cd doc && uv run quartodoc build && uv run quartodoc interlinks && uv run quarto render",
         "preview": "cd doc && uv run quarto preview"
     },
     "devDependencies": {

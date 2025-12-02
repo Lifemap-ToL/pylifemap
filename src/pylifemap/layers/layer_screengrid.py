@@ -67,4 +67,5 @@ class LayerScreengrid(LayersBase):
         layer = {"layer": "screengrid", "options": options}
         self._layers.append(layer)
         self._layers_data[options["id"]] = df.points_data()
+        self._has_deck_layers = True
         return self

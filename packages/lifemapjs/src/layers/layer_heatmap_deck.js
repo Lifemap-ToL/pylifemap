@@ -1,7 +1,7 @@
-import { HeatmapLayer } from "@deck.gl/aggregation-layers"
+//import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import { guidGenerator } from "../utils"
 
-export function layer_heatmap_deck(data, options = {}) {
+export async function layer_heatmap_deck(data, options = {}) {
     let {
         id = undefined,
         x_col = "pylifemap_x",
@@ -15,7 +15,9 @@ export function layer_heatmap_deck(data, options = {}) {
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    const layer = new HeatmapLayer({
+    const aggregation_layers = await import("@deck.gl/aggregation-layers")
+
+    const layer = new aggregation_layers.HeatmapLayer({
         data: data,
         id: id,
         pickable: false,

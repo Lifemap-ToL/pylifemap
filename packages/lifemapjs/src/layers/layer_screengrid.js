@@ -1,7 +1,7 @@
-import { ScreenGridLayer } from "@deck.gl/aggregation-layers"
+//import { ScreenGridLayer } from "@deck.gl/aggregation-layers"
 import { guidGenerator } from "../utils"
 
-export function layer_screengrid(data, options = {}) {
+export async function layer_screengrid(data, options = {}) {
     let {
         id = undefined,
         x_col = "pylifemap_x",
@@ -13,7 +13,9 @@ export function layer_screengrid(data, options = {}) {
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    const layer = new ScreenGridLayer({
+    const aggregation_layers = await import("@deck.gl/aggregation-layers")
+
+    const layer = new aggregation_layers.ScreenGridLayer({
         data: data,
         id: id,
         pickable: false,

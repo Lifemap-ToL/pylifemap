@@ -1,11 +1,13 @@
-import { Deck } from "@deck.gl/core"
+//import { Deck } from "@deck.gl/core"
 import { Layer } from "ol/layer"
 import { toLonLat } from "ol/proj"
 import { DEFAULT_LON, DEFAULT_LAT } from "../utils"
 
-export function layer_deck(el, zoom) {
+export async function layer_deck(el, zoom) {
+    const deck_core = await import("@deck.gl/core")
+
     // Create deck.gl layer
-    const deck = new Deck({
+    const deck = new deck_core.Deck({
         initialViewState: { longitude: DEFAULT_LON, latitude: DEFAULT_LAT, zoom: zoom },
         controller: false,
         //useDevicePixels: false,

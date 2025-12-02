@@ -31,10 +31,6 @@ class LifemapWidget(anywidget.AnyWidget):
         Widget height string traitlet.
     """
 
-    # Static JS and CSS for widget are accessed through bundled files
-    _esm = pathlib.Path(BUNDLER_OUTPUT_DIR / "widget.js")
-    _css = pathlib.Path(BUNDLER_OUTPUT_DIR / "widget.css")
-
     # traitlets
     data = traitlets.Dict().tag(sync=True)
     layers = traitlets.List().tag(sync=True)
@@ -68,3 +64,15 @@ class LifemapWidget(anywidget.AnyWidget):
         super().__init__(
             data=data, layers=layers, options=options, color_ranges=color_ranges, width=width, height=height
         )
+
+
+class LifemapWidgetDeck(LifemapWidget):
+    # Static JS and CSS bundled files with deck.gl
+    _esm = pathlib.Path(BUNDLER_OUTPUT_DIR / "deck" / "widget.js")
+    _css = pathlib.Path(BUNDLER_OUTPUT_DIR / "deck" / "widget.css")
+
+
+class LifemapWidgetNoDeck(LifemapWidget):
+    # Static JS and CSS bundled files without deck.gl
+    _esm = pathlib.Path(BUNDLER_OUTPUT_DIR / "nodeck" / "widget.js")
+    _css = pathlib.Path(BUNDLER_OUTPUT_DIR / "nodeck" / "widget.css")

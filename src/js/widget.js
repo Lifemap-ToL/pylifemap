@@ -3,20 +3,20 @@ import { Lifemap } from "lifemapjs"
 import "./styles.css"
 
 // Data value change callback
-function _onDataChanged(model, map) {
+async function _onDataChanged(model, map) {
     let data = () => model.get("data")
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    map.update_data(data()).then(() => {
-        map.update_layers(layers(), color_ranges())
+    map.update_data(data()).then(async () => {
+        await map.update_layers(layers(), color_ranges())
     })
 }
 
 // Layers value change callback
-function _onLayersChanged(model, map) {
+async function _onLayersChanged(model, map) {
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    map.update_layers(layers(), color_ranges())
+    await map.update_layers(layers(), color_ranges())
 }
 
 // Width value change callback

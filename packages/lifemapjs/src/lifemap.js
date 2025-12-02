@@ -2,14 +2,14 @@ import { create_map } from "./map"
 import { layer_labels } from "./layers/layer_labels"
 import { layer_heatmap } from "./layers/layer_heatmap"
 import { layer_points } from "./layers/layer_points"
-import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
-import { layer_screengrid } from "./layers/layer_screengrid"
 import { layer_lines } from "./layers/layer_lines"
 import { layer_donuts } from "./layers/layer_donuts"
-import { layer_deck } from "./layers/layer_deck"
 import { layer_tiles } from "./layers/layer_tiles"
 import { layer_text } from "./layers/layer_text"
 import { layer_icons } from "./layers/layer_icons"
+import { layer_deck } from "./layers/layer_deck"
+import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
+import { layer_screengrid } from "./layers/layer_screengrid"
 import { LegendControl } from "./elements/controls"
 import { get_coords } from "./api"
 import { unserialize_data, stringify_scale } from "./utils"
@@ -35,6 +35,8 @@ export class Lifemap {
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
+        this.el = el
+        this.zoom = zoom
 
         el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
 
@@ -46,11 +48,6 @@ export class Lifemap {
             const labels_layer = layer_labels(this.map)
             this.base_layers.push(labels_layer)
         }
-
-        // Deck.gl init
-        const { deck_layer, deck } = layer_deck(el, zoom)
-        this.deck = deck
-        this.deck.base_layer = deck_layer
 
         this.deck_layers = []
         this.ol_layers = []
@@ -107,7 +104,32 @@ export class Lifemap {
         this.map.spinner.hide()
     }
 
-    create_layers(layers_def_list, color_ranges) {
+    async create_deck_layers(layers_def_list) {
+        if (layers_def_list.length == 0) {
+            return []
+        }
+        layers_def_list = Array.isArray(layers_def_list)
+            ? layers_def_list
+            : [layers_def_list]
+        let layers_list = layers_def_list.map(async (l) => {
+            // Get data
+            const layer_id = l.options.id
+            let layer_data = this.data[layer_id]
+            switch (l.layer) {
+                case "heatmap_deck":
+                    return await layer_heatmap_deck(layer_data, l.options ?? {})
+                case "screengrid":
+                    return await layer_screengrid(layer_data, l.options ?? {})
+            }
+        })
+        const layers = await Promise.all(layers_list)
+        this.deck_layers = layers.flat()
+    }
+
+    create_ol_layers(layers_def_list, color_ranges) {
+        if (layers_def_list.length == 0) {
+            return []
+        }
         layers_def_list = Array.isArray(layers_def_list)
             ? layers_def_list
             : [layers_def_list]
@@ -132,10 +154,6 @@ export class Lifemap {
                     )
                 case "heatmap":
                     return layer_heatmap(layer_data, l.options ?? {})
-                case "heatmap_deck":
-                    return layer_heatmap_deck(layer_data, l.options ?? {})
-                case "screengrid":
-                    return layer_screengrid(layer_data, l.options ?? {})
                 case "donuts":
                     return layer_donuts(this.map, layer_data, l.options ?? {})
                 case "text":
@@ -147,34 +165,39 @@ export class Lifemap {
                     return undefined
             }
         })
-        return layers_list.flat()
+        this.ol_layers = layers_list.flat()
     }
 
-    update_layers(layers_def_list, color_ranges) {
+    async init_deck() {
+        let { deck_layer, deck } = await layer_deck(this.el, this.zoom)
+        this.deck = deck
+        this.deck.base_layer = deck_layer
+    }
+
+    async update_layers(layers_def_list, color_ranges) {
         this.map.spinner.show()
         this.dispose_webgl_layers()
-
-        const deck_layers_def = layers_def_list.filter((d) =>
-            DECK_LAYERS.includes(d.layer)
-        )
-        this.deck_layers =
-            deck_layers_def.length == 0 ? [] : this.create_layers(deck_layers_def)
 
         const ol_layers_def = layers_def_list.filter(
             (d) => !DECK_LAYERS.includes(d.layer)
         )
-        this.ol_layers =
-            ol_layers_def.length == 0
-                ? []
-                : this.create_layers(ol_layers_def, color_ranges)
-
+        this.create_ol_layers(ol_layers_def, color_ranges)
         let layers = [...this.base_layers, ...this.ol_layers]
-        if (this.deck_layers.length > 0) {
+
+        const deck_layers_def = layers_def_list.filter((d) =>
+            DECK_LAYERS.includes(d.layer)
+        )
+        if (deck_layers_def.length > 0) {
+            if (this.deck === undefined) {
+                await this.init_deck()
+            }
             layers = [this.deck.base_layer, ...layers]
+            await this.create_deck_layers(deck_layers_def)
             this.deck.setProps({ layers: this.deck_layers })
         }
 
         this.map.setLayers(layers)
+
         this.update_scales()
 
         this.map.spinner.hide()
