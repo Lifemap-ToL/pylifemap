@@ -1,7 +1,7 @@
 import { LIFEMAP_BACK_URL } from "./utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
-export async function get_coords(taxids) {
+export async function get_data_coords(taxids) {
     const url_taxids = [...taxids].join(" ")
     const cache_key = `taxids_${url_taxids}`
     const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
@@ -59,8 +59,8 @@ export async function get_coords(taxids) {
     return result
 }
 
-// Get sci_name and common_name of a taxid
-export async function get_names(taxid) {
+// Fetch fields values for a given taxid
+export async function fetch_taxid(taxid, fields) {
     if (taxid == 0) {
         return { taxid: 0, sci_name: "LUCA" }
     }
@@ -69,7 +69,7 @@ export async function get_names(taxid) {
         params: {
             q: "*:*",
             fq: `taxid:${taxid}`,
-            fl: "taxid,sci_name",
+            fl: fields.join(","),
             wt: "json",
             rows: 1,
         },
@@ -92,9 +92,21 @@ export async function get_names(taxid) {
     }
 }
 
+// Get coordinates and zoom level of a taxid
+export async function get_taxid_coords(taxid) {
+    const result = await fetch_taxid(taxid, ["taxid", "lat", "lon", "zoom"])
+    return result
+}
+
+// Get sci_name of a taxid
+export async function get_taxid_name(taxid) {
+    const result = await fetch_taxid(taxid, ["taxid", "sci_name"])
+    return result
+}
+
 // Get popup title for taxid by querying scientific name from solr API
 export async function get_popup_title(taxid) {
-    const names = await get_names(taxid)
+    const names = await get_taxid_name(taxid)
     let out = ""
     if (names !== null) {
         out += `<h2>${names["sci_name"]} <span>(${taxid})</span></h2>`

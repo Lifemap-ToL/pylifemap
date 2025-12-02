@@ -11,9 +11,12 @@ import { layer_deck } from "./layers/layer_deck"
 import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
 import { layer_screengrid } from "./layers/layer_screengrid"
 import { LegendControl } from "./elements/controls"
-import { get_coords } from "./api"
-import { unserialize_data, stringify_scale } from "./utils"
+import { get_data_coords, get_taxid_coords } from "./api"
+import { DEFAULT_LON, DEFAULT_LAT, unserialize_data, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
+
+import { fromLonLat, transformExtent } from "ol/proj"
+import { extend } from "ol/extent"
 
 import * as Plot from "@observablehq/plot"
 
@@ -25,7 +28,8 @@ const LANG = "en"
 export class Lifemap {
     constructor(el, options = {}) {
         const {
-            zoom = 5,
+            center = "default",
+            zoom = undefined,
             legend_width = undefined,
             controls = [],
             hide_labels = false,
@@ -36,6 +40,7 @@ export class Lifemap {
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
         this.el = el
+        this.center = center
         this.zoom = zoom
 
         el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
@@ -73,7 +78,7 @@ export class Lifemap {
         if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
             console.log("Getting up-to-date taxids coordinates...")
             // Get up-to-date coordinates from lifemap-back solr
-            let coords = await get_coords(taxids)
+            let coords = await get_data_coords(taxids)
             // If query succeeded, update coordinates with new values
             if (coords !== null) {
                 for (let k in deserialized_data) {
@@ -267,5 +272,41 @@ export class Lifemap {
         }
         this.legend.element.appendChild(legend_container)
         this.map.addControl(this.legend)
+    }
+
+    async update_zoom() {
+        let view = this.map.getView()
+        // Adjust view to data
+        if (this.center == "auto") {
+            let global_extent = null
+            for (let layer of this.ol_layers) {
+                let current_extent = layer.getSource().getExtent()
+                if (global_extent === null) {
+                    global_extent = current_extent
+                } else {
+                    global_extent = extend(global_extent, current_extent)
+                }
+            }
+            view.fit(global_extent, { padding: [50, 150, 50, 50], duration: 0 })
+        }
+        // Center view on taxid
+        else if (Number.isFinite(this.center)) {
+            const result = await get_taxid_coords(this.center)
+            if (result === undefined) {
+                console.warn(`taxid ${this.center} not found in Lifemap taxids.`)
+                view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
+            } else {
+                view.setCenter(fromLonLat([result["lon"], result["lat"]]))
+                view.setZoom(result["zoom"] - 3)
+            }
+        }
+        // "default"
+        else {
+            view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
+        }
+        // Apply zoom if specified
+        if (Number.isFinite(this.zoom)) {
+            view.setZoom(this.zoom)
+        }
     }
 }

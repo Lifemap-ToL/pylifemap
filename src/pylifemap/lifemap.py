@@ -10,6 +10,7 @@ import webbrowser
 from collections.abc import Sequence
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Literal
 
 import pandas as pd
 import polars as pl
@@ -59,8 +60,12 @@ class Lifemap(
     height : int | str, optional
         Lifemap visualization height, in pixels or CSS units, by
         default `DEFAULT_HEIGHT`
-    zoom : int, optional
-        Default Lifemap zoom level, by default 4 or 5 depending on widget size
+    center : Literal["default", "auto"] | int
+        Lifemap initial center. Can be "default" (tree center), "auto" (center on data) or
+        a taxid value. Defaults to "default".
+    zoom : int | None, optional
+        Lifemap initial zoom level, if not specified, it is computed depending on the "center"
+        argument value. Defaults to None.
     theme : str, optional
         Color theme for the basemap. Can be one of "light", "dark", "lightblue", "lightgrey", or "lightgreen".
         Defaults to "dark".
@@ -92,6 +97,7 @@ class Lifemap(
         taxid_col: str = "taxid",
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
+        center: Literal["default", "auto"] | int = "default",
         zoom: int | None = None,
         theme: str = "dark",
         controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "full_screen"),
@@ -111,7 +117,7 @@ class Lifemap(
         self._height = height if isinstance(height, str) else f"{height}px"
 
         # Default zoom level
-        if zoom is None:
+        if center == "default" and zoom is None:
             final_width = re.findall(r"^(\d+)px$", self._width)
             final_height = re.findall(r"^(\d+)px$", self._height)
             if (final_width and int(final_width[0]) < 800) or (final_height and int(final_height[0]) < 800):  # noqa: PLR2004
@@ -126,6 +132,7 @@ class Lifemap(
 
         # Store global map options
         self._map_options = {
+            "center": center,
             "zoom": zoom,
             "theme": theme,
             "legend_width": legend_width,

@@ -137,6 +137,18 @@ The following values are available:
 - `"png_export"`: button to export the current view to a PNG file
 - `"full_screen"`: full screen toggle button
 
+### Default view (center and zoom)
+
+The `center` and `zoom` arguments allow to specify the initial map view at widget creation.
+
+There are three different possible values for `center`:
+
+- `"default"`: show the entire tree of life (default value)
+- `"auto"`: center the view on the displayed data
+- taxid (integer value): center the view on this taxid coordinates
+
+If you set `zoom` to an integer value between 4 and 42, the initial zoom will be set to this level. If you leave `zoom` at its default `None` value, the zoom level will be computed according to the `center` value.
+
 ## Visualization layers
 
 Here are the currently available layers:

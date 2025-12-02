@@ -7,8 +7,10 @@ async function _onDataChanged(model, map) {
     let data = () => model.get("data")
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    map.update_data(data()).then(async () => {
-        await map.update_layers(layers(), color_ranges())
+    map.update_data(data()).then(() => {
+        map.update_layers(layers(), color_ranges()).then(
+            async () => await map.update_zoom()
+        )
     })
 }
 
@@ -16,7 +18,7 @@ async function _onDataChanged(model, map) {
 async function _onLayersChanged(model, map) {
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    await map.update_layers(layers(), color_ranges())
+    map.update_layers(layers(), color_ranges()).then(async () => await map.update_zoom())
 }
 
 // Width value change callback
@@ -55,7 +57,9 @@ export default {
         // Create map
         const map = new Lifemap(container, options())
         map.update_data(data()).then(() => {
-            map.update_layers(layers(), color_ranges())
+            map.update_layers(layers(), color_ranges()).then(
+                async () => await map.update_zoom()
+            )
         })
 
         // Add traitlets change callback
