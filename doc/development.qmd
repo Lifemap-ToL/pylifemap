@@ -2,7 +2,6 @@
 title: "Development notes"
 ---
 
-
 ## Install the development version (from source)
 
 If you want to install `pylifemap` from source, you'll have to follow these steps:
@@ -14,19 +13,25 @@ If you want to install `pylifemap` from source, you'll have to follow these step
 - Install JavaScript dependencies with : `npm install --workspaces --include-root-workspace`
 - Bundle JavaScript and CSS code with `npm run bundle`
 
-
 ## Widget JavaScript modification and bundling
 
 Each time the widget JavaScript or CSS code is modified in the `src/js/` or `packages/lifemapjs/` directories, it must be bundled with one of the following commands:
 
 ```sh
-# Bundle
+# Bundle and minify both deck and no_deck versions
 npm run bundle
-# Bundle and watch for code change
-npm run dev
+# Bundle with deck.gl without minifying and watch for code change
+npm run dev_deck
+# Bundle with deck.gl without minifying and watch for code change
+npm run dev_nodeck
 ```
 
-The result is put into `src/pylifemap/static`.
+Two bundles are created:
+
+- A bundle including deck.gl, in `src/pylifemap/static/deck`
+- A smaller bundle without deck.gl, in `src/pylifemap/static/nodeck`
+
+One bundle or the other is used by the widget depending on the presence of deck.gl layers.
 
 ## Tests
 
@@ -54,9 +59,7 @@ To build the docker image manually, run the following at the root of the reposit
 docker build . -t pylifemap
 ```
 
-
 ## Release notes
-
 
 - Change version in `NEWS.md` and `pyproject.toml`
 - Cleanup the previous builds in `dist/`
