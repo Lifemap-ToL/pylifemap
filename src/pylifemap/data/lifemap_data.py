@@ -29,6 +29,7 @@ class LifemapData:
         data: pl.DataFrame | pd.DataFrame,
         *,
         taxid_col: str = "taxid",
+        check_taxids: bool = True,
     ):
         """
         LifemapData constructor.
@@ -39,6 +40,8 @@ class LifemapData:
             Pandas or polars dataframe with original data.
         taxid_col : str
             Name of the column storing taxonomy ids, by default "taxid".
+        check_taxids : bool
+            Wether to check or not for missing and duplicated taxids. Defaults to True.
 
         Raises
         ------
@@ -71,8 +74,9 @@ class LifemapData:
         self._data = data
 
         # Check for unknown or duplicated taxids
-        self.check_unknown_taxids()
-        self.check_duplicated_taxids()
+        if check_taxids:
+            self.check_unknown_taxids()
+            self.check_duplicated_taxids()
 
     def __len__(self) -> int:
         return self._data.height
@@ -89,31 +93,65 @@ class LifemapData:
         """
         return self._data
 
-    def check_unknown_taxids(self) -> None:
+    def get_unknown_taxids(self) -> list:
         """
-        Check and display a warning if taxids in user data are not found in
+        Check and returns a list of taxids in user data not found in
         Lifemap data.
+
+        Returns
+        -------
+        list
+            Missing taxids
         """
         lmdata = BACKEND_DATA.select("taxid")
         data = self._data.select(TAXID_COL)
-        absent_ids = data.join(lmdata, how="anti", left_on=TAXID_COL, right_on="taxid")
-        if (n := absent_ids.height) > 0:
+        unknown_ids = data.join(lmdata, how="anti", left_on=TAXID_COL, right_on="taxid")
+        return unknown_ids.get_column(TAXID_COL).to_list()
+
+    def check_unknown_taxids(self, limit: int = 10) -> None:
+        """
+        Check and display a warning if taxids in user data are not found in
+        Lifemap data.
+
+        Parameters
+        ----------
+        limit : int
+            Maximum number of taxids to print.
+        """
+        unknown_ids = self.get_unknown_taxids()
+        if (n := len(unknown_ids)) > 0:
             msg = f"{n} taxids have not been found in Lifemap database"
-            if n < 10:  # noqa: PLR2004
-                ids = absent_ids.get_column(TAXID_COL).to_list()
-                msg = msg + f": {ids}"
+            if n < limit:
+                msg = msg + f": {unknown_ids}"
             warnings.warn(msg, stacklevel=0)
 
-    def check_duplicated_taxids(self) -> None:
+    def get_duplicated_taxids(self) -> list:
         """
-        Check and display a warning if their are duplicated taxids in user data.
+        Check and returns a list of duplicated taxids in user data.
+
+        Returns
+        -------
+        list
+            Duplicated taxids
         """
         taxids = self._data.get_column(TAXID_COL)
         duplicates = taxids.filter(taxids.is_duplicated()).unique()
-        if (n := duplicates.len()) > 0:
+        return duplicates.to_list()
+
+    def check_duplicated_taxids(self, limit: int = 10) -> None:
+        """
+        Check and display a warning if their are duplicated taxids in user data.
+
+        Parameters
+        ----------
+        limit : int
+            Maximum number of taxids to print.
+        """
+        duplicates = self.get_duplicated_taxids()
+        if (n := len(duplicates)) > 0:
             msg = f"{n} duplicated taxids have been found in the data"
-            if n < 10:  # noqa: PLR2004
-                msg = msg + f": {duplicates.to_list()}"
+            if n < limit:
+                msg = msg + f": {duplicates}"
             warnings.warn(msg, stacklevel=0)
 
     def data_with_parents(self) -> pl.DataFrame:

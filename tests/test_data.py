@@ -7,6 +7,7 @@ import polars as pl
 import pytest
 
 from pylifemap import aggregate_freq, aggregate_num
+from pylifemap.data.check_taxids import get_duplicated_taxids, get_unknown_taxids
 from pylifemap.data.lifemap_data import LifemapData
 
 d = pd.DataFrame({"tid": [33090, 33208, 2, 2944257], "value": [1, 2, 3, 4]})
@@ -100,9 +101,21 @@ class TestLifemapDataMethods:
         with pytest.warns(Warning, match="taxids have not been found"):
             LifemapData(data_absent)
 
+    def test_get_unknown_taxids(self, data_absent):
+        unknown = LifemapData(data_absent, check_taxids=False).get_unknown_taxids()
+        assert unknown == [-12, -834]
+        unknown = get_unknown_taxids(data_absent)
+        assert unknown == [-12, -834]
+
     def test_check_duplicated_taxids(self, data_dupl):
         with pytest.warns(Warning, match="duplicated taxids have been found"):
             LifemapData(data_dupl)
+
+    def test_get_duplicated_taxids(self, data_dupl):
+        dupl = LifemapData(data_dupl, check_taxids=False).get_duplicated_taxids()
+        assert dupl == [33090, 33208]
+        dupl = get_duplicated_taxids(data_dupl)
+        assert dupl == [33090, 33208]
 
 
 class TestPointsData:

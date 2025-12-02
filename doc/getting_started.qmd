@@ -2,13 +2,17 @@
 title: "Getting started"
 ---
 
+```{python}
+#| include: false
+import warnings
+warnings.filterwarnings("always")
+```
 
 ## Presentation
 
 ::: {.callout-note}
 This is a quick introduction to the features and usage of the package. See the [usage](usage.qmd) page for more detailed informations.
 :::
-
 
 ### What is it?
 
@@ -30,13 +34,11 @@ iucn = pl.read_parquet(
 Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
 ```
 
-
 ### How do I use it?
 
 `pylifemap` visualizations are [jupyter widgets](https://ipywidgets.readthedocs.io/en/latest/) and are better created inside a notebook environment, such as [Jupyter](https://jupyter.org), [marimo](https://marimo.io) or [Quarto](https://quarto.org). These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.
 
 It is also possible to generate `pylifemap` visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser.
-
 
 ## Installation
 
@@ -57,13 +59,10 @@ pip install pylifemap
 # Add pylifemap to a python project
 uv add pylifemap
 ```
+
 :::
 
 To have an overview of the package without installing anything, you can also open our introduction notebook in Google Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb)
-
-
-
-
 
 ## Creating a visualization
 
@@ -83,7 +82,6 @@ from pylifemap import Lifemap
 ```
 
 ### 2. Prepare your data
-
 
 The data you want to visualize on the Lifemap tree of life must be in a [pandas](https://pandas.pydata.org) or [polars](https://pola.rs) DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.
 
@@ -124,9 +122,6 @@ iucn
 
 For some visualizations you will have to aggregate a count of species or the values of a numerical or categorical variable along the tree branches. For this you can use one of the provided [aggregation functions](reference/index.html#aggregation-functions).
 
-
-
-
 ### 3. Initialize a `Lifemap` object
 
 The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]. We will also add `.show()`, which is needed to display the visualization.
@@ -136,6 +131,12 @@ Lifemap(iucn, taxid_col="taxid").show()
 ```
 
 For the moment this only displays the Lifemap base map.
+
+::: {.callout-note}
+When initializing a new `Lifemap` object, `pylifemap` will check and display a warning message if unknown or duplicated taxids are found in the data.
+
+You can get the full list of unknown or duplicated taxids by using the helper functions [get_unknown_taxids](`~pylifemap.get_unknown_taxids`) and [get_duplicated_taxids](`~pylifemap.get_duplicated_taxids`).
+:::
 
 ## 4. Add visualization layers
 
@@ -151,11 +152,9 @@ Some layers allow to represent the values of one of our dataset columns. For exa
 Lifemap(iucn, taxid_col="taxid").layer_points(fill="status").show()
 ```
 
-
 ::: {.callout-note}
 There are many options to customize the base map or the layers, see the [usage](usage.qmd) page for more informations.
 :::
-
 
 ## Exporting a visualization
 

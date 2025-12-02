@@ -92,6 +92,11 @@ quartodoc:
               - aggregate_count
               - aggregate_num
               - aggregate_freq
+        - title: Data utilities
+          desc: Functions to help with user data handling
+          contents:
+              - get_unknown_taxids
+              - get_duplicated_taxids
 
 filters:
     - interlinks

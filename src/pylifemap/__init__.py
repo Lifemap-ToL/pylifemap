@@ -7,6 +7,7 @@ from pylifemap.data.aggregation import (
     aggregate_freq,
     aggregate_num,
 )
+from pylifemap.data.check_taxids import get_duplicated_taxids, get_unknown_taxids
 from pylifemap.lifemap import Lifemap
 
 __all__ = [
@@ -14,4 +15,6 @@ __all__ = [
     "aggregate_count",
     "aggregate_freq",
     "aggregate_num",
+    "get_duplicated_taxids",
+    "get_unknown_taxids",
 ]
