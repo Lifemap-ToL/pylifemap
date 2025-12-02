@@ -401,12 +401,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    taxid_col<span class="op">=</span><span class="st">'taxid'</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span>DEFAULT_WIDTH,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span>DEFAULT_HEIGHT,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    theme<span class="op">=</span><span class="st">'dark'</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    controls<span class="op">=</span>(<span class="st">'zoom'</span>, <span class="st">'reset_zoom'</span>, <span class="st">'png_export'</span>, <span class="st">'full_screen'</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    legend_width<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    hide_labels<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span><span class="st">'default'</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    zoom<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    theme<span class="op">=</span><span class="st">'dark'</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    controls<span class="op">=</span>(<span class="st">'zoom'</span>, <span class="st">'reset_zoom'</span>, <span class="st">'png_export'</span>, <span class="st">'full_screen'</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    legend_width<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    hide_labels<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build visualization.</p>
 <section id="parameters" class="level2 doc-section doc-section-parameters">
 <h2 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h2>
@@ -445,30 +446,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>DEFAULT_HEIGHT</code></td>
 </tr>
 <tr class="odd">
-<td>zoom</td>
-<td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Default Lifemap zoom level, by default 4 or 5 depending on widget size</td>
-<td><code>None</code></td>
+<td>center</td>
+<td><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>['default', 'auto'] | <a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
+<td>Lifemap initial center. Can be “default” (tree center), “auto” (center on data) or a taxid value. Defaults to “default”.</td>
+<td><code>'default'</code></td>
 </tr>
 <tr class="even">
+<td>zoom</td>
+<td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | None</td>
+<td>Lifemap initial zoom level, if not specified, it is computed depending on the “center” argument value. Defaults to None.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
 <td>theme</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
 <td>Color theme for the basemap. Can be one of “light”, “dark”, “lightblue”, “lightgrey”, or “lightgreen”. Defaults to “dark”.</td>
 <td><code>'dark'</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>controls</td>
 <td><a href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</td>
 <td>List of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - “zoom”: zoom in and zoom out buttons - “reset_zoom”: zoom reset button - “png_export”: button to export current view to a PNG file - “full_screen”: full screen toggle button</td>
 <td><code>('zoom', 'reset_zoom', 'png_export', 'full_screen')</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>legend_width</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | None</td>
 <td>Legend width in pixels, by default None</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>hide_labels</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
 <td>If True, hide the taxa name labels. Defaults to False.</td>
