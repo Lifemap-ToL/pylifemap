@@ -237,6 +237,22 @@ icons_data = icons_data.with_columns(popup="The taxid of this node is <strong>" 
 )
 ```
 
+### Lazy loading
+
+By default the entire user data points are loaded and displayed on the map. This can be slow when the dataset is big.
+
+Lazy loading means that data isn't loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.
+
+Lazy loading is available for the `points`, `lines`, `text`, `donuts` and `icons` layers. It is enabled by default for the `donuts` layer.
+
+To manually enable or disable lazy loading, you can set the `lazy` argument to `True` or `False` when using one these layers creation function.
+
+Another useful argument you can give is `lazy_zoom`, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level `z`, then only data points above zoom level `z` + `lazy_zoom`. You can set `lazy_zoom` to -1 to display all zoom levels.
+
+::: {.callout-warning}
+In certain cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in.
+:::
+
 ## Widget display and export
 
 `Lifemap` and layer methods create a widget object but don't display it. For it to appear, we have to call the [show()](`~pylifemap.Lifemap.show`) method:
