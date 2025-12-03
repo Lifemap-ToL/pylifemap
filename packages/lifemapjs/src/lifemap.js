@@ -287,7 +287,13 @@ export class Lifemap {
                     global_extent = extend(global_extent, current_extent)
                 }
             }
-            view.fit(global_extent, { padding: [50, 150, 50, 50], duration: 0 })
+
+            if (
+                JSON.stringify(global_extent) !=
+                JSON.stringify([Infinity, Infinity, -Infinity, -Infinity])
+            ) {
+                view.fit(global_extent, { padding: [50, 150, 50, 50], duration: 0 })
+            }
         }
         // Center view on taxid
         else if (Number.isFinite(this.center)) {
