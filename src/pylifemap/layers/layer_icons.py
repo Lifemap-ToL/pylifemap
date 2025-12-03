@@ -24,6 +24,8 @@ class LayerIcons(LayersBase):
         popup: bool = True,
         popup_col: str | None = None,
         declutter: bool = True,
+        lazy: bool = False,
+        lazy_zoom: int = 10,
     ) -> LayersBase:
         """
         Add an icons layer.
@@ -64,6 +66,13 @@ class LayerIcons(LayersBase):
             Name of a data column containing custom popup content. By default None.
         declutter : bool, optional
             If True, use OpenLayers decluttering option for this layer. Defaults to True.
+        lazy : bool
+            If True, points are displayed depending on the widget view. If False, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to False.
+        lazy_zoom : int
+            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            displayed. Defaults to 10.
+
 
         Returns
         -------
