@@ -16,6 +16,7 @@ class LayerText(LayersBase):
         color: str = "#FFFFFF",
         stroke: str = "#000000",
         opacity: float = 1.0,
+        declutter: bool = True,
     ) -> LayersBase:
         """
         Add a text labels layer.
@@ -40,6 +41,9 @@ class LayerText(LayersBase):
             CSS stroke color specification, by default "#000000".
         opacity : float
             Text opacity as a floating number between 0 and 1, by default 1.0.
+        declutter : bool, optional
+            If True, use OpenLayers decluttering option for this layer. Defaults to True.
+
 
         Returns
         -------

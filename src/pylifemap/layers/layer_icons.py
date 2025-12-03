@@ -23,6 +23,7 @@ class LayerIcons(LayersBase):
         opacity: float = 1.0,
         popup: bool = True,
         popup_col: str | None = None,
+        declutter: bool = True,
     ) -> LayersBase:
         """
         Add an icons layer.
@@ -61,6 +62,8 @@ class LayerIcons(LayersBase):
             by default True.
         popup_col : str | None
             Name of a data column containing custom popup content. By default None.
+        declutter : bool, optional
+            If True, use OpenLayers decluttering option for this layer. Defaults to True.
 
         Returns
         -------

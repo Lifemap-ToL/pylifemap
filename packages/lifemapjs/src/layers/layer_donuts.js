@@ -26,6 +26,7 @@ export function layer_donuts(map, data, options = {}) {
         opacity = 0.9,
         popup = true,
         popup_col = null,
+        declutter = true,
     } = options
 
     // Layer id
@@ -83,7 +84,7 @@ export function layer_donuts(map, data, options = {}) {
     // Donuts layer
     const donuts_source = new VectorSource({})
     const layer = new VectorLayer({
-        declutter: id,
+        declutter: declutter ? id : false,
         // Donuts are above labels
         zIndex: 6,
         source: donuts_source,

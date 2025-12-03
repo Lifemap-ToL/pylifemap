@@ -20,6 +20,7 @@ class LayerDonuts(LayersBase):
         popup: bool = True,
         popup_col: str | None = None,
         label: str | None = None,
+        declutter: bool = True,
     ) -> LayersBase:
         """
         Add a donuts layer.
@@ -56,6 +57,10 @@ class LayerDonuts(LayersBase):
             Name of a data column containing custom popup content. By default None.
         label : str | None, optional
             Legend title for this layer. If `None`, the value of `counts_col` is used.
+        declutter : bool, optional
+            If True, use OpenLayers decluttering option for this layer. Defaults to True.
+
+
 
 
         Returns

@@ -170,7 +170,6 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         source: source,
         style: style,
         disableHitDetection: false,
-        declutter: false,
     })
     layer.setOpacity(opacity)
 

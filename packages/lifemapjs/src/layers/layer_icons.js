@@ -27,6 +27,7 @@ export function layer_icons(map, data, options = {}) {
         opacity = 1.0,
         popup = false,
         popup_col = null,
+        declutter = true,
         icons_cache = {},
     } = options
 
@@ -79,7 +80,7 @@ export function layer_icons(map, data, options = {}) {
     const layer = new VectorLayer({
         source: source,
         style: style_function,
-        declutter: id,
+        declutter: declutter ? id : false,
         opacity: opacity,
     })
 

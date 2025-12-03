@@ -36,6 +36,7 @@ export function layer_text(data, options = {}) {
         color = TEXT_COLOR,
         stroke = TEXT_STROKE_COLOR,
         opacity = 1.0,
+        declutter = true,
     } = options
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
@@ -66,7 +67,7 @@ export function layer_text(data, options = {}) {
     const layer = new VectorLayer({
         source: source,
         style: style_function,
-        declutter: id,
+        declutter: declutter ? id : false,
         opacity: opacity,
         zIndex: 5,
     })

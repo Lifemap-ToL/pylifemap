@@ -149,7 +149,6 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
         source: source,
         style: style,
         disableHitDetection: false,
-        declutter: false,
     })
     layer.setOpacity(opacity)
 
