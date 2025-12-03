@@ -149,6 +149,10 @@ There are three different possible values for `center`:
 
 If you set `zoom` to an integer value between 4 and 42, the initial zoom will be set to this level. If you leave `zoom` at its default `None` value, the zoom level will be computed according to the `center` value.
 
+::: {.callout-note}
+For technical reason, the `center="auto"` argument doesn't take into account data passed to `layer_screengrid` or `layer_heatmap_deck`.
+:::
+
 ## Visualization layers
 
 Here are the currently available layers:
