@@ -411,7 +411,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">1.0</span>,</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    popup<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    popup_col<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    declutter<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Add an icons layer.</p>
 <p>It can be used to display icons associated to taxids.</p>
 <section id="parameters" class="level2 doc-section doc-section-parameters">
@@ -509,6 +510,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
 <td>Name of a data column containing custom popup content. By default None.</td>
 <td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>declutter</td>
+<td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
+<td>If True, use OpenLayers decluttering option for this layer. Defaults to True.</td>
+<td><code>True</code></td>
 </tr>
 </tbody>
 </table>

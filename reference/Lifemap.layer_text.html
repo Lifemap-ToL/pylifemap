@@ -405,7 +405,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">'#FFFFFF'</span>,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    stroke<span class="op">=</span><span class="st">'#000000'</span>,</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="fl">1.0</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    declutter<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    lazy<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    lazy_zoom<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Add a text labels layer.</p>
 <p>It can be used to display text labels alongside species identified by their taxids.</p>
 <section id="parameters" class="level2 doc-section doc-section-parameters">
@@ -467,6 +470,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
 <td>Text opacity as a floating number between 0 and 1, by default 1.0.</td>
 <td><code>1.0</code></td>
+</tr>
+<tr class="odd">
+<td>declutter</td>
+<td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
+<td>If True, use OpenLayers decluttering option for this layer. Defaults to True.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>lazy</td>
+<td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
+<td>If True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to False.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>lazy_zoom</td>
+<td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
+<td>If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be displayed. Defaults to 15.</td>
+<td><code>15</code></td>
 </tr>
 </tbody>
 </table>
