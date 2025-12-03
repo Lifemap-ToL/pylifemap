@@ -30,9 +30,12 @@ export function setup_lazy_loading(options) {
             ...toLonLat(getBottomLeft(extent)),
             ...toLonLat(getTopRight(extent)),
         ]
-        let extent_data = data
-            .filter((d) => filter_fn(d, xmin, xmax, ymin, ymax))
-            .filter((d) => d["pylifemap_zoom"] <= zoom + lazy_zoom)
+        let extent_data = data.filter((d) => filter_fn(d, xmin, xmax, ymin, ymax))
+        if (lazy_zoom > 0) {
+            extent_data = extent_data.filter(
+                (d) => d["pylifemap_zoom"] <= zoom + lazy_zoom
+            )
+        }
         const extent_features = extent_data.map(create_feature_fn)
 
         source.clear()
