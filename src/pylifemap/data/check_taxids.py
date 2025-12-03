@@ -37,7 +37,7 @@ def get_unknown_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "taxi
 
 def get_duplicated_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "taxid") -> list:
     """
-    Get a list of duplicated taxids in user data.
+    Get a list of duplicated taxids in a data frame.
 
     Parameters
     ----------
