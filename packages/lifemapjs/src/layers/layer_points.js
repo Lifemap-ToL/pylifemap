@@ -4,17 +4,19 @@ import {
     DEFAULT_CAT_SCHEME,
     DEFAULT_NUM_SCHEME,
 } from "../utils"
+import { get_popup_title } from "../api"
+import { set_popup_event } from "../elements/popup"
+import { setup_lazy_loading } from "../lazy_loading"
 
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
-import { fromLonLat } from "ol/proj.js"
+import { getBottomLeft, getTopRight } from "ol/extent.js"
+import { fromLonLat, toLonLat } from "ol/proj.js"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
-import { get_popup_title } from "../api"
-import { set_popup_event } from "../elements/popup"
 
 export function layer_points(map, data, options = {}, color_ranges = {}) {
     let {
@@ -30,6 +32,8 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         popup = false,
         popup_col = null,
         hover = false,
+        lazy = false,
+        lazy_zoom = 15,
         radius_range = [1, 20],
     } = options
 
@@ -120,27 +124,29 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
     }
 
     // Create features
-    const n_features = data.length
-    const features = new Array(n_features)
-    const radius_col_fn = get_radius_col_fn(data, radius_col)
-    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat, color_ranges)
-    for (let i = 0; i < n_features; i++) {
-        let line = data[i]
-        const coordinates = fromLonLat([line[x_col], line[y_col]])
-        features[i] = new Feature({
+    function create_feature(d) {
+        const coordinates = fromLonLat([d[x_col], d[y_col]])
+        const feature = new Feature({
             geometry: new Point(coordinates),
-            data: line,
+            data: d,
         })
         if (radius_col_fn != null) {
-            features[i].set("radius_col", radius_col_fn(line[radius_col]))
+            feature.set("radius_col", radius_col_fn(d[radius_col]))
         }
         if (fill_col != null) {
-            features[i].set("fill_col", fill_col_fn(line[fill_col]))
+            feature.set("fill_col", fill_col_fn(d[fill_col]))
         }
+        return feature
     }
-    const source = new VectorSource({
-        features: features,
-    })
+
+    // Initialize source
+    const radius_col_fn = get_radius_col_fn(data, radius_col)
+    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat, color_ranges)
+    const source = new VectorSource({})
+    if (!lazy) {
+        const features = data.map(create_feature)
+        source.addFeatures(features)
+    }
 
     // Radius style
     let circle_radius
@@ -172,6 +178,18 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         disableHitDetection: false,
     })
     layer.setOpacity(opacity)
+
+    // Lazy loading
+    if (lazy) {
+        setup_lazy_loading({
+            map: map,
+            data: data,
+            source: source,
+            create_feature_fn: create_feature,
+            lazy_zoom: lazy_zoom,
+            type: "points",
+        })
+    }
 
     // Hover
     if (hover) {

@@ -1,6 +1,7 @@
 import { guidGenerator, DEFAULT_CAT_SCHEME } from "../utils"
 import { get_popup_title } from "../api"
 import { set_popup_event } from "../elements/popup"
+import { setup_lazy_loading } from "../lazy_loading"
 
 import VectorLayer from "ol/layer/Vector"
 import VectorSource from "ol/source/Vector"
@@ -27,6 +28,8 @@ export function layer_donuts(map, data, options = {}) {
         popup = true,
         popup_col = null,
         declutter = true,
+        lazy = true,
+        lazy_zoom = 4,
     } = options
 
     // Layer id
@@ -56,12 +59,6 @@ export function layer_donuts(map, data, options = {}) {
     scales.push(scale)
     let scale_fn = (key) => Plot.scale(scale).apply(key)
 
-    // Create feature from data
-    function create_donut_feature(d) {
-        const coordinates = fromLonLat([d[x_col], d[y_col]])
-        return new Feature({ geometry: new Point(coordinates), data: d })
-    }
-
     // Style function
     function donut_style(feature) {
         const data = feature.get("data")
@@ -81,43 +78,39 @@ export function layer_donuts(map, data, options = {}) {
         return new Style(style)
     }
 
+    // Create feature
+    function create_feature(d) {
+        const coordinates = fromLonLat([d[x_col], d[y_col]])
+        return new Feature({ geometry: new Point(coordinates), data: d })
+    }
+
     // Donuts layer
-    const donuts_source = new VectorSource({})
+    const source = new VectorSource({})
+    if (!lazy) {
+        const features = data.map(create_feature)
+        source.addFeatures(features)
+    }
     const layer = new VectorLayer({
         declutter: declutter ? id : false,
         // Donuts are above labels
         zIndex: 6,
-        source: donuts_source,
+        source: source,
         style: donut_style,
     })
 
-    // Display donuts for current zoom and extent
-    function display_for_extent(map) {
-        const zoom = map.getView().getZoom()
-        let extent = map.getView().calculateExtent()
-        extent = [...toLonLat(getBottomLeft(extent)), ...toLonLat(getTopRight(extent))]
-
-        const extent_data = data.filter((d) => d["pylifemap_zoom"] <= zoom + 3)
-        const extent_features = extent_data.map(create_donut_feature)
-
-        donuts_source.clear()
-        donuts_source.addFeatures(extent_features)
-
-        map.render()
+    // Lazy loading
+    if (lazy) {
+        setup_lazy_loading({
+            map: map,
+            data: data,
+            source: source,
+            create_feature_fn: create_feature,
+            lazy_zoom: lazy_zoom,
+            type: "points",
+        })
     }
 
-    display_for_extent(map)
-
-    // Refresh features after move or zoom
-    function on_move_end(ev) {
-        const map = ev.map
-        display_for_extent(map)
-    }
-
-    map.on("moveend", on_move_end)
-
-    /* Popup  */
-
+    // Popup
     if (popup) {
         const content_fn = popup_col
             ? (feature) => feature.get("data")[popup_col]

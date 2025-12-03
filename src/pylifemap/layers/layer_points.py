@@ -24,6 +24,8 @@ class LayerPoints(LayersBase):
         popup_col: str | None = None,
         hover: bool | None = None,
         label: str | None = None,
+        lazy: bool = False,
+        lazy_zoom: int = 15,
     ) -> LayersBase:
         """
         Add a points layer.
@@ -68,6 +70,12 @@ class LayerPoints(LayersBase):
         label : str | None, optional
             Legend title for this layer if `fill` is defined. If `None`, the value
             of `fill` is used.
+        lazy : bool
+            If True, points are displayed depending on the widget view. If False, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to False.
+        lazy_zoom : int
+            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            displayed. Defaults to 15.
 
         Returns
         -------

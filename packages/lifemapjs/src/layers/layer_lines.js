@@ -1,5 +1,6 @@
 import { guidGenerator, set_hover_event, DEFAULT_NUM_SCHEME } from "../utils"
 import { get_popup_title } from "../api"
+import { setup_lazy_loading } from "../lazy_loading"
 
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
@@ -26,6 +27,8 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
         popup = false,
         popup_col = null,
         hover = false,
+        lazy = false,
+        lazy_zoom = 15,
         width_range = [1, 20],
     } = options
 
@@ -94,30 +97,31 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
     }
 
     // Create features
-    const n_features = data.length
-    const features = new Array(n_features)
-    const width_col_fn = get_width_col_fn(data, width_col)
-    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
-
-    for (let i = 0; i < n_features; i++) {
-        let line = data[i]
-        features[i] = new Feature({
+    function create_feature(d) {
+        const feature = new Feature({
             geometry: new LineString([
-                fromLonLat([line[x_col0], line[y_col0]]),
-                fromLonLat([line[x_col1], line[y_col1]]),
+                fromLonLat([d[x_col0], d[y_col0]]),
+                fromLonLat([d[x_col1], d[y_col1]]),
             ]),
-            data: line,
+            data: d,
         })
         if (width_col_fn != null) {
-            features[i].set("width_col", width_col_fn(line[width_col]))
+            feature.set("width_col", width_col_fn(d[width_col]))
         }
         if (color_col != null) {
-            features[i].set("color_col", color_col_fn(line[color_col]))
+            feature.set("color_col", color_col_fn(d[color_col]))
         }
+        return feature
     }
-    const source = new VectorSource({
-        features: features,
-    })
+
+    // Initialize source
+    const width_col_fn = get_width_col_fn(data, width_col)
+    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
+    const source = new VectorSource({})
+    if (!lazy) {
+        const features = data.map(create_feature)
+        source.addFeatures(features)
+    }
 
     // Width style
     let stroke_width
@@ -151,6 +155,18 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
         disableHitDetection: false,
     })
     layer.setOpacity(opacity)
+
+    // Lazy loading
+    if (lazy) {
+        setup_lazy_loading({
+            map: map,
+            data: data,
+            source: source,
+            create_feature_fn: create_feature,
+            lazy_zoom: lazy_zoom,
+            type: "lines",
+        })
+    }
 
     // Hover
     if (hover) {

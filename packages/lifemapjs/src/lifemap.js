@@ -162,7 +162,7 @@ export class Lifemap {
                 case "donuts":
                     return layer_donuts(this.map, layer_data, l.options ?? {})
                 case "text":
-                    return layer_text(layer_data, l.options ?? {})
+                    return layer_text(this.map, layer_data, l.options ?? {})
                 case "icons":
                     return layer_icons(this.map, layer_data, l.options ?? {})
                 default:

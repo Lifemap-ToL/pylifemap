@@ -356,6 +356,7 @@ class LifemapData:
             "pylifemap_parent",
             "pylifemap_x1",
             "pylifemap_y1",
+            "pylifemap_zoom",
         ]
 
         # Check and add data columns to needed columns if they are defined

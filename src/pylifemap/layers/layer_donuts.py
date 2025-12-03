@@ -21,6 +21,8 @@ class LayerDonuts(LayersBase):
         popup_col: str | None = None,
         label: str | None = None,
         declutter: bool = True,
+        lazy: bool = True,
+        lazy_zoom: int = 4,
     ) -> LayersBase:
         """
         Add a donuts layer.
@@ -59,8 +61,12 @@ class LayerDonuts(LayersBase):
             Legend title for this layer. If `None`, the value of `counts_col` is used.
         declutter : bool, optional
             If True, use OpenLayers decluttering option for this layer. Defaults to True.
-
-
+        lazy : bool
+            If True, points are displayed depending on the widget view. If False, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to True.
+        lazy_zoom : int
+            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            displayed. Defaults to 4.
 
 
         Returns

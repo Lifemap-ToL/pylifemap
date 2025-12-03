@@ -17,6 +17,8 @@ class LayerText(LayersBase):
         stroke: str = "#000000",
         opacity: float = 1.0,
         declutter: bool = True,
+        lazy: bool = False,
+        lazy_zoom: int = 15,
     ) -> LayersBase:
         """
         Add a text labels layer.
@@ -43,6 +45,12 @@ class LayerText(LayersBase):
             Text opacity as a floating number between 0 and 1, by default 1.0.
         declutter : bool, optional
             If True, use OpenLayers decluttering option for this layer. Defaults to True.
+        lazy : bool
+            If True, points are displayed depending on the widget view. If False, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to False.
+        lazy_zoom : int
+            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            displayed. Defaults to 15.
 
 
         Returns
