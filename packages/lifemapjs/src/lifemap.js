@@ -181,7 +181,7 @@ export class Lifemap {
 
     async update_layers(layers_def_list, color_ranges) {
         this.map.spinner.show()
-        this.dispose_webgl_layers()
+        this.dispose_ol_layers()
 
         const ol_layers_def = layers_def_list.filter(
             (d) => !DECK_LAYERS.includes(d.layer)
@@ -208,16 +208,23 @@ export class Lifemap {
         this.map.spinner.hide()
     }
 
-    dispose_webgl_layers() {
+    dispose_ol_layers() {
         this.map
             .getLayers()
             .getArray()
             .forEach((l) => {
                 if (l.is_webgl) {
-                    this.map.removeLayer(l)
                     l.dispose()
                 }
+                this.map.removeLayer(l)
+                l.setSource(null)
             })
+    }
+
+    dispose_deck() {
+        if (this.deck) {
+            this.deck.finalize()
+        }
     }
 
     // Update scales from layers

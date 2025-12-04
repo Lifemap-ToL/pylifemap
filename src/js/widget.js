@@ -55,7 +55,7 @@ export default {
         el.appendChild(container)
 
         // Create map
-        const map = new Lifemap(container, options())
+        let map = new Lifemap(container, options())
         map.update_data(data()).then(() => {
             map.update_layers(layers(), color_ranges()).then(
                 async () => await map.update_zoom()
@@ -67,5 +67,15 @@ export default {
         model.on("change:layers", () => _onLayersChanged(model, map))
         model.on("change:width", () => _onWidthChanged(model, el))
         model.on("change:height", () => _onHeightChanged(model, el))
+
+        // Cleanup function
+        return () => {
+            console.log("Disposing OpenLayers layers...")
+            map.dispose_ol_layers()
+            console.log("Disposing Deck.gl...")
+            map.dispose_deck()
+            // Garbage collection
+            map = null
+        }
     },
 }
