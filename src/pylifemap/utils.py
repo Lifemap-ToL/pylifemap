@@ -111,13 +111,20 @@ def mime_type_from_url(url: str) -> str:
 def icon_url_to_data_uri(image_url: str) -> str:
     if image_url.startswith("data:"):
         return image_url
+    elif image_url.startswith("http"):
+        response = requests.get(image_url, timeout=5000)
+        if response.status_code != 200:  # noqa: PLR2004
+            msg = f"Failed to fetch icon at {image_url} : HTTP {response.status_code}"
+            raise ValueError(msg)
 
-    response = requests.get(image_url, timeout=5000)
-    if response.status_code != 200:  # noqa: PLR2004
-        msg = f"Failed to fetch icon at {image_url} : HTTP {response.status_code}"
-        raise ValueError(msg)
+        image_data = response.content
+    else:
+        img_file = Path(image_url)
+        if not img_file.exists():
+            msg = f"Icon file {image_url} not found"
+            raise FileNotFoundError(msg)
+        image_data = img_file.read_bytes()
 
-    image_data = response.content
     mime_type = mime_type_from_url(image_url)
 
     # Encode the image data in base64

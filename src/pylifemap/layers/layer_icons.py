@@ -108,7 +108,7 @@ class LayerIcons(LayersBase):
             msg = "You cannot specify both a 'scale' and  a 'width' or 'height'."
             raise ValueError(msg)
 
-        is_icon_column = isinstance(options["icon"], str) and not is_icon_url(options["icon"])
+        is_icon_column = isinstance(options["icon"], str) and options["icon"] in df._data.columns
 
         data_columns = (
             [
@@ -122,8 +122,8 @@ class LayerIcons(LayersBase):
         layer_data = df.points_data(options, data_columns)
         self._layers_data[options["id"]] = layer_data
 
-        # Convert icons url to data uri
-        if is_icon_url(options["icon"]):
+        if not is_icon_column:
+            # Convert icon url to data uri
             options["icons_cache"] = {options["icon"]: icon_url_to_data_uri(options["icon"])}
         else:
             # If icon is a data column, build a cache dictionary of urls => data uris

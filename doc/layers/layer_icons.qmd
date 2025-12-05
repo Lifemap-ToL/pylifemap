@@ -4,7 +4,7 @@ title: Icons layer
 
 The icons layer displays images associated to taxid values.
 
-Icons are specified by either an `http` or `https` URL, or by a `data` URI.
+Icons are specified by either an `http` or `https` URL, a `data` URI, or a file path.
 
 In the following example we use an svg icon encoded into a data URI. We specify an icon `width`, `height`, a vertical anchor and a `color` to tint it (`color` only works for certain type of SVG images).
 
@@ -28,7 +28,7 @@ iucn = pl.read_parquet(
 )
 ```
 
-The `icon` parameter can also be a data column containing image URLs. Here we use the `scale` argument to resize the icons by a given factor.
+The `icon` parameter can also be a data column containing image URLs or image file paths. Here we also use the `scale` argument to resize the icons by a given factor.
 
 ```{python}
 d = pl.DataFrame({
