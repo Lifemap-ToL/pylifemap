@@ -38,7 +38,11 @@ export function layer_icons(map, data, options = {}) {
 
     // Check if icon is a fixed URL or a data column
     let icon_col = null
-    if (typeof icon === "string" && Object.keys(data[0]).includes(icon)) {
+    if (
+        typeof icon === "string" &&
+        data.length > 0 &&
+        Object.keys(data[0]).includes(icon)
+    ) {
         icon_col = icon
     }
 
