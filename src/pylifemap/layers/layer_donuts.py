@@ -13,6 +13,7 @@ class LayerDonuts(LayersBase):
         *,
         taxid_col: str = "taxid",
         counts_col: str,
+        categories: list | tuple | None = None,
         radius: int = 40,
         leaves: Literal["show", "hide"] = "hide",
         scheme: str | None = None,
@@ -41,6 +42,8 @@ class LayerDonuts(LayersBase):
             If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
         counts_col : str
             DataFrame column containing the counts.
+        categories : list | tuple | None, optional
+            Custom order of categories. Defaults to None.
         radius : int, optional
             Donut charts radius, by default 40
         leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional

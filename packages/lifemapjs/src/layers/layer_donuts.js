@@ -21,6 +21,7 @@ export function layer_donuts(map, data, options = {}) {
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
         counts_col,
+        categories = null,
         scheme = undefined,
         label = undefined,
         radius = 40,
@@ -35,8 +36,6 @@ export function layer_donuts(map, data, options = {}) {
     // Layer id
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    // Get levels
-    const levels = Object.keys(JSON.parse(data[0][counts_col])).sort()
     // Convert to array of {key: , value: } objects
     data.forEach((d) => {
         d[counts_col] = Object.entries(JSON.parse(d[counts_col])).map((d) => ({
@@ -50,8 +49,10 @@ export function layer_donuts(map, data, options = {}) {
     // Color scale
     scheme = scheme ?? DEFAULT_CAT_SCHEME
     let scales = []
+    const domain = categories ?? Object.keys(JSON.parse(data[0][counts_col])).sort()
     let scale = {
-        color: { type: "categorical", scheme: scheme, domain: levels },
+        // Get levels
+        color: { type: "categorical", scheme: scheme, domain: domain },
         columns: 1,
         className: "lifemap-ol-cat-legend",
         label: label,
