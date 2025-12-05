@@ -1,3 +1,5 @@
+from typing import Literal
+
 import pandas as pd
 import polars as pl
 
@@ -15,6 +17,7 @@ class LayerLines(LayersBase):
         width_range: tuple | list = (1, 30),
         color: str | None = None,
         scheme: str | None = None,
+        linetype: Literal["solid", "dotted", "dashed"] = "solid",
         opacity: float = 0.8,
         popup: bool = True,
         popup_col: str | None = None,
@@ -46,6 +49,8 @@ class LayerLines(LayersBase):
         scheme : str | None, optional
             Color scheme for lines color. It is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
+        linetype: Literal['solid', 'dooted', dashed'], optional
+            Type of lines. Defaults to 'solid'.
         opacity : float
             Line opacity as a floating number between 0 and 1, by default 0.8
         popup : bool

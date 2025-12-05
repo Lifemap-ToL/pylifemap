@@ -24,6 +24,7 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
         label = null,
         scheme = null,
         opacity = 0.8,
+        linetype = "solid",
         popup = false,
         popup_col = null,
         hover = false,
@@ -140,11 +141,24 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
     if (hover) {
         stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]
     }
+    // Linedash style
+    let stroke_line_dash = [0]
+    console.log(linetype)
+    switch (linetype) {
+        case "dotted":
+            stroke_line_dash = [10, 10, 10, 10]
+            break
+        case "dashed":
+            stroke_line_dash = [25, 10, 25, 10]
+            break
+    }
 
     const style = {
         "stroke-width": stroke_width,
         "stroke-color": stroke_color,
-        "stroke-line-cap": "round",
+        "stroke-line-dash": stroke_line_dash,
+        "stroke-line-dash-offset": 0,
+        "stroke-line-cap": linetype == "solid" ? "round" : "butt",
         "stroke-line-join": "round",
     }
 
