@@ -3,6 +3,7 @@ import Map from "ol/Map"
 import View from "ol/View"
 import { Popup } from "./elements/popup"
 import { Spinner } from "./elements/spinner"
+import { ErrorMessage } from "./elements/error_message"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat, transformExtent } from "ol/proj"
 import { get_controls } from "./elements/controls"
@@ -54,6 +55,8 @@ export function create_map(el, options) {
 
     // Spinner
     map.spinner = new Spinner(el)
+    // Error message div
+    map.error_message = new ErrorMessage(el)
 
     return map
 }

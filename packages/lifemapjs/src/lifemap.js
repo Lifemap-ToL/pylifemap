@@ -64,49 +64,54 @@ export class Lifemap {
     }
 
     async update_data(data) {
-        this.map.spinner.show()
-        let deserialized_data = {}
-        let taxids = new Set()
-        for (let k in data) {
-            let current_data = unserialize_data(data[k])
-            deserialized_data[k] = current_data
-            taxids = taxids.union(new Set(current_data.map((d) => d.pylifemap_taxid)))
-        }
-        if (taxids.size > MAX_SOLR_QUERY) {
-            console.log("Too many taxids to query for up-to-date coordinates.")
-        }
-        if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
-            console.log("Getting up-to-date taxids coordinates...")
-            // Get up-to-date coordinates from lifemap-back solr
-            let coords = await get_data_coords(taxids)
-            // If query succeeded, update coordinates with new values
-            if (coords !== null) {
-                for (let k in deserialized_data) {
-                    deserialized_data[k].forEach((d) => {
-                        const taxid_coords = coords[d.pylifemap_taxid]
-                        if (taxid_coords !== undefined) {
-                            if (d.pylifemap_x !== undefined) {
-                                d.pylifemap_x = taxid_coords.x
-                                d.pylifemap_y = taxid_coords.y
+        try {
+            this.map.spinner.show()
+            let deserialized_data = {}
+            let taxids = new Set()
+            for (let k in data) {
+                let current_data = unserialize_data(data[k])
+                deserialized_data[k] = current_data
+                taxids = taxids.union(new Set(current_data.map((d) => d.pylifemap_taxid)))
+            }
+            if (taxids.size > MAX_SOLR_QUERY) {
+                console.log("Too many taxids to query for up-to-date coordinates.")
+            }
+            if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
+                console.log("Getting up-to-date taxids coordinates...")
+                // Get up-to-date coordinates from lifemap-back solr
+                let coords = await get_data_coords(taxids)
+                // If query succeeded, update coordinates with new values
+                if (coords !== null) {
+                    for (let k in deserialized_data) {
+                        deserialized_data[k].forEach((d) => {
+                            const taxid_coords = coords[d.pylifemap_taxid]
+                            if (taxid_coords !== undefined) {
+                                if (d.pylifemap_x !== undefined) {
+                                    d.pylifemap_x = taxid_coords.x
+                                    d.pylifemap_y = taxid_coords.y
+                                }
+                                if (d.pylifemap_x0 !== undefined) {
+                                    d.pylifemap_x0 = taxid_coords.x
+                                    d.pylifemap_y0 = taxid_coords.y
+                                }
                             }
-                            if (d.pylifemap_x0 !== undefined) {
-                                d.pylifemap_x0 = taxid_coords.x
-                                d.pylifemap_y0 = taxid_coords.y
+                            if (d.pylifemap_parent !== undefined) {
+                                const taxid_parent_coords = coords[d.pylifemap_parent]
+                                if (taxid_parent_coords !== undefined) {
+                                    d.pylifemap_x1 = taxid_parent_coords.x
+                                    d.pylifemap_y1 = taxid_parent_coords.y
+                                }
                             }
-                        }
-                        if (d.pylifemap_parent !== undefined) {
-                            const taxid_parent_coords = coords[d.pylifemap_parent]
-                            if (taxid_parent_coords !== undefined) {
-                                d.pylifemap_x1 = taxid_parent_coords.x
-                                d.pylifemap_y1 = taxid_parent_coords.y
-                            }
-                        }
-                    })
+                        })
+                    }
                 }
             }
+            this.data = deserialized_data
+        } catch (e) {
+            this.map.error_message.show_message(e)
+        } finally {
+            this.map.spinner.hide()
         }
-        this.data = deserialized_data
-        this.map.spinner.hide()
     }
 
     async create_deck_layers(layers_def_list) {
@@ -180,32 +185,36 @@ export class Lifemap {
     }
 
     async update_layers(layers_def_list, color_ranges) {
-        this.map.spinner.show()
-        this.dispose_ol_layers()
+        try {
+            this.map.spinner.show()
+            this.dispose_ol_layers()
 
-        const ol_layers_def = layers_def_list.filter(
-            (d) => !DECK_LAYERS.includes(d.layer)
-        )
-        this.create_ol_layers(ol_layers_def, color_ranges)
-        let layers = [...this.base_layers, ...this.ol_layers]
+            const ol_layers_def = layers_def_list.filter(
+                (d) => !DECK_LAYERS.includes(d.layer)
+            )
+            this.create_ol_layers(ol_layers_def, color_ranges)
+            let layers = [...this.base_layers, ...this.ol_layers]
 
-        const deck_layers_def = layers_def_list.filter((d) =>
-            DECK_LAYERS.includes(d.layer)
-        )
-        if (deck_layers_def.length > 0) {
-            if (this.deck === undefined) {
-                await this.init_deck()
+            const deck_layers_def = layers_def_list.filter((d) =>
+                DECK_LAYERS.includes(d.layer)
+            )
+            if (deck_layers_def.length > 0) {
+                if (this.deck === undefined) {
+                    await this.init_deck()
+                }
+                layers = [this.deck.base_layer, ...layers]
+                await this.create_deck_layers(deck_layers_def)
+                this.deck.setProps({ layers: this.deck_layers })
             }
-            layers = [this.deck.base_layer, ...layers]
-            await this.create_deck_layers(deck_layers_def)
-            this.deck.setProps({ layers: this.deck_layers })
+
+            this.map.setLayers(layers)
+
+            this.update_scales()
+        } catch (e) {
+            this.map.error_message.show_message(e)
+        } finally {
+            this.map.spinner.hide()
         }
-
-        this.map.setLayers(layers)
-
-        this.update_scales()
-
-        this.map.spinner.hide()
     }
 
     dispose_ol_layers() {
