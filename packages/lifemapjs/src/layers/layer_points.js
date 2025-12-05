@@ -26,6 +26,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         radius = null,
         fill = null,
         fill_cat = null,
+        categories = null,
         label = null,
         scheme = null,
         opacity = 0.8,
@@ -110,7 +111,8 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         // Categorical color scale
         else {
             scheme = scheme ?? DEFAULT_CAT_SCHEME
-            const domain = [...new Set(data.map((d) => d[col]))].sort()
+            let domain = categories ?? [...new Set(data.map((d) => d[col]))].sort()
+            domain = domain.map((d) => d.toString())
             const scale = {
                 color: { type: "categorical", scheme: scheme, domain: domain },
                 columns: 1,
@@ -118,7 +120,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
                 label: label ?? col,
             }
             scales.push(scale)
-            fn = (d) => Plot.scale(scale).apply(d)
+            fn = (d) => Plot.scale(scale).apply(d.toString())
         }
         return fn
     }

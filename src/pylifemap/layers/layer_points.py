@@ -18,6 +18,7 @@ class LayerPoints(LayersBase):
         radius_range: tuple | list = (2, 30),
         fill: str | None = None,
         fill_cat: bool | None = None,
+        categories: list | tuple | None = None,
         scheme: str | None = None,
         opacity: float = 0.8,
         popup: bool = True,
@@ -54,6 +55,9 @@ class LayerPoints(LayersBase):
         fill_cat : bool | None, optional
             If True, force color scheme to be categorical. If False, force it to be
             continuous. If None, let pylifemap decide. By default None.
+        categories : list | tuple | None, optional
+            Custom order of categories when a categorical variable is used for the fill argument.
+            Defaults to None.
         scheme : str | None, optional
             Color scheme for points color. It is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
@@ -123,6 +127,12 @@ class LayerPoints(LayersBase):
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
+        if (
+            options["fill"] is not None
+            and options["categories"] is None
+            and options["fill"] in df._categories
+        ):
+            options["categories"] = df._categories[options["fill"]]
         if options["hover"] is None:
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         layer = {"layer": "points", "options": options}

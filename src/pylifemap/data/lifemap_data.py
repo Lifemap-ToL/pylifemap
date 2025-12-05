@@ -57,8 +57,11 @@ class LifemapData:
             raise TypeError(msg)
 
         # Convert pandas to polars
+        categories = {}
         if isinstance(data, pd.DataFrame):
-            data = pl.DataFrame(data)
+            categorical_cols = data.select_dtypes(include=["category"]).columns
+            categories = {col: data[col].cat.categories for col in categorical_cols}
+            data = pl.from_pandas(data)
 
         # Check if taxid_col exists
         if taxid_col not in data.columns:
@@ -72,6 +75,8 @@ class LifemapData:
 
         # Store data as attribute
         self._data = data
+        # Store pandas categories
+        self._categories = categories
 
         # Check for unknown or duplicated taxids
         if check_taxids:
