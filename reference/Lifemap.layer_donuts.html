@@ -405,15 +405,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    categories<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    radius<span class="op">=</span><span class="dv">40</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    leaves<span class="op">=</span><span class="st">'hide'</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    scheme<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    popup<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    popup_col<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    declutter<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    lazy<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    lazy_zoom<span class="op">=</span><span class="dv">4</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    show_totals<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    scheme<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    popup<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    popup_col<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    declutter<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    lazy<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    lazy_zoom<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Add a donuts layer.</p>
 <p>This layer displays the distribution of a categorical variable values among each nodes children. Optionally it can also represent leaves values as a point layer.</p>
 <p>It should be applied to data computed with <a href="../reference/aggregate_freq.html#pylifemap.aggregate_freq"><code>aggregate_freq</code></a>.</p>
@@ -455,8 +456,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>radius</td>
-<td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Donut charts radius, by default 40</td>
+<td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a></td>
+<td>Donut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 40</td>
 <td><code>40</code></td>
 </tr>
 <tr class="even">
@@ -466,48 +467,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>'hide'</code></td>
 </tr>
 <tr class="odd">
+<td>show_totals</td>
+<td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
+<td>If True, display the total count of the current taxa in the center of the donut chart. Defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
 <td>scheme</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
 <td>Color scheme for donut charts ans points. It is the name of a categorical <a href="https://observablehq.com/plot/features/scales#color-scales">Observable Plot color scale</a>, by default None</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>opacity</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</td>
 <td>Donut charts and points opacity, by default 1</td>
 <td><code>1</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>popup</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
 <td>If True, display informations in a popup when a point is clicked, by default True</td>
 <td><code>True</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>popup_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
 <td>Name of a data column containing custom popup content. By default None.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>label</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
 <td>Legend title for this layer. If <code>None</code>, the value of <code>counts_col</code> is used.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>declutter</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
 <td>If True, use OpenLayers decluttering option for this layer. Defaults to True.</td>
 <td><code>True</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>lazy</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
 <td>If True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.</td>
 <td><code>True</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>lazy_zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
 <td>If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be displayed. Defaults to 4.</td>
