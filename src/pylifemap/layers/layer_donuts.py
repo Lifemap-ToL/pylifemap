@@ -52,7 +52,8 @@ class LayerDonuts(LayersBase):
             If `"show"`, add a points layer with individual leaves values, by
             default "hide"
         show_totals : bool, optional
-            If True, display the total count of the current taxa in the center of the donut chart. Defaults to False
+            If True, display the total count of the current taxa in the center of the donut chart. Defaults to
+            False
         scheme : str | None, optional
             Color scheme for donut charts ans points. It is the name of
             a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),

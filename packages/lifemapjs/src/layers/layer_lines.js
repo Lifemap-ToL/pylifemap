@@ -145,6 +145,9 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
     let stroke_line_dash = [0]
     switch (linetype) {
         case "dotted":
+            stroke_line_dash = [3, 3, 3, 3]
+            break
+        case "smalldash":
             stroke_line_dash = [10, 10, 10, 10]
             break
         case "dashed":
