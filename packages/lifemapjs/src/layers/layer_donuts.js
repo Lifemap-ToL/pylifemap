@@ -67,12 +67,20 @@ export function layer_donuts(map, data, options = {}) {
         const chart = donut_chart(counts, radius, scale_fn, opacity)
         const src = "data:image/svg+xml;base64," + window.btoa(chart.outerHTML)
 
+        // --- TODO ---
+        let size
+        if (Array.isArray(radius)) {
+            const total = data.map((d) => d.value).reduce((acc, val) => acc + val, 0)
+        } else {
+            size = radius
+        }
+        console.log(size)
         const style = {
             image: new Icon({
                 src: src,
                 opacity: 1,
-                width: radius,
-                height: radius,
+                width: size,
+                height: size,
             }),
         }
 
