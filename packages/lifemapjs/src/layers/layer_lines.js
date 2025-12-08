@@ -143,7 +143,6 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
     }
     // Linedash style
     let stroke_line_dash = [0]
-    console.log(linetype)
     switch (linetype) {
         case "dotted":
             stroke_line_dash = [10, 10, 10, 10]
