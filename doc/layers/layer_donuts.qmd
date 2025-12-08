@@ -26,4 +26,14 @@ iucn_freq = aggregate_freq(iucn, column="status")
 
 The `leaves` argument allows to `"show"` or `"hide"` individual leaves values.
 
+The `radius` argument allows to modify the size of each donut chart. If it is a single integer, the size will be fixed. If it is an Array of two integers, the size will vary depending on the total count of the variable for this node. In the following example we make the size vary between 40 and 150, and we also show the total count as a number with the `show_totals` argument.
+
+```{python}
+(
+    Lifemap(iucn_freq)
+    .layer_donuts(counts_col="status", radius = [40, 150], show_totals = True)
+    .show()
+)
+```
+
 For a detailed list of `layer_donuts` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_donuts`).

@@ -259,9 +259,11 @@ class LifemapData:
         """
 
         counts_col = options["counts_col"]
+        total_col = "pylifemap_total"
 
         needed_cols = [
             TAXID_COL,
+            total_col,
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
@@ -288,9 +290,10 @@ class LifemapData:
 
         # Store frequencies as a pl.Struct and encode as JSON
         data = data.pivot(index=TAXID_COL, on=counts_col, values="count").fill_null(0)
-        data = data.with_columns(pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col)).select(
-            pl.all().exclude(levels)
-        )
+        data = data.with_columns(
+            pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col),
+            pl.sum_horizontal(pl.col(levels)).alias(total_col),
+        ).select(pl.all().exclude(levels))
 
         # Add needed lifemap tree data
         data = data.join(

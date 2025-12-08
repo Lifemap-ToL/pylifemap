@@ -172,9 +172,10 @@ class TestDonutsData:
     @pytest.mark.filterwarnings("ignore:.*duplicated taxids.*")
     def test_donuts_data(self, lmd_cat):
         tmp = lmd_cat.donuts_data({"counts_col": "value"})
-        assert tmp.shape == (10, 5)
+        assert tmp.shape == (10, 6)
         assert sorted(tmp.columns) == [
             "pylifemap_taxid",
+            "pylifemap_total",
             "pylifemap_x",
             "pylifemap_y",
             "pylifemap_zoom",
@@ -184,6 +185,7 @@ class TestDonutsData:
             tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("value").item()
             == '{"1":1,"2":1,"3":1,"4":1}'
         )
+        assert tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("pylifemap_total").item() == 4
 
 
 class TestLinesData:

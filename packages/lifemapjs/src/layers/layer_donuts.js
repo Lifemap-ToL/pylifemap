@@ -21,6 +21,7 @@ export function layer_donuts(map, data, options = {}) {
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
         counts_col,
+        show_totals = false,
         categories = null,
         scheme = undefined,
         label = undefined,
@@ -49,7 +50,7 @@ export function layer_donuts(map, data, options = {}) {
     // Color scale
     scheme = scheme ?? DEFAULT_CAT_SCHEME
     let scales = []
-    const domain = categories ?? Object.keys(JSON.parse(data[0][counts_col])).sort()
+    const domain = categories ?? data[0][counts_col].map((d) => d["key"]).sort()
     let scale = {
         // Get levels
         color: { type: "categorical", scheme: scheme, domain: domain },
@@ -60,21 +61,35 @@ export function layer_donuts(map, data, options = {}) {
     scales.push(scale)
     let scale_fn = (key) => Plot.scale(scale).apply(key)
 
+    // Radius function
+    let get_radius_col_fn = function (data) {
+        const min_domain = d3.min(data, (d) => Number(d["pylifemap_total"]))
+        const max_domain = d3.max(data, (d) => Number(d["pylifemap_total"]))
+        const [min_range, max_range] = radius
+
+        const fn = (d) => {
+            return Math.round(
+                min_range +
+                    ((Number(d) - min_domain) / (max_domain - min_domain)) *
+                        (max_range - min_range)
+            )
+        }
+        return fn
+    }
+    const radius_col_fn = Array.isArray(radius) ? get_radius_col_fn(data) : () => radius
+
     // Style function
     function donut_style(feature) {
         const data = feature.get("data")
         const counts = data[counts_col]
-        const chart = donut_chart(counts, radius, scale_fn, opacity)
+        const total = data["pylifemap_total"]
+        const size = radius_col_fn(total)
+
+        // Create chart
+        const chart = donut_chart(counts, total, size, scale_fn, opacity, show_totals)
+
         const src = "data:image/svg+xml;base64," + window.btoa(chart.outerHTML)
 
-        // --- TODO ---
-        let size
-        if (Array.isArray(radius)) {
-            const total = data.map((d) => d.value).reduce((acc, val) => acc + val, 0)
-        } else {
-            size = radius
-        }
-        console.log(size)
         const style = {
             image: new Icon({
                 src: src,
@@ -154,7 +169,7 @@ export function layer_donuts(map, data, options = {}) {
             feature.get("data").pylifemap_x,
             feature.get("data").pylifemap_y,
         ]
-        const offset = [0, -radius / 2]
+        const offset = [0, Array.isArray(radius) ? -radius[0] / 2 : -radius / 2]
         set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }
 
@@ -164,14 +179,15 @@ export function layer_donuts(map, data, options = {}) {
     return layer
 }
 
-function donut_chart(counts, size, color_scale_fn, opacity) {
+function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) {
     const width = size
     const height = size
+    const outerRadius = Math.min(width, height) / 2 - 1
 
     const arc = d3
         .arc()
-        .innerRadius(8)
-        .outerRadius(Math.min(width, height) / 2 - 1)
+        .innerRadius(Math.max(8, outerRadius - 12))
+        .outerRadius(outerRadius)
 
     let svg = d3
         .create("svg:svg")
@@ -199,6 +215,19 @@ function donut_chart(counts, size, color_scale_fn, opacity) {
         .attr("stroke", "white")
         .style("stroke-width", "0px")
         .style("opacity", opacity)
+
+    if (show_totals) {
+        svg.append("text")
+            .attr("fill", "white")
+            .attr("stroke", "black")
+            .attr("dy", 6)
+            .attr("text-anchor", "middle")
+            .style("stroke-width", "0.3px")
+            .style("font-weight", "bold")
+            .style("font-size", "18px")
+            .style("font-family", "sans-serif")
+            .text(total)
+    }
 
     return svg.node()
 }

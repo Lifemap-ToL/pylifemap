@@ -14,8 +14,9 @@ class LayerDonuts(LayersBase):
         taxid_col: str = "taxid",
         counts_col: str,
         categories: list | tuple | None = None,
-        radius: int = 40,
+        radius: int | list[int] | tuple[int] = 40,
         leaves: Literal["show", "hide"] = "hide",
+        show_totals: bool = False,
         scheme: str | None = None,
         opacity: float | None = 1,
         popup: bool = True,
@@ -44,11 +45,14 @@ class LayerDonuts(LayersBase):
             DataFrame column containing the counts.
         categories : list | tuple | None, optional
             Custom order of categories. Defaults to None.
-        radius : int, optional
-            Donut charts radius, by default 40
+        radius : int | list | tuple, optional
+            Donut charts radius. If an integer, all donut charts will be of the same size. If a list
+            or a tuple of length 2, chart size will depend on the node total count. By default 40
         leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
             If `"show"`, add a points layer with individual leaves values, by
             default "hide"
+        show_totals : bool, optional
+            If True, display the total count of the current taxa in the center of the donut chart. Defaults to False
         scheme : str | None, optional
             Color scheme for donut charts ans points. It is the name of
             a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),
