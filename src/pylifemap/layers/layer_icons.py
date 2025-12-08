@@ -2,7 +2,7 @@ import pandas as pd
 import polars as pl
 
 from pylifemap.layers.base import LayersBase
-from pylifemap.utils import icon_url_to_data_uri, is_icon_url
+from pylifemap.utils import icon_url_to_data_uri
 
 
 class LayerIcons(LayersBase):
