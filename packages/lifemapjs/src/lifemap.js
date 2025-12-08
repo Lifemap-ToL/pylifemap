@@ -109,6 +109,7 @@ export class Lifemap {
             this.data = deserialized_data
         } catch (e) {
             this.map.error_message.show_message(e)
+            console.error(e)
         } finally {
             this.map.spinner.hide()
         }
@@ -212,6 +213,7 @@ export class Lifemap {
             this.update_scales()
         } catch (e) {
             this.map.error_message.show_message(e)
+            console.error(e)
         } finally {
             this.map.spinner.hide()
         }
