@@ -32,6 +32,7 @@ class LayersBase:
         if options["data"] is not None:
             taxid_col = options["taxid_col"] if options["taxid_col"] is not None else "taxid"
             data = LifemapData(options["data"], taxid_col=taxid_col)
+            del options["data"]
         else:
             data = self.data
         if data is None:
