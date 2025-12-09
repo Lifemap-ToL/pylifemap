@@ -78,6 +78,26 @@ def ensure_column_exists(d: pl.DataFrame, column: str) -> None:
         raise ValueError(msg)
 
 
+def pandas_result(fn):
+    """
+    Decorator around aggregation functions. If the input is a pandas DataFrame,
+    convert the result back to a pandas DataFrame.
+    """
+
+    def wrapper(d: pd.DataFrame | pl.DataFrame, *args, **kwargs):
+        pandas_input = isinstance(d, pd.DataFrame)
+
+        result = fn(d, *args, **kwargs)
+
+        if pandas_input:
+            result = result.to_pandas()
+
+        return result
+
+    return wrapper
+
+
+@pandas_result
 def aggregate_num(
     d: pd.DataFrame | pl.DataFrame,
     column: str,
@@ -140,7 +160,6 @@ def aggregate_num(
     │ 33154 ┆ 10    │
     └───────┴───────┘
     """
-    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, column)
     ensure_column_exists(d, taxid_col)
@@ -177,12 +196,10 @@ def aggregate_num(
     res = res.group_by(["pylifemap_ascend"]).agg(agg_fn(column)).rename({"pylifemap_ascend": taxid_col})
     res = res.sort(taxid_col)
 
-    if pandas_result:
-        res = res.to_pandas()
-
     return res
 
 
+@pandas_result
 def aggregate_count(
     d: pd.DataFrame | pl.DataFrame, *, result_col: str = "n", taxid_col: str = "taxid"
 ) -> pl.DataFrame | pd.DataFrame:
@@ -232,7 +249,6 @@ def aggregate_count(
     │ 33154 ┆ 1   │
     └───────┴─────┘
     """
-    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
     d = ensure_int32(d, taxid_col)
@@ -250,12 +266,10 @@ def aggregate_count(
     res = res.group_by("pylifemap_ascend").len(name=result_col).rename({"pylifemap_ascend": taxid_col})
     res = res.sort(taxid_col)
 
-    if pandas_result:
-        res = res.to_pandas()
-
     return res
 
 
+@pandas_result
 def aggregate_freq(
     d: pd.DataFrame | pl.DataFrame,
     column: str,
@@ -310,7 +324,6 @@ def aggregate_freq(
     │ 33154 ┆ a     ┆ 1     │
     └───────┴───────┴───────┘
     """
-    pandas_result = isinstance(d, pd.DataFrame)
     d = ensure_polars(d)
     ensure_column_exists(d, taxid_col)
     ensure_column_exists(d, column)
@@ -328,8 +341,5 @@ def aggregate_freq(
     # Group by parent and value, and count
     res = res.group_by(["pylifemap_ascend", column]).len(name="count").rename({"pylifemap_ascend": taxid_col})
     res = res.sort([taxid_col, column])
-
-    if pandas_result:
-        res = res.to_pandas()
 
     return res
