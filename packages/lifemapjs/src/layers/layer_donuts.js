@@ -199,7 +199,7 @@ function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) 
         .pie()
         .sort(null)
         .value(function (d) {
-            return d.value
+            return d["value"]
         })
     let arcs = pie(counts)
 
