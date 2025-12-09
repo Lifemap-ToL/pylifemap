@@ -164,18 +164,18 @@ def aggregate_num(
     else:
         agg_fn = fn_dict[fn]
     # Generate dataframe of parent values
-    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
-        "pylifemap_ascend"
-    )
+    d = d.select(pl.col(taxid_col), pl.col(column))
+    res = d.join(
+        BACKEND_DATA.select("taxid", "pylifemap_ascend"), left_on=taxid_col, right_on="taxid", how="left"
+    ).explode("pylifemap_ascend")
     # Get original nodes data with itself as parent in order to take into account
     # the nodes values
-    obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
+    obs = d.with_columns(pl.col(taxid_col).alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and aggregate values
-    res = res.group_by(["pylifemap_ascend"]).agg(agg_fn(column)).rename({"pylifemap_ascend": "taxid"})
-    res = res.sort("taxid")
+    res = res.group_by(["pylifemap_ascend"]).agg(agg_fn(column)).rename({"pylifemap_ascend": taxid_col})
+    res = res.sort(taxid_col)
 
     if pandas_result:
         res = res.to_pandas()
@@ -237,18 +237,18 @@ def aggregate_count(
     ensure_column_exists(d, taxid_col)
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
-    d = d.select(pl.col(taxid_col).alias("taxid"))
-    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
-        "pylifemap_ascend"
-    )
+    d = d.select(pl.col(taxid_col))
+    res = d.join(
+        BACKEND_DATA.select("taxid", "pylifemap_ascend"), left_on=taxid_col, right_on="taxid", how="left"
+    ).explode("pylifemap_ascend")
     # Get original nodes with itself as parent in order to take into account
     # the nodes themselves
-    obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
+    obs = d.with_columns(pl.col(taxid_col).alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and count
-    res = res.group_by("pylifemap_ascend").len(name=result_col).rename({"pylifemap_ascend": "taxid"})
-    res = res.sort("taxid")
+    res = res.group_by("pylifemap_ascend").len(name=result_col).rename({"pylifemap_ascend": taxid_col})
+    res = res.sort(taxid_col)
 
     if pandas_result:
         res = res.to_pandas()
@@ -316,18 +316,18 @@ def aggregate_freq(
     ensure_column_exists(d, column)
     d = ensure_int32(d, taxid_col)
     # Generate dataframe of parent counts
-    d = d.select(pl.col(taxid_col).alias("taxid"), pl.col(column))
-    res = d.join(BACKEND_DATA.select("taxid", "pylifemap_ascend"), on="taxid", how="left").explode(
-        "pylifemap_ascend"
-    )
+    d = d.select(pl.col(taxid_col), pl.col(column))
+    res = d.join(
+        BACKEND_DATA.select("taxid", "pylifemap_ascend"), left_on=taxid_col, right_on="taxid", how="left"
+    ).explode("pylifemap_ascend")
     # Get original nodes with itself as parent in order to take into account
     # the nodes themselves
-    obs = d.with_columns(pl.col("taxid").alias("pylifemap_ascend"))
+    obs = d.with_columns(pl.col(taxid_col).alias("pylifemap_ascend"))
     # Concat parent and node values
     res = pl.concat([res, obs])
     # Group by parent and value, and count
-    res = res.group_by(["pylifemap_ascend", column]).len(name="count").rename({"pylifemap_ascend": "taxid"})
-    res = res.sort(["taxid", column])
+    res = res.group_by(["pylifemap_ascend", column]).len(name="count").rename({"pylifemap_ascend": taxid_col})
+    res = res.sort([taxid_col, column])
 
     if pandas_result:
         res = res.to_pandas()

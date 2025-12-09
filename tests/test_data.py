@@ -56,13 +56,13 @@ def lmd():
 @pytest.fixture
 def lmd_cat():
     dagg = aggregate_freq(d_cat, column="value", taxid_col="tid")
-    return LifemapData(data=dagg)
+    return LifemapData(data=dagg, taxid_col="tid")
 
 
 @pytest.fixture
 def lmd_num():
     dagg = aggregate_num(d, column="value", taxid_col="tid", fn="sum")
-    return LifemapData(data=dagg)
+    return LifemapData(data=dagg, taxid_col="tid")
 
 
 class TestLifemapDataInit:
