@@ -3,6 +3,7 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
+from pylifemap.data.zoom import propagate_parent_zoom
 from pylifemap.layers.base import LayersBase
 from pylifemap.utils import MAX_HOVER_DATA_LEN, is_hex_color
 
@@ -27,6 +28,7 @@ class LayerPoints(LayersBase):
         label: str | None = None,
         lazy: bool = False,
         lazy_zoom: int = 15,
+        lazy_mode: Literal["self", "parent"] = "parent",
     ) -> LayersBase:
         """
         Add a points layer.
@@ -78,8 +80,11 @@ class LayerPoints(LayersBase):
             If True, points are displayed depending on the widget view. If False, all points are displayed.
             Can be useful when displaying a great number of items. Defaults to False.
         lazy_zoom : int
-            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            If lazy is True, only points with a zoom level less than (zoom + lazy_zoom) level will be
             displayed. Defaults to 15.
+        lazy_mode : Literal["self", "parent"], optional
+            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
+            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
 
         Returns
         -------
@@ -123,20 +128,30 @@ class LayerPoints(LayersBase):
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
         """
         options, df = self._process_options(locals())
+
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
+
+        lazy_mode_values = ["self", "parent"]
+        if options["lazy_mode"] not in lazy_mode_values:
+            msg = f"lazy_mode must be one of {lazy_mode_values}"
+            raise ValueError(msg)
+
         if (
             options["fill"] is not None
             and options["categories"] is None
             and options["fill"] in df._categories
         ):
             options["categories"] = df._categories[options["fill"]]
+
         if options["hover"] is None:
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
+
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)
+
         data_columns = [
             options[k]
             for k in ("radius", "fill")
@@ -145,7 +160,10 @@ class LayerPoints(LayersBase):
         if popup_col is not None:
             data_columns.append(options["popup_col"])
         d = df.points_data(options, data_columns)
+        if lazy_mode == "parent":
+            d = propagate_parent_zoom(d)
         self._layers_data[options["id"]] = d
+
         # Compute color range
         key = options["fill"]
         if key in data_columns:

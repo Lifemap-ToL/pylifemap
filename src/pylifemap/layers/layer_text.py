@@ -1,6 +1,9 @@
+from typing import Literal
+
 import pandas as pd
 import polars as pl
 
+from pylifemap.data.zoom import propagate_parent_zoom
 from pylifemap.layers.base import LayersBase
 
 
@@ -19,6 +22,7 @@ class LayerText(LayersBase):
         declutter: bool = True,
         lazy: bool = False,
         lazy_zoom: int = 15,
+        lazy_mode: Literal["self", "parent"] = "parent",
     ) -> LayersBase:
         """
         Add a text labels layer.
@@ -51,6 +55,10 @@ class LayerText(LayersBase):
         lazy_zoom : int
             If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
             displayed. Defaults to 15.
+        lazy_mode : Literal["self", "parent"], optional
+            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
+            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
+
 
 
         Returns
@@ -84,8 +92,14 @@ class LayerText(LayersBase):
 
         """
         options, df = self._process_options(locals())
+
         layer = {"layer": "text", "options": options}
         self._layers.append(layer)
+
         data_columns = (text,)
-        self._layers_data[options["id"]] = df.points_data(options, data_columns)
+        d = df.points_data(options, data_columns)
+        if lazy_mode == "parent":
+            d = propagate_parent_zoom(d)
+        self._layers_data[options["id"]] = d
+
         return self
