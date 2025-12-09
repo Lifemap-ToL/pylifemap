@@ -3,7 +3,7 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.data.zoom import propagate_parent_zoom
+from pylifemap.data.lazy_loading import propagate_parent_zoom
 from pylifemap.layers.base import LayersBase
 from pylifemap.utils import icon_url_to_data_uri
 
