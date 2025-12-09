@@ -14,7 +14,7 @@ class LayerDonuts(LayersBase):
         taxid_col: str = "taxid",
         counts_col: str,
         categories: list | tuple | None = None,
-        radius: int | list[int] | tuple[int] = 40,
+        radius: int | list[int] | tuple[int] = 50,
         leaves: Literal["show", "hide"] = "hide",
         show_totals: bool = False,
         scheme: str | None = None,
@@ -47,7 +47,7 @@ class LayerDonuts(LayersBase):
             Custom order of categories. Defaults to None.
         radius : int | list | tuple, optional
             Donut charts radius. If an integer, all donut charts will be of the same size. If a list
-            or a tuple of length 2, chart size will depend on the node total count. By default 40
+            or a tuple of length 2, chart size will depend on the node total count. By default 50
         leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
             If `"show"`, add a points layer with individual leaves values, by
             default "hide"

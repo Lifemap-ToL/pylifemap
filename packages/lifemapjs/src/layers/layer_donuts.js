@@ -25,7 +25,7 @@ export function layer_donuts(map, data, options = {}) {
         categories = null,
         scheme = undefined,
         label = undefined,
-        radius = 40,
+        radius = 50,
         opacity = 0.9,
         popup = true,
         popup_col = null,
@@ -183,11 +183,9 @@ function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) 
     const width = size
     const height = size
     const outerRadius = Math.min(width, height) / 2 - 1
+    const innerRadius = Math.max(8, outerRadius - 12)
 
-    const arc = d3
-        .arc()
-        .innerRadius(Math.max(8, outerRadius - 12))
-        .outerRadius(outerRadius)
+    const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
 
     let svg = d3
         .create("svg:svg")
@@ -217,16 +215,18 @@ function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) 
         .style("opacity", opacity)
 
     if (show_totals) {
+        const total_format_fn = (d) => (d >= 1000 ? d3.format(".2~s")(d) : d)
+        svg.append("circle").attr("r", innerRadius).style("fill", "rgba(0, 0, 0, 0.7)")
         svg.append("text")
             .attr("fill", "white")
             .attr("stroke", "black")
-            .attr("dy", 6)
+            .attr("dy", 5)
             .attr("text-anchor", "middle")
-            .style("stroke-width", "0.3px")
+            .style("stroke-width", "0.2px")
             .style("font-weight", "bold")
-            .style("font-size", "18px")
+            .style("font-size", "16px")
             .style("font-family", "sans-serif")
-            .text(total)
+            .text(total_format_fn(total))
     }
 
     return svg.node()
