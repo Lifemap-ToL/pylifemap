@@ -29,7 +29,7 @@ class LayerIcons(LayersBase):
         declutter: bool = True,
         lazy: bool = False,
         lazy_zoom: int = 10,
-        lazy_mode: Literal["self", "parent"] = "parent",
+        lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
         Add an icons layer.

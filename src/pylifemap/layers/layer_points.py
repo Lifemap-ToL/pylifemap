@@ -28,7 +28,7 @@ class LayerPoints(LayersBase):
         label: str | None = None,
         lazy: bool = False,
         lazy_zoom: int = 15,
-        lazy_mode: Literal["self", "parent"] = "parent",
+        lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
         Add a points layer.
