@@ -3,7 +3,6 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.data.lazy_loading import propagate_parent_zoom
 from pylifemap.layers.base import LayersBase
 from pylifemap.utils import MAX_HOVER_DATA_LEN, is_hex_color
 
@@ -159,9 +158,7 @@ class LayerPoints(LayersBase):
         ]
         if popup_col is not None:
             data_columns.append(options["popup_col"])
-        d = df.points_data(options, data_columns)
-        if lazy_mode == "parent":
-            d = propagate_parent_zoom(d)
+        d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
         self._layers_data[options["id"]] = d
 
         # Compute color range

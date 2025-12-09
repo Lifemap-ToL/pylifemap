@@ -3,7 +3,6 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.data.lazy_loading import propagate_parent_zoom
 from pylifemap.layers.base import LayersBase
 
 
@@ -97,9 +96,7 @@ class LayerText(LayersBase):
         self._layers.append(layer)
 
         data_columns = (text,)
-        d = df.points_data(options, data_columns)
-        if lazy_mode == "parent":
-            d = propagate_parent_zoom(d)
+        d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
         self._layers_data[options["id"]] = d
 
         return self

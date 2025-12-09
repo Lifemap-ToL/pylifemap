@@ -3,11 +3,13 @@ Handling of Lifemap objects data.
 """
 
 import warnings
+from typing import Literal
 
 import pandas as pd
 import polars as pl
 
 from pylifemap.data.backend_data import BACKEND_DATA
+from pylifemap.data.lazy_loading import propagate_parent_zoom
 
 # Custom warning message formatting. We use warnings.warn() to display warnings
 # in order to be able to filter them in quarto.
@@ -174,7 +176,12 @@ class LifemapData:
             data = data.join(lmdata, how="inner", left_on=TAXID_COL, right_on="taxid")
         return data
 
-    def points_data(self, options: dict | None = None, data_columns: tuple | list = ()) -> pl.DataFrame:
+    def points_data(
+        self,
+        options: dict | None = None,
+        data_columns: tuple | list = (),
+        lazy_mode: Literal["self", "parent"] = "self",
+    ) -> pl.DataFrame:
         """
         Generate data for a points layer.
 
@@ -184,6 +191,10 @@ class LifemapData:
             Options dictionary, by default None.
         data_columns: tuple | list, optional
             Data columns to keep in output data, by default ().
+        lazy_mode : Literal["self", "parent"], optional
+            Lazy loading mode. If "parent", get the nearest ancestor zoom level.
+            Defaults to "self".
+
 
         Returns
         -------
@@ -238,7 +249,12 @@ class LifemapData:
             needed_cols.append(col)
 
         # Only keep needed columns
-        return data.select(set(needed_cols))
+        data = data.select(set(needed_cols))
+
+        if lazy_mode == "parent":
+            data = propagate_parent_zoom(data)
+
+        return data
 
     def donuts_data(self, options: dict, data_columns: tuple | list = ()) -> pl.DataFrame:
         """
@@ -314,7 +330,11 @@ class LifemapData:
 
         return data
 
-    def lines_data(self, data_columns: tuple | list = ()) -> pl.DataFrame:
+    def lines_data(
+        self,
+        data_columns: tuple | list = (),
+        lazy_mode: Literal["self", "parent"] = "self",
+    ) -> pl.DataFrame:
         """
         Generate data for a lines layer.
 
@@ -322,6 +342,9 @@ class LifemapData:
         ----------
         data_columns : tuple | list, optional
             List of data columns to add to output, by default ()
+        lazy_mode : Literal["self", "parent"], optional
+            Lazy loading mode. If "parent", get the nearest ancestor zoom level.
+            Defaults to "self".
 
 
         Returns
@@ -375,4 +398,9 @@ class LifemapData:
             needed_cols.append(col)
 
         # Only keep needed columns
-        return data.select(set(needed_cols))
+        data = data.select(set(needed_cols))
+
+        if lazy_mode == "parent":
+            data = propagate_parent_zoom(data)
+
+        return data
