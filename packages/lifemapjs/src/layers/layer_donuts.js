@@ -146,7 +146,10 @@ export function layer_donuts(map, data, options = {}) {
                   const total = data
                       .map((d) => d.value)
                       .reduce((acc, val) => acc + val, 0)
-                  data.sort((a, b) => (a.key > b.key ? 1 : -1))
+
+                  data.sort((a, b) =>
+                      domain.indexOf(a.key) > domain.indexOf(b.key) ? 1 : -1
+                  )
 
                   let table_content = ""
                   for (let d of data) {
