@@ -28,7 +28,7 @@ jobs:
             - name: Check for changes
               id: check_changes
               run: |
-                  if [ -n "$(git status --porcelain)" ]; then
+                  if [ -n "$(git status --porcelain src/pylifemap/static)" ]; then
                     echo "changes=true" >> $GITHUB_OUTPUT
                   else
                     echo "changes=false" >> $GITHUB_OUTPUT
@@ -39,6 +39,6 @@ jobs:
               run: |
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
-                  git add src/pylifemap/static
-                  git commit -m "build[ci]: update js and css bundle"
+                  git add -f src/pylifemap/static
+                  git commit --force -m "build[ci]: update js and css bundle"
                   git push
