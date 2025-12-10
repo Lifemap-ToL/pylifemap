@@ -1,8 +1,9 @@
 on:
     workflow_dispatch:
     workflow_run:
-        workflows: ["bundle"] # Run after bundle has run
-        types: [completed]
+        workflows: ["JS and CSS bundle"] # Run after bundle has run
+        types:
+            - completed
         branches:
             - "main"
 
