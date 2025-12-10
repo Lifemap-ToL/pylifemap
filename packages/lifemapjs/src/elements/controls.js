@@ -25,6 +25,10 @@ export function get_controls(controls_list) {
         controls.extend([new ResetZoomControl()])
         top += 25
     }
+    if (controls_list.includes("search")) {
+        controls.extend([new TaxaSearchControl({ top: top })])
+        top += 40
+    }
     if (controls_list.includes("png_export")) {
         controls.extend([new PngExportControl({ top: top })])
     }
@@ -33,6 +37,35 @@ export function get_controls(controls_list) {
     }
 
     return controls
+}
+
+class TaxaSearchControl extends Control {
+    constructor(opt_options) {
+        const options = opt_options || {}
+        const { top = 10 } = options
+
+        const button = document.createElement("button")
+        button.setAttribute("title", "Search")
+        button.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>magnify</title><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>'
+
+        const element = document.createElement("div")
+        element.className = "taxa-search pylifemap-control ol-unselectable ol-control"
+        element.style.top = `${top}px`
+        element.appendChild(button)
+
+        super({
+            element: element,
+            target: options.target,
+        })
+
+        button.addEventListener("click", this.handleTaxaSearch.bind(this), false)
+    }
+
+    handleTaxaSearch() {
+        const map = this.getMap()
+        map.search_overlay.show()
+    }
 }
 
 class ResetZoomControl extends Control {
