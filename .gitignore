@@ -1,13 +1,13 @@
 /data/raw/
 /data/phylopic_icons/
 
-notebooks/work/
+/notebooks/work/
 
-src/pylifemap/static/
+/src/pylifemap/static/
 
-doc/_site
-doc/_freeze
-doc/_sidebar.yml
+/doc/_site
+/doc/_freeze
+/doc/_sidebar.yml
 
 *.html
 
