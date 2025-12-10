@@ -1,13 +1,18 @@
 on:
     workflow_dispatch:
-    push:
-        branches: [main]
+    workflow_run:
+        workflows: ["JS and CSS bundle"] # Run after bundle has run
+        types:
+            - completed
+        branches:
+            - "main"
 
 name: Tests
 
 jobs:
-    Python-tests:
+    python-tests:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         strategy:
             matrix:
@@ -16,15 +21,6 @@ jobs:
         steps:
             - name: Check out pylifemap repository
               uses: actions/checkout@v4
-
-            - name: Setup node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: "npm"
-
-            - name: Install node dependencies
-              run: npm install --workspaces --include-workspace-root
 
             - name: Install uv
               uses: astral-sh/setup-uv@v4

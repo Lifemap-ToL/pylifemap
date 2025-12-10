@@ -25,6 +25,7 @@ class LayerLines(LayersBase):
         label: str | None = None,
         lazy: bool = False,
         lazy_zoom: int = 15,
+        lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
         Add a lines layer.
@@ -70,7 +71,9 @@ class LayerLines(LayersBase):
         lazy_zoom : int
             If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
             displayed. Defaults to 15.
-
+        lazy_mode : Literal["self", "parent"], optional
+            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
+            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
 
         Returns
         -------
@@ -110,10 +113,18 @@ class LayerLines(LayersBase):
         [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
         """
         options, df = self._process_options(locals())
+
+        lazy_mode_values = ["self", "parent"]
+        if options["lazy_mode"] not in lazy_mode_values:
+            msg = f"lazy_mode must be one of {lazy_mode_values}"
+            raise ValueError(msg)
+
         if options["hover"] is None:
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
+
         layer = {"layer": "lines", "options": options}
         self._layers.append(layer)
+
         data_columns = [
             options[k]
             for k in ("width", "color")
@@ -121,8 +132,9 @@ class LayerLines(LayersBase):
         ]
         if popup_col is not None:
             data_columns.append(options["popup_col"])
-        d = df.lines_data(data_columns)
+        d = df.lines_data(data_columns, lazy_mode=lazy_mode)
         self._layers_data[options["id"]] = d
+
         # Compute color range
         key = options["color"]
         if key in data_columns:

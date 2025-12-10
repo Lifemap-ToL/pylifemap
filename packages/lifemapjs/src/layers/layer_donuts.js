@@ -9,8 +9,7 @@ import Point from "ol/geom/Point.js"
 import Feature from "ol/Feature.js"
 import Icon from "ol/style/Icon.js"
 import Style from "ol/style/Style.js"
-import { getBottomLeft, getTopRight } from "ol/extent.js"
-import { fromLonLat, toLonLat } from "ol/proj"
+import { fromLonLat } from "ol/proj"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
@@ -146,7 +145,10 @@ export function layer_donuts(map, data, options = {}) {
                   const total = data
                       .map((d) => d.value)
                       .reduce((acc, val) => acc + val, 0)
-                  data.sort((a, b) => (a.key > b.key ? 1 : -1))
+
+                  data.sort((a, b) =>
+                      domain.indexOf(a.key) > domain.indexOf(b.key) ? 1 : -1
+                  )
 
                   let table_content = ""
                   for (let d of data) {

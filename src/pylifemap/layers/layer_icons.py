@@ -1,3 +1,5 @@
+from typing import Literal
+
 import pandas as pd
 import polars as pl
 
@@ -26,6 +28,7 @@ class LayerIcons(LayersBase):
         declutter: bool = True,
         lazy: bool = False,
         lazy_zoom: int = 10,
+        lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
         Add an icons layer.
@@ -72,7 +75,9 @@ class LayerIcons(LayersBase):
         lazy_zoom : int
             If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
             displayed. Defaults to 10.
-
+        lazy_mode : Literal["self", "parent"], optional
+            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
+            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
 
         Returns
         -------
@@ -104,6 +109,12 @@ class LayerIcons(LayersBase):
 
         """
         options, df = self._process_options(locals())
+
+        lazy_mode_values = ["self", "parent"]
+        if options["lazy_mode"] not in lazy_mode_values:
+            msg = f"lazy_mode must be one of {lazy_mode_values}"
+            raise ValueError(msg)
+
         if options["scale"] is not None and (options["width"] is not None or options["height"] is not None):
             msg = "You cannot specify both a 'scale' and  a 'width' or 'height'."
             raise ValueError(msg)
@@ -119,15 +130,15 @@ class LayerIcons(LayersBase):
         )
         if popup_col is not None:
             data_columns.append(options["popup_col"])
-        layer_data = df.points_data(options, data_columns)
-        self._layers_data[options["id"]] = layer_data
+        d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
+        self._layers_data[options["id"]] = d
 
         if not is_icon_column:
             # Convert icon url to data uri
             options["icons_cache"] = {options["icon"]: icon_url_to_data_uri(options["icon"])}
         else:
             # If icon is a data column, build a cache dictionary of urls => data uris
-            icon_values = layer_data.get_column(options["icon"]).unique().to_list()
+            icon_values = d.get_column(options["icon"]).unique().to_list()
 
             options["icons_cache"] = {
                 uri: icon_url_to_data_uri(uri) for uri in icon_values if uri is not None
