@@ -218,7 +218,7 @@ function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) 
 
     if (show_totals) {
         const total_format_fn = (d) => (d >= 1000 ? d3.format(".2~s")(d) : d)
-        svg.append("circle").attr("r", innerRadius).style("fill", "rgba(0, 0, 0, 0.7)")
+        svg.append("circle").attr("r", innerRadius).style("fill", "rgba(0, 0, 0, 0.75)")
         svg.append("text")
             .attr("fill", "white")
             .attr("stroke", "black")
