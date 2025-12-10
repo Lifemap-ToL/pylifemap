@@ -1,14 +1,17 @@
 on:
+    workflow_dispatch:
     workflow_run:
         workflows: ["bundle"] # Run after bundle has run
-        types:
-            - completed
+        types: [completed]
+        branches:
+            - "main"
 
 name: Documentation
 
 jobs:
     build-deploy-pages:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         permissions:
             contents: write
         steps:
