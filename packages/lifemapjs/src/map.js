@@ -9,7 +9,6 @@ import { fromLonLat, transformExtent } from "ol/proj"
 import { get_controls } from "./elements/controls"
 
 import { DEFAULT_LON, DEFAULT_LAT, MAP_EXTENT } from "./utils"
-import { SearchOverlay } from "./elements/search"
 
 export function create_map(el, options) {
     const { zoom = 5, minZoom = 4, maxZoom = 42, controls_list = [] } = options
@@ -56,12 +55,8 @@ export function create_map(el, options) {
 
     // Spinner
     map.spinner = new Spinner(el)
-
-    // Error message
+    // Error message div
     map.error_message = new ErrorMessage(el)
-
-    // Search overlay
-    map.search_overlay = new SearchOverlay(el, map)
 
     return map
 }

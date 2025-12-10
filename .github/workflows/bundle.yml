@@ -25,12 +25,6 @@ jobs:
             - name: Bundle
               run: npm run bundle
 
-            - name: Temporarily remove .gitignore rule
-              run: |
-                  # Remove the line matching '/src/pylifemap/static' from .gitignore
-                  # to allow check for changes
-                  sed -i '/\/src\/pylifemap\/static\//d' .gitignore
-
             - name: Check for changes
               id: check_changes
               run: |

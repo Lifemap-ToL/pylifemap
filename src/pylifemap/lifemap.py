@@ -75,7 +75,6 @@ class Lifemap(
             - "zoom": zoom in and zoom out buttons
             - "reset_zoom": zoom reset button
             - "png_export": button to export current view to a PNG file
-            - "search": taxa search button
             - "full_screen": full screen toggle button
     legend_width : int | None, optional
         Legend width in pixels, by default None
@@ -101,7 +100,7 @@ class Lifemap(
         center: Literal["default", "auto"] | int = "default",
         zoom: int | None = None,
         theme: str = "dark",
-        controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "search", "full_screen"),
+        controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "full_screen"),
         legend_width: int | None = None,
         hide_labels: bool = False,
     ) -> None:
