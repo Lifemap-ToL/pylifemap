@@ -3,6 +3,8 @@
 
 notebooks/work/
 
+src/pylifemap/static/
+
 doc/_site
 doc/_freeze
 doc/_sidebar.yml
