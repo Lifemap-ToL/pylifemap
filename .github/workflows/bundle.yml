@@ -25,7 +25,17 @@ jobs:
             - name: Bundle
               run: npm run bundle
 
+            - name: Check for changes
+              id: check_changes
+              run: |
+                  if [ -n "$(git status --porcelain)" ]; then
+                    echo "changes=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "changes=false" >> $GITHUB_OUTPUT
+                  fi
+
             - name: Commit and push changes
+              if: steps.check_changes.outputs.changes == 'true'
               run: |
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
