@@ -17,7 +17,7 @@ Here, taxa/lineages present in the reference database used by Kraken2 are repres
 
 
 ```{python}
-#| title: "Wihan phylogenomics"
+#| title: "Wuhan phylogenomics"
 #| echo: true
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -30,7 +30,7 @@ import pandas as pd
 df = pd.read_parquet("data/wuhan_taxid_kraken2.parquet", engine='pyarrow')
 
 # Get all taxids in the reference database at the time of the study 
-alltaxid = pd.read_parquet("data/kraken2_nt_28112022_tax_id.parquet", engine="pyarrow")
+alltaxid = pd.read_parquet("data/kraken2_nt_28112022_inspect_tax_id.parquet", engine="pyarrow")
 
 # Get all taxids belonging to amniota
 amniota_taxid = pd.read_csv("data/amniota_taxid_list.csv")
