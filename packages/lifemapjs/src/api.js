@@ -109,7 +109,7 @@ export async function get_popup_title(taxid) {
     const names = await get_taxid_name(taxid)
     let out = ""
     if (names !== null) {
-        out += `<h2>${names["sci_name"]} <span>(${taxid})</span></h2>`
+        out += `<h2>${names["sci_name"]} <span>(<a href="https://lifemap.cnrs.fr/tree?tid=${taxid}" target="_blank">${taxid}</a>)</span></h2>`
     } else {
         out += `<h2>${taxid}</h2>`
     }

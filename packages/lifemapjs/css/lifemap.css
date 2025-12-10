@@ -1,3 +1,9 @@
+.pylifemap-map {
+    font-family:
+        "Source Sans 3", "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue",
+        sans-serif;
+}
+
 /* Global border */
 
 .pylifemap-map.light {
@@ -86,7 +92,17 @@
 }
 
 #lifemap-popup h2 span {
-    font-size: 12px;
+    font-size: 13px;
+}
+
+#lifemap-popup h2 span a {
+    font-weight: 400;
+    color: #479eba;
+    text-decoration: underline;
+}
+
+#lifemap-popup h2 span a:hover {
+    text-decoration: none;
 }
 
 #lifemap-popup table {
