@@ -1,12 +1,13 @@
 on:
-    workflow_dispatch:
-    push:
-        branches: [main]
+    workflow_run:
+        workflows: ["bundle"] # Run after bundle has run
+        types:
+            - completed
 
 name: Documentation
 
 jobs:
-    Build-deploy:
+    build-deploy-pages:
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -31,9 +32,6 @@ jobs:
 
             - name: Set up Python
               run: uv python install
-
-            - name: Bundle
-              run: npm run bundle
 
             - name: Render and Publish
               shell: bash
