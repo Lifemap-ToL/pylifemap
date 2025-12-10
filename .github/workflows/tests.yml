@@ -1,13 +1,17 @@
 on:
     workflow_dispatch:
-    push:
-        branches: [main]
+    workflow_run:
+        workflows: ["bundle"] # Run after bundle has run
+        types: [completed]
+        branches:
+            - "main"
 
 name: Tests
 
 jobs:
     python-tests:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         strategy:
             matrix:
