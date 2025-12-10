@@ -5,6 +5,7 @@ listing:
   id: main-listing
   contents: sources  
   type: grid
+  grid-columns: 3
   sort: "date"
   fields: [date, title, author, description, categories, image]
   categories: true

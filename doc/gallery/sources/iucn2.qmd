@@ -1,0 +1,26 @@
+---
+title: IUCN Categories 2
+author: "D. de Vienne"
+date: 2025-11-25
+description: Simple IUCN categories mapping
+image: img/iucn2.png
+categories: [points, dark theme]
+---
+     
+
+```{python}
+#| title: "Some Phylopic example"
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
+import polars as pl
+from pylifemap import Lifemap
+
+# Load iucn dataset
+iucn = pl.read_parquet(
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+)
+
+Lifemap(iucn, taxid_col="taxid", width="100%").layer_points(fill="status").show()
+```

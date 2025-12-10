@@ -1,21 +1,19 @@
 ---
 title: Wuhan market metagenomics
-author: "D. de Vienne, V. Navratil"
+author: "J. Barnier, V. Navratil, D. de Vienne"
 date: 2025-11-25
 description: Metagenomics in the Wuhan market after beginning of the covid pandemy. 
 image: img/wuhan.png
-categories: [icons, lightgrey, points, lines]
+categories: [icons, lightgrey theme, points, lines, in publication]
 ---
 
+::: {.callout-note}
+This visualization accompanies the article presenting pylifemap, available at [link to be added](tocome).
+:::
 
-In this visualualization, red crosses show the 38 terrestrial wild animal species sold in the Wuhan city market (17 shops) between May 2017 and Nov 2019, according to vendors (https://www-nature-com.docelec.univ-lyon1.fr/articles/s41598-021-91470-2). 
+The visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).
 
-An environmental metagenomics survey was performed on this same market. Reads were assigned a taxa using kraken2. The results are represented as follows: 
-
-- taxa/lineages present in the reference database used by kraken2 are represented by yellow branches.
-
-- Circles have size and colors proportional to the number of reads assigned to each taxa by kraken. taxa with less than 1000 reads map to them were discarded. 
-
+Here, taxa/lineages present in the reference database used by Kraken2 are represented by orange branches, and the number of reads assigned to each taxon is indicated by a circle whose size and color are proportional to this number. Points representing fewer than 1,000 reads mapped to the taxa were discarded.
 
 
 ```{python}
@@ -53,9 +51,7 @@ Lifemap(df_amniota[df_amniota["count"]>=1000], theme="lightgrey", center=32524, 
 
 ```
 ::: {.callout-note}
-Dataset used here come from the article from: 
-
-Xiao, X., Newman, C., Buesching, C.D. et al. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Sci Rep 11, 11898 (2021). https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2 
-
-
+## References
+[1] Xiao X., Newman C., Buesching C.D., Macdonald D.W., Zhou Z.-M. 2021. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Scientific Reports. 11:11898. https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2 
+[2] Liu W.J., Liu P., Lei W., Jia Z., He X., Shi W., Tan Y., Zou S., Wong G., Wang J., Wang F., Wang G., Qin K., Gao R., Zhang J., Li M., Xiao W., Guo Y., Xu Z., Zhao Y., Song J., Zhang J., Zhen W., Zhou W., Ye B., Song J., Yang M., Zhou W., Dai Y., Lu G., Bi Y., Tan W., Han J., Gao G.F., Wu G. 2024. Surveillance of SARS-CoV-2 at the Huanan Seafood Market. Nature. 631:402–408. 
 :::
