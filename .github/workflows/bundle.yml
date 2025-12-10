@@ -34,6 +34,12 @@ jobs:
                     echo "changes=false" >> $GITHUB_OUTPUT
                   fi
 
+            - name: Temporarily remove .gitignore rule
+              run: |
+                  # Remove the line matching '/src/pylifemap/static' from .gitignore
+                  # to allow check for changes
+                  sed -i '/\/src\/pylifemap\/static\//d' .gitignore
+
             - name: Commit and push changes
               if: steps.check_changes.outputs.changes == 'true'
               run: |
