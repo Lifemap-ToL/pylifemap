@@ -2,142 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/getting_started.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/changelog.html</loc>
-    <lastmod>2025-12-11T17:19:53.990Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.505Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/gallery/sources/iucn.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.598Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/gallery/sources/wuhan.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/development.html</loc>
-    <lastmod>2025-12-11T17:19:53.990Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.505Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_num.html</loc>
-    <lastmod>2025-12-11T17:20:42.356Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.435Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_freq.html</loc>
-    <lastmod>2025-12-11T17:20:42.360Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.439Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/aggregate_count.html</loc>
-    <lastmod>2025-12-11T17:20:42.352Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.430Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.html</loc>
-    <lastmod>2025-12-11T17:20:42.278Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.331Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_icons.html</loc>
-    <lastmod>2025-12-11T17:20:42.343Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.418Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.show.html</loc>
-    <lastmod>2025-12-11T17:20:42.344Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.420Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.save.html</loc>
-    <lastmod>2025-12-11T17:20:42.348Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.424Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/get_duplicated_taxids.html</loc>
-    <lastmod>2025-12-11T17:20:42.366Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.445Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_points.html</loc>
-    <lastmod>2025-12-11T17:19:54.085Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_donuts.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_icons.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_heatmap.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/index.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_text.html</loc>
-    <lastmod>2025-12-11T17:19:54.085Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_heatmap_deck.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_screengrid.html</loc>
-    <lastmod>2025-12-11T17:19:54.085Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/layers/layer_lines.html</loc>
-    <lastmod>2025-12-11T17:19:54.085Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_points.html</loc>
-    <lastmod>2025-12-11T17:20:42.293Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.342Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/index.html</loc>
-    <lastmod>2025-12-11T17:20:42.254Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.300Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_screengrid.html</loc>
-    <lastmod>2025-12-11T17:20:42.326Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.374Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_text.html</loc>
-    <lastmod>2025-12-11T17:20:42.333Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.381Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/get_unknown_taxids.html</loc>
-    <lastmod>2025-12-11T17:20:42.363Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.442Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_lines.html</loc>
-    <lastmod>2025-12-11T17:20:42.304Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.351Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_heatmap_deck.html</loc>
-    <lastmod>2025-12-11T17:20:42.322Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.369Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_donuts.html</loc>
-    <lastmod>2025-12-11T17:20:42.313Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.360Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/reference/Lifemap.layer_heatmap.html</loc>
-    <lastmod>2025-12-11T17:20:42.317Z</lastmod>
+    <lastmod>2025-12-11T17:26:04.364Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/gallery/sources/phylopic.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/gallery/sources/iucn2.html</loc>
-    <lastmod>2025-12-11T17:19:54.084Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.598Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/gallery/gallery.html</loc>
-    <lastmod>2025-12-11T17:19:53.990Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.505Z</lastmod>
   </url>
   <url>
     <loc>https://lifemap-tol.github.io/pylifemap/usage.html</loc>
-    <lastmod>2025-12-11T17:19:54.085Z</lastmod>
+    <lastmod>2025-12-11T17:22:46.599Z</lastmod>
   </url>
 </urlset>
