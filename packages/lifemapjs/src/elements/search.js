@@ -16,6 +16,14 @@ export class SearchDialog {
 
         input.addEventListener("change", this.input_validated.bind(this))
         input.addEventListener("input", this.input_changed.bind(this))
+        input.addEventListener(
+            "keydown",
+            ((event) => {
+                if (event.key === "Escape" && input.value.trim() === "") {
+                    this.hide_dialog()
+                }
+            }).bind(this)
+        )
 
         // Error message
         const error = document.createElement("div")
