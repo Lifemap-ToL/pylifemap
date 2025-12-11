@@ -4,11 +4,6 @@ import { inAndOut } from "ol/easing"
 
 export class SearchDialog {
     constructor(el, map) {
-        this.create_dialog(el)
-        this.map = map
-    }
-
-    create_dialog(el) {
         // Dialog
         const dialog = document.createElement("dialog")
 
@@ -39,6 +34,7 @@ export class SearchDialog {
         this.input = input
         this.error = error
         this.suggestions = suggestions
+        this.map = map
     }
 
     display_error(msg) {
