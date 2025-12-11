@@ -289,6 +289,11 @@
     cursor: pointer;
 }
 
+/* Disable bigger controls on mobile */
+.pylifemap-map .ol-touch .ol-control button {
+    font-size: inherit;
+}
+
 /* Attribution */
 
 .pylifemap-map .ol-attribution.ol-uncollapsible {
