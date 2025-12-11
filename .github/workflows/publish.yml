@@ -1,7 +1,7 @@
 on:
     workflow_dispatch:
     workflow_run:
-        workflows: ["Build and deploy to dev branch"] # Run after bundle has run
+        workflows: ["Build and deploy to bundle branch"] # Run after bundle has run
         types:
             - completed
 
@@ -17,7 +17,7 @@ jobs:
             - name: Check out repository
               uses: actions/checkout@v4
               with:
-                  ref: "dev"
+                  ref: "bundle"
 
             - name: Setup node
               uses: actions/setup-node@v4

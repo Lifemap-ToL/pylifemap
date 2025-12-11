@@ -1,11 +1,11 @@
-name: Build and deploy to dev branch
+name: Build and deploy to bundle branch
 
 on:
     push:
         branches: [main]
 
 jobs:
-    bundle:
+    build-deploy-bundle:
         runs-on: ubuntu-latest
         permissions:
             contents: write
