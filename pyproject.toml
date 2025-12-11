@@ -1,6 +1,7 @@
 [project]
 name = "pylifemap"
-version = "0.1-dev"
+version = "0.1"
+description = "Python package for Lifemap visualizations"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
