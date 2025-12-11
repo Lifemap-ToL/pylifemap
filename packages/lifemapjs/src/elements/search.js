@@ -42,6 +42,7 @@ export class SearchDialog {
     }
 
     display_error(msg) {
+        this.clear_suggestions()
         this.error.innerHTML = msg
         this.error.style.display = "block"
     }
@@ -83,8 +84,7 @@ export class SearchDialog {
     suggestion_clicked(event) {
         const sugg = event.currentTarget
         const taxid = sugg.getAttribute("data-taxid")
-        this.input.value = taxid
-        this.input.dispatchEvent(new Event("change"))
+        this.zoom_to_taxid(taxid)
     }
 
     async input_changed(event) {
@@ -105,23 +105,26 @@ export class SearchDialog {
         const value = event.target.value
         this.hide_error()
         if (value != "" && Number.isFinite(Number(value))) {
-            const result = await get_taxid_coords(Number(value))
-            if (result === null) {
-                this.display_error(`An error occured while querying Lifemap API.`)
-            } else if (result === undefined) {
-                this.clear_suggestions()
-                this.display_error(`taxid ${Number(value)} not found in Lifemap taxids.`)
-            } else {
-                this.hide_dialog()
-                const view = this.map.getView()
-                view.animate({
-                    center: fromLonLat([result["lon"], result["lat"]]),
-                    zoom: result["zoom"] - 3,
-                    duration: 2000,
-                    easing: inAndOut,
-                })
-            }
+            this.zoom_to_taxid(value)
         }
         event.preventDefault()
+    }
+
+    async zoom_to_taxid(taxid) {
+        const result = await get_taxid_coords(Number(taxid))
+        if (result === null) {
+            this.display_error(`An error occured while querying Lifemap API.`)
+        } else if (result === undefined) {
+            this.display_error(`taxid ${Number(taxid)} not found in Lifemap taxids.`)
+        } else {
+            this.hide_dialog()
+            const view = this.map.getView()
+            view.animate({
+                center: fromLonLat([result["lon"], result["lat"]]),
+                zoom: result["zoom"] - 3,
+                duration: 2000,
+                easing: inAndOut,
+            })
+        }
     }
 }
