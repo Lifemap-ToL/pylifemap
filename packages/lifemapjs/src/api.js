@@ -92,6 +92,41 @@ export async function fetch_taxid(taxid, fields) {
     }
 }
 
+export async function fetch_suggestions(search, n = 10) {
+    const url = `${LIFEMAP_BACK_URL}/solr/taxo/suggesthandler`
+    const payload = {
+        params: {
+            "suggest.q": search,
+            wt: "json",
+            rows: 1,
+        },
+    }
+    try {
+        const response = await fetch(url, {
+            method: "post",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+        let data = await response.json()
+        let suggestions = data["suggest"]["mySuggester"][search]["suggestions"]
+        suggestions = suggestions.slice(0, n).map((d) => {
+            let elems = d.term.split("|")
+            return {
+                sci_name: elems[0].trim(),
+                common_name: elems[1].trim(),
+                rank: elems[2].trim(),
+                taxid: Number(elems[3].replace(/<\/?b>/g, "").trim()),
+            }
+        })
+        return suggestions
+    } catch (error) {
+        return null
+    }
+}
+
 // Get coordinates and zoom level of a taxid
 export async function get_taxid_coords(taxid) {
     const result = await fetch_taxid(taxid, ["taxid", "lat", "lon", "zoom"])
@@ -115,3 +150,5 @@ export async function get_popup_title(taxid) {
     }
     return out
 }
+
+export async function get_suggestions(str) {}
