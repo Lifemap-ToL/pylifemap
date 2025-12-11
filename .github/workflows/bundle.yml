@@ -42,4 +42,5 @@ jobs:
                   else
                       git commit -m "build: bundle"
                   fi
+                  git pull origin dev
                   git push origin dev
