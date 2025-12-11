@@ -202,7 +202,7 @@
     width: 15rem;
     height: auto;
     z-index: 15;
-    margin-left: 1.6em;
+    margin-left: 1.9em;
     background-color: transparent;
 }
 
@@ -259,10 +259,16 @@
 
 /* Controls */
 
+.ol-control button {
+    width: 1.6em;
+    height: 1.6em;
+}
+
 .pylifemap-control {
     position: absolute;
     left: 0.5em;
 }
+
 .pylifemap-control button {
     padding: 3px;
 }

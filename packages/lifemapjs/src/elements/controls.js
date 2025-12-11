@@ -20,15 +20,15 @@ export function get_controls(controls_list) {
     })
 
     let controls = defaultControls(default_controls_options).extend([attribution])
-    let top = controls_list.includes("zoom") ? 75 : 10
+    let top = controls_list.includes("zoom") ? 4.25 : 0.5
 
     if (controls_list.includes("zoom") && controls_list.includes("reset_zoom")) {
-        controls.extend([new ResetZoomControl()])
-        top += 25
+        controls.extend([new ResetZoomControl({ top: top })])
+        top += 2.75
     }
     if (controls_list.includes("search")) {
         controls.extend([new TaxaSearchControl({ top: top })])
-        top += 40
+        top += 2.75
     }
     if (controls_list.includes("png_export")) {
         controls.extend([new PngExportControl({ top: top })])
@@ -43,12 +43,12 @@ export function get_controls(controls_list) {
 class TaxaSearchControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {}
-        const { top = 10 } = options
+        const { top } = options
 
         const search_container = document.createElement("div")
         search_container.className =
             "lifemap-search pylifemap-control ol-unselectable ol-control"
-        search_container.style.top = `${top}px`
+        search_container.style.top = `${top}em`
 
         super({
             element: search_container,
@@ -87,6 +87,7 @@ class TaxaSearchControl extends Control {
 class ResetZoomControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {}
+        const { top } = options
 
         const button = document.createElement("button")
         button.setAttribute("title", "Reset zoom")
@@ -95,7 +96,7 @@ class ResetZoomControl extends Control {
 
         const element = document.createElement("div")
         element.className = "reset-zoom pylifemap-control ol-unselectable ol-control"
-        element.style.top = "60px"
+        element.style.top = `${top}em`
         element.appendChild(button)
 
         super({
@@ -119,7 +120,7 @@ class ResetZoomControl extends Control {
 class PngExportControl extends Control {
     constructor(opt_options) {
         const options = opt_options || {}
-        const { top = 10 } = options
+        const { top } = options
 
         const button = document.createElement("button")
         button.setAttribute("title", "Export to PNG")
@@ -128,7 +129,7 @@ class PngExportControl extends Control {
 
         const element = document.createElement("div")
         element.className = "png-export pylifemap-control ol-unselectable ol-control"
-        element.style.top = `${top}px`
+        element.style.top = `${top}em`
         element.appendChild(button)
 
         super({
