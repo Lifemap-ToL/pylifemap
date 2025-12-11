@@ -233,7 +233,8 @@
     display: none;
     margin-top: 0;
     padding: 0;
-    background-color: #000055cc;
+    background-color: #442244cc;
+    border-top: 1px solid white;
     color: #fff;
     font-size: 13px;
     max-height: 20rem;
