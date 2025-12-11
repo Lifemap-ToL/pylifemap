@@ -1,4 +1,4 @@
-name: JS and CSS bundle
+name: Build and deploy to dev branch
 
 on:
     push:
@@ -12,6 +12,8 @@ jobs:
         steps:
             - name: Check out repository
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
             - name: Setup node
               uses: actions/setup-node@v4
@@ -25,26 +27,12 @@ jobs:
             - name: Bundle
               run: npm run bundle
 
-            - name: Temporarily remove .gitignore rule
-              run: |
-                  # Remove the line matching '/src/pylifemap/static' from .gitignore
-                  # to allow check for changes
-                  sed -i '/\/src\/pylifemap\/static\//d' .gitignore
-
-            - name: Check for changes
-              id: check_changes
-              run: |
-                  if [ -n "$(git status --porcelain src/pylifemap/static)" ]; then
-                    echo "changes=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "changes=false" >> $GITHUB_OUTPUT
-                  fi
-
             - name: Commit and push changes
-              if: steps.check_changes.outputs.changes == 'true'
               run: |
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
+                  git checkout -b dev
                   git add -f src/pylifemap/static
-                  git commit -m "build[ci]: update js and css bundle"
-                  git push
+                  git add -A
+                  git commit -m "build: bundle"
+                  git push origin dev
