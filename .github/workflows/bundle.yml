@@ -37,5 +37,9 @@ jobs:
                   git rebase main
                   git add -f src/pylifemap/static
                   git add -A
-                  git commit -m "build: bundle"
-                  git push origin dev
+                  if git diff --cached --exit-code >/dev/null 2>&1; then
+                      echo "Nothing to commit"
+                  else
+                      git commit -m "build: bundle"
+                      git push origin dev
+                  fi
