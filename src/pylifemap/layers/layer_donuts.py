@@ -16,7 +16,7 @@ class LayerDonuts(LayersBase):
         categories: list | tuple | None = None,
         radius: int | list[int] | tuple[int] = 50,
         leaves: Literal["show", "hide"] = "hide",
-        show_totals: bool = False,
+        show_totals: bool = True,
         scheme: str | None = None,
         opacity: float | None = 1,
         popup: bool = True,
@@ -53,7 +53,7 @@ class LayerDonuts(LayersBase):
             default "hide"
         show_totals : bool, optional
             If True, display the total count of the current taxa in the center of the donut chart. Defaults to
-            False
+            True
         scheme : str | None, optional
             Color scheme for donut charts ans points. It is the name of
             a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),
