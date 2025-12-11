@@ -192,83 +192,68 @@
 /* Search */
 
 .lifemap-search {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 15;
-}
-
-.lifemap-search .close-button {
-    fill: #fff;
-    display: block;
-    height: 24px;
-    width: 24px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.lifemap-search .content {
-    margin-top: 10%;
-    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
-.lifemap-search .content > * {
-    width: 20rem;
+.lifemap-search dialog {
+    width: 15rem;
+    height: auto;
+    z-index: 15;
+    margin-left: 1.6em;
+    background-color: transparent;
 }
 
-.lifemap-search .content input {
-    padding: 5px 8px;
-    border: 1px solid black;
+.lifemap-search dialog input {
+    width: 100%;
+    padding: 3px 5px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-family: "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     background-color: #fff;
     color: #000;
+    margin-bottom: 3px;
 }
 
-.lifemap-search .error {
+.lifemap-search dialog .error {
+    width: 100%;
     display: none;
-    margin-top: 1rem;
+    margin-top: 0;
     padding: 5px 8px;
     background-color: #d00;
     color: #fff;
     font-size: 14px;
 }
 
-.lifemap-search .suggestions {
+.lifemap-search dialog .suggestions {
+    width: 100%;
     display: none;
     margin-top: 0;
     padding: 0;
-    background-color: #000;
+    background-color: #000055cc;
     color: #fff;
-    font-size: 14px;
-    max-height: 30rem;
+    font-size: 13px;
+    max-height: 20rem;
     overflow-y: auto;
 }
 
-.lifemap-search .suggestions .suggestion {
+.lifemap-search dialog .suggestions .suggestion {
+    width: 100%;
     padding: 5px 8px;
     border-bottom: 1px solid white;
     cursor: pointer;
 }
 
-.lifemap-search .suggestions .suggestion:hover {
+.lifemap-search dialog .suggestions .suggestion:hover {
     background-color: #444;
 }
 
-.lifemap-search .suggestions .suggestion span {
+.lifemap-search dialog .suggestions .suggestion span {
     font-style: italic;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 /* Controls */
@@ -277,8 +262,13 @@
     position: absolute;
     left: 0.5em;
 }
-.pylifemap-control button svg {
-    margin: 3px;
+.pylifemap-control button {
+    padding: 3px;
+}
+
+.pylifemap-control button.selected {
+    background-color: #ddd;
+    padding: 4px 2px 2px 4px;
 }
 
 .ol-control {

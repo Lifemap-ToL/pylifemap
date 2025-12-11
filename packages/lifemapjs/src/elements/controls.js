@@ -5,6 +5,7 @@ import { snapdom } from "@zumer/snapdom"
 import Attribution from "ol/control/Attribution.js"
 import { defaults as defaultControls } from "ol/control/defaults.js"
 import FullScreen from "ol/control/FullScreen"
+import { SearchDialog } from "./search"
 
 export function get_controls(controls_list) {
     const default_controls_options = {
@@ -44,27 +45,42 @@ class TaxaSearchControl extends Control {
         const options = opt_options || {}
         const { top = 10 } = options
 
-        const button = document.createElement("button")
-        button.setAttribute("title", "Search")
-        button.innerHTML =
-            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>magnify</title><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>'
-
-        const element = document.createElement("div")
-        element.className = "taxa-search pylifemap-control ol-unselectable ol-control"
-        element.style.top = `${top}px`
-        element.appendChild(button)
+        const search_container = document.createElement("div")
+        search_container.className =
+            "lifemap-search pylifemap-control ol-unselectable ol-control"
+        search_container.style.top = `${top}px`
 
         super({
-            element: element,
+            element: search_container,
             target: options.target,
         })
 
-        button.addEventListener("click", this.handleTaxaSearch.bind(this), false)
+        const search_control = document.createElement("div")
+        search_control.className = "pylifemap-control ol-unselectable ol-control"
+        const search_button = document.createElement("button")
+        search_button.setAttribute("title", "Search")
+        search_button.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>magnify</title><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>'
+        search_container.appendChild(search_button)
+
+        search_button.addEventListener("click", this.handleTaxaSearch.bind(this), false)
+
+        this.search_container = search_container
+        this.search_button = search_button
     }
 
     handleTaxaSearch() {
-        const map = this.getMap()
-        map.search_overlay.show()
+        if (this.search_dialog === undefined) {
+            const search_dialog = new SearchDialog(this.search_container, this.getMap())
+            this.search_dialog = search_dialog
+        }
+        if (this.search_dialog.dialog.open) {
+            this.search_dialog.dialog.close()
+            this.search_button.classList.remove("selected")
+        } else {
+            this.search_dialog.dialog.show()
+            this.search_button.classList.add("selected")
+        }
     }
 }
 
