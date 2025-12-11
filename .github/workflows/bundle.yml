@@ -32,15 +32,15 @@ jobs:
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
                   git config pull.rebase true
-                  git checkout -b dev
-                  git pull origin dev
-                  git rebase main
+                  git push
+                  git branch -D bundle 2>/dev/null || true
+                  git push origin --delete bundle 2>/dev/null || true
+                  git branch bundle
+                  git switch bundle
                   git add -f src/pylifemap/static
-                  git add -A
                   if git diff --cached --exit-code >/dev/null 2>&1; then
                       echo "Nothing to commit"
                   else
                       git commit -m "build: bundle"
                   fi
-                  git pull origin dev
-                  git push origin dev
+                  git push origin bundle
