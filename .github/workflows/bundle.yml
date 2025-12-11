@@ -41,5 +41,5 @@ jobs:
                       echo "Nothing to commit"
                   else
                       git commit -m "build: bundle"
-                      git push origin dev
                   fi
+                  git push origin dev
