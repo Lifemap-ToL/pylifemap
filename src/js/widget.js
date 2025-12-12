@@ -1,6 +1,6 @@
-import { Lifemap } from "lifemapjs"
+import { Lifemap } from "./lifemap"
 
-import "./styles.css"
+import "../css/lifemap.css"
 
 // Data value change callback
 async function _onDataChanged(model, map) {

@@ -1,3 +1,5 @@
+@import url("ol.css");
+
 .pylifemap-map {
     font-family:
         "Source Sans 3", "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue",
@@ -310,4 +312,9 @@
 
 .pylifemap-map.light .ol-attribution.ol-uncollapsible {
     background-color: rgba(240, 240, 240, 0.75);
+}
+
+/* VSCode workarounds */
+.cell-output-ipywidget-background:has(.p-Widget):has(.pylifemap-map) {
+    background-color: transparent !important;
 }

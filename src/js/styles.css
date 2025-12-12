@@ -1,7 +1,0 @@
-@import url("ol.css");
-@import url("../../packages/lifemapjs/css/lifemap.css");
-
-/* VSCode workarounds */
-.cell-output-ipywidget-background:has(.p-Widget):has(.pylifemap-map) {
-    background-color: transparent !important;
-}

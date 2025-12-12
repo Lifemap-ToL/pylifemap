@@ -17,6 +17,7 @@ __marimo__/
 .virtual_documents/
 .jupyter_cache/
 .ipynb_checkpoints/
+.pytest_cache/
 node_modules/
 dist/
 
