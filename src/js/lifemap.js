@@ -12,7 +12,8 @@ import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
 import { layer_screengrid } from "./layers/layer_screengrid"
 import { LegendControl } from "./elements/controls"
 import { get_data_coords, get_taxid_coords } from "./data/api"
-import { DEFAULT_LON, DEFAULT_LAT, unserialize_data, stringify_scale } from "./utils"
+import { deserialize_data } from "./data/deserialization"
+import { DEFAULT_LON, DEFAULT_LAT, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
 
 import { fromLonLat, transformExtent } from "ol/proj"
@@ -69,7 +70,7 @@ export class Lifemap {
             let deserialized_data = {}
             let taxids = new Set()
             for (let k in data) {
-                let current_data = unserialize_data(data[k])
+                let current_data = deserialize_data(data[k])
                 deserialized_data[k] = current_data
                 taxids = taxids.union(new Set(current_data.map((d) => d.pylifemap_taxid)))
             }
