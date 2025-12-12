@@ -6,14 +6,12 @@ description: IUCN categories proportions at each clade
 image: img/iucn.png
 categories: [points, dark theme, published, scheme, in publication]
 ---
- 
+
 ::: {.callout-note}
 This visualization accompanies the article presenting pylifemap, available at [link to be added](tocome).
 :::
 
-
 Visualization of the proportion of species at each taxonomic rank that belong to each one of the 11 IUCN red list categories. Numbers inside donuts represent the number of species belonging to each clade present in the IUCN red list. IUCN data version 2025-2, downloaded from https://www.iucnredlist.org/ the 4th of December 2025.
-
 
 ```{python}
 #| echo: true
@@ -44,9 +42,20 @@ order_cat = [
 
 # Aggregate
 agg = aggregate_freq(df, column="redlistCategory")
-agg
 
 # Plot
-Lifemap(agg, center=41666, zoom=13).layer_donuts(counts_col="redlistCategory", scheme="Turbo", radius = [70, 150], show_totals = True, lazy_zoom=4, declutter=False, opacity=0.7, categories=order_cat).show()
-
+(
+    Lifemap(agg, center=41666, zoom=13)
+    .layer_donuts(
+        counts_col="redlistCategory",
+        scheme="Turbo",
+        radius = [70, 150],
+        show_totals = True,
+        lazy_zoom=4,
+        declutter=False,
+        opacity=0.7,
+        categories=order_cat
+    )
+    .show()
+)
 ```

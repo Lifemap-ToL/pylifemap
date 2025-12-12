@@ -6,7 +6,6 @@ description: Simple IUCN categories mapping
 image: img/iucn2.png
 categories: [points, dark theme]
 ---
-     
 
 ```{python}
 #| title: "Some Phylopic example"
@@ -22,5 +21,5 @@ iucn = pl.read_parquet(
     "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
 )
 
-Lifemap(iucn, taxid_col="taxid", width="100%").layer_points(fill="status").show()
+Lifemap(iucn, width="100%").layer_points(fill="status").show()
 ```

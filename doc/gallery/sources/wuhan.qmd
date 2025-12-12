@@ -2,7 +2,7 @@
 title: Wuhan market metagenomics
 author: "J. Barnier, V. Navratil, D. de Vienne"
 date: 2025-11-25
-description: Metagenomics in the Wuhan market after beginning of the covid pandemy. 
+description: Metagenomics in the Wuhan market after beginning of the covid pandemy.
 image: img/wuhan.png
 categories: [icons, lightgrey theme, points, lines, in publication]
 ---
@@ -14,7 +14,6 @@ This visualization accompanies the article presenting pylifemap, available at [l
 The visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).
 
 Here, taxa/lineages present in the reference database used by Kraken2 are represented by orange branches, and the number of reads assigned to each taxon is indicated by a circle whose size and color are proportional to this number. Points representing fewer than 1,000 reads mapped to the taxa were discarded.
-
 
 ```{python}
 #| title: "Wuhan phylogenomics"
@@ -29,7 +28,7 @@ import pandas as pd
 # Get all metagenomics read data (kraken)
 df = pd.read_parquet("data/wuhan_taxid_kraken2.parquet", engine='pyarrow')
 
-# Get all taxids in the reference database at the time of the study 
+# Get all taxids in the reference database at the time of the study
 alltaxid = pd.read_parquet("data/kraken2_nt_28112022_inspect_tax_id.parquet", engine="pyarrow")
 
 # Get all taxids belonging to amniota
@@ -47,11 +46,39 @@ alltaxid_amniota_agg = aggregate_count(alltaxid_amniota)
 wuhan_taxid_df = pd.read_csv("data/wuhan_taxid_df.csv")
 
 # PLOT
-Lifemap(df_amniota[df_amniota["count"]>=1000], theme="lightgrey", center=32524, zoom=12.5).layer_lines(alltaxid_amniota_agg, color="#f4aa44", width=1.5).layer_icons(wuhan_taxid_df, icon="img/cross.png", scale=0.2, popup=False, declutter=False).layer_points(radius="count", fill="count", radius_range = [4,25], scheme="YlOrRd").show()
-
+(
+    Lifemap(
+        theme="lightgrey",
+        center=32524,
+        zoom=12.5
+    )
+    .layer_lines(
+        alltaxid_amniota_agg,
+        color="#f4aa44",
+        width=1.5
+    )
+    .layer_icons(
+        wuhan_taxid_df,
+        icon="img/cross.png",
+        scale=0.2,
+        popup=False,
+        declutter=False
+    )
+    .layer_points(
+        df_amniota[df_amniota["count"]>=1000],
+        radius="count",
+        fill="count",
+        radius_range = [4,25],
+        scheme="YlOrRd"
+    )
+    .show()
+)
 ```
+
 ::: {.callout-note}
+
 ## References
-[1] Xiao X., Newman C., Buesching C.D., Macdonald D.W., Zhou Z.-M. 2021. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Scientific Reports. 11:11898. https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2 
-[2] Liu W.J., Liu P., Lei W., Jia Z., He X., Shi W., Tan Y., Zou S., Wong G., Wang J., Wang F., Wang G., Qin K., Gao R., Zhang J., Li M., Xiao W., Guo Y., Xu Z., Zhao Y., Song J., Zhang J., Zhen W., Zhou W., Ye B., Song J., Yang M., Zhou W., Dai Y., Lu G., Bi Y., Tan W., Han J., Gao G.F., Wu G. 2024. Surveillance of SARS-CoV-2 at the Huanan Seafood Market. Nature. 631:402–408. 
+
+[1] Xiao X., Newman C., Buesching C.D., Macdonald D.W., Zhou Z.-M. 2021. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Scientific Reports. 11:11898. https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2
+[2] Liu W.J., Liu P., Lei W., Jia Z., He X., Shi W., Tan Y., Zou S., Wong G., Wang J., Wang F., Wang G., Qin K., Gao R., Zhang J., Li M., Xiao W., Guo Y., Xu Z., Zhao Y., Song J., Zhang J., Zhen W., Zhou W., Ye B., Song J., Yang M., Zhou W., Dai Y., Lu G., Bi Y., Tan W., Han J., Gao G.F., Wu G. 2024. Surveillance of SARS-CoV-2 at the Huanan Seafood Market. Nature. 631:402–408.
 :::

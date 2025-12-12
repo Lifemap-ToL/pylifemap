@@ -37,11 +37,16 @@ data = pd.DataFrame({
 })
 
 # Show the Lifemap heatmap
-Lifemap(data, theme="lightgrey", width="100%").layer_icons(icon="imageurl", popup=True).show()
+(
+    Lifemap(data, theme="lightgrey", width="100%")
+    .layer_icons(icon="imageurl", popup=True)
+    .show()
+)
 ```
-::: {.callout-note}
-All images come from the Phylopic website [https://www.phylopic.org/](https://www.phylopic.org/). 
 
-For attribution and license information, follow 
-[this link](https://www.phylopic.org/permalinks/d34007439733ff57ec80c775ccb61c2218e0133255e43cf30af08f839e5447eb). 
+::: {.callout-note}
+All images come from the Phylopic website [https://www.phylopic.org/](https://www.phylopic.org/).
+
+For attribution and license information, follow
+[this link](https://www.phylopic.org/permalinks/d34007439733ff57ec80c775ccb61c2218e0133255e43cf30af08f839e5447eb).
 :::
