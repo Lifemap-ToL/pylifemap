@@ -63,7 +63,7 @@ class Lifemap(
     center : Literal["default", "auto"] | int
         Lifemap initial center. Can be "default" (tree center), "auto" (center on data) or
         a taxid value. Defaults to "default".
-    zoom : int | None, optional
+    zoom : int | float | None, optional
         Lifemap initial zoom level, if not specified, it is computed depending on the "center"
         argument value. Defaults to None.
     theme : str, optional
@@ -99,7 +99,7 @@ class Lifemap(
         width: int | str = DEFAULT_WIDTH,
         height: int | str = DEFAULT_HEIGHT,
         center: Literal["default", "auto"] | int = "default",
-        zoom: int | None = None,
+        zoom: int | float | None = None,
         theme: str = "dark",
         controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "search", "full_screen"),
         legend_width: int | None = None,
@@ -121,8 +121,10 @@ class Lifemap(
         if center == "default" and zoom is None:
             final_width = re.findall(r"^(\d+)px$", self._width)
             final_height = re.findall(r"^(\d+)px$", self._height)
-            if (final_width and int(final_width[0]) < 800) or (final_height and int(final_height[0]) < 800):  # noqa: PLR2004
+            if (final_width and int(final_width[0]) < 600) or (final_height and int(final_height[0]) < 600):  # noqa: PLR2004
                 zoom = 4
+            elif (final_width and int(final_width[0]) < 800) or (final_height and int(final_height[0]) < 800):  # noqa: PLR2004
+                zoom = 4.5
             else:
                 zoom = 5
 
