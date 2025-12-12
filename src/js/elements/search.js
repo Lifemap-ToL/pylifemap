@@ -1,4 +1,5 @@
 import { get_taxid_coords, fetch_suggestions } from "../data/api"
+import { flyTo } from "../utils"
 import { fromLonLat } from "ol/proj"
 import { inAndOut } from "ol/easing"
 
@@ -123,12 +124,8 @@ export class SearchDialog {
         } else {
             this.hide_dialog()
             const view = this.map.getView()
-            view.animate({
-                center: fromLonLat([result["lon"], result["lat"]]),
-                zoom: result["zoom"] - 3,
-                duration: 2000,
-                easing: inAndOut,
-            })
+            const center = fromLonLat([result["lon"], result["lat"]])
+            flyTo(view, center, result["zoom"] - 3)
         }
     }
 }

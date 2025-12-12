@@ -4,6 +4,8 @@ import {
     CompressionType,
 } from "@apache-arrow/es2015-esm"
 import * as lz4 from "lz4js"
+import { easeIn, easeOut, linear } from "ol/easing"
+import { boundingExtent } from "ol/extent"
 
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
@@ -80,4 +82,40 @@ export function set_hover_event(map, id, selected_feature) {
             { layerFilter: (d) => d.lifemap_ol_id == id }
         )
     })
+}
+
+// Animated dezoom / zoom movement helper
+// Taken from https://openlayers.org/en/latest/examples/animation.html
+export function flyTo(view, center, dest_zoom, duration = 1000) {
+    const current_zoom = view.getZoom()
+    const current_center = view.getCenter()
+    // Get bounding box of current and destination centers
+    const extent = boundingExtent([current_center, center])
+    // Get resolution and zoom for this bounding box
+    const intermediate_resolution = view.getResolutionForExtent(extent)
+    let intermediate_zoom = Math.round(view.getZoomForResolution(intermediate_resolution))
+    // Intermediate zoom must be lower than current and dest
+    intermediate_zoom = Math.min(intermediate_zoom, current_zoom, dest_zoom)
+
+    // Zoom movements
+    const start_zoom_move = Math.abs(intermediate_zoom - current_zoom)
+    const end_zoom_move = Math.abs(intermediate_zoom - dest_zoom)
+    const total_zoom_move = start_zoom_move + end_zoom_move
+
+    // Take zoom movement into account in duration
+    const total_duration = duration + 50 * total_zoom_move
+    view.animate({
+        center: center,
+        duration: total_duration,
+    })
+    view.animate(
+        {
+            zoom: intermediate_zoom,
+            duration: total_duration * (start_zoom_move / total_zoom_move),
+        },
+        {
+            zoom: dest_zoom,
+            duration: total_duration * (end_zoom_move / total_zoom_move),
+        }
+    )
 }
