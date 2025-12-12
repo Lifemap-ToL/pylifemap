@@ -5,7 +5,6 @@ Functions for DataFrame objects conversion to Arrow IPC bytes.
 import io
 from typing import Any
 
-import pandas as pd
 import polars as pl
 import pyarrow.feather as pf
 
@@ -32,31 +31,9 @@ def serialize_data(data: Any) -> dict:
     # If polars DataFrame, serialize to Arrow IPC
     if isinstance(data, pl.DataFrame):
         return {"serialized": True, "value": pl_to_arrow(data)}
-    # If pandas DataFrame, serialize to Arrow IPC
-    elif isinstance(data, pd.DataFrame):
-        return {"serialized": True, "value": pd_to_arrow(data)}
     # Else, keep as is
     else:
         return {"serialized": False, "value": data}
-
-
-def pd_to_arrow(df: pd.DataFrame) -> bytes:
-    """
-    Convert a pandas DataFrame to Arrow IPC bytes.
-
-    Arguments
-    ---------
-    df : pd.DataFrame
-        Pandas DataFrame to convert.
-
-    Returns
-    -------
-    bytes
-        Arrow IPC bytes
-    """
-    f = io.BytesIO()
-    df.to_feather(f, compression="lz4")
-    return f.getvalue()
 
 
 def pl_to_arrow(df: pl.DataFrame) -> bytes:
