@@ -1,6 +1,6 @@
 import { guidGenerator, set_hover_event, DEFAULT_NUM_SCHEME } from "../utils"
-import { get_popup_title } from "../api"
-import { setup_lazy_loading } from "../lazy_loading"
+import { get_popup_title } from "../data/api"
+import { setup_lazy_loading } from "../data/lazy_loading"
 
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"

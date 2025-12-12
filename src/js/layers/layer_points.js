@@ -4,9 +4,9 @@ import {
     DEFAULT_CAT_SCHEME,
     DEFAULT_NUM_SCHEME,
 } from "../utils"
-import { get_popup_title } from "../api"
+import { get_popup_title } from "../data/api"
 import { set_popup_event } from "../elements/popup"
-import { setup_lazy_loading } from "../lazy_loading"
+import { setup_lazy_loading } from "../data/lazy_loading"
 
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"

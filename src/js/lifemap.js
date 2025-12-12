@@ -11,7 +11,7 @@ import { layer_deck } from "./layers/layer_deck"
 import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
 import { layer_screengrid } from "./layers/layer_screengrid"
 import { LegendControl } from "./elements/controls"
-import { get_data_coords, get_taxid_coords } from "./api"
+import { get_data_coords, get_taxid_coords } from "./data/api"
 import { DEFAULT_LON, DEFAULT_LAT, unserialize_data, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
 

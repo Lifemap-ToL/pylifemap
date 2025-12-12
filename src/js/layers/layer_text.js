@@ -1,5 +1,5 @@
 import { guidGenerator } from "../utils"
-import { setup_lazy_loading } from "../lazy_loading"
+import { setup_lazy_loading } from "../data/lazy_loading"
 
 import { fromLonLat } from "ol/proj"
 import Feature from "ol/Feature.js"

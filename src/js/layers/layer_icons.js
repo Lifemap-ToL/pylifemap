@@ -1,6 +1,6 @@
-import { get_popup_title } from "../api"
+import { get_popup_title } from "../data/api"
 import { set_popup_event } from "../elements/popup"
-import { setup_lazy_loading } from "../lazy_loading"
+import { setup_lazy_loading } from "../data/lazy_loading"
 import { guidGenerator } from "../utils"
 
 import { fromLonLat } from "ol/proj"

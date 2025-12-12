@@ -1,4 +1,4 @@
-import { LIFEMAP_BACK_URL } from "./utils"
+import { LIFEMAP_BACK_URL } from "../utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
 export async function get_data_coords(taxids) {

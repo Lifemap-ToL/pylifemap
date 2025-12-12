@@ -1,4 +1,4 @@
-import { get_taxid_coords, fetch_suggestions } from "../api"
+import { get_taxid_coords, fetch_suggestions } from "../data/api"
 import { fromLonLat } from "ol/proj"
 import { inAndOut } from "ol/easing"
 
