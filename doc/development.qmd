@@ -2,7 +2,20 @@
 title: "Development notes"
 ---
 
-## Install the development version (from source)
+## Install the development version from Github
+
+Development version can be installed with pip or uv from Github with:
+
+```sh
+# With pip
+pip install git+https://github.com/Lifemap-ToL/pylifemap.git@bundle
+# Add to a project with uv
+uv add git+https://github.com/Lifemap-ToL/pylifemap.git@bundle
+# Run python with uv
+uv run --with git+https://github.com/Lifemap-ToL/pylifemap.git@bundle python
+```
+
+## Install the development version from source
 
 If you want to install `pylifemap` from source, you'll have to follow these steps:
 
@@ -62,6 +75,7 @@ docker build . -t pylifemap
 ## Release notes
 
 - Change version in `NEWS.md` and `pyproject.toml`
+- Run `uv sync` to update lock file
 - Cleanup the previous builds in `dist/`
 - Bundle and minify JS and CSS and build package with `npm run build`
 - Release the Python package with `uv publish` in `pylifemap`
