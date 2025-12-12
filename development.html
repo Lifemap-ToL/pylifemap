@@ -377,7 +377,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install-the-development-version-from-source" id="toc-install-the-development-version-from-source" class="nav-link active" data-scroll-target="#install-the-development-version-from-source">Install the development version (from source)</a></li>
+  <li><a href="#install-the-development-version-from-github" id="toc-install-the-development-version-from-github" class="nav-link active" data-scroll-target="#install-the-development-version-from-github">Install the development version from Github</a></li>
+  <li><a href="#install-the-development-version-from-source" id="toc-install-the-development-version-from-source" class="nav-link" data-scroll-target="#install-the-development-version-from-source">Install the development version from source</a></li>
   <li><a href="#widget-javascript-modification-and-bundling" id="toc-widget-javascript-modification-and-bundling" class="nav-link" data-scroll-target="#widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</a></li>
   <li><a href="#tests" id="toc-tests" class="nav-link" data-scroll-target="#tests">Tests</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
@@ -409,27 +410,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="install-the-development-version-from-github" class="level2">
+<h2 class="anchored" data-anchor-id="install-the-development-version-from-github">Install the development version from Github</h2>
+<p>Development version can be installed with pip or uv from Github with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># With pip</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/Lifemap-ToL/pylifemap.git@bundle</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add to a project with uv</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add git+https://github.com/Lifemap-ToL/pylifemap.git@bundle</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Run python with uv</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> git+https://github.com/Lifemap-ToL/pylifemap.git@bundle python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
 <section id="install-the-development-version-from-source" class="level2">
-<h2 class="anchored" data-anchor-id="install-the-development-version-from-source">Install the development version (from source)</h2>
+<h2 class="anchored" data-anchor-id="install-the-development-version-from-source">Install the development version from source</h2>
 <p>If you want to install <code>pylifemap</code> from source, you’ll have to follow these steps:</p>
 <ul>
 <li>Install <a href="https://nodejs.org/en">node.js</a></li>
 <li>Install <a href="https://docs.astral.sh/uv/">uv</a></li>
 <li>Clone the <a href="https://github.com/Lifemap-ToL/pylifemap">pylifemap</a> repository</li>
 <li>Install Python dependencies with : <code>uv sync</code></li>
-<li>Install JavaScript dependencies with : <code>npm install --workspaces --include-root-workspace</code></li>
+<li>Install JavaScript dependencies with : <code>npm install</code></li>
 <li>Bundle JavaScript and CSS code with <code>npm run bundle</code></li>
 </ul>
 </section>
 <section id="widget-javascript-modification-and-bundling" class="level2">
 <h2 class="anchored" data-anchor-id="widget-javascript-modification-and-bundling">Widget JavaScript modification and bundling</h2>
-<p>Each time the widget JavaScript or CSS code is modified in the <code>src/js/</code> or <code>packages/lifemapjs/</code> directories, it must be bundled with one of the following commands:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and minify both deck and no_deck versions</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle with deck.gl without minifying and watch for code change</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev_deck</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle with deck.gl without minifying and watch for code change</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev_nodeck</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each time the widget JavaScript or CSS code is modified in <code>src/js/</code> or <code>src/css</code>, it must be bundled with one of the following commands:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle and minify both deck and no_deck versions</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run bundle</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle with deck.gl without minifying and watch for code change</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev_deck</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle with deck.gl without minifying and watch for code change</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev_nodeck</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Two bundles are created:</p>
 <ul>
 <li>A bundle including deck.gl, in <code>src/pylifemap/static/deck</code></li>
@@ -440,23 +451,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tests" class="level2">
 <h2 class="anchored" data-anchor-id="tests">Tests</h2>
 <p>Python tests are in the <code>tests</code> directory and can be run with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
 <p>The package documentation is in <code>doc/</code>. It is managed by <a href="https://quarto.org">quarto</a> and <a href="https://machow.github.io/quartodoc/">quartodoc</a>.</p>
 <p>To build it in HTML format in <code>doc/_site/</code>you can run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run doc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run doc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="docker-image" class="level2">
 <h2 class="anchored" data-anchor-id="docker-image">Docker image</h2>
 <p>To build the docker image manually, run the following at the root of the repository:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build . <span class="at">-t</span> pylifemap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build . <span class="at">-t</span> pylifemap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="release-notes" class="level2">
 <h2 class="anchored" data-anchor-id="release-notes">Release notes</h2>
 <ul>
 <li>Change version in <code>NEWS.md</code> and <code>pyproject.toml</code></li>
+<li>Run <code>uv sync</code> to update lock file</li>
 <li>Cleanup the previous builds in <code>dist/</code></li>
 <li>Bundle and minify JS and CSS and build package with <code>npm run build</code></li>
 <li>Release the Python package with <code>uv publish</code> in <code>pylifemap</code></li>
