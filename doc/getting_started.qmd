@@ -138,7 +138,7 @@ When initializing a new `Lifemap` object, `pylifemap` will check and display a w
 You can get the full list of unknown or duplicated taxids by using the helper functions [get_unknown_taxids](`~pylifemap.get_unknown_taxids`) and [get_duplicated_taxids](`~pylifemap.get_duplicated_taxids`).
 :::
 
-## 4. Add visualization layers
+### 4. Add visualization layers
 
 After initializing our `Lifemap` object, we must add visualization layers to create graphical representations of our data. For example, we can add a points layer which will add a colored point over each species in our dataset. To do that, we can add a call to `layer_points()`:
 
