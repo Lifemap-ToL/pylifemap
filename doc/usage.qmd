@@ -77,7 +77,7 @@ Another way to use the package without having to install it is to use our [Docke
 To use `pylifemap` in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:
 
 ```sh
-docker run -it -p 8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
+docker run -it -p 127.0.0.1:8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest
 ```
 
 Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you will have access to a Jupyter notebook environment with `pylifemap` and its dependencies preinstalled.
