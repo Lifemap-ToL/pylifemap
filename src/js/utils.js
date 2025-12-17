@@ -1,4 +1,5 @@
 import { boundingExtent } from "ol/extent"
+import { inAndOut } from "ol/easing"
 
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
@@ -59,21 +60,26 @@ export function flyTo(view, center, dest_zoom, duration = 1000) {
     const start_zoom_move = Math.abs(intermediate_zoom - current_zoom)
     const end_zoom_move = Math.abs(intermediate_zoom - dest_zoom)
     const total_zoom_move = start_zoom_move + end_zoom_move
+    console.log(current_zoom, intermediate_zoom, dest_zoom)
+    console.log(start_zoom_move, end_zoom_move, total_zoom_move)
 
     // Take zoom movement into account in duration
     const total_duration = duration + 50 * total_zoom_move
     view.animate({
         center: center,
         duration: total_duration,
+        easing: inAndOut,
     })
     view.animate(
         {
             zoom: intermediate_zoom,
             duration: total_duration * (start_zoom_move / total_zoom_move),
+            easing: inAndOut,
         },
         {
             zoom: dest_zoom,
             duration: total_duration * (end_zoom_move / total_zoom_move),
+            easing: inAndOut,
         }
     )
 }
