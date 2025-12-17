@@ -14,6 +14,12 @@ export class SearchDialog {
         input.placeholder = "Taxa name or id..."
         input.name = "pylifemap-search"
         dialog.appendChild(input)
+        dialog.addEventListener("beforetoggle", (event) => {
+            if (event.newState === "open") {
+                input.focus()
+                input.select()
+            }
+        })
 
         input.addEventListener("change", this.input_validated.bind(this))
         input.addEventListener("input", this.input_changed.bind(this))
