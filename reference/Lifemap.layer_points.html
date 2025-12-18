@@ -458,7 +458,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>radius_range</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></td>
-<td>Range of values for points radius, only used if <code>radius_col</code> is not <code>None</code>. By default (2, 30).</td>
+<td>Range of values for points radius, only used if radius is the name of a DataFrame column. By default (2, 30).</td>
 <td><code>(2, 30)</code></td>
 </tr>
 <tr class="even">
@@ -524,7 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>lazy_zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>If <code>lazy</code> is <code>True</code>, only points with a zoom level less than (<code>zoom</code> + <code>lazy_zoom</code>) level will be displayed. Defaults to 15.</td>
+<td>If lazy is <code>True</code>, only points with a zoom level less than (current zoom + <code>lazy_zoom</code>) level will be displayed. Defaults to 15.</td>
 <td><code>15</code></td>
 </tr>
 <tr class="odd">
