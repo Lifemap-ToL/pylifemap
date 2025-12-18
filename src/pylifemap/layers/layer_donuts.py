@@ -116,8 +116,7 @@ class LayerDonuts(LayersBase):
 
         See also
         --------
-        [](c): aggregation of the values counts of a
-        categorical variable.
+        [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical variable.
 
         """
         options, df = self._process_options(locals())
