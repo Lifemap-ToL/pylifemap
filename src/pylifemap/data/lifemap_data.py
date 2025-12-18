@@ -178,7 +178,7 @@ class LifemapData:
 
     def points_data(
         self,
-        options: dict | None = None,
+        options: dict,
         data_columns: tuple | list = (),
         lazy_mode: Literal["self", "parent"] = "self",
     ) -> pl.DataFrame:
@@ -187,8 +187,8 @@ class LifemapData:
 
         Parameters
         ----------
-        options : dict | None, optional
-            Options dictionary. By default `None`.
+        options : dict
+            Options dictionary.
         data_columns: tuple | list, optional
             Data columns to keep in output data. By default `()`.
         lazy_mode : Literal["self", "parent"], optional
