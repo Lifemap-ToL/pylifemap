@@ -22,13 +22,13 @@ If you want to install `pylifemap` from source, you'll have to follow these step
 - Install [node.js](https://nodejs.org/en)
 - Install [uv](https://docs.astral.sh/uv/)
 - Clone the [pylifemap](https://github.com/Lifemap-ToL/pylifemap) repository
-- Install Python dependencies with : `uv sync`
-- Install JavaScript dependencies with : `npm install`
+- Install Python dependencies with `uv sync`
+- Install JavaScript dependencies with `npm install`
 - Bundle JavaScript and CSS code with `npm run bundle`
 
 ## Widget JavaScript modification and bundling
 
-Each time the widget JavaScript or CSS code is modified in `src/js/` or `src/css`, it must be bundled with one of the following commands:
+Each time the widget JavaScript or CSS code is modified in `src/js/` or `src/css/`, it must be bundled with one of the following commands:
 
 ```sh
 # Bundle and minify both deck and no_deck versions
@@ -58,7 +58,7 @@ npm run test
 
 The package documentation is in `doc/`. It is managed by [quarto](https://quarto.org) and [quartodoc](https://machow.github.io/quartodoc/).
 
-To build it in HTML format in `doc/_site/`you can run:
+To build it in HTML format in `doc/_site/` you can run:
 
 ```sh
 npm run doc

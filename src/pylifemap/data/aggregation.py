@@ -118,9 +118,9 @@ def aggregate_num(
     column : str
         Name of the `d` column to aggregate.
     fn : {"sum", "mean", "min", "max", "median"}
-        Function used to aggregate the values, by default "sum".
+        Function used to aggregate the values. By default `'sum'`.
     taxid_col : str, optional
-        Name of the `d` column containing taxonomy ids, by default "taxid"
+        Name of the `d` column containing taxonomy ids. By default `'taxid'`.
 
     Returns
     -------
@@ -130,15 +130,15 @@ def aggregate_num(
     Raises
     ------
     ValueError
-        If `column` is equal to "taxid".
+        If `column` is equal to `'taxid'`.
     ValueError
         If `fn` is not on the allowed values.
 
     See also
     --------
-    [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
+    [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
 
-    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a
+    [](`~pylifemap.aggregate_freq`): aggregation of the values counts of a
         categorical variable.
 
     Examples
@@ -214,9 +214,9 @@ def aggregate_count(
     d : pd.DataFrame | pl.DataFrame
         DataFrame to aggregate data from.
     result_col : str, optional
-        Name of the column created to store the counts, by default "n".
+        Name of the column created to store the counts. By default `'n'`.
     taxid_col : str, optional
-        Name of the `d` column containing taxonomy ids, by default "taxid".
+        Name of the `d` column containing taxonomy ids. By default `'taxid'`.
 
     Returns
     -------
@@ -225,9 +225,9 @@ def aggregate_count(
 
     See also
     --------
-    [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
+    [](`~pylifemap.aggregate_num`): aggregation of a numeric variable.
 
-    [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical
+    [](`~pylifemap.aggregate_freq`): aggregation of the values counts of a categorical
         variable.
 
     Examples
@@ -289,19 +289,19 @@ def aggregate_freq(
     column : str
         Name of the `d` column to aggregate.
     taxid_col : str, optional
-        Name of the `d` column containing taxonomy ids, by default "taxid".
+        Name of the `d` column containing taxonomy ids. By default `'taxid'`.
 
     Returns
     -------
     pl.DataFrame | pd.DataFrame
-        Aggregated DataFrame in the same format as input. The "count" column contains the value
+        Aggregated DataFrame in the same format as input. The `count` column contains the value
         counts as a polars struct.
 
     See also
     --------
-    [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
+    [](`~pylifemap.aggregate_num`): aggregation of a numeric variable.
 
-    [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
+    [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
 
     Examples
     --------

@@ -8,7 +8,7 @@ categories: [icons, lightgrey theme, points, lines, in publication]
 ---
 
 ::: {.callout-note}
-This visualization accompanies the article presenting pylifemap, available at [link to be added](tocome).
+This visualization accompanies the article presenting `pylifemap`, available at [link to be added](tocome).
 :::
 
 The visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).

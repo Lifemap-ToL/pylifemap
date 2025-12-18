@@ -13,7 +13,7 @@ def get_unknown_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "taxi
     data : pl.DataFrame | pd.DataFrame
         Pandas or polars dataframe with original data.
     taxid_col : str
-        Name of the column storing taxonomy ids, by default "taxid".
+        Name of the column storing taxonomy ids. By default `'taxid'`.
 
     Returns
     -------
@@ -22,7 +22,7 @@ def get_unknown_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "taxi
 
     See also
     --------
-    [](`~pylifemap.get_duplicated_taxids`) : function to get a list of duplicated taxids.
+    [](`~pylifemap.get_duplicated_taxids`): function to get a list of duplicated taxids.
 
     Examples
     --------
@@ -44,7 +44,7 @@ def get_duplicated_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "t
     data : pl.DataFrame | pd.DataFrame
         Pandas or polars dataframe with original data.
     taxid_col : str
-        Name of the column storing taxonomy ids, by default "taxid".
+        Name of the column storing taxonomy ids. By default `'taxid'`.
 
     Returns
     -------
@@ -53,7 +53,7 @@ def get_duplicated_taxids(data: pl.DataFrame | pd.DataFrame, taxid_col: str = "t
 
     See also
     --------
-    [](`~pylifemap.get_unknown_taxids`) : function to get a list of unknown taxids.
+    [](`~pylifemap.get_unknown_taxids`): function to get a list of unknown taxids.
 
     Examples
     --------

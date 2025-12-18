@@ -2,7 +2,7 @@
 title: Phylopic - Tree of Life
 author: "D. de Vienne"
 date: 2025-11-25
-description: Silhouettes of some species from Phylopic mapped at their exact location in Lifemap (lightgrey theme).
+description: Silhouettes of some species from Phylopic mapped at their exact location in `Lifemap` (lightgrey theme).
 image: img/phylopic.png
 categories: [icons, lightgrey]
 ---

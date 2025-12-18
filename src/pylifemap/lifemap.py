@@ -53,34 +53,34 @@ class Lifemap(
     data : pl.DataFrame | pd.DataFrame | None, optional
         Visualization data.
     taxid_col : str, optional
-        Name of the `data` column with taxonomy ids, by default `"taxid"`
+        Name of the `data` column with taxonomy ids. By default `'taxid'`
     width : int | str, optional
-        Lifemap visualization width, in pixels or CSS units, by
+        Lifemap visualization width, in pixels or CSS units. By
         default `DEFAULT_WIDTH`
     height : int | str, optional
-        Lifemap visualization height, in pixels or CSS units, by
+        Lifemap visualization height, in pixels or CSS units. By
         default `DEFAULT_HEIGHT`
     center : Literal["default", "auto"] | int
-        Lifemap initial center. Can be "default" (tree center), "auto" (center on data) or
-        a taxid value. Defaults to "default".
+        Lifemap initial center. Can be `'default'` (tree center), `'auto'` (center on data) or
+        a taxid value. Defaults to `'default'`.
     zoom : int | float | None, optional
-        Lifemap initial zoom level, if not specified, it is computed depending on the "center"
-        argument value. Defaults to None.
+        Lifemap initial zoom level, if not specified, it is computed depending on the `center`
+        argument value. Defaults to `None`.
     theme : str, optional
-        Color theme for the basemap. Can be one of "light", "dark", "lightblue", "lightgrey", or "lightgreen".
-        Defaults to "dark".
+        Color theme for the basemap. Can be one of `'light'`, `'dark'`, `'lightblue'`, `'lightgrey'`, or `'lightgreen'`.
+        Defaults to `'dark'`.
     controls : Sequence[str]
         List of controls to be displayed on the widget. By default all controls are displayed.
         Available controls are:
-            - "zoom": zoom in and zoom out buttons
-            - "reset_zoom": zoom reset button
-            - "png_export": button to export current view to a PNG file
-            - "search": taxa search button
-            - "full_screen": full screen toggle button
+            - `'zoom'`: zoom in and zoom out buttons
+            - `'reset_zoom'`: zoom reset button
+            - `'png_export'`: button to export current view to a PNG file
+            - `'search'`: taxa search button
+            - `'full_screen'`: full screen toggle button
     legend_width : int | None, optional
-        Legend width in pixels, by default None
+        Legend width in pixels. By default `None`.
     hide_labels : bool
-        If True, hide the taxa name labels. Defaults to False.
+        If `True`, hide the taxa name labels. Defaults to `False`.
 
     Examples
     --------
@@ -89,7 +89,7 @@ class Lifemap(
     >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
     >>> Lifemap(d, width="100%", height="100vh").layer_points().show()
 
-    """
+    """  # noqa: E501
 
     def __init__(
         self,
@@ -185,7 +185,7 @@ class Lifemap(
         file and opens it in a browser if possible.
 
         In a marimo notebook environment, the widget object is returned in order to be
-        passed to marimo.ui.anywidget().
+        passed to `marimo.ui.anywidget()`.
         """
         if check_marimo():
             return self._to_widget()
@@ -214,7 +214,7 @@ class Lifemap(
         path : str | Path
             Path to the HTML file to save the widget.
         title : str, optional
-            Optional HTML page title, by default "Lifemap"
+            Optional HTML page title. By default `'Lifemap'`.
 
         Examples
         --------

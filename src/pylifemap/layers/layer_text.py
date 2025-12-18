@@ -33,30 +33,30 @@ class LayerText(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         text : str
             Name of a column of the data containing text to be displayed.
         font_size: int
-            Text font size, by default 12.
+            Text font size. By default 12.
         font_family : str
-            CSS-like font family definition, by default "Segoe UI, Helvetica, sans-serif".
+            CSS-like font family definition. By default `'Segoe UI, Helvetica, sans-serif'`.
         color : str
-            CSS text color specification, by default "#FFFFFF".
+            CSS text color specification. By default `'#FFFFFF'`.
         stroke : str
-            CSS stroke color specification, by default "#000000".
+            CSS stroke color specification. By default `'#000000'`.
         opacity : float
-            Text opacity as a floating number between 0 and 1, by default 1.0.
+            Text opacity as a floating number between 0 and 1. By default 1.0.
         declutter : bool, optional
-            If True, use OpenLayers decluttering option for this layer. Defaults to True.
+            If `True`, use OpenLayers decluttering option for this layer. Defaults to `True`.
         lazy : bool
-            If True, points are displayed depending on the widget view. If False, all points are displayed.
-            Can be useful when displaying a great number of items. Defaults to False.
+            If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to `False`.
         lazy_zoom : int
-            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            If `lazy` is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
             displayed. Defaults to 15.
         lazy_mode : Literal["self", "parent"], optional
-            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
-            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
+            If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'"self'`, keep the taxa zoom
+            level. If `'parent'`, get the nearest ancestor zoom level. Defaults to `'self'`.
 
 
 

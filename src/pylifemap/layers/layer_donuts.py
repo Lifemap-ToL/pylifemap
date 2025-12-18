@@ -40,40 +40,40 @@ class LayerDonuts(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         counts_col : str
             DataFrame column containing the counts.
         categories : list | tuple | None, optional
-            Custom order of categories. Defaults to None.
+            Custom order of categories. Defaults to `None`.
         radius : int | list | tuple, optional
             Donut charts radius. If an integer, all donut charts will be of the same size. If a list
-            or a tuple of length 2, chart size will depend on the node total count. By default 50
+            or a tuple of length 2, chart size will depend on the node total count. By default 50.
         leaves : Literal[&quot;show&quot;, &quot;hide&quot;], optional
-            If `"show"`, add a points layer with individual leaves values, by
-            default "hide"
+            If `'show'`, add a points layer with individual leaves values. By
+            default `'hide'`.
         show_totals : bool, optional
-            If True, display the total count of the current taxa in the center of the donut chart. Defaults to
-            True
+            If `True`, display the total count of the current taxa in the center of the donut chart. Defaults to
+            `True`.
         scheme : str | None, optional
             Color scheme for donut charts ans points. It is the name of
-            a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales),
-            by default None
+            a categorical [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
+            By default `None`.
         opacity : float | None, optional
-            Donut charts and points opacity, by default 1
+            Donut charts and points opacity. By default 1.
         popup : bool, optional
-            If True, display informations in a popup when a point is clicked,
-            by default True
+            If `True`, display informations in a popup when a point is clicked.
+            By default `True`.
         popup_col : str | None
-            Name of a data column containing custom popup content. By default None.
+            Name of a data column containing custom popup content. By default `None`.
         label : str | None, optional
             Legend title for this layer. If `None`, the value of `counts_col` is used.
         declutter : bool, optional
-            If True, use OpenLayers decluttering option for this layer. Defaults to True.
+            If `True`, use OpenLayers decluttering option for this layer. Defaults to `True`.
         lazy : bool
-            If True, points are displayed depending on the widget view. If False, all points are displayed.
-            Can be useful when displaying a great number of items. Defaults to True.
+            If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to `True`.
         lazy_zoom : int
-            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            If `lazy`is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
             displayed. Defaults to 4.
 
 
@@ -116,7 +116,7 @@ class LayerDonuts(LayersBase):
 
         See also
         --------
-        [](c) : aggregation of the values counts of a
+        [](c): aggregation of the values counts of a
         categorical variable.
 
         """

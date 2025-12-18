@@ -40,7 +40,7 @@ class LayerIcons(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         icon : str
             Either the URL to an image file or data uri to use as icon, or the name of a column of the data
             containing urls or data uris of icons to be displayed.
@@ -49,35 +49,35 @@ class LayerIcons(LayersBase):
         height : int | None, optional
             Image height, in pixels.
         scale : float | None, optional
-            Factor with which to scale the original icon size. Cannot be used with width or height.
+            Factor with which to scale the original icon size. Cannot be used with `width` or `height`.
         color : str | None, optional
-            CSS color to tint the icon, by default None.
+            CSS color to tint the icon. By default `None`.
         x_offset : int
-            Horizontal offset in pixels, by default 0.
+            Horizontal offset in pixels. By default 0.
         y_offset : int
-            Vertical offset in pixels, by default 0.
+            Vertical offset in pixels. By default 0.
         x_anchor : float
-            Horizontal icon anchor, as a number between 0 and 1, by default 0.5.
+            Horizontal icon anchor, as a number between 0 and 1. By default 0.5.
         y_anchor : float
-            Vertical icon anchor, as a number between 0 and 1, by default 0.5.
+            Vertical icon anchor, as a number between 0 and 1. By default 0.5.
         opacity : float
-            Text opacity as a floating number between 0 and 1, by default 1.0.
+            Text opacity as a floating number between 0 and 1. By default 1.0.
         popup : bool, optional
-            If True, display informations in a popup when an icon is clicked,
-            by default True.
+            If `True`, display informations in a popup when an icon is clicked.
+            By default `True`.
         popup_col : str | None
-            Name of a data column containing custom popup content. By default None.
+            Name of a data column containing custom popup content. By default `None`.
         declutter : bool, optional
-            If True, use OpenLayers decluttering option for this layer. Defaults to True.
+            If `True`, use OpenLayers decluttering option for this layer. Defaults to `True`.
         lazy : bool
-            If True, points are displayed depending on the widget view. If False, all points are displayed.
-            Can be useful when displaying a great number of items. Defaults to False.
+            If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to `False`.
         lazy_zoom : int
-            If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            If `lazy`is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
             displayed. Defaults to 10.
         lazy_mode : Literal["self", "parent"], optional
-            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
-            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
+            If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'self'`, keep the taxa zoom
+            level. If `'parent'`, get the nearest ancestor zoom level. Defaults to `'self'`.
 
         Returns
         -------

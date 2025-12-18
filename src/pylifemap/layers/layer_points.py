@@ -41,49 +41,49 @@ class LayerPoints(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         leaves : Literal[&quot;show&quot;, &quot;only&quot;, &quot;omit&quot;], optional
-            If `"only"`, only show tree leaves. If `"omit"`, only show nodes that are
-            not leaves. If `"show"`, show all nodes, by default "show"
+            If `'only'`, only show tree leaves. If `'omit'`, only show nodes that are
+            not leaves. If `'show'`, show all nodes. By default `'show'`.
         radius : int | float | str, optional
             If numeric, the fixed radius of the points. If a string, the name of a numerical DataFrame column
             to compute radius width from.
         radius_range : tuple | list
-            Range of values for points radius, only used if radius_col is not None, by default (2, 30)
+            Range of values for points radius, only used if `radius_col` is not `None`. By default (2, 30).
         fill : str | None, optional
             Either the name of a numerical DataFrame column to determine points color, or a fixed CSS
             color for points.
         fill_cat : bool | None, optional
-            If True, force color scheme to be categorical. If False, force it to be
-            continuous. If None, let pylifemap decide. By default None.
+            If `True`, force color scheme to be categorical. If `False`, force it to be
+            continuous. If `None`, let `pylifemap` decide. By default `None`.
         categories : list | tuple | None, optional
-            Custom order of categories when a categorical variable is used for the fill argument.
-            Defaults to None.
+            Custom order of categories when a categorical variable is used for the `fill` argument.
+            Defaults to `None`.
         scheme : str | None, optional
             Color scheme for points color. It is the name of
             an [Observable Plot color scale](https://observablehq.com/plot/features/scales#color-scales).
         opacity : float
-            Points opacity as a floating number between 0 and 1, by default 0.8
+            Points opacity as a floating number between 0 and 1. By default 0.8.
         popup : bool
-            If True, display informations in a popup when a point is clicked,
-            by default True
+            If `True`, display informations in a popup when a point is clicked.
+            By default `True`.
         popup_col : str | None
-            Name of a data column containing custom popup content. By default None.
+            Name of a data column containing custom popup content. By default `None`.
         hover : bool | None, optional
-            If True, highlight points on mouse hovering. By default True if less than 10_000 data points,
-            False otherwise.
+            If `True`, highlight points on mouse hovering. By default `True` if less than 10_000 data points,
+            `False` otherwise.
         label : str | None, optional
             Legend title for this layer if `fill` is defined. If `None`, the value
             of `fill` is used.
         lazy : bool
-            If True, points are displayed depending on the widget view. If False, all points are displayed.
-            Can be useful when displaying a great number of items. Defaults to False.
+            If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
+            Can be useful when displaying a great number of items. Defaults to `False`.
         lazy_zoom : int
-            If lazy is True, only points with a zoom level less than (zoom + lazy_zoom) level will be
+            If `lazy` is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
             displayed. Defaults to 15.
         lazy_mode : Literal["self", "parent"], optional
-            If lazy is True, choose the zoom level to apply to each taxa. If "self", keep the taxa zoom
-            level. If "parent", get the nearest ancestor zoom level. Defaults to "self".
+            If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'self'`, keep the taxa zoom
+            level. If `'parent'`, get the nearest ancestor zoom level. Defaults to `'self'`.
 
         Returns
         -------
@@ -122,9 +122,9 @@ class LayerPoints(LayersBase):
 
         See also
         --------
-        [](`~pylifemap.aggregate_num`) : aggregation of a numeric variable.
+        [](`~pylifemap.aggregate_num`): aggregation of a numeric variable.
 
-        [](`~pylifemap.aggregate_count`) : aggregation of the number of observations.
+        [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
         """
         options, df = self._process_options(locals())
 

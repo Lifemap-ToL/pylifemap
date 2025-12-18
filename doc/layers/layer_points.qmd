@@ -2,7 +2,7 @@
 title: Points layer
 ---
 
-The points layer displays observations as points on the lifemap tree.
+The points layer displays observations as points on the `Lifemap` tree.
 
 The `fill` and `radius` arguments allow to modify the size and color of the points. They can either be fixed values (numerical for `radius`, an hexadecimal color code for `fill`) or data column names. In this case, size or color will depend on the column values.
 
