@@ -439,7 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>taxid_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids, by default <code>"taxid"</code></td>
+<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids. By default <code>'taxid'</code>.</td>
 <td><code>'taxid'</code></td>
 </tr>
 <tr class="odd">
@@ -451,49 +451,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>categories</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> | None</td>
-<td>Custom order of categories. Defaults to None.</td>
+<td>Custom order of categories. Defaults to <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>radius</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a></td>
-<td>Donut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50</td>
+<td>Donut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50.</td>
 <td><code>50</code></td>
 </tr>
 <tr class="even">
 <td>leaves</td>
 <td>Literal["show", "hide"]</td>
-<td>If <code>"show"</code>, add a points layer with individual leaves values, by default “hide”</td>
+<td>If <code>'show'</code>, add a points layer with individual leaves values. By default <code>'hide'</code>.</td>
 <td><code>'hide'</code></td>
 </tr>
 <tr class="odd">
 <td>show_totals</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, display the total count of the current taxa in the center of the donut chart. Defaults to True</td>
+<td>If <code>True</code>, display the total count of the current taxa in the center of the donut chart. Defaults to <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
 <td>scheme</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
-<td>Color scheme for donut charts ans points. It is the name of a categorical <a href="https://observablehq.com/plot/features/scales#color-scales">Observable Plot color scale</a>, by default None</td>
+<td>Color scheme for donut charts ans points. It is the name of a categorical <a href="https://observablehq.com/plot/features/scales#color-scales">Observable Plot color scale</a>. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>opacity</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</td>
-<td>Donut charts and points opacity, by default 1</td>
+<td>Donut charts and points opacity. By default 1.</td>
 <td><code>1</code></td>
 </tr>
 <tr class="even">
 <td>popup</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, display informations in a popup when a point is clicked, by default True</td>
+<td>If <code>True</code>, display informations in a popup when a point is clicked. By default <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
 <td>popup_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
-<td>Name of a data column containing custom popup content. By default None.</td>
+<td>Name of a data column containing custom popup content. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
@@ -505,19 +505,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>declutter</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, use OpenLayers decluttering option for this layer. Defaults to True.</td>
+<td>If <code>True</code>, use OpenLayers decluttering option for this layer. Defaults to <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
 <td>lazy</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.</td>
+<td>If <code>True</code>, points are displayed depending on the widget view. If <code>False</code>, all points are displayed. Can be useful when displaying a great number of items. Defaults to <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
 <td>lazy_zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be displayed. Defaults to 4.</td>
+<td>If <code>lazy</code>is <code>True</code>, only points with a zoom level less than (<code>zoom</code> + <code>lazy_zoom</code>) level will be displayed. Defaults to 4.</td>
 <td><code>4</code></td>
 </tr>
 </tbody>
@@ -588,7 +588,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="see-also" class="level2 doc-section doc-section-see-also">
 <h2 class="doc-section doc-section-see-also anchored" data-anchor-id="see-also">See also</h2>
-<p><a href="c"></a> : aggregation of the values counts of a categorical variable.</p>
+<p><a href="c"></a>: aggregation of the values counts of a categorical variable.</p>
 
 
 </section>

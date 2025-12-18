@@ -430,55 +430,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>taxid_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>Name of the <code>data</code> column with taxonomy ids, by default <code>"taxid"</code></td>
+<td>Name of the <code>data</code> column with taxonomy ids. By default <code>'taxid'</code></td>
 <td><code>'taxid'</code></td>
 </tr>
 <tr class="odd">
 <td>width</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>Lifemap visualization width, in pixels or CSS units, by default <code>DEFAULT_WIDTH</code></td>
+<td>Lifemap visualization width, in pixels or CSS units. By default <code>DEFAULT_WIDTH</code></td>
 <td><code>DEFAULT_WIDTH</code></td>
 </tr>
 <tr class="even">
 <td>height</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>Lifemap visualization height, in pixels or CSS units, by default <code>DEFAULT_HEIGHT</code></td>
+<td>Lifemap visualization height, in pixels or CSS units. By default <code>DEFAULT_HEIGHT</code></td>
 <td><code>DEFAULT_HEIGHT</code></td>
 </tr>
 <tr class="odd">
 <td>center</td>
 <td><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>['default', 'auto'] | <a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Lifemap initial center. Can be “default” (tree center), “auto” (center on data) or a taxid value. Defaults to “default”.</td>
+<td>Lifemap initial center. Can be <code>'default'</code> (tree center), <code>'auto'</code> (center on data) or a taxid value. Defaults to <code>'default'</code>.</td>
 <td><code>'default'</code></td>
 </tr>
 <tr class="even">
 <td>zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</td>
-<td>Lifemap initial zoom level, if not specified, it is computed depending on the “center” argument value. Defaults to None.</td>
+<td>Lifemap initial zoom level, if not specified, it is computed depending on the <code>center</code> argument value. Defaults to <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>theme</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>Color theme for the basemap. Can be one of “light”, “dark”, “lightblue”, “lightgrey”, or “lightgreen”. Defaults to “dark”.</td>
+<td>Color theme for the basemap. Can be one of <code>'light'</code>, <code>'dark'</code>, <code>'lightblue'</code>, <code>'lightgrey'</code>, or <code>'lightgreen'</code>. Defaults to <code>'dark'</code>.</td>
 <td><code>'dark'</code></td>
 </tr>
 <tr class="even">
 <td>controls</td>
 <td><a href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</td>
-<td>List of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - “zoom”: zoom in and zoom out buttons - “reset_zoom”: zoom reset button - “png_export”: button to export current view to a PNG file - “search”: taxa search button - “full_screen”: full screen toggle button</td>
+<td>List of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - <code>'zoom'</code>: zoom in and zoom out buttons - <code>'reset_zoom'</code>: zoom reset button - <code>'png_export'</code>: button to export current view to a PNG file - <code>'search'</code>: taxa search button - <code>'full_screen'</code>: full screen toggle button</td>
 <td><code>('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen')</code></td>
 </tr>
 <tr class="odd">
 <td>legend_width</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a> | None</td>
-<td>Legend width in pixels, by default None</td>
+<td>Legend width in pixels. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
 <td>hide_labels</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, hide the taxa name labels. Defaults to False.</td>
+<td>If <code>True</code>, hide the taxa name labels. Defaults to <code>False</code>.</td>
 <td><code>False</code></td>
 </tr>
 </tbody>

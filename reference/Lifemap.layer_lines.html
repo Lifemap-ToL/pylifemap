@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>taxid_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids, by default <code>"taxid"</code></td>
+<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids. By default <code>'taxid'</code>.</td>
 <td><code>'taxid'</code></td>
 </tr>
 <tr class="odd">
@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>width_range</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></td>
-<td>Min and max values for line widths, only used if width is a data column, by default (1, 30)</td>
+<td>Min and max values for line widths, only used if <code>width</code> is a data column. By default (1, 30).</td>
 <td><code>(1, 30)</code></td>
 </tr>
 <tr class="odd">
@@ -467,31 +467,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>linetype</td>
 <td><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>['solid', 'dotted', 'smalldash', 'dashed']</td>
-<td>Type of lines. Defaults to ‘solid’.</td>
+<td>Type of lines. Defaults to <code>'solid'</code>.</td>
 <td><code>'solid'</code></td>
 </tr>
 <tr class="even">
 <td>opacity</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
-<td>Line opacity as a floating number between 0 and 1, by default 0.8</td>
+<td>Line opacity as a floating number between 0 and 1. By default 0.8.</td>
 <td><code>0.8</code></td>
 </tr>
 <tr class="odd">
 <td>popup</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, display informations in a popup when a point is clicked, by default True</td>
+<td>If <code>True</code>, display informations in a popup when a point is clicked. By default <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
 <td>popup_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
-<td>Name of a data column containing custom popup content. By default None.</td>
+<td>Name of a data column containing custom popup content. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>hover</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None</td>
-<td>If True, highlight points on mouse hovering. By default True if less than 10_000 data points, False otherwise.</td>
+<td>If <code>True</code>, highlight points on mouse hovering. By default <code>True</code> if less than 10_000 data points, <code>False</code> otherwise.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
@@ -503,19 +503,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>lazy</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to False.</td>
+<td>If <code>True</code>, points are displayed depending on the widget view. If <code>False</code>, all points are displayed. Can be useful when displaying a great number of items. Defaults to <code>False</code>.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
 <td>lazy_zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be displayed. Defaults to 15.</td>
+<td>If <code>lazy</code> is <code>True</code>, only points with a zoom level less than (<code>zoom</code> + <code>lazy_zoom</code>) level will be displayed. Defaults to 15.</td>
 <td><code>15</code></td>
 </tr>
 <tr class="odd">
 <td>lazy_mode</td>
 <td><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>['self', 'parent']</td>
-<td>If lazy is True, choose the zoom level to apply to each taxa. If “self”, keep the taxa zoom level. If “parent”, get the nearest ancestor zoom level. Defaults to “self”.</td>
+<td>If <code>lazy</code> is <code>True</code>, choose the zoom level to apply to each taxa. If <code>'self'</code>, keep the taxa zoom level. If <code>'parent'</code>, get the nearest ancestor zoom level. Defaults to <code>'self'</code>.</td>
 <td><code>'self'</code></td>
 </tr>
 </tbody>
@@ -567,8 +567,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="see-also" class="level2 doc-section doc-section-see-also">
 <h2 class="doc-section doc-section-see-also anchored" data-anchor-id="see-also">See also</h2>
-<p><a href="../reference/aggregate_num.html#pylifemap.aggregate_num"><code>aggregate_num</code></a> : aggregation of a numeric variable.</p>
-<p><a href="../reference/aggregate_count.html#pylifemap.aggregate_count"><code>aggregate_count</code></a> : aggregation of the number of observations.</p>
+<p><a href="../reference/aggregate_num.html#pylifemap.aggregate_num"><code>aggregate_num</code></a>: aggregation of a numeric variable.</p>
+<p><a href="../reference/aggregate_count.html#pylifemap.aggregate_count"><code>aggregate_count</code></a>: aggregation of the number of observations.</p>
 
 
 </section>

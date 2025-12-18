@@ -439,7 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>taxid_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></td>
-<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids, by default <code>"taxid"</code></td>
+<td>If <code>data</code> is provided, name of the <code>data</code> column with taxonomy ids. By default <code>'taxid'</code>.</td>
 <td><code>'taxid'</code></td>
 </tr>
 <tr class="odd">
@@ -463,79 +463,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>scale</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</td>
-<td>Factor with which to scale the original icon size. Cannot be used with width or height.</td>
+<td>Factor with which to scale the original icon size. Cannot be used with <code>width</code> or <code>height</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>color</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
-<td>CSS color to tint the icon, by default None.</td>
+<td>CSS color to tint the icon. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
 <td>x_offset</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Horizontal offset in pixels, by default 0.</td>
+<td>Horizontal offset in pixels. By default 0.</td>
 <td><code>0</code></td>
 </tr>
 <tr class="odd">
 <td>y_offset</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>Vertical offset in pixels, by default 0.</td>
+<td>Vertical offset in pixels. By default 0.</td>
 <td><code>0</code></td>
 </tr>
 <tr class="even">
 <td>x_anchor</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
-<td>Horizontal icon anchor, as a number between 0 and 1, by default 0.5.</td>
+<td>Horizontal icon anchor, as a number between 0 and 1. By default 0.5.</td>
 <td><code>0.5</code></td>
 </tr>
 <tr class="odd">
 <td>y_anchor</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
-<td>Vertical icon anchor, as a number between 0 and 1, by default 0.5.</td>
+<td>Vertical icon anchor, as a number between 0 and 1. By default 0.5.</td>
 <td><code>0.5</code></td>
 </tr>
 <tr class="even">
 <td>opacity</td>
 <td><a href="https://docs.python.org/3/library/functions.html#float">float</a></td>
-<td>Text opacity as a floating number between 0 and 1, by default 1.0.</td>
+<td>Text opacity as a floating number between 0 and 1. By default 1.0.</td>
 <td><code>1.0</code></td>
 </tr>
 <tr class="odd">
 <td>popup</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, display informations in a popup when an icon is clicked, by default True.</td>
+<td>If <code>True</code>, display informations in a popup when an icon is clicked. By default <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
 <td>popup_col</td>
 <td><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None</td>
-<td>Name of a data column containing custom popup content. By default None.</td>
+<td>Name of a data column containing custom popup content. By default <code>None</code>.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>declutter</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, use OpenLayers decluttering option for this layer. Defaults to True.</td>
+<td>If <code>True</code>, use OpenLayers decluttering option for this layer. Defaults to <code>True</code>.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
 <td>lazy</td>
 <td><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></td>
-<td>If True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to False.</td>
+<td>If <code>True</code>, points are displayed depending on the widget view. If <code>False</code>, all points are displayed. Can be useful when displaying a great number of items. Defaults to <code>False</code>.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
 <td>lazy_zoom</td>
 <td><a href="https://docs.python.org/3/library/functions.html#int">int</a></td>
-<td>If lazy true, only points with a zoom level less than (zoom + lazy_zoom) level will be displayed. Defaults to 10.</td>
+<td>If <code>lazy</code>is <code>True</code>, only points with a zoom level less than (<code>zoom</code> + <code>lazy_zoom</code>) level will be displayed. Defaults to 10.</td>
 <td><code>10</code></td>
 </tr>
 <tr class="even">
 <td>lazy_mode</td>
 <td><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>['self', 'parent']</td>
-<td>If lazy is True, choose the zoom level to apply to each taxa. If “self”, keep the taxa zoom level. If “parent”, get the nearest ancestor zoom level. Defaults to “self”.</td>
+<td>If <code>lazy</code> is <code>True</code>, choose the zoom level to apply to each taxa. If <code>'self'</code>, keep the taxa zoom level. If <code>'parent'</code>, get the nearest ancestor zoom level. Defaults to <code>'self'</code>.</td>
 <td><code>'self'</code></td>
 </tr>
 </tbody>
