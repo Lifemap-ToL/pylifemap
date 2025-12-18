@@ -27,8 +27,8 @@ class TestPropagateParentZoom:
 
     def test_points_data_lazy_parent(self, d):
         lm = LifemapData(d, taxid_col="pylifemap_taxid")
-        data_self = lm.points_data(lazy_mode="self").sort("pylifemap_taxid")
-        data_parent = lm.points_data(lazy_mode="parent").sort("pylifemap_taxid")
+        data_self = lm.points_data(options={"lazy": True}, lazy_mode="self").sort("pylifemap_taxid")
+        data_parent = lm.points_data(options={"lazy": True}, lazy_mode="parent").sort("pylifemap_taxid")
         assert data_self.get_column("pylifemap_taxid").to_list() == [2157, 48510, 55559, 1783263]
         assert data_parent.get_column("pylifemap_taxid").to_list() == [2157, 48510, 55559, 1783263]
         assert data_self.get_column("pylifemap_zoom").to_list() == [6, 8, 18, 13]
