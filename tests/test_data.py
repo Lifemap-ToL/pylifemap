@@ -120,7 +120,7 @@ class TestLifemapDataMethods:
 
 class TestPointsData:
     def test_points_data(self, lmd):
-        tmp = lmd.points_data(data_columns=("value",))
+        tmp = lmd.points_data(options={}, data_columns=("value",))
         assert tmp.shape == (4, 5)
         assert sorted(tmp.columns) == [
             "pylifemap_taxid",
@@ -134,9 +134,9 @@ class TestPointsData:
     @pytest.mark.filterwarnings("ignore:.*duplicated taxids.*")
     def test_points_data_validations(self, lmd, lmd_cat):
         with pytest.raises(ValueError):
-            lmd.points_data(data_columns=("whatever",))
+            lmd.points_data(options={}, data_columns=("whatever",))
         with pytest.raises(ValueError):
-            lmd_cat.points_data(data_columns=("counts_col"))
+            lmd_cat.points_data(options={}, data_columns=("counts_col"))
 
     def test_points_data_leaves_omit(self, lmd):
         tmp = lmd.points_data(options={"leaves": "omit"}, data_columns=("value",))
