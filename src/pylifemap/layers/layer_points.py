@@ -49,7 +49,8 @@ class LayerPoints(LayersBase):
             If numeric, the fixed radius of the points. If a string, the name of a numerical DataFrame column
             to compute radius width from.
         radius_range : tuple | list
-            Range of values for points radius, only used if `radius_col` is not `None`. By default (2, 30).
+            Range of values for points radius, only used if radius is the name of a DataFrame column.
+            By default (2, 30).
         fill : str | None, optional
             Either the name of a numerical DataFrame column to determine points color, or a fixed CSS
             color for points.
@@ -79,7 +80,7 @@ class LayerPoints(LayersBase):
             If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
             Can be useful when displaying a great number of items. Defaults to `False`.
         lazy_zoom : int
-            If `lazy` is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
+            If lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be
             displayed. Defaults to 15.
         lazy_mode : Literal["self", "parent"], optional
             If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'self'`, keep the taxa zoom

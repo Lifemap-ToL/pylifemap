@@ -73,7 +73,7 @@ class LayerDonuts(LayersBase):
             If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
             Can be useful when displaying a great number of items. Defaults to `True`.
         lazy_zoom : int
-            If `lazy`is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
+            If lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be
             displayed. Defaults to 4.
 
 

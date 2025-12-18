@@ -52,7 +52,7 @@ class LayerText(LayersBase):
             If `True`, points are displayed depending on the widget view. If `False`, all points are displayed.
             Can be useful when displaying a great number of items. Defaults to `False`.
         lazy_zoom : int
-            If `lazy` is `True`, only points with a zoom level less than (`zoom` + `lazy_zoom`) level will be
+            If lazy is True, only texts with a zoom level less than (current zoom + lazy_zoom) level will be
             displayed. Defaults to 15.
         lazy_mode : Literal["self", "parent"], optional
             If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'"self'`, keep the taxa zoom
