@@ -34,16 +34,16 @@ class LayerHeatmap(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         radius : float
-            Heatmap radius, by default 5.0
+            Heatmap radius. By default 5.0.
         blur : float
-            Heatmap blur, by default 5.0
+            Heatmap blur. By default 5.0.
         opacity : float
-            Heatmap opacity as a floating number between 0 and 1, by default 1.0
+            Heatmap opacity as a floating number between 0 and 1. By default 1.0.
         gradient: tuple
             Tuple of CSS colors to define the heatmap gradient. By default gradient
-            inspired from the "turbo" color ramp.
+            inspired from the 'turbo' color ramp.
 
         Returns
         -------

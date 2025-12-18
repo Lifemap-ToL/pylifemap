@@ -25,14 +25,14 @@ class LayerScreengrid(LayersBase):
         data : pl.DataFrame | pd.DataFrame | None, optional
             Layer data. If not provided, use the base widget data.
         taxid_col : str, optional
-            If `data` is provided, name of the `data` column with taxonomy ids, by default `"taxid"`
+            If `data` is provided, name of the `data` column with taxonomy ids. By default `'taxid'`.
         cell_size : int, optional
-            Screen grid cell size, in pixels, by default 30
+            Screen grid cell size, in pixels. By default 30.
         extruded : bool, optionals
-            If True, show the grid as extruded, by default False
+            If `True`, show the grid as extruded. By default `False`.
         opacity : float, optional
-            Screengrid opacity as a floating point number between 0 and 1,
-            by default 0.5
+            Screengrid opacity as a floating point number between 0 and 1.
+            By default 0.5.
 
         Returns
         -------

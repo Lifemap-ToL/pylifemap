@@ -124,13 +124,13 @@ For some visualizations you will have to aggregate a count of species or the val
 
 ### 3. Initialize a `Lifemap` object
 
-The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named "taxid" you can omit the `taxid_col` argument as it is its default value.]. We will also add `.show()`, which is needed to display the visualization.
+The next step is to create a new [Lifemap](`~pylifemap.Lifemap`) object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers^[if your column is named `"taxid"` you can omit the `taxid_col` argument as it is its default value.]. We will also add `.show()`, which is needed to display the visualization.
 
 ```{python}
 Lifemap(iucn, taxid_col="taxid").show()
 ```
 
-For the moment this only displays the Lifemap base map.
+For the moment this only displays the `Lifemap` base map.
 
 ::: {.callout-note}
 When initializing a new `Lifemap` object, `pylifemap` will check and display a warning message if unknown or duplicated taxids are found in the data.
@@ -163,4 +163,4 @@ Once you are satisfied with a visualization, there are several ways to export it
 - at any time, you can use the "Export PNG" button on the widget to export the current view as a PNG image. You can use the "Fullscreen" button first to generate bigger images if needed
 - you can use `.save("file.html")` instead of `.show()` to save the widget to an HTML file
 - if in a Jupyter notebook, you can save it to HTML, which will include the widgets in the output
-- you can also use [Quarto](https://quarto.org) to generate an HTML document embedding pylifemap widgets, or to convert a Jupyter notebook to an HTML file
+- you can also use [Quarto](https://quarto.org) to generate an HTML document embedding `pylifemap` widgets, or to convert a Jupyter notebook to an HTML file

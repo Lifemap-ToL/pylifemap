@@ -2,16 +2,16 @@
 title: IUCN Categories proportions
 author: "D. de Vienne"
 date: 2025-11-25
-description: IUCN categories proportions at each clade
+description: IUCN categories proportions at each clade.
 image: img/iucn.png
 categories: [points, dark theme, published, scheme, in publication]
 ---
 
 ::: {.callout-note}
-This visualization accompanies the article presenting pylifemap, available at [link to be added](tocome).
+This visualization accompanies the article presenting `pylifemap`, available at [link to be added](tocome).
 :::
 
-Visualization of the proportion of species at each taxonomic rank that belong to each one of the 11 IUCN red list categories. Numbers inside donuts represent the number of species belonging to each clade present in the IUCN red list. IUCN data version 2025-2, downloaded from https://www.iucnredlist.org/ the 4th of December 2025.
+Visualization of the proportion of species at each taxonomic rank that belong to each one of the 11 IUCN Red List categories. Numbers inside donuts represent the number of species belonging to each clade present in the IUCN Red List. IUCN data version 2025-2, downloaded from https://www.iucnredlist.org/ the 4th of December 2025.
 
 ```{python}
 #| echo: true

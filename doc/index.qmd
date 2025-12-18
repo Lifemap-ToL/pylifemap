@@ -4,7 +4,7 @@ title: "pylifemap"
 
 ## Overview
 
-`pylifemap` is a Python package for visualizing taxonomy data on [Lifemap](https://lifemap.cnrs.fr), the interactive tree of life. It provides several visualisation layers, as well as functions allowing to aggregate data along the tree branches. 
+`pylifemap` is a Python package for visualizing taxonomy data on [Lifemap](https://lifemap.cnrs.fr), the interactive tree of life. It provides several visualization layers, as well as functions allowing to aggregate data along the tree branches. 
 
 Here is a simple example:
 

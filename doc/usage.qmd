@@ -84,7 +84,7 @@ Open the following URL in your browser: <http://127.0.0.1:8899/lab>, and you wil
 
 #### Run a script
 
-If you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:
+If you just want to run a Python script generating a `pylifemap` visualization, you can open a terminal in the script directory and run the following command:
 
 ```sh
 docker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py
@@ -165,9 +165,9 @@ Here are the currently available layers:
 | [layer_donuts](layers/layer_donuts.qmd)             | Displays aggregated categorical data as donut charts.                                                       |
 | [layer_heatmap](layers/layer_heatmap.qmd)           | Displays a heatmap of the observations distribution in the tree.                                            |
 | [layer_heatmap_deck](layers/layer_heatmap_deck.qmd) | Displays a deck.gl heatmap of the observations distribution in the tree.                                    |
-| [layer_screengrid](layers/layer_screengrid.qmd)     | Displays the observations distribution with a colored grid with fixed-size cells..                          |
-| [layer_text](layers/layer_text.qmd)                 | Displays text labels by taxid                                                                               |
-| [layer_icons](layers/layer_icons.qmd)               | Displays icons associated to taxids                                                                         |
+| [layer_screengrid](layers/layer_screengrid.qmd)     | Displays the observations distribution with a colored grid with fixed-size cells.                           |
+| [layer_text](layers/layer_text.qmd)                 | Displays text labels by taxid.                                                                              |
+| [layer_icons](layers/layer_icons.qmd)               | Displays icons associated to taxids.                                                                        |
 
 Several layers can be added to the same map by chaining several methods:
 
@@ -263,7 +263,7 @@ Lifemap(iucn, taxid_col="taxid").layer_points().show()
 ```
 
 ::: {.callout-note}
-When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualisation as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user's browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.
+When in a notebook environment, calling [show()](`~pylifemap.Lifemap.show`) will display the visualization as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user's browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.
 :::
 
 The widget can also be saved to an HTML file by using the [save()](`~pylifemap.Lifemap.save`) method:
@@ -273,7 +273,7 @@ The widget can also be saved to an HTML file by using the [save()](`~pylifemap.L
 Lifemap(iucn, taxid_col="taxid").layer_points().save("lifemap.html")
 ```
 
-You can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive pylifemap widgets.
+You can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive `pylifemap` widgets.
 
 ::: {.callout-important}
 Lifemap is updated weekly from the latest NCBI data. During these updates, the precise coordinates of each taxon can change slightly.

@@ -2,7 +2,7 @@
 title: Donuts layer
 ---
 
-The donuts layer displays aggregated levels count of a categorical variable as donut charts, optionally displayng the individual values with points.
+The donuts layer displays aggregated levels count of a categorical variable as donut charts, optionally displaying the individual values with points.
 
 ```{python}
 import polars as pl

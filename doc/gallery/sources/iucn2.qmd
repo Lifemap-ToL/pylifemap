@@ -2,7 +2,7 @@
 title: IUCN Categories 2
 author: "D. de Vienne"
 date: 2025-11-25
-description: Simple IUCN categories mapping
+description: Simple IUCN categories mapping.
 image: img/iucn2.png
 categories: [points, dark theme]
 ---

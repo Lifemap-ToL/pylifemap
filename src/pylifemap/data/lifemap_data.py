@@ -41,16 +41,16 @@ class LifemapData:
         data : pl.DataFrame | pd.DataFrame
             Pandas or polars dataframe with original data.
         taxid_col : str
-            Name of the column storing taxonomy ids, by default "taxid".
+            Name of the column storing taxonomy ids. By default `'taxid'`.
         check_taxids : bool
-            Wether to check or not for missing and duplicated taxids. Defaults to True.
+            Wether to check or not for missing and duplicated taxids. Defaults to `True`.
 
         Raises
         ------
         TypeError
-            If data is not a polars or pandas DataFrame.
+            If `data` is not a polars or pandas DataFrame.
         ValueError
-            If taxid_col is not a column of data.
+            If `taxid_col` is not a column of `data`.
         """
 
         # Check data type
@@ -188,12 +188,12 @@ class LifemapData:
         Parameters
         ----------
         options : dict | None, optional
-            Options dictionary, by default None.
+            Options dictionary. By default `None`.
         data_columns: tuple | list, optional
-            Data columns to keep in output data, by default ().
+            Data columns to keep in output data. By default `()`.
         lazy_mode : Literal["self", "parent"], optional
-            Lazy loading mode. If "parent", get the nearest ancestor zoom level.
-            Defaults to "self".
+            Lazy loading mode. If `'parent'`, get the nearest ancestor zoom level.
+            Defaults to `'self'`.
 
 
         Returns
@@ -206,7 +206,7 @@ class LifemapData:
         ValueError
             If `options["leaves"]` value is not allowed.
         ValueError
-            If `data_columns` columns are not in data.
+            If `data_columns` columns are not in `data`.
 
         """
 
@@ -265,7 +265,7 @@ class LifemapData:
         options : dict
             Options dictionary.
         data_columns: tuple | list, optional
-            Data columns to keep in output data, by default ().
+            Data columns to keep in output data. By default `()`.
 
 
         Returns
@@ -341,10 +341,10 @@ class LifemapData:
         Parameters
         ----------
         data_columns : tuple | list, optional
-            List of data columns to add to output, by default ()
+            List of data columns to add to output. By default `()`.
         lazy_mode : Literal["self", "parent"], optional
-            Lazy loading mode. If "parent", get the nearest ancestor zoom level.
-            Defaults to "self".
+            Lazy loading mode. If `'parent'`, get the nearest ancestor zoom level.
+            Defaults to `'self'`.
 
 
         Returns
