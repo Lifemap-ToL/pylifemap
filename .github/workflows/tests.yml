@@ -1,16 +1,12 @@
-on:
-    workflow_dispatch:
-    workflow_run:
-        workflows: ["Build and deploy to bundle branch"] # Run after bundle has run
-        types:
-            - completed
-
 name: Tests
+
+on:
+    push:
+        branches: [main]
 
 jobs:
     python-tests:
         runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         strategy:
             matrix:
@@ -18,12 +14,22 @@ jobs:
 
         steps:
             - name: Check out pylifemap repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
+
+            - name: Setup node
+              uses: actions/setup-node@v6
               with:
-                  ref: "bundle"
+                  node-version: 22
+                  cache: "npm"
+
+            - name: Install node dependencies
+              run: npm ci
+
+            - name: Bundle
+              run: npm run bundle
 
             - name: Install uv
-              uses: astral-sh/setup-uv@v4
+              uses: astral-sh/setup-uv@v7
 
             - name: Set up Python ${{ matrix.python-version }}
               run: uv python install ${{ matrix.python-version }}

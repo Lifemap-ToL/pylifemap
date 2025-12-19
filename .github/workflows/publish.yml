@@ -1,26 +1,20 @@
-on:
-    workflow_dispatch:
-    workflow_run:
-        workflows: ["Build and deploy to bundle branch"] # Run after bundle has run
-        types:
-            - completed
-
 name: Documentation
+
+on:
+    push:
+        branches: [main]
 
 jobs:
     build-deploy-pages:
         runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         permissions:
             contents: write
         steps:
             - name: Check out repository
-              uses: actions/checkout@v4
-              with:
-                  ref: "bundle"
+              uses: actions/checkout@v6
 
             - name: Setup node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
                   node-version: 22
                   cache: "npm"
@@ -28,14 +22,17 @@ jobs:
             - name: Install node dependencies
               run: npm ci
 
+            - name: Bundle
+              run: npm run bundle
+
             - name: Set up Quarto
               uses: quarto-dev/quarto-actions/setup@v2
 
             - name: Install uv
-              uses: astral-sh/setup-uv@v4
+              uses: astral-sh/setup-uv@v7
 
-            - name: Set up Python
-              run: uv python install
+            - name: Set up Python and dependencies
+              run: uv sync --all-extras --dev
 
             - name: Render and Publish
               shell: bash
