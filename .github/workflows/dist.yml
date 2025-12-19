@@ -41,6 +41,7 @@ jobs:
             - name: Copy wheel to dist branch
               run: |
                   cp dist/*.whl . || true # Copy the wheel file(s)
-                  git add *.whl
+                  ln -sf $(ls *.whl | tail -n 1) dev.whl
+                  git add *.whl dev.whl
                   git commit -m "Update wheel file" || echo "No changes to commit"
-                  git push origin dist
+                  git push origin dist --force
