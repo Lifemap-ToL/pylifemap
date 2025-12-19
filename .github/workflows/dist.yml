@@ -1,4 +1,4 @@
-name: Build and deploy to bundle branch
+name: Build wheel and deploy to dist branch
 
 on:
     push:
@@ -35,8 +35,7 @@ jobs:
               run: |
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
-                  git fetch origin dist:dist || git checkout -b dist
-                  git checkout dist
+                  git checkout --orphan dist
 
             - name: Copy wheel to dist branch
               run: |
