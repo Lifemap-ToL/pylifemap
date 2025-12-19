@@ -1,4 +1,4 @@
-name: Build wheel and deploy to dist branch
+name: Deploy wheel to dist
 
 on:
     push:
@@ -36,6 +36,7 @@ jobs:
                   git config --global user.name "GitHub Actions"
                   git config --global user.email "actions@github.com"
                   git checkout --orphan dist
+                  git rm -rf .
 
             - name: Copy wheel to dist branch
               run: |
