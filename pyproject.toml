@@ -31,16 +31,14 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 
 [dependency-groups]
 dev = [
-  "basedpyright>=1.31.5",
   "jupyter-cache>=1.0.1",
-  "jupyterlab>=4.5.0",
-  "marimo>=0.18.4",
+  "jupyterlab>=4.5.2",
+  "marimo>=0.19.4",
   "nbstripout>=0.7.1",
-  "pytest>=8.3.3",
-  "python-lsp-server>=1.13.1",
+  "pytest>=9.0.2",
   "quartodoc>=0.11.1",
-  "ruff>=0.14.8",
-  "ty>=0.0.1a32",
+  "ruff>=0.14.13",
+  "ty>=0.0.12",
   "watchfiles>=0.24.0",
 ]
 
@@ -48,16 +46,13 @@ dev = [
 requires = ["uv_build>=0.9.10,<0.10.0"]
 build-backend = "uv_build"
 
-[tool.basedpyright]
-include = ["src"]
-exclude = ["**/__pycache__", "**/__marimo__", ".venv", "notebooks/**"]
-pythonVersion = "3.10"
-typeCheckingMode = "standard"
+[tool.marimo.runtime]
+output_max_bytes = 300_000_000
 
-[tool.pytest.ini_options]
-filterwarnings = "ignore::DeprecationWarning"
-pythonpath = "src"
-testpaths = "tests"
+[tool.pytest]
+filterwarnings = ["ignore::DeprecationWarning"]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [tool.ruff]
 extend-exclude = ["notebooks"]
