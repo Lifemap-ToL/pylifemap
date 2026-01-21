@@ -247,7 +247,7 @@
 }
 
 .lifemap-search dialog .suggestions .suggestion {
-    width: 100%;
+    width: auto;
     padding: 5px 8px;
     border-bottom: 1px solid white;
     cursor: pointer;

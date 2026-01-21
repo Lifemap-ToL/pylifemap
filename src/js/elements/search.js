@@ -26,7 +26,7 @@ export class SearchDialog {
         input.addEventListener(
             "keydown",
             ((event) => {
-                if (event.key === "Escape" && input.value.trim() === "") {
+                if (event.key === "Escape") {
                     this.hide_dialog()
                 }
             }).bind(this)
