@@ -225,17 +225,19 @@ export class Lifemap {
             .getLayers()
             .getArray()
             .forEach((l) => {
+                l.setSource(null)
                 if (l.is_webgl) {
                     l.dispose()
                 }
                 this.map.removeLayer(l)
-                l.setSource(null)
+                l = null
             })
     }
 
     dispose_deck() {
         if (this.deck) {
             this.deck.finalize()
+            this.deck = null
         }
     }
 
