@@ -16,7 +16,7 @@ import { deserialize_data } from "./data/deserialization"
 import { DEFAULT_LON, DEFAULT_LAT, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
 
-import { fromLonLat, transformExtent } from "ol/proj"
+import { fromLonLat } from "ol/proj"
 import { extend } from "ol/extent"
 
 import * as Plot from "@observablehq/plot"
