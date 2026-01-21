@@ -11,8 +11,6 @@ import { setup_lazy_loading } from "../data/lazy_loading"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
-import { getBottomLeft, getTopRight } from "ol/extent.js"
-import { fromLonLat, toLonLat } from "ol/proj.js"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
@@ -21,8 +19,6 @@ import VectorSource from "ol/source/Vector.js"
 export function layer_points(map, data, options = {}, color_ranges = {}) {
     let {
         id = null,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
         radius = null,
         fill = null,
         fill_cat = null,
@@ -125,26 +121,22 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
         return fn
     }
 
-    // Create features
+    // Create feature function
+    const radius_col_fn = get_radius_col_fn(data, radius_col)
+    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat, color_ranges)
     function create_feature(d) {
-        const coordinates = fromLonLat([d[x_col], d[y_col]])
-        const feature = new Feature({
-            geometry: new Point(coordinates),
+        return new Feature({
+            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
             data: d,
+            radius_col: radius_col_fn != null ? radius_col_fn(d[radius_col]) : null,
+            fill_col: fill_col_fn != null ? fill_col_fn(d[fill_col]) : null,
         })
-        if (radius_col_fn != null) {
-            feature.set("radius_col", radius_col_fn(d[radius_col]))
-        }
-        if (fill_col != null) {
-            feature.set("fill_col", fill_col_fn(d[fill_col]))
-        }
-        return feature
     }
 
     // Initialize source
-    const radius_col_fn = get_radius_col_fn(data, radius_col)
-    const fill_col_fn = get_fill_col_fn(data, fill_col, fill_cat, color_ranges)
-    const source = new VectorSource({})
+    const source = new VectorSource({
+        useSpatialIndex: !lazy || popup || hover,
+    })
     if (!lazy) {
         const features = data.map(create_feature)
         source.addFeatures(features)

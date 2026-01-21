@@ -4,13 +4,10 @@ import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import Vector from "ol/source/Vector.js"
 import HeatmapLayer from "ol/layer/Heatmap.js"
-import { fromLonLat } from "ol/proj.js"
 
 export function layer_heatmap(data, options = {}) {
     let {
         id = null,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
         radius = 5.0,
         blur = 5.0,
         opacity = 1.0,
@@ -28,17 +25,14 @@ export function layer_heatmap(data, options = {}) {
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
-    const n_features = data.length
-    const features = new Array(n_features)
-    for (let i = 0; i < n_features; i++) {
-        let line = data[i]
-        const coordinates = fromLonLat([line[x_col], line[y_col]])
-        features[i] = new Feature({
-            geometry: new Point(coordinates),
+    function create_feature(d) {
+        return new Feature({
+            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
         })
     }
     const source = new Vector({
-        features: features,
+        features: data.map(create_feature),
+        useSpatialIndex: false,
     })
 
     // Layer definition

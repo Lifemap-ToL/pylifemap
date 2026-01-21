@@ -1,5 +1,5 @@
-//import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import { guidGenerator } from "../utils"
+import { toLonLat } from "ol/proj"
 
 export async function layer_heatmap_deck(data, options = {}) {
     let {
@@ -21,7 +21,7 @@ export async function layer_heatmap_deck(data, options = {}) {
         data: data,
         id: id,
         pickable: false,
-        getPosition: (d) => [d[x_col], d[y_col]],
+        getPosition: (d) => toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
         getWeight: 1,
         radiusPixels: radius,
         intensity: intensity,

@@ -1,3 +1,4 @@
+import { fromLonLat } from "ol/proj"
 import { LIFEMAP_BACK_URL } from "../utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
@@ -44,7 +45,10 @@ export async function get_data_coords(taxids) {
         return null
     }
     let result = {}
-    data.forEach((d) => (result[d.taxid] = { x: d.lon[0], y: d.lat[0] }))
+    data.forEach((d) => {
+        const coords = fromLonLat([d.lon[0], d.lat[0]])
+        result[d.taxid] = { x: coords[0], y: coords[1] }
+    })
 
     try {
         // Store the result in localStorage with a timestamp

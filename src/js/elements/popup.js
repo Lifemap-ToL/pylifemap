@@ -1,5 +1,4 @@
 import Overlay from "ol/Overlay"
-import { fromLonLat } from "ol/proj"
 
 export class Popup {
     constructor() {
@@ -55,7 +54,7 @@ export class Popup {
     show(coordinates, content, offset = [0, 0]) {
         this.dispose()
         this.popup.content.innerHTML = content
-        this.overlay.setPosition(fromLonLat(coordinates))
+        this.overlay.setPosition(coordinates)
         this.overlay.setOffset(offset)
         this.is_shown = true
     }

@@ -7,6 +7,7 @@ from typing import Literal
 
 import pandas as pd
 import polars as pl
+from pyproj import Transformer
 
 from pylifemap.data.backend_data import BACKEND_DATA
 from pylifemap.data.lazy_loading import propagate_parent_zoom
@@ -16,6 +17,34 @@ from pylifemap.data.lazy_loading import propagate_parent_zoom
 warnings.formatwarning = lambda msg, *args, **kwargs: f"Warning: {msg}.\n"  # type: ignore  # noqa: ARG005
 
 TAXID_COL = "pylifemap_taxid"
+# Projection from GPS (longitude, latitude) to Web mercator
+TRANSFORMER = Transformer.from_crs(4326, 3857, always_xy=True)
+
+
+def project_to_3857(data: pl.DataFrame, x_col: str, y_col: str) -> pl.DataFrame:
+    """
+    Reproject two x,y columns in a DataFrame from EPSG 4326 (GPS) to EPSG 3857 (Web Mercator)
+
+    Parameters
+    ----------
+    data : pl.DataFrame
+        Source DataFrame
+    x_col : str
+        Name of column with x coordinates
+    y_col : str
+        Name of column with y coordinates
+
+    Returns
+    -------
+    pl.DataFrame
+        DataFrame with reprojected columns
+    """
+    x_proj, y_proj = TRANSFORMER.transform(data.get_column(x_col), data.get_column(y_col))
+    data = data.with_columns(
+        pl.Series(x_proj).alias(x_col),
+        pl.Series(y_proj).alias(y_col),
+    )
+    return data
 
 
 class LifemapData:
@@ -250,9 +279,12 @@ class LifemapData:
 
         # Only keep needed columns
         data = data.select(set(needed_cols))
-
-        if lazy_mode == "parent":
+        if "lazy" not in options.keys() or not options["lazy"]:
+            data = data.select(pl.all().exclude("pylifemap_zoom"))
+        elif lazy_mode == "parent":
             data = propagate_parent_zoom(data)
+
+        data = project_to_3857(data, x_col="pylifemap_x", y_col="pylifemap_y")
 
         return data
 
@@ -328,6 +360,8 @@ class LifemapData:
             needed_data_cols.append(col)
         data = data.join(self._data.select([TAXID_COL, *needed_data_cols]).unique(), how="left", on=TAXID_COL)
 
+        data = project_to_3857(data, x_col="pylifemap_x", y_col="pylifemap_y")
+
         return data
 
     def lines_data(
@@ -402,5 +436,8 @@ class LifemapData:
 
         if lazy_mode == "parent":
             data = propagate_parent_zoom(data)
+
+        data = project_to_3857(data, x_col="pylifemap_x0", y_col="pylifemap_y0")
+        data = project_to_3857(data, x_col="pylifemap_x1", y_col="pylifemap_y1")
 
         return data

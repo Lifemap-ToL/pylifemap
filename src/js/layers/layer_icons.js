@@ -3,13 +3,11 @@ import { set_popup_event } from "../elements/popup"
 import { setup_lazy_loading } from "../data/lazy_loading"
 import { guidGenerator } from "../utils"
 
-import { fromLonLat } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import VectorSource from "ol/source/Vector"
 import VectorLayer from "ol/layer/Vector.js"
-import { Style, Fill, Stroke, Icon } from "ol/style.js"
-import Text from "ol/style/Text.js"
+import { Style, Icon } from "ol/style.js"
 
 export function layer_icons(map, data, options = {}) {
     let {
@@ -20,8 +18,6 @@ export function layer_icons(map, data, options = {}) {
         color = null,
         x_offset = 0,
         y_offset = 0,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
         icon = null,
         x_anchor = 0.5,
         y_anchor = 0.5,
@@ -46,19 +42,17 @@ export function layer_icons(map, data, options = {}) {
         icon_col = icon
     }
 
-    // Create features
+    // Create feature function
     function create_feature(d) {
-        const coordinates = fromLonLat([d[x_col], d[y_col]])
-        const feature = new Feature({
-            geometry: new Point(coordinates),
+        return new Feature({
+            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
             icon: icon_col === null ? icon : d[icon_col],
             data: d,
         })
-        return feature
     }
 
     // Initialize source
-    const source = new VectorSource({})
+    const source = new VectorSource({ useSpatialIndex: !lazy || popup || hover })
     if (!lazy) {
         const features = data.map(create_feature)
         source.addFeatures(features)

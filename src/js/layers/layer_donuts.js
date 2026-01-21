@@ -9,7 +9,6 @@ import Point from "ol/geom/Point.js"
 import Feature from "ol/Feature.js"
 import Icon from "ol/style/Icon.js"
 import Style from "ol/style/Style.js"
-import { fromLonLat } from "ol/proj"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
@@ -17,8 +16,6 @@ import * as Plot from "@observablehq/plot"
 export function layer_donuts(map, data, options = {}) {
     let {
         id = undefined,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
         counts_col,
         show_totals = false,
         categories = null,
@@ -103,12 +100,14 @@ export function layer_donuts(map, data, options = {}) {
 
     // Create feature
     function create_feature(d) {
-        const coordinates = fromLonLat([d[x_col], d[y_col]])
-        return new Feature({ geometry: new Point(coordinates), data: d })
+        return new Feature({
+            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
+            data: d,
+        })
     }
 
     // Donuts layer
-    const source = new VectorSource({})
+    const source = new VectorSource({ useSpatialIndex: !lazy || popup || hover })
     if (!lazy) {
         const features = data.map(create_feature)
         source.addFeatures(features)

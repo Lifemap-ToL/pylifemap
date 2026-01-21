@@ -1,5 +1,4 @@
-import { getBottomLeft, getTopRight } from "ol/extent.js"
-import { fromLonLat, toLonLat, transformExtent } from "ol/proj"
+import { fromLonLat, transformExtent } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import { Vector } from "ol/source.js"
@@ -80,7 +79,7 @@ export function layer_labels(map) {
         return label_style
     }
 
-    const labels_source = new Vector()
+    const labels_source = new Vector({ useSpatialIndex: false })
     const labels_layer = new VectorLayer({
         id: id,
         source: labels_source,
@@ -96,7 +95,6 @@ export function layer_labels(map) {
             "EPSG:3857",
             "EPSG:4326"
         )
-        //extent = [...toLonLat(getBottomLeft(extent)), ...toLonLat(getTopRight(extent))]
         const zoom = Math.round(map.getView().getZoom())
         let labels = await list_for_extent(zoom + 4, extent)
         labels_source.clear()

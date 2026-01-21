@@ -4,7 +4,6 @@ import { setup_lazy_loading } from "../data/lazy_loading"
 
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
-import { fromLonLat } from "ol/proj.js"
 import { set_popup_event } from "../elements/popup"
 
 import * as d3 from "d3"
@@ -15,10 +14,6 @@ import { LineString } from "ol/geom"
 export function layer_lines(map, data, options = {}, color_ranges = {}) {
     let {
         id = null,
-        x_col0 = "pylifemap_x0",
-        y_col0 = "pylifemap_y0",
-        x_col1 = "pylifemap_x1",
-        y_col1 = "pylifemap_y1",
         width = null,
         color = null,
         label = null,
@@ -97,28 +92,23 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
         return fn
     }
 
-    // Create features
+    // Create feature function
+    const width_col_fn = get_width_col_fn(data, width_col)
+    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
     function create_feature(d) {
-        const feature = new Feature({
+        return new Feature({
             geometry: new LineString([
-                fromLonLat([d[x_col0], d[y_col0]]),
-                fromLonLat([d[x_col1], d[y_col1]]),
+                [d["pylifemap_x0"], d["pylifemap_y0"]],
+                [d["pylifemap_x1"], d["pylifemap_y1"]],
             ]),
             data: d,
+            width_col: width_col_fn != null ? width_col_fn(d[width_col]) : null,
+            color_col: color_col_fn != null ? color_col_fn(d[color_col]) : null,
         })
-        if (width_col_fn != null) {
-            feature.set("width_col", width_col_fn(d[width_col]))
-        }
-        if (color_col != null) {
-            feature.set("color_col", color_col_fn(d[color_col]))
-        }
-        return feature
     }
 
     // Initialize source
-    const width_col_fn = get_width_col_fn(data, width_col)
-    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
-    const source = new VectorSource({})
+    const source = new VectorSource({ useSpatialIndex: !lazy || popup || hover })
     if (!lazy) {
         const features = data.map(create_feature)
         source.addFeatures(features)

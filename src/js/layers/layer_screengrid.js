@@ -1,15 +1,9 @@
 //import { ScreenGridLayer } from "@deck.gl/aggregation-layers"
 import { guidGenerator } from "../utils"
+import { toLonLat } from "ol/proj"
 
 export async function layer_screengrid(data, options = {}) {
-    let {
-        id = undefined,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
-        cell_size = 30,
-        opacity = 0.5,
-        extruded = false,
-    } = options
+    let { id = undefined, cell_size = 30, opacity = 0.5, extruded = false } = options
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
@@ -19,7 +13,7 @@ export async function layer_screengrid(data, options = {}) {
         data: data,
         id: id,
         pickable: false,
-        getPosition: (d) => [d[x_col], d[y_col]],
+        getPosition: (d) => toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
         getWeight: 1,
         cellSizePixels: cell_size,
         extruded: extruded,

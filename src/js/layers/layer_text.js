@@ -1,7 +1,6 @@
 import { guidGenerator } from "../utils"
 import { setup_lazy_loading } from "../data/lazy_loading"
 
-import { fromLonLat } from "ol/proj"
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
 import VectorSource from "ol/source/Vector"
@@ -30,8 +29,6 @@ function create_text(text, font_family, font_size, color, stroke) {
 export function layer_text(map, data, options = {}) {
     let {
         id = null,
-        x_col = "pylifemap_x",
-        y_col = "pylifemap_y",
         text = null,
         font_family = "Segoe UI, Helvetica, sans-serif",
         font_size = 12,
@@ -47,16 +44,14 @@ export function layer_text(map, data, options = {}) {
 
     // Create features
     function create_feature(d) {
-        const coordinates = fromLonLat([d[x_col], d[y_col]])
-        const feature = new Feature({
-            geometry: new Point(coordinates),
+        return new Feature({
+            geometry: new Point([d["pylifemap_x"]], d["pylifemap_y"]),
             text: d[text],
         })
-        return feature
     }
 
     // Initialize source
-    const source = new VectorSource({})
+    const source = new VectorSource({ useSpatialIndex: false })
     if (!lazy) {
         const features = data.map(create_feature)
         source.addFeatures(features)
