@@ -21,6 +21,7 @@ dependencies = [
   "platformdirs>=4.3.6",
   "polars>=1.17.0",
   "pyarrow>=22.0.0",
+  "pyproj>=3.7.1",
   "requests>=2.32.3",
 ]
 
