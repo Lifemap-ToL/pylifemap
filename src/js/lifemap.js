@@ -20,6 +20,7 @@ import { fromLonLat } from "ol/proj"
 import { extend } from "ol/extent"
 
 import * as Plot from "@observablehq/plot"
+import { Spinner } from "./elements/spinner"
 
 const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const DARK_THEMES = ["dark"]
@@ -62,11 +63,13 @@ export class Lifemap {
         this.legend_width = legend_width
         this.scales = []
         this.data = undefined
+
+        // Spinner
+        this.spinner = new Spinner(el)
     }
 
     async update_data(data) {
         try {
-            this.map.spinner.show()
             let deserialized_data = {}
             let taxids = new Set()
             for (let k in data) {
@@ -111,8 +114,6 @@ export class Lifemap {
         } catch (e) {
             this.map.error_message.show_message(e)
             console.error(e)
-        } finally {
-            this.map.spinner.hide()
         }
     }
 
@@ -188,7 +189,6 @@ export class Lifemap {
 
     async update_layers(layers_def_list, color_ranges) {
         try {
-            this.map.spinner.show()
             this.dispose_ol_layers()
 
             const ol_layers_def = layers_def_list.filter(
@@ -215,8 +215,6 @@ export class Lifemap {
         } catch (e) {
             this.map.error_message.show_message(e)
             console.error(e)
-        } finally {
-            this.map.spinner.hide()
         }
     }
 
