@@ -76,6 +76,8 @@ export default {
             map.dispose_deck()
             // Garbage collection
             map = null
+            layers = null
+            data = null
         }
     },
 }
