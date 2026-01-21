@@ -60,8 +60,6 @@ export function flyTo(view, center, dest_zoom, duration = 1000) {
     const start_zoom_move = Math.abs(intermediate_zoom - current_zoom)
     const end_zoom_move = Math.abs(intermediate_zoom - dest_zoom)
     const total_zoom_move = start_zoom_move + end_zoom_move
-    console.log(current_zoom, intermediate_zoom, dest_zoom)
-    console.log(start_zoom_move, end_zoom_move, total_zoom_move)
 
     // Take zoom movement into account in duration
     const total_duration = duration + 50 * total_zoom_move
