@@ -81,7 +81,7 @@ export class Lifemap {
                 console.log("Too many taxids to query for up-to-date coordinates.")
             }
             if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
-                console.log("Getting up-to-date taxids coordinates...")
+                this.spinner.update_message("Getting up-to-date taxids coordinates")
                 // Get up-to-date coordinates from lifemap-back solr
                 let coords = await get_data_coords(taxids)
                 // If query succeeded, update coordinates with new values

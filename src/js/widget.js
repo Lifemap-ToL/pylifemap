@@ -18,11 +18,12 @@ async function _onDataChanged(model, lifemap) {
 async function _onLayersChanged(model, lifemap) {
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    lifemap.spinner.show()
+    lifemap.spinner.show("Updating data")
+    console.log("layers changed")
     lifemap
         .update_layers(layers(), color_ranges())
         .then(async () => await lifemap.update_zoom())
-    lifemap.spinner.hide()
+        .then(lifemap.spinner.hide())
 }
 
 // Width value change callback
@@ -60,11 +61,16 @@ export default {
 
         // Create map
         let lifemap = new Lifemap(container, options())
-        lifemap.spinner.show()
+
+        lifemap.spinner.show("Processing data")
         lifemap.update_data(data()).then(() => {
+            lifemap.spinner.update_message("Creating layers")
             lifemap
                 .update_layers(layers(), color_ranges())
-                .then(async () => await lifemap.update_zoom())
+                .then(async () => {
+                    lifemap.spinner.update_message("Updating view")
+                    await lifemap.update_zoom()
+                })
                 .then(lifemap.spinner.hide())
         })
 
@@ -76,7 +82,7 @@ export default {
 
         // Cleanup function
         return () => {
-            lifemap.spinner.show()
+            lifemap.spinner.show("Cleaning up widget")
             console.log("Disposing OpenLayers layers...")
             lifemap.dispose_ol_layers()
             console.log("Disposing Deck.gl...")

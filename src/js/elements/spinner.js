@@ -1,20 +1,25 @@
 export class Spinner {
     constructor(el) {
-        this.spinner = this.create_spinner(el)
+        this.spinner = document.createElement("div")
+        this.spinner.classList.add("lifemap-spinner")
+        this.spinner_message = document.createElement("p")
+        this.spinner.appendChild(this.spinner_message)
+        el.querySelector(".ol-viewport").appendChild(this.spinner)
     }
 
-    create_spinner(el) {
-        const spinner = document.createElement("div")
-        spinner.classList.add("lifemap-spinner")
-        el.querySelector(".ol-viewport").appendChild(spinner)
-        return spinner
-    }
-
-    show() {
+    show(msg) {
+        if (msg != null) {
+            this.update_message(msg)
+        }
         this.spinner.style.display = "block"
     }
 
     hide() {
+        this.update_message("")
         this.spinner.style.display = "none"
+    }
+
+    update_message(msg) {
+        this.spinner_message.innerHTML = msg
     }
 }
