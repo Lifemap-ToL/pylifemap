@@ -67,8 +67,8 @@ class Lifemap(
         Lifemap initial zoom level, if not specified, it is computed depending on the `center`
         argument value. Defaults to `None`.
     theme : str, optional
-        Color theme for the basemap. Can be one of `'light'`, `'dark'`, `'lightblue'`, `'lightgrey'`, or `'lightgreen'`.
-        Defaults to `'dark'`.
+        Color theme for the basemap. Can be one of `'light'`, `'dark'`, `'lightblue'`, `'lightgrey'`, or
+        `'lightgreen'`. Defaults to `'dark'`.
     controls : Sequence[str]
         List of controls to be displayed on the widget. By default all controls are displayed.
         Available controls are:
@@ -89,7 +89,7 @@ class Lifemap(
     >>> d = pl.DataFrame({"taxid": [9685, 9615, 9994]})
     >>> Lifemap(d, width="100%", height="100vh").layer_points().show()
 
-    """  # noqa: E501
+    """
 
     def __init__(
         self,
@@ -105,8 +105,8 @@ class Lifemap(
         legend_width: int | None = None,
         hide_labels: bool = False,
     ) -> None:
+        print("Go!")
         super().__init__()
-
         # Init LifemapData object with data
         if data is not None:
             self.data = LifemapData(data, taxid_col=taxid_col)
