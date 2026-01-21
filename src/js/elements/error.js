@@ -1,15 +1,10 @@
 export class ErrorMessage {
     constructor(el) {
-        this.error_message = this.create_error_message(el)
-    }
-
-    create_error_message(el) {
-        const error_message = document.createElement("div")
-        error_message.classList.add("lifemap-error")
+        this.error_message = document.createElement("div")
+        this.error_message.classList.add("lifemap-error")
         const error_message_content = document.createElement("p")
-        error_message.appendChild(error_message_content)
-        el.querySelector(".ol-viewport").appendChild(error_message)
-        return error_message
+        this.error_message.appendChild(error_message_content)
+        el.querySelector(".ol-viewport").appendChild(this.error_message)
     }
 
     show_message(e) {
