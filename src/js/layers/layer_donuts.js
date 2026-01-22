@@ -55,7 +55,8 @@ export function layer_donuts(map, data, options = {}) {
         label: label,
     }
     scales.push(scale)
-    let scale_fn = (key) => Plot.scale(scale).apply(key)
+    const plot_scale = Plot.scale(scale)
+    let scale_fn = (key) => plot_scale.apply(key)
 
     // Radius function
     let get_radius_col_fn = function (data) {

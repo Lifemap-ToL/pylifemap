@@ -88,7 +88,8 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
             label: label ?? col,
         }
         scales.push(scale)
-        fn = (d) => Plot.scale(scale).apply(Number(d))
+        const plot_scale = Plot.scale(scale)
+        fn = (d) => plot_scale.apply(Number(d))
         return fn
     }
 
