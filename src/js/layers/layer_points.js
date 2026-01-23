@@ -171,7 +171,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
     const layer = new WebGLVectorLayer({
         source: source,
         style: style,
-        disableHitDetection: false,
+        disableHitDetection: !(popup || hover),
     })
     layer.setOpacity(opacity)
 
