@@ -120,7 +120,7 @@ class TestLifemapDataMethods:
 
 class TestPointsData:
     def test_points_data(self, lmd):
-        tmp = lmd.points_data(options={}, data_columns=("value",))
+        tmp = lmd.points_data(options={"lazy": True}, data_columns=("value",))
         assert tmp.shape == (4, 5)
         assert sorted(tmp.columns) == [
             "pylifemap_taxid",
@@ -131,6 +131,16 @@ class TestPointsData:
         ]
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [6, 8, 8, 20]
 
+    def test_points_data_nolazy(self, lmd):
+        tmp = lmd.points_data(options={"lazy": False}, data_columns=("value",))
+        assert tmp.shape == (4, 4)
+        assert sorted(tmp.columns) == [
+            "pylifemap_taxid",
+            "pylifemap_x",
+            "pylifemap_y",
+            "value",
+        ]
+
     @pytest.mark.filterwarnings("ignore:.*duplicated taxids.*")
     def test_points_data_validations(self, lmd, lmd_cat):
         with pytest.raises(ValueError):
@@ -139,7 +149,7 @@ class TestPointsData:
             lmd_cat.points_data(options={}, data_columns=("counts_col"))
 
     def test_points_data_leaves_omit(self, lmd):
-        tmp = lmd.points_data(options={"leaves": "omit"}, data_columns=("value",))
+        tmp = lmd.points_data(options={"leaves": "omit", "lazy": True}, data_columns=("value",))
         assert tmp.shape == (3, 5)
         assert sorted(tmp.columns) == [
             "pylifemap_taxid",
@@ -151,7 +161,7 @@ class TestPointsData:
         assert tmp.get_column("pylifemap_zoom").sort().to_list() == [6, 8, 8]
 
     def test_points_data_leaves_only(self, lmd):
-        tmp = lmd.points_data(options={"leaves": "only"}, data_columns=("value",))
+        tmp = lmd.points_data(options={"leaves": "only", "lazy": True}, data_columns=("value",))
         assert tmp.shape == (1, 5)
         assert sorted(tmp.columns) == [
             "pylifemap_taxid",
@@ -191,10 +201,10 @@ class TestDonutsData:
 class TestLinesData:
     def tests_lines_data_validations(self, lmd_num):
         with pytest.raises(ValueError):
-            lmd_num.lines_data(data_columns=("whatever",))
+            lmd_num.lines_data(options={}, data_columns=("whatever",))
 
     def test_lines_data(self, lmd_num):
-        tmp = lmd_num.lines_data(data_columns=("value",))
+        tmp = lmd_num.lines_data(options={"lazy": True}, data_columns=("value",))
         assert tmp.shape == (10, 8)
         assert sorted(tmp.columns) == [
             "pylifemap_parent",
@@ -204,6 +214,31 @@ class TestLinesData:
             "pylifemap_y0",
             "pylifemap_y1",
             "pylifemap_zoom",
+            "value",
+        ]
+        assert tmp.get_column("value").sort().to_list() == [
+            1,
+            2,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            6,
+            7,
+        ]
+
+    def test_lines_data_nolazy(self, lmd_num):
+        tmp = lmd_num.lines_data(options={}, data_columns=("value",))
+        assert tmp.shape == (10, 7)
+        assert sorted(tmp.columns) == [
+            "pylifemap_parent",
+            "pylifemap_taxid",
+            "pylifemap_x0",
+            "pylifemap_x1",
+            "pylifemap_y0",
+            "pylifemap_y1",
             "value",
         ]
         assert tmp.get_column("value").sort().to_list() == [
