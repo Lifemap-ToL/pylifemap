@@ -102,7 +102,7 @@ export function layer_lines(map, data, options = {}, color_ranges = {}) {
                 [d["pylifemap_x0"], d["pylifemap_y0"]],
                 [d["pylifemap_x1"], d["pylifemap_y1"]],
             ]),
-            data: d,
+            data: popup ? d : null,
             width_col: width_col_fn != null ? width_col_fn(d[width_col]) : null,
             color_col: color_col_fn != null ? color_col_fn(d[color_col]) : null,
         })

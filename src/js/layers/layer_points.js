@@ -129,7 +129,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
     function create_feature(d) {
         return new Feature({
             geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
-            data: d,
+            data: popup ? d : null,
             radius_col: radius_col_fn != null ? radius_col_fn(d[radius_col]) : null,
             fill_col: fill_col_fn != null ? fill_col_fn(d[fill_col]) : null,
         })

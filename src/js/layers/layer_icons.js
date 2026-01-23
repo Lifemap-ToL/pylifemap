@@ -47,7 +47,7 @@ export function layer_icons(map, data, options = {}) {
         return new Feature({
             geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
             icon: icon_col === null ? icon : d[icon_col],
-            data: d,
+            data: popup ? d : null,
         })
     }
 
