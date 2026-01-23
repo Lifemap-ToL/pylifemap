@@ -167,10 +167,7 @@ export function layer_donuts(map, data, options = {}) {
                   }
                   return content
               }
-        const coordinates_fn = (feature) => [
-            feature.get("data").pylifemap_x,
-            feature.get("data").pylifemap_y,
-        ]
+        const coordinates_fn = (feature) => feature.getGeometry().getCoordinates()
         const offset = [0, Array.isArray(radius) ? -radius[0] / 2 : -radius / 2]
         set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }

@@ -216,10 +216,7 @@ export function layer_points(map, data, options = {}, color_ranges = {}) {
 
                   return content
               }
-        const coordinates_fn = (feature) => [
-            feature.get("data").pylifemap_x,
-            feature.get("data").pylifemap_y,
-        ]
+        const coordinates_fn = (feature) => feature.getGeometry().getCoordinates()
         set_popup_event(map, id, coordinates_fn, content_fn)
     }
     layer.lifemap_ol_id = id
