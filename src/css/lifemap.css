@@ -174,7 +174,7 @@
 
 .lifemap-spinner p {
     position: absolute;
-    top: calc(45% + 20px);
+    top: calc(45% + 30px);
     left: 50%;
     transform: translateX(-50%);
     font-size: 14px;
