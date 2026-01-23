@@ -132,7 +132,7 @@ class LayerLines(LayersBase):
         ]
         if popup_col is not None:
             data_columns.append(options["popup_col"])
-        d = df.lines_data(data_columns, lazy_mode=lazy_mode)
+        d = df.lines_data(options, data_columns, lazy_mode=lazy_mode)
         self._layers_data[options["id"]] = d
 
         # Compute color range

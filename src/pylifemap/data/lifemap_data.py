@@ -366,6 +366,7 @@ class LifemapData:
 
     def lines_data(
         self,
+        options: dict,
         data_columns: tuple | list = (),
         lazy_mode: Literal["self", "parent"] = "self",
     ) -> pl.DataFrame:
@@ -374,6 +375,8 @@ class LifemapData:
 
         Parameters
         ----------
+        options : dict
+            Options dictionary.
         data_columns : tuple | list, optional
             List of data columns to add to output. By default `()`.
         lazy_mode : Literal["self", "parent"], optional
@@ -434,7 +437,9 @@ class LifemapData:
         # Only keep needed columns
         data = data.select(set(needed_cols))
 
-        if lazy_mode == "parent":
+        if "lazy" not in options.keys() or not options["lazy"]:
+            data = data.select(pl.all().exclude("pylifemap_zoom"))
+        elif lazy_mode == "parent":
             data = propagate_parent_zoom(data)
 
         data = project_to_3857(data, x_col="pylifemap_x0", y_col="pylifemap_y0")
