@@ -27,10 +27,12 @@ export function setup_lazy_loading(options) {
         const current_zoom = map.getView().getZoom()
         let extent = map.getView().calculateExtent()
         let [xmin, ymin, xmax, ymax] = [...getBottomLeft(extent), ...getTopRight(extent)]
-        xmin = xmin - Math.abs(xmin) * 0.05
-        ymin = ymin - Math.abs(ymin) * 0.05
-        xmax = xmax + Math.abs(xmax) * 0.05
-        ymax = ymax + Math.abs(ymax) * 0.05
+        const xrange = xmax - xmin
+        const yrange = ymax - ymin
+        xmin = xmin - xrange * 0.05
+        ymin = ymin - yrange * 0.05
+        xmax = xmax + xrange * 0.05
+        ymax = ymax + yrange * 0.05
         const zoom = lazy_zoom > 0 ? current_zoom + lazy_zoom : Infinity
         const extent_features = data
             .filter((d) => filter_fn(d, xmin, xmax, ymin, ymax, zoom))
