@@ -11,21 +11,6 @@ import Text from "ol/style/Text.js"
 const TEXT_COLOR = "rgba(255, 255, 255, 1)"
 const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
 
-function create_text(text, font_family, font_size, color, stroke) {
-    const text_font = `${font_size}px ${font_family}`
-    const text_obj = [text, text_font]
-
-    const text_style = new Text({
-        fill: new Fill({ color: color }),
-        stroke: new Stroke({ width: 2, color: stroke }),
-        text: text_obj,
-        offsetY: 10,
-        textBaseline: "top",
-    })
-
-    return text_style
-}
-
 export function layer_text(map, data, options = {}) {
     let {
         id = null,
@@ -45,7 +30,7 @@ export function layer_text(map, data, options = {}) {
     // Create features
     function create_feature(d) {
         return new Feature({
-            geometry: new Point([d["pylifemap_x"]], d["pylifemap_y"]),
+            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
             text: d[text],
         })
     }
@@ -57,12 +42,17 @@ export function layer_text(map, data, options = {}) {
         source.addFeatures(features)
     }
 
+    const text_font = `${font_size}px ${font_family}`
     const style_function = (feature) => {
-        const style = new Style({
-            text: create_text(feature.get("text"), font_family, font_size, color, stroke),
+        return new Style({
+            text: new Text({
+                fill: new Fill({ color: color }),
+                stroke: new Stroke({ width: 2, color: stroke }),
+                text: [feature.get("text"), text_font],
+                offsetY: 10,
+                textBaseline: "top",
+            }),
         })
-
-        return style
     }
 
     // Create layer
