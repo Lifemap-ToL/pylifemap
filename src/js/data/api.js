@@ -1,10 +1,11 @@
 import { fromLonLat } from "ol/proj"
 import { LIFEMAP_BACK_URL } from "../utils"
+import { generate_hash } from "../utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
 export async function get_data_coords(taxids) {
     const url_taxids = [...taxids].join(" ")
-    const cache_key = `taxids_${url_taxids}`
+    const cache_key = `taxids_${generate_hash(url_taxids)}`
     const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
 
     // Check if cached data exists and is still valid

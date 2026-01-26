@@ -81,3 +81,14 @@ export function flyTo(view, center, dest_zoom, duration = 1000) {
         }
     )
 }
+
+// Simple string hash function
+// Source: https://stackoverflow.com/a/7616484
+export function generate_hash(string) {
+    let hash = 0
+    for (const char of string) {
+        hash = (hash << 5) - hash + char.charCodeAt(0)
+        hash |= 0
+    }
+    return hash
+}
