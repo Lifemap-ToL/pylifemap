@@ -24,7 +24,7 @@ import { Spinner } from "./elements/spinner"
 
 const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const DARK_THEMES = ["dark"]
-const MAX_SOLR_QUERY = 100000
+const MAX_SOLR_QUERY = 100_000
 const LANG = "en"
 
 export class Lifemap {
