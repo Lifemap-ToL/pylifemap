@@ -83,7 +83,15 @@ export function layer_donuts(map, data, options = {}) {
         const size = radius_col_fn(total)
 
         // Create chart
-        const chart = donut_chart(counts, total, size, scale_fn, opacity, show_totals)
+        const chart = donut_chart(
+            counts,
+            total,
+            size,
+            scale_fn,
+            opacity,
+            show_totals,
+            domain
+        )
 
         const src = "data:image/svg+xml;base64," + window.btoa(chart.outerHTML)
 
@@ -178,13 +186,15 @@ export function layer_donuts(map, data, options = {}) {
     return layer
 }
 
-function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) {
+function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals, domain) {
     const width = size
     const height = size
     const outerRadius = Math.min(width, height) / 2 - 1
     const innerRadius = Math.max(8, outerRadius - 12)
 
     const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
+
+    const domain_ranks = Object.fromEntries(domain.map((item, index) => [item, index]))
 
     let svg = d3
         .create("svg:svg")
@@ -196,10 +206,8 @@ function donut_chart(counts, total, size, color_scale_fn, opacity, show_totals) 
 
     let pie = d3
         .pie()
-        .sort(null)
-        .value(function (d) {
-            return d["value"]
-        })
+        .sort((a, b) => d3.ascending(domain_ranks[a.key], domain_ranks[b.key]))
+        .value((d) => d["value"])
     let arcs = pie(counts)
 
     svg.append("g")
