@@ -35,12 +35,12 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 dev = [
   "jupyter-cache>=1.0.1",
   "jupyterlab>=4.5.2",
-  "marimo>=0.19.4",
+  "marimo>=0.19.6",
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
   "ruff>=0.14.13",
-  "ty>=0.0.12",
+  "ty>=0.0.13",
   "watchfiles>=0.24.0",
 ]
 
