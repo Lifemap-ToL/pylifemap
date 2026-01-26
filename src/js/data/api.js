@@ -8,15 +8,28 @@ export async function get_data_coords(taxids) {
     const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
 
     // Check if cached data exists and is still valid
-    const cached_data = localStorage.getItem(cache_key)
+    const cached_data = sessionStorage.getItem(cache_key)
     if (cached_data) {
         const { timestamp, data } = JSON.parse(cached_data)
-        if (Date.now() - timestamp < cache_duration) {
-            console.log("Returning cached data...")
+        if (Date.now() - timestamp <= cache_duration) {
+            console.log("Returning cached coordinates...")
             return data
         }
     }
-
+    // Clear stale cache entries from sessionStorage
+    for (let key of Object.keys(sessionStorage)) {
+        if (key.startsWith("taxids_")) {
+            try {
+                const { timestamp, data } = JSON.parse(sessionStorage.getItem(key))
+                if (timestamp && Date.now() - timestamp > cache_duration) {
+                    sessionStorage.removeItem(key)
+                    console.log(`Removed stale cache for ${key}`)
+                }
+            } catch (e) {
+                // Ignore malformed cache entries
+            }
+        }
+    }
     // If no valid cache, fetch from the backend
     const url = `${LIFEMAP_BACK_URL}/solr/taxo/select`
     const payload = {
@@ -51,8 +64,8 @@ export async function get_data_coords(taxids) {
     })
 
     try {
-        // Store the result in localStorage with a timestamp
-        localStorage.setItem(
+        // Store the result in sessionStorage with a timestamp
+        sessionStorage.setItem(
             cache_key,
             JSON.stringify({ timestamp: Date.now(), data: result })
         )
