@@ -105,7 +105,6 @@ class Lifemap(
         legend_width: int | None = None,
         hide_labels: bool = False,
     ) -> None:
-        print("Go!")
         super().__init__()
         # Init LifemapData object with data
         if data is not None:
