@@ -181,6 +181,33 @@
     color: #fff;
 }
 
+/* Lazy Loading spinner */
+
+.lifemap-lazyspinner {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.lifemap-lazyspinner:after {
+    content: "";
+    display: inline-block;
+    box-sizing: border-box;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    border: 3px solid #fff;
+    border-bottom-color: transparent;
+    animation: spinner-rotation 0.8s linear infinite;
+}
+
 /* Error */
 
 .lifemap-error {

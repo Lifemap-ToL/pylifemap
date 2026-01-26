@@ -48,7 +48,15 @@ export function setup_lazy_loading(options) {
 
     // Refresh features after move or zoom
     function on_move_end(ev) {
-        display_for_extent(ev.map)
+        const map = ev.map
+        map.lazy_spinner.show()
+        requestAnimationFrame(() => {
+            try {
+                display_for_extent(map)
+            } finally {
+                map.lazy_spinner.hide()
+            }
+        })
     }
 
     map.on("moveend", on_move_end)

@@ -21,6 +21,7 @@ import { extend } from "ol/extent"
 
 import * as Plot from "@observablehq/plot"
 import { Spinner } from "./elements/spinner"
+import { LazySpinner } from "./elements/lazy_spinner"
 
 const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const DARK_THEMES = ["dark"]
@@ -64,8 +65,11 @@ export class Lifemap {
         this.scales = []
         this.data = undefined
 
-        // Spinner
+        // Global spinner
         this.spinner = new Spinner(el)
+        // Lazy loading spinner
+        // Must be a map property to be accessible in a moveend event
+        this.map.lazy_spinner = new LazySpinner(el)
     }
 
     async update_data(data) {
