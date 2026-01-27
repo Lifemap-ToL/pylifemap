@@ -1,3 +1,5 @@
+## pylifemap 0.1.3dev (development version)
+
 ## pylifemap 0.1.2
 
 - Feature: add small lazy loading spinner
