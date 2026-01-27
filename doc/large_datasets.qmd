@@ -1,0 +1,77 @@
+---
+title: Large datasets
+---
+
+Depending on your hardware, visualizing large datasets can be slow or downright impossible if the number of data points is very high. This page lists `pylifemap` features and some tips to try to improve map rendering in these cases.
+
+## Lazy loading
+
+The most important feature for handling large datasets is _lazy loading_. By default, the entire dataset is loaded and displayed on the map. Lazy loading means that data isn't loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.
+
+Lazy loading is available for the following layers:
+
+- `points`
+- `lines`
+- `text`
+- `donuts` (enabled by default)
+- `icons`
+
+It is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.
+
+To manually enable or disable lazy loading, you can set the `lazy` argument to `True` or `False` when calling the layer creation function.
+
+```{python}
+#| eval: false
+Lifemap(data).layer_points(lazy=True).show()
+```
+
+Another useful argument is `lazy_zoom`, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level `z`, then only data points above zoom level `z` + `lazy_zoom` will be shown. You can set `lazy_zoom` to -1 to display all zoom levels.
+
+With the following code, the points layer will use lazy loading and will only load and display the points included in the current view and with a zoom level above the current zoom plus 15.
+
+```{python}
+#| eval: false
+Lifemap(data).layer_points(lazy=True, lazy_zoom=15).show()
+```
+
+### Lazy loading modes
+
+In some cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in. As an extreme example, if you only have leaves in your datasets, the map could appear completely empty initially.
+
+There are two modes of lazy loading, which can be selected with the `lazy_mode` argument.
+
+The `"self"` lazy loading mode will use the precomputed zoom level attributed to each taxon to determine which points must be displayed. This is the default mode, and it will work well for example if you used one of the provided aggregation functions on your data.
+
+```{python}
+#| eval: false
+Lifemap(data).layer_points(lazy=True, lazy_mode="self").show()
+```
+
+The `"parent"` lazy mode attributes to each taxon the zoom level of its nearest ancestor. This will allow to avoid "false" empty areas at higher zoom levels, but it will also be slower.
+
+```{python}
+#| eval: false
+Lifemap(data).layer_points(lazy=True, lazy_mode="parent").show()
+```
+
+::: {.callout-note}
+For aggregated data, it is recommended to keep the default `"self"` mode and to adjust the `lazy_zoom` value. For non-aggregated data, it is recommended to try different combinations of `lazy_mode` and `lazy_zoom` values to try to get a good balance between display efficiency and visual accuracy.
+:::
+
+## Disabling popup and hover
+
+Using popups or hover effect (the change of colour of points or lines below the mouse cursor) may slow down view rendering when zooming or panning the map if the dataset is very large. Hover effect is automatically disabled if there are more than 10 000 data points, but they both can be manually disabled by setting the `hover` and `popup` layer arguments to `False`.
+
+```{python}
+#| eval: false
+Lifemap(data).layer_points(lazy=True, hover=False, popup=False).show()
+```
+
+## Using deck.gl layers
+
+Deck.gl layers may be more efficient when viewing large datasets:
+
+- The `screengrid` layer is very fast even with many data points
+- The `heatmap_deck` layer will also be fast, and much faster than the `heatmap` layer
+
+In particular it is recommended to switch to `heatmap_deck` if the `heatmap` layer is too slow.

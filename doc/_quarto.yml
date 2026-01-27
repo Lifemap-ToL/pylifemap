@@ -21,6 +21,7 @@ website:
         left:
             - getting_started.qmd
             - usage.qmd
+            - large_datasets.qmd
             - gallery/gallery.qmd
             - text: "Layers"
               menu:
