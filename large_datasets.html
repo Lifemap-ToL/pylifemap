@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>index – pylifemap</title>
+<title>Large datasets – pylifemap</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,31 +20,66 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-cd11bed60a35738a5546891b5dcc8635.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-be5447a3e94aa2a4d2de1598261a8291.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-cd11bed60a35738a5546891b5dcc8635.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-cd11bed60a35738a5546891b5dcc8635.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-be5447a3e94aa2a4d2de1598261a8291.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cd11bed60a35738a5546891b5dcc8635.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -244,7 +279,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">pylifemap</span>
     </a>
   </div>
@@ -255,19 +290,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../getting_started.html"> 
+    <a class="nav-link" href="./getting_started.html"> 
 <span class="menu-text">Getting started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../usage.html"> 
+    <a class="nav-link" href="./usage.html"> 
 <span class="menu-text">Usage</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../large_datasets.html"> 
+    <a class="nav-link active" href="./large_datasets.html" aria-current="page"> 
 <span class="menu-text">Large datasets</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../gallery/gallery.html"> 
+    <a class="nav-link" href="./gallery/gallery.html"> 
 <span class="menu-text">Gallery</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -276,41 +311,41 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-layers">    
         <li>
-    <a class="dropdown-item" href="../layers/layer_points.html">
+    <a class="dropdown-item" href="./layers/layer_points.html">
  <span class="dropdown-text">Points layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_lines.html">
+    <a class="dropdown-item" href="./layers/layer_lines.html">
  <span class="dropdown-text">Lines layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_donuts.html">
+    <a class="dropdown-item" href="./layers/layer_donuts.html">
  <span class="dropdown-text">Donuts layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_heatmap.html">
+    <a class="dropdown-item" href="./layers/layer_heatmap.html">
  <span class="dropdown-text">Heatmap layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_heatmap_deck.html">
+    <a class="dropdown-item" href="./layers/layer_heatmap_deck.html">
  <span class="dropdown-text">Deck.gl heatmap layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_screengrid.html">
+    <a class="dropdown-item" href="./layers/layer_screengrid.html">
  <span class="dropdown-text">Screengrid layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_text.html">
+    <a class="dropdown-item" href="./layers/layer_text.html">
  <span class="dropdown-text">Text layer</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../layers/layer_icons.html">
+    <a class="dropdown-item" href="./layers/layer_icons.html">
  <span class="dropdown-text">Icons layer</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link active" href="../reference/index.html" aria-current="page"> 
+    <a class="nav-link" href="./reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -319,11 +354,11 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-development">    
         <li>
-    <a class="dropdown-item" href="../changelog.html">
+    <a class="dropdown-item" href="./changelog.html">
  <span class="dropdown-text">Changelog</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../development.html">
+    <a class="dropdown-item" href="./development.html">
  <span class="dropdown-text">Development notes</span></a>
   </li>  
     </ul>
@@ -346,113 +381,104 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#reference" id="toc-reference" class="nav-link active" data-scroll-target="#reference">Reference</a>
+  <li><a href="#lazy-loading" id="toc-lazy-loading" class="nav-link active" data-scroll-target="#lazy-loading">Lazy loading</a>
   <ul class="collapse">
-  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
-  <li><a href="#data-aggregation" id="toc-data-aggregation" class="nav-link" data-scroll-target="#data-aggregation">Data aggregation</a></li>
-  <li><a href="#data-utilities" id="toc-data-utilities" class="nav-link" data-scroll-target="#data-utilities">Data utilities</a></li>
+  <li><a href="#lazy-loading-modes" id="toc-lazy-loading-modes" class="nav-link" data-scroll-target="#lazy-loading-modes">Lazy loading modes</a></li>
   </ul></li>
+  <li><a href="#disabling-popup-and-hover" id="toc-disabling-popup-and-hover" class="nav-link" data-scroll-target="#disabling-popup-and-hover">Disabling popup and hover</a></li>
+  <li><a href="#using-deck.gl-layers" id="toc-using-deck.gl-layers" class="nav-link" data-scroll-target="#using-deck.gl-layers">Using deck.gl layers</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Lifemap-ToL/pylifemap/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Large datasets</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="reference" class="level1 doc doc-index">
-<h1 class="doc doc-index">Reference</h1>
-<section id="visualization" class="level2">
-<h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td><a href="../reference/Lifemap.html#pylifemap.Lifemap">Lifemap</a></td>
-<td>Build visualization.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/Lifemap.layer_points.html#pylifemap.Lifemap.layer_points">Lifemap.layer_points</a></td>
-<td>Add a points layer.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/Lifemap.layer_lines.html#pylifemap.Lifemap.layer_lines">Lifemap.layer_lines</a></td>
-<td>Add a lines layer.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/Lifemap.layer_donuts.html#pylifemap.Lifemap.layer_donuts">Lifemap.layer_donuts</a></td>
-<td>Add a donuts layer.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/Lifemap.layer_heatmap.html#pylifemap.Lifemap.layer_heatmap">Lifemap.layer_heatmap</a></td>
-<td>Add an heatmap layer.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/Lifemap.layer_heatmap_deck.html#pylifemap.Lifemap.layer_heatmap_deck">Lifemap.layer_heatmap_deck</a></td>
-<td>Add a deck.gl heatmap layer.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/Lifemap.layer_screengrid.html#pylifemap.Lifemap.layer_screengrid">Lifemap.layer_screengrid</a></td>
-<td>Add a screengrid layer.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/Lifemap.layer_text.html#pylifemap.Lifemap.layer_text">Lifemap.layer_text</a></td>
-<td>Add a text labels layer.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/Lifemap.layer_icons.html#pylifemap.Lifemap.layer_icons">Lifemap.layer_icons</a></td>
-<td>Add an icons layer.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/Lifemap.show.html#pylifemap.Lifemap.show">Lifemap.show</a></td>
-<td>Display the Jupyter widget for this instance.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/Lifemap.save.html#pylifemap.Lifemap.save">Lifemap.save</a></td>
-<td>Save the Jupyter widget for this instance to an HTML file.</td>
-</tr>
-</tbody>
-</table>
+</header>
+
+
+<p>Depending on your hardware, visualizing large datasets can be slow or downright impossible if the number of data points is very high. This page lists <code>pylifemap</code> features and some tips to try to improve map rendering in these cases.</p>
+<section id="lazy-loading" class="level2">
+<h2 class="anchored" data-anchor-id="lazy-loading">Lazy loading</h2>
+<p>The most important feature for handling large datasets is <em>lazy loading</em>. By default, the entire dataset is loaded and displayed on the map. Lazy loading means that data isn’t loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.</p>
+<p>Lazy loading is available for the following layers:</p>
+<ul>
+<li><code>points</code></li>
+<li><code>lines</code></li>
+<li><code>text</code></li>
+<li><code>donuts</code> (enabled by default)</li>
+<li><code>icons</code></li>
+</ul>
+<p>It is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.</p>
+<p>To manually enable or disable lazy loading, you can set the <code>lazy</code> argument to <code>True</code> or <code>False</code> when calling the layer creation function.</p>
+<div id="ceb47162" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Another useful argument is <code>lazy_zoom</code>, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level <code>z</code>, then only data points above zoom level <code>z</code> + <code>lazy_zoom</code> will be shown. You can set <code>lazy_zoom</code> to -1 to display all zoom levels.</p>
+<p>With the following code, the points layer will use lazy loading and will only load and display the points included in the current view and with a zoom level above the current zoom plus 15.</p>
+<div id="2add1a89" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_zoom<span class="op">=</span><span class="dv">15</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="lazy-loading-modes" class="level3">
+<h3 class="anchored" data-anchor-id="lazy-loading-modes">Lazy loading modes</h3>
+<p>In some cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in. As an extreme example, if you only have leaves in your datasets, the map could appear completely empty initially.</p>
+<p>There are two modes of lazy loading, which can be selected with the <code>lazy_mode</code> argument.</p>
+<p>The <code>"self"</code> lazy loading mode will use the precomputed zoom level attributed to each taxon to determine which points must be displayed. This is the default mode, and it will work well for example if you used one of the provided aggregation functions on your data.</p>
+<div id="2bffc956" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_mode<span class="op">=</span><span class="st">"self"</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The <code>"parent"</code> lazy mode attributes to each taxon the zoom level of its nearest ancestor. This will allow to avoid “false” empty areas at higher zoom levels, but it will also be slower.</p>
+<div id="bd72774c" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_mode<span class="op">=</span><span class="st">"parent"</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For aggregated data, it is recommended to keep the default <code>"self"</code> mode and to adjust the <code>lazy_zoom</code> value. For non-aggregated data, it is recommended to try different combinations of <code>lazy_mode</code> and <code>lazy_zoom</code> values to try to get a good balance between display efficiency and visual accuracy.</p>
+</div>
+</div>
 </section>
-<section id="data-aggregation" class="level2">
-<h2 class="anchored" data-anchor-id="data-aggregation">Data aggregation</h2>
-<p>Functions to aggregate data along the branches of the lifemap tree.</p>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td><a href="../reference/aggregate_count.html#pylifemap.aggregate_count">aggregate_count</a></td>
-<td>Nodes count aggregation along branches.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/aggregate_num.html#pylifemap.aggregate_num">aggregate_num</a></td>
-<td>Numerical variable aggregation along branches.</td>
-</tr>
-<tr class="odd">
-<td><a href="../reference/aggregate_freq.html#pylifemap.aggregate_freq">aggregate_freq</a></td>
-<td>Categorical variable frequencies aggregation along branches.</td>
-</tr>
-</tbody>
-</table>
 </section>
-<section id="data-utilities" class="level2">
-<h2 class="anchored" data-anchor-id="data-utilities">Data utilities</h2>
-<p>Functions to help with user data handling</p>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td><a href="../reference/get_unknown_taxids.html#pylifemap.get_unknown_taxids">get_unknown_taxids</a></td>
-<td>Get a list of taxids from a data frame which are not in Lifemap data.</td>
-</tr>
-<tr class="even">
-<td><a href="../reference/get_duplicated_taxids.html#pylifemap.get_duplicated_taxids">get_duplicated_taxids</a></td>
-<td>Get a list of duplicated taxids in a data frame.</td>
-</tr>
-</tbody>
-</table>
+<section id="disabling-popup-and-hover" class="level2">
+<h2 class="anchored" data-anchor-id="disabling-popup-and-hover">Disabling popup and hover</h2>
+<p>Using popups or hover effect (the change of colour of points or lines below the mouse cursor) may slow down view rendering when zooming or panning the map if the dataset is very large. Hover effect is automatically disabled if there are more than 10 000 data points, but they both can be manually disabled by setting the <code>hover</code> and <code>popup</code> layer arguments to <code>False</code>.</p>
+<div id="08a895c5" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, hover<span class="op">=</span><span class="va">False</span>, popup<span class="op">=</span><span class="va">False</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="using-deck.gl-layers" class="level2">
+<h2 class="anchored" data-anchor-id="using-deck.gl-layers">Using deck.gl layers</h2>
+<p>Deck.gl layers may be more efficient when viewing large datasets:</p>
+<ul>
+<li>The <code>screengrid</code> layer is very fast even with many data points</li>
+<li>The <code>heatmap_deck</code> layer will also be fast, and much faster than the <code>heatmap</code> layer</li>
+</ul>
+<p>In particular it is recommended to switch to <code>heatmap_deck</code> if the <code>heatmap</code> layer is too slow.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
