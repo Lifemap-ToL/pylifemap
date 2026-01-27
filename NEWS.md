@@ -1,5 +1,14 @@
 ## pylifemap 0.1.2dev (development version)
 
+- Feat: Add small lazy loading spinner
+- Feat: progress text to global spinner
+- Improvement: better lazy loading filter functions efficiency
+- Improvement: better garbage collection when widget is destroyed
+- Fix: arcs in donut charts must follow the categories order
+- Fix: use sessionStorage instead of localStorage for updated coordinates caching
+- Fix: wrong lazy loading extent margins computation
+- Refactor: move projection computations to Python code
+
 ## pylifemap 0.1.1
 
 - Improved default zoom level depending on widget size
