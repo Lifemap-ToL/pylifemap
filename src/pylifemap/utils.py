@@ -6,6 +6,7 @@ import base64
 import logging
 import re
 import sys
+import warnings
 from pathlib import Path
 
 import requests
@@ -15,6 +16,7 @@ DEFAULT_HEIGHT = "600px"
 LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 
 MAX_HOVER_DATA_LEN = 10_000
+MAX_LAZYLOADING_DATA_LEN = 300_000
 
 logger = logging.getLogger("pylifemap")
 ch = logging.StreamHandler(stream=sys.stdout)
@@ -132,3 +134,32 @@ def icon_url_to_data_uri(image_url: str) -> str:
 
     data_uri = f"data:{mime_type};base64,{base64_data}"
     return data_uri
+
+
+def init_lazy(*, lazy: bool | None, df_len: int) -> bool:
+    """
+    Check and set lazy loading argument value.
+
+    Parameters
+    ----------
+    lazy : bool | None
+        Current lazy loading argument value
+    df_len : int
+        Number of rows of the dataset
+
+    Returns
+    -------
+    bool
+        Updated lazy loading argument value.
+    """
+    if lazy is None:
+        lazy = df_len > MAX_LAZYLOADING_DATA_LEN
+        if lazy:
+            msg = (
+                "Large dataset detected, lazy loading has been automatically enabled. You can disable it"
+                " by adding lazy=False to your layer options. You can disable this message by explicitly"
+                " adding lazy=True"
+            )
+            warnings.warn(msg, stacklevel=0)
+
+    return lazy

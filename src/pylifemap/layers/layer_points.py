@@ -4,7 +4,7 @@ import pandas as pd
 import polars as pl
 
 from pylifemap.layers.base import LayersBase
-from pylifemap.utils import MAX_HOVER_DATA_LEN, is_hex_color
+from pylifemap.utils import MAX_HOVER_DATA_LEN, init_lazy, is_hex_color
 
 
 class LayerPoints(LayersBase):
@@ -25,8 +25,8 @@ class LayerPoints(LayersBase):
         popup_col: str | None = None,
         hover: bool | None = None,
         label: str | None = None,
-        lazy: bool = False,
-        lazy_zoom: int = 15,
+        lazy: bool | None = None,
+        lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
@@ -76,12 +76,12 @@ class LayerPoints(LayersBase):
         label : str | None, optional
             Legend title for this layer if `fill` is defined. If `None`, the value
             of `fill` is used.
-        lazy : bool
+        lazy : bool | None
             If `True`, points are displayed depending on the widget view. If `False`, all points
-            are displayed. Can be useful when displaying a great number of items. Defaults to `False`.
+            are displayed. Can be useful when displaying a great number of items. Defaults to `None`.
         lazy_zoom : int
             If lazy is `True`, only points with a zoom level less than (current zoom + `lazy_zoom`) level will
-            be displayed. Defaults to 15.
+            be displayed. Defaults to 10.
         lazy_mode : Literal["self", "parent"], optional
             If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'self'`, keep the taxa zoom
             level. If `'parent'`, get the nearest ancestor zoom level. Defaults to `'self'`.
@@ -148,6 +148,7 @@ class LayerPoints(LayersBase):
 
         if options["hover"] is None:
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
+        options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
         layer = {"layer": "points", "options": options}
         self._layers.append(layer)

@@ -4,7 +4,7 @@ import pandas as pd
 import polars as pl
 
 from pylifemap.layers.base import LayersBase
-from pylifemap.utils import icon_url_to_data_uri
+from pylifemap.utils import icon_url_to_data_uri, init_lazy
 
 
 class LayerIcons(LayersBase):
@@ -26,7 +26,7 @@ class LayerIcons(LayersBase):
         popup: bool = True,
         popup_col: str | None = None,
         declutter: bool = True,
-        lazy: bool = False,
+        lazy: bool | None = None,
         lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
@@ -69,9 +69,9 @@ class LayerIcons(LayersBase):
             Name of a data column containing custom popup content. By default `None`.
         declutter : bool, optional
             If `True`, use OpenLayers decluttering option for this layer. Defaults to `True`.
-        lazy : bool
+        lazy : bool | None
             If `True`, points are displayed depending on the widget view. If `False`, all points are
-            displayed. Can be useful when displaying a great number of items. Defaults to `False`.
+            displayed. Can be useful when displaying a great number of items. Defaults to `None`.
         lazy_zoom : int
             If lazy is `True`, only icons with a zoom level less than (current zoom + `lazy_zoom`) level will
             be displayed. Defaults to 10.
@@ -109,6 +109,8 @@ class LayerIcons(LayersBase):
 
         """
         options, df = self._process_options(locals())
+
+        options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
         lazy_mode_values = ["self", "parent"]
         if options["lazy_mode"] not in lazy_mode_values:

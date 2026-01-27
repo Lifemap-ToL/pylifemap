@@ -2,6 +2,7 @@
 
 - Feat: Add small lazy loading spinner
 - Feat: progress text to global spinner
+- Improvement: automatically enable lazy loading if a large dataset (> 300 000 rows) is detected
 - Improvement: better lazy loading filter functions efficiency
 - Improvement: better garbage collection when widget is destroyed
 - Fix: arcs in donut charts must follow the categories order

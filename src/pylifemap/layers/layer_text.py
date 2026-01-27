@@ -4,6 +4,7 @@ import pandas as pd
 import polars as pl
 
 from pylifemap.layers.base import LayersBase
+from pylifemap.utils import init_lazy
 
 
 class LayerText(LayersBase):
@@ -19,8 +20,8 @@ class LayerText(LayersBase):
         stroke: str = "#000000",
         opacity: float = 1.0,
         declutter: bool = True,
-        lazy: bool = False,
-        lazy_zoom: int = 15,
+        lazy: bool | None = None,
+        lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
     ) -> LayersBase:
         """
@@ -48,12 +49,12 @@ class LayerText(LayersBase):
             Text opacity as a floating number between 0 and 1. By default 1.0.
         declutter : bool, optional
             If `True`, use OpenLayers decluttering option for this layer. Defaults to `True`.
-        lazy : bool
+        lazy : bool | None
             If `True`, points are displayed depending on the widget view. If `False`, all points are
-            displayed. Can be useful when displaying a great number of items. Defaults to `False`.
+            displayed. Can be useful when displaying a great number of items. Defaults to `None`.
         lazy_zoom : int
             If lazy is `True`, only texts with a zoom level less than (current zoom + `lazy_zoom`) level will
-            be displayed. Defaults to 15.
+            be displayed. Defaults to 10.
         lazy_mode : Literal["self", "parent"], optional
             If `lazy` is `True`, choose the zoom level to apply to each taxa. If `'"self'`, keep the taxa zoom
             level. If `'parent'`, get the nearest ancestor zoom level. Defaults to `'self'`.
@@ -91,6 +92,7 @@ class LayerText(LayersBase):
 
         """
         options, df = self._process_options(locals())
+        options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
         layer = {"layer": "text", "options": options}
         self._layers.append(layer)
