@@ -1,7 +1,7 @@
-## pylifemap 0.1.2dev (development version)
+## pylifemap 0.1.2
 
-- Feat: Add small lazy loading spinner
-- Feat: progress text to global spinner
+- Feature: add small lazy loading spinner
+- Feature: add progress text to global spinner
 - Improvement: automatically enable lazy loading if a large dataset (> 300 000 rows) is detected
 - Improvement: better lazy loading filter functions efficiency
 - Improvement: better garbage collection when widget is destroyed
