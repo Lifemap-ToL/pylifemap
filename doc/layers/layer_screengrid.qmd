@@ -4,7 +4,6 @@ title: Screengrid layer
 
 The screengrid layer displays observations distribution as a colored grid with fixed-size cells.
 
-
 ::: {.callout-note}
 This visualization is highly sensitive to the current zoom level and extent. Small modifications of the view can lead to very different visual representations.
 :::
@@ -15,7 +14,7 @@ from pylifemap import Lifemap
 
 # Load iucn dataset
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 
 (
@@ -24,6 +23,5 @@ iucn = pl.read_parquet(
     .show()
 )
 ```
-
 
 For a detailed list of `layer_screengrid` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_screengrid`).

@@ -4,7 +4,7 @@ title: "pylifemap"
 
 ## Overview
 
-`pylifemap` is a Python package for visualizing taxonomy data on [Lifemap](https://lifemap.cnrs.fr), the interactive tree of life. It provides several visualization layers, as well as functions allowing to aggregate data along the tree branches. 
+`pylifemap` is a Python package for visualizing taxonomy data on [Lifemap](https://lifemap.cnrs.fr), the interactive tree of life. It provides several visualization layers, as well as functions allowing to aggregate data along the tree branches.
 
 Here is a simple example:
 
@@ -16,7 +16,7 @@ from pylifemap import Lifemap
 
 # Load iucn dataset
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 
 Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
@@ -26,7 +26,7 @@ Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
 
 - [Getting started](getting_started.qmd) gives an overview of the package usage and features.
 - [Usage](usage.qmd) describes how to use the package and the available features and options.
-- The *Layers* section shows examples of the different available layers.
+- The _Layers_ section shows examples of the different available layers.
 - [Reference](reference/index.qmd) provides detailed documentation of the different methods and functions.
 
 ## Credits

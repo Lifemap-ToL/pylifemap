@@ -26,10 +26,10 @@ It allows to create this type of interactive visualization:
 import polars as pl
 from pylifemap import Lifemap
 
-# Load iucn dataset
+# Load iucn dataset and keep a subset
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
-)
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
+).filter()
 
 Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
 ```
@@ -97,7 +97,7 @@ We can import it as a polars or pandas DataFrame with the following code:
 import polars as pl
 
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 ```
 
@@ -108,7 +108,7 @@ iucn = pl.read_parquet(
 import pandas as pd
 
 iucn = pd.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 ```
 

@@ -13,7 +13,7 @@ import polars as pl
 from pylifemap import Lifemap
 
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 ```
 

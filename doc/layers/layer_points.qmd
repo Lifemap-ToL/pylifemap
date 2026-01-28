@@ -12,7 +12,7 @@ from pylifemap import Lifemap, aggregate_count
 
 # Load iucn dataset
 iucn = pl.read_parquet(
-    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet"
+    "https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet"
 )
 
 # Aggregate observations count along branches
