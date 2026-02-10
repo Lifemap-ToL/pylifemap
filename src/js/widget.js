@@ -1,4 +1,4 @@
-import { Lifemap } from "../../packages/lifemap-js/src/lifemap"
+import { Lifemap } from "../../packages/lifemap-js/"
 
 import "../../packages/lifemap-js/css/lifemap.css"
 
