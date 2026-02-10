@@ -36,7 +36,7 @@ export class Lifemap {
             center = "default",
             zoom = undefined,
             legend_width = undefined,
-            controls = [],
+            controls = ["zoom", "reset_zoom", "png_export", "search", "full_screen"],
             hide_labels = false,
             theme = "dark",
         } = options
