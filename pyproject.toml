@@ -4,7 +4,8 @@ version = "0.1.3dev"
 description = "Taxonomy data visualizations on the Lifemap tree of life"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
   { name = "Julien Barnier", email = "julien.barnier@cnrs.fr" },
   { name = "Damien de Vienne", email = "damien.de-vienne@cnrs.fr" }
@@ -16,11 +17,11 @@ classifiers = [
 ]
 dependencies = [
   "anywidget[dev]>=0.9.21",
-  "ipywidgets>=8.1.7",
+  "ipywidgets>=8.1.8",
   "pandas>=2.0.0",
   "platformdirs>=4.3.6",
   "polars>=1.17.0",
-  "pyarrow>=22.0.0",
+  "pyarrow>=23.0.0",
   "pyproj>=3.7.1",
   "requests>=2.32.3",
 ]
@@ -39,7 +40,7 @@ dev = [
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
   "ruff>=0.14.13",
-  "ty>=0.0.13",
+  "ty>=0.0.15",
   "watchfiles>=0.24.0",
 ]
 
