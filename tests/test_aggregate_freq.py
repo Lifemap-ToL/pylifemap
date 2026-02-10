@@ -52,7 +52,7 @@ def df1_pd():
 class TestAggregateFreqErrors:
     def test_error_not_df(self):
         with pytest.raises(TypeError):
-            aggregate_freq("whatever", column="whatever")  # type: ignore
+            aggregate_freq("whatever", column="whatever")
 
     def test_wrong_taxid_col(self, df1_pl):
         with pytest.raises(ValueError):
@@ -66,7 +66,7 @@ class TestAggregateFreqErrors:
 class TestAggregateFreqResults:
     def test_freq_df1_pl(self, df1_pl):
         tmp = aggregate_freq(df1_pl, column="value")
-        assert pl.DataFrame(df1_agg).equals(tmp)  # type:ignore
+        assert pl.DataFrame(df1_agg).equals(tmp)
 
     def test_freq_df1_pd(self, df1_pd):
         tmp = aggregate_freq(df1_pd, column="value")

@@ -72,7 +72,7 @@ class TestLifemapDataInit:
 
     def test_taxid_col_in_data(self, data_pl):
         with pytest.raises(ValueError):
-            LifemapData(data_pl, taxid_col="whatever")  # type: ignore
+            LifemapData(data_pl, taxid_col="whatever")
 
     def test_convert_to_polars(self, data_pd, data_pl):
         lmd = LifemapData(data_pd, taxid_col="tid")

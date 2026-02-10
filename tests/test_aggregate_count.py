@@ -31,7 +31,7 @@ def df1_pd():
 class TestAggregateCountErrors:
     def test_error_not_df(self):
         with pytest.raises(TypeError):
-            aggregate_count("whatever")  # type: ignore
+            aggregate_count("whatever")
 
     def test_wrong_taxid_col(self):
         with pytest.raises(ValueError):
@@ -41,7 +41,7 @@ class TestAggregateCountErrors:
 class TestAggregateCountResults:
     def test_count_df1_pl(self, df1_pl):
         tmp = aggregate_count(df1_pl)
-        assert pl.DataFrame(df1_agg).equals(tmp)  # type:ignore
+        assert pl.DataFrame(df1_agg).equals(tmp)
 
     def test_count_df1_pd(self, df1_pd):
         tmp = aggregate_count(df1_pd)
@@ -50,4 +50,4 @@ class TestAggregateCountResults:
 
     def test_count_df1_result_col(self, df1_pl):
         tmp = aggregate_count(df1_pl, result_col="out")
-        assert pl.DataFrame(df1_agg).rename({"n": "out"}).equals(tmp)  # type:ignore
+        assert pl.DataFrame(df1_agg).rename({"n": "out"}).equals(tmp)
