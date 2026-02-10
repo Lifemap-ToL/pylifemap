@@ -1,6 +1,4 @@
-import { Lifemap } from "../../packages/lifemap-js/"
-
-import "../../packages/lifemap-js/css/lifemap.css"
+import { Lifemap } from "../../packages/lifemap-js/index.js"
 
 // Data value change callback
 async function _onDataLayersChanged(model, lifemap) {
@@ -42,6 +40,7 @@ export default {
         let lifemap_options = options()
         lifemap_options.width = width()
         lifemap_options.height = height()
+
         let lifemap = new Lifemap(container, lifemap_options)
         lifemap.update({ data: data(), layers: layers(), color_ranges: color_ranges() })
 

@@ -8,10 +8,19 @@
     "type": "git",
     "url": "https://github.com/Lifemap-ToL/lifemap-js.git"
   },
+  "type": "module",
+  "main": "index.js",
+  "browser": "dist/lifemap.js",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": "./index.js"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
     "@apache-arrow/es2015-esm": "^21.1.0",
     "@deck.gl/aggregation-layers": "^9.2.2",
@@ -22,5 +31,8 @@
     "d3": "^7.9.0",
     "lz4js": "^0.2.0",
     "ol": "^10.7.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
   }
 }
