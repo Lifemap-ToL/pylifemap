@@ -1,4 +1,7 @@
-## pylifemap 0.1.3dev (development version)
+## pylifemap 0.1.3
+
+- Fix: JavaScript bundling version problem
+- Maint: upgrade Python dependencies
 
 ## pylifemap 0.1.2
 
