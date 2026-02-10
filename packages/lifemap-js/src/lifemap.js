@@ -89,6 +89,22 @@ export class Lifemap {
         }
     }
 
+    async update(options) {
+        const { data, layers, color_ranges } = options
+        this.spinner.show("Processing data")
+        requestAnimationFrame(() => {
+            this.update_data(data).then(() => {
+                this.spinner.update_message("Creating layers")
+                this.update_layers(layers, color_ranges)
+                    .then(async () => {
+                        this.spinner.update_message("Updating view")
+                        await this.update_zoom()
+                    })
+                    .then(this.spinner.hide())
+            })
+        })
+    }
+
     async update_data(data) {
         try {
             let deserialized_data = {}
