@@ -95,6 +95,7 @@ export default {
             lifemap = null
             layers = null
             data = null
+            container.remove()
         }
     },
 }
