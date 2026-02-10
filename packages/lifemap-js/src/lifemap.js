@@ -31,6 +31,8 @@ const LANG = "en"
 export class Lifemap {
     constructor(el, options = {}) {
         const {
+            width = 600,
+            height = 600,
             center = "default",
             zoom = undefined,
             legend_width = undefined,
@@ -38,11 +40,16 @@ export class Lifemap {
             hide_labels = false,
             theme = "dark",
         } = options
+
+        // Init container
+        this.el = el
+        this.el.classList.add("pylifemap-map")
+        this.update_container({ width: width, height: height })
+
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
-        this.el = el
         this.center = center
         this.zoom = zoom
 
@@ -70,6 +77,16 @@ export class Lifemap {
         // Lazy loading spinner
         // Must be a map property to be accessible in a moveend event
         this.map.lazy_spinner = new LazySpinner(el)
+    }
+
+    update_container(options) {
+        const { width = undefined, height = undefined } = options
+        if (width !== undefined) {
+            this.el.style.width = width
+        }
+        if (height !== undefined) {
+            this.el.style.height = height
+        }
     }
 
     async update_data(data) {

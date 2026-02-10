@@ -28,17 +28,15 @@ async function _onLayersChanged(model, lifemap) {
 }
 
 // Width value change callback
-function _onWidthChanged(model, el) {
+function _onWidthChanged(model, lifemap) {
     let width = () => model.get("width")
-    let container = el.querySelector(":scope > .pylifemap-map")
-    container.style.width = width()
+    lifemap.update_container({ width: width() })
 }
 
 // Height value change callback
-function _onHeightChanged(model, el) {
+function _onHeightChanged(model, lifemap) {
     let height = () => model.get("height")
-    let container = el.querySelector(":scope > .pylifemap-map")
-    container.style.height = height()
+    lifemap.update_container({ height: height() })
 }
 
 export default {
@@ -55,13 +53,13 @@ export default {
 
         // Add container div
         const container = document.createElement("div")
-        container.style.height = height()
-        container.style.width = width()
-        container.classList.add("pylifemap-map")
         el.appendChild(container)
 
         // Create map
-        let lifemap = new Lifemap(container, options())
+        let lifemap_options = options()
+        lifemap_options.width = width()
+        lifemap_options.height = height()
+        let lifemap = new Lifemap(container, lifemap_options)
 
         lifemap.spinner.show("Processing data")
         requestAnimationFrame(() => {
@@ -80,8 +78,8 @@ export default {
         // Add traitlets change callback
         model.on("change:data", () => _onDataChanged(model, lifemap))
         model.on("change:layers", () => _onLayersChanged(model, lifemap))
-        model.on("change:width", () => _onWidthChanged(model, el))
-        model.on("change:height", () => _onHeightChanged(model, el))
+        model.on("change:width", () => _onWidthChanged(model, lifemap))
+        model.on("change:height", () => _onHeightChanged(model, lifemap))
 
         // Cleanup function
         return () => {
