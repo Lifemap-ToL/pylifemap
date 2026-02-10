@@ -19,11 +19,12 @@ async function _onLayersChanged(model, lifemap) {
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
     lifemap.spinner.show("Updating data")
-    console.log("layers changed")
-    lifemap
-        .update_layers(layers(), color_ranges())
-        .then(async () => await lifemap.update_zoom())
-        .then(lifemap.spinner.hide())
+    requestAnimationFrame(() => {
+        lifemap
+            .update_layers(layers(), color_ranges())
+            .then(async () => await lifemap.update_zoom())
+            .then(lifemap.spinner.hide())
+    })
 }
 
 // Width value change callback
@@ -63,15 +64,17 @@ export default {
         let lifemap = new Lifemap(container, options())
 
         lifemap.spinner.show("Processing data")
-        lifemap.update_data(data()).then(() => {
-            lifemap.spinner.update_message("Creating layers")
-            lifemap
-                .update_layers(layers(), color_ranges())
-                .then(async () => {
-                    lifemap.spinner.update_message("Updating view")
-                    await lifemap.update_zoom()
-                })
-                .then(lifemap.spinner.hide())
+        requestAnimationFrame(() => {
+            lifemap.update_data(data()).then(() => {
+                lifemap.spinner.update_message("Creating layers")
+                lifemap
+                    .update_layers(layers(), color_ranges())
+                    .then(async () => {
+                        lifemap.spinner.update_message("Updating view")
+                        await lifemap.update_zoom()
+                    })
+                    .then(lifemap.spinner.hide())
+            })
         })
 
         // Add traitlets change callback
