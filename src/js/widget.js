@@ -83,16 +83,8 @@ export default {
 
         // Cleanup function
         return () => {
-            lifemap.spinner.show("Cleaning up widget")
-            console.log("Disposing OpenLayers layers...")
-            lifemap.dispose_ol_layers()
-            console.log("Disposing Deck.gl...")
-            lifemap.dispose_deck()
-            lifemap.spinner.hide()
-            // Garbage collection
+            lifemap.destroy()
             lifemap = null
-            layers = null
-            data = null
             container.remove()
         }
     },

@@ -365,4 +365,13 @@ export class Lifemap {
             view.setZoom(this.zoom)
         }
     }
+
+    destroy() {
+        this.spinner.show("Cleaning up widget")
+        console.log("Disposing OpenLayers layers...")
+        this.dispose_ol_layers()
+        console.log("Disposing Deck.gl...")
+        this.dispose_deck()
+        this.spinner.hide()
+    }
 }
