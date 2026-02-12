@@ -34,13 +34,13 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 [dependency-groups]
 dev = [
   "jupyter-cache>=1.0.1",
-  "jupyterlab>=4.5.3",
-  "marimo>=0.19.6",
+  "jupyterlab>=4.5.4",
+  "marimo[recommended]>=0.19.10",
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
   "ruff>=0.14.13",
-  "ty>=0.0.15",
+  "ty>=0.0.16",
   "watchfiles>=0.24.0",
 ]
 
