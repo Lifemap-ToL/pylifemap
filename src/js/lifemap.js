@@ -79,7 +79,17 @@ export class Lifemap {
             for (let k in data) {
                 let current_data = deserialize_data(data[k])
                 deserialized_data[k] = current_data
-                taxids = taxids.union(new Set(current_data.map((d) => d.pylifemap_taxid)))
+                taxids = taxids.union(
+                    new Set(
+                        current_data
+                            .map((d) =>
+                                d.pylifemap_parent !== undefined
+                                    ? [d.pylifemap_taxid, d.pylifemap_parent]
+                                    : d.pylifemap_taxid
+                            )
+                            .flat()
+                    )
+                )
             }
             if (taxids.size > MAX_SOLR_QUERY) {
                 console.log("Too many taxids to query for up-to-date coordinates.")
