@@ -25,6 +25,7 @@
         "ol": "^10.7.0"
     },
     "devDependencies": {
-        "esbuild": "^0.25.10"
+        "esbuild": "^0.25.10",
+        "prettier": "3.8.1"
     }
 }
