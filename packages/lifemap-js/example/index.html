@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title>lifemap-js test</title>
+        <link rel="stylesheet" href="../dist/lifemap.css" />
+        <script src="../dist/lifemap.js"></script>
+        <!-- Use Arquero to ease data table creation and conversion -->
+        <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+    </head>
+
+    <body>
+        <!-- Create base lifemap element -->
+        <div id="map"></div>
+    </body>
+
+    <script>
+        // In the following we put coordinates and zoom values to zero
+        // as they will be updated via the Lifemap API. But it is better
+        // to use real coordinates in case the API call fails or if you have
+        // more than 100 000 data points
+
+        // Base arquero points table
+        const points_dt = aq.table({
+            pylifemap_taxid: [480711, 247402, 2966254, 1119041],
+            pylifemap_x: [0, 0, 0, 0],
+            pylifemap_y: [0, 0, 0, 0],
+            pylifemap_zoom: [0, 0, 0, 0],
+            points_value: ["A", "A", "B", "B"],
+        })
+        // Arrow IPC data
+        const points_data_bytes = points_dt.toArrowIPC()
+        // Objects data
+        const points_data_objects = points_dt.objects()
+
+        // Base arquero lines table
+        const lines_dt = aq.table({
+            pylifemap_taxid: [2759, 33154, 4751, 451864],
+            pylifemap_parent: [0, 2759, 33154, 4751],
+            pylifemap_x0: [0, 0, 0, 0],
+            pylifemap_y0: [0, 0, 0, 0],
+            pylifemap_x1: [0, 0, 0, 0],
+            pylifemap_y1: [0, 0, 0, 0],
+            pylifemap_zoom: [0, 0, 0, 0],
+            lines_value: [4.0, 3.0, 2.0, 1.0],
+        })
+        // Arrow IPC data
+        const lines_data_bytes = lines_dt.toArrowIPC()
+        // Objects data
+        const lines_data_objects = lines_dt.objects()
+
+        // Base arquero counts table
+        const counts_dt = aq.table({
+            pylifemap_taxid: [480711, 247402, 2966254, 1119041],
+            pylifemap_x: [0, 0, 0, 0],
+            pylifemap_y: [0, 0, 0, 0],
+            pylifemap_zoom: [0, 0, 0, 0],
+            counts_value: [
+                { Foo: 5, Bar: 3, Baz: 0 },
+                { Foo: 1, Bar: 2, Baz: 4 },
+                { Foo: 3, Bar: 1, Baz: 1 },
+                { Foo: 2, Bar: 2, Baz: 2 },
+            ],
+        })
+        // Arrow IPC data
+        const counts_data_bytes = counts_dt.toArrowIPC()
+        // Objects data
+        const counts_data_objects = counts_dt.objects()
+
+        // Here we use Arrow IPC to pass data to Lifemap
+        const data = {
+            layer_points: { serialized: true, value: points_data_bytes },
+            layer_lines: { serialized: true, value: lines_data_bytes },
+            layer_donuts: { serialized: true, value: counts_data_bytes },
+        }
+        // We could have used objects data this way instead
+        // const data = {
+        //     layer_points: { serialized: false, value: points_data_objects },
+        //     layer_lines: { serialized: false, value: lines_data_objects },
+        //     layer_donuts: { serialized: false, value: counts_data_objects },
+        // }
+
+        // Define layers
+        const layers = [
+            {
+                layer: "points",
+                id: "layer_points",
+                options: {
+                    fill: "points_value",
+                    hover: true,
+                    popup: true,
+                    lazy: true,
+                    lazy_zoom: 25,
+                },
+            },
+            {
+                layer: "lines",
+                id: "layer_lines",
+                options: {
+                    color: "lines_value",
+                    width: "lines_value",
+                    hover: true,
+                    popup: true,
+                },
+            },
+            {
+                layer: "donuts",
+                id: "layer_donuts",
+                options: {
+                    counts_col: "counts_value",
+                    lazy: true,
+                    lazy_zoom: 30,
+                },
+            },
+        ]
+
+        // We can optionnaly define ranges for continuous color variables in points and
+        // lines layers. This is useful if you represent both a points and a lines layer of the
+        // same variable which may result in two slightly different color scales
+        const color_ranges = { lines_value: { min: -10, max: 10 } }
+
+        // Get base element
+        const el = document.getElementById("map")
+
+        // Initialize Lifemap object
+        const lifemap = new Lifemap.Lifemap(el, {
+            width: 800,
+            height: 800,
+            theme: "lightgrey",
+        })
+        // Update Lifemap with data, layers and optional color ranges
+        lifemap.update({ data: data, layers: layers, color_ranges: color_ranges })
+    </script>
+</html>
