@@ -174,13 +174,13 @@ export class Lifemap {
             : [layers_def_list]
         let layers_list = layers_def_list.map(async (l) => {
             // Get data
-            const layer_id = l.options.id
+            const layer_id = l.id
             let layer_data = this.data[layer_id]
             switch (l.layer) {
                 case "heatmap_deck":
-                    return await layer_heatmap_deck(layer_data, l.options ?? {})
+                    return await layer_heatmap_deck(layer_id, layer_data, l.options ?? {})
                 case "screengrid":
-                    return await layer_screengrid(layer_data, l.options ?? {})
+                    return await layer_screengrid(layer_id, layer_data, l.options ?? {})
             }
         })
         const layers = await Promise.all(layers_list)
@@ -196,11 +196,12 @@ export class Lifemap {
             : [layers_def_list]
         let layers_list = layers_def_list.map((l) => {
             // Get data
-            const layer_id = l.options.id
+            const layer_id = l.id
             let layer_data = this.data[layer_id]
             switch (l.layer) {
                 case "points":
                     return layer_points(
+                        layer_id,
                         this.map,
                         layer_data,
                         l.options ?? {},
@@ -208,19 +209,20 @@ export class Lifemap {
                     )
                 case "lines":
                     return layer_lines(
+                        layer_id,
                         this.map,
                         layer_data,
                         l.options ?? {},
                         color_ranges
                     )
                 case "heatmap":
-                    return layer_heatmap(layer_data, l.options ?? {})
+                    return layer_heatmap(layer_id, layer_data, l.options ?? {})
                 case "donuts":
-                    return layer_donuts(this.map, layer_data, l.options ?? {})
+                    return layer_donuts(layer_id, this.map, layer_data, l.options ?? {})
                 case "text":
-                    return layer_text(this.map, layer_data, l.options ?? {})
+                    return layer_text(layer_id, this.map, layer_data, l.options ?? {})
                 case "icons":
-                    return layer_icons(this.map, layer_data, l.options ?? {})
+                    return layer_icons(layer_id, this.map, layer_data, l.options ?? {})
                 default:
                     console.warn(`Invalid layer type: ${l.layer}`)
                     return undefined

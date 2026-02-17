@@ -13,9 +13,8 @@ import Style from "ol/style/Style.js"
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 
-export function layer_donuts(map, data, options = {}) {
+export function layer_donuts(id, map, data, options = {}) {
     let {
-        id = undefined,
         counts_col,
         show_totals = false,
         categories = null,

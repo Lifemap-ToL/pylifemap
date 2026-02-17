@@ -16,9 +16,8 @@ import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
 
-export function layer_points(map, data, options = {}, color_ranges = {}) {
+export function layer_points(id, map, data, options = {}, color_ranges = {}) {
     let {
-        id = null,
         radius = null,
         fill = null,
         fill_cat = null,

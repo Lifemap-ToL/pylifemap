@@ -119,7 +119,7 @@ class LayerDonuts(LayersBase):
         [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical variable.
 
         """
-        options, df = self._process_options(locals())
+        layer_id, options, df = self._process_options(locals())
         leaves_values = ["show", "hide"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"
@@ -128,11 +128,11 @@ class LayerDonuts(LayersBase):
         layer = {"layer": "donuts", "options": options}
         self._layers.append(layer)
         data_columns = (options["popup_col"],) if popup_col is not None else ()
-        self._layers_data[options["id"]] = df.donuts_data(options, data_columns=data_columns)
+        self._layers_data[layer_id] = df.donuts_data(options, data_columns=data_columns)
 
         # If leaves is "show", add a specific points layer
         if leaves == "show":
-            points_id = f"{options['id']}-points"
+            points_id = f"{layer_id}-points"
             points_options = {
                 "id": points_id,
                 "scheme": scheme,
@@ -140,7 +140,7 @@ class LayerDonuts(LayersBase):
                 "popup": popup,
                 "fill_col": options["counts_col"],
             }
-            points_layer = {"layer": "points", "options": points_options}
+            points_layer = {"id": layer_id, "layer": "points", "options": points_options}
             self._layers.append(points_layer)
             points_options["leaves"] = "only"
             self._layers_data[points_id] = df.points_data(points_options)

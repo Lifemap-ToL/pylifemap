@@ -9,9 +9,8 @@ import VectorSource from "ol/source/Vector"
 import VectorLayer from "ol/layer/Vector.js"
 import { Style, Icon } from "ol/style.js"
 
-export function layer_icons(map, data, options = {}) {
+export function layer_icons(id, map, data, options = {}) {
     let {
-        id = null,
         width = null,
         height = null,
         scale = null,

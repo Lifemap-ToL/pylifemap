@@ -1,9 +1,8 @@
 import { guidGenerator } from "../utils"
 import { toLonLat } from "ol/proj"
 
-export async function layer_heatmap_deck(data, options = {}) {
+export async function layer_heatmap_deck(id, data, options = {}) {
     let {
-        id = undefined,
         x_col = "pylifemap_x",
         y_col = "pylifemap_y",
         radius = 30,

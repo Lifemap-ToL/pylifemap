@@ -11,9 +11,8 @@ import Text from "ol/style/Text.js"
 const TEXT_COLOR = "rgba(255, 255, 255, 1)"
 const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
 
-export function layer_text(map, data, options = {}) {
+export function layer_text(id, map, data, options = {}) {
     let {
-        id = null,
         text = null,
         font_family = "Segoe UI, Helvetica, sans-serif",
         font_size = 12,
