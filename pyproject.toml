@@ -19,9 +19,9 @@ dependencies = [
   "anywidget[dev]>=0.9.21",
   "ipywidgets>=8.1.8",
   "pandas>=2.0.0",
-  "platformdirs>=4.3.6",
+  "platformdirs>=4.9.2",
   "polars>=1.17.0",
-  "pyarrow>=23.0.0",
+  "pyarrow>=23.0.1",
   "pyproj>=3.7.1",
   "requests>=2.32.3",
 ]
@@ -35,12 +35,12 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 dev = [
   "jupyter-cache>=1.0.1",
   "jupyterlab>=4.5.4",
-  "marimo[recommended]>=0.19.10",
+  "marimo[recommended]>=0.19.11",
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
-  "ruff>=0.14.13",
-  "ty>=0.0.16",
+  "ruff>=0.15.1",
+  "ty>=0.0.17",
   "watchfiles>=0.24.0",
 ]
 
