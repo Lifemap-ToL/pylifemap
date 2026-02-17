@@ -2,8 +2,8 @@
 import { guidGenerator } from "../utils"
 import { toLonLat } from "ol/proj"
 
-export async function layer_screengrid(data, options = {}) {
-    let { id = undefined, cell_size = 30, opacity = 0.5, extruded = false } = options
+export async function layer_screengrid(id, data, options = {}) {
+    let { cell_size = 30, opacity = 0.5, extruded = false } = options
 
     id = `lifemap-ol-${id ?? guidGenerator()}`
 

@@ -108,7 +108,7 @@ class LayerIcons(LayersBase):
         >>> Lifemap(d).layer_icons(icon="https://openlayers.org/en/latest/examples/data/icon.png").show()
 
         """
-        options, df = self._process_options(locals())
+        layer_id, options, df = self._process_options(locals())
 
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
@@ -133,7 +133,7 @@ class LayerIcons(LayersBase):
         if popup_col is not None:
             data_columns.append(options["popup_col"])
         d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
-        self._layers_data[options["id"]] = d
+        self._layers_data[layer_id] = d
 
         if not is_icon_column:
             # Convert icon url to data uri
@@ -146,7 +146,7 @@ class LayerIcons(LayersBase):
                 uri: icon_url_to_data_uri(uri) for uri in icon_values if uri is not None
             }
 
-        layer = {"layer": "icons", "options": options}
+        layer = {"id": layer_id, "layer": "icons", "options": options}
         self._layers.append(layer)
 
         return self

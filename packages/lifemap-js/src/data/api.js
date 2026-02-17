@@ -1,5 +1,5 @@
 import { fromLonLat } from "ol/proj"
-import { DEFAULT_LAT, DEFAULT_LON, LIFEMAP_BACK_URL } from "../utils"
+import { LUCA_LAT, LUCA_LON, LUCA_ZOOM, LIFEMAP_BACK_URL } from "../utils"
 import { generate_hash } from "../utils"
 
 // Get up-to-date taxids coordinates from lifemap-back solr server
@@ -37,7 +37,7 @@ export async function get_data_coords(taxids) {
         params: {
             q: "*:*",
             fq: `taxid:(${url_taxids})`,
-            fl: "taxid,lat,lon",
+            fl: "taxid,lat,lon,zoom",
             wt: "json",
             rows: taxids.size,
         },
@@ -59,12 +59,12 @@ export async function get_data_coords(taxids) {
         return null
     }
     // Add LUCA coordinates manually
-    data.push({ taxid: 0, lon: [DEFAULT_LON], lat: [DEFAULT_LAT] })
+    data.push({ taxid: 0, lon: [LUCA_LON], lat: [LUCA_LAT], zoom: [LUCA_ZOOM] })
 
     let result = {}
     data.forEach((d) => {
         const coords = fromLonLat([d.lon[0], d.lat[0]])
-        result[d.taxid] = { x: coords[0], y: coords[1] }
+        result[d.taxid] = { x: coords[0], y: coords[1], zoom: d.zoom[0] }
     })
 
     try {

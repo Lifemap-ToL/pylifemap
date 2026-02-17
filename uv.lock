@@ -1427,6 +1427,7 @@ dependencies = [
     { name = "markdown" },
     { name = "msgspec" },
     { name = "narwhals" },
+    { name = "openai" },
     { name = "packaging" },
     { name = "psutil" },
     { name = "pygments" },

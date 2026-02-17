@@ -1,5 +1,3 @@
-@import url("ol.css");
-
 .pylifemap-map {
     font-family:
         "Source Sans 3", "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue",
@@ -84,7 +82,7 @@
 
 #lifemap-popup-closer a {
     text-decoration: none;
-    color: auto;
+    color: #666;
 }
 
 #lifemap-popup h2 {
@@ -111,10 +109,12 @@
 #lifemap-popup table {
     margin-top: 8px;
     border: none;
+    border-collapse: collapse;
 }
 
 #lifemap-popup table td {
     padding: 2px 4px;
+    font-size: 12px;
     line-height: 13px;
 }
 

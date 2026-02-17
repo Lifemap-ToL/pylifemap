@@ -5,9 +5,8 @@ import Point from "ol/geom/Point.js"
 import Vector from "ol/source/Vector.js"
 import HeatmapLayer from "ol/layer/Heatmap.js"
 
-export function layer_heatmap(data, options = {}) {
+export function layer_heatmap(id, data, options = {}) {
     let {
-        id = null,
         radius = 5.0,
         blur = 5.0,
         opacity = 1.0,

@@ -112,7 +112,7 @@ class LayerLines(LayersBase):
 
         [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
         """
-        options, df = self._process_options(locals())
+        layer_id, options, df = self._process_options(locals())
 
         lazy_mode_values = ["self", "parent"]
         if options["lazy_mode"] not in lazy_mode_values:
@@ -123,7 +123,7 @@ class LayerLines(LayersBase):
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
-        layer = {"layer": "lines", "options": options}
+        layer = {"id": layer_id, "layer": "lines", "options": options}
         self._layers.append(layer)
 
         data_columns = [
@@ -134,7 +134,7 @@ class LayerLines(LayersBase):
         if popup_col is not None:
             data_columns.append(options["popup_col"])
         d = df.lines_data(options, data_columns, lazy_mode=lazy_mode)
-        self._layers_data[options["id"]] = d
+        self._layers_data[layer_id] = d
 
         # Compute color range
         key = options["color"]

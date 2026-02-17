@@ -11,9 +11,8 @@ import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
 import { LineString } from "ol/geom"
 
-export function layer_lines(map, data, options = {}, color_ranges = {}) {
+export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
     let {
-        id = null,
         width = null,
         color = null,
         label = null,

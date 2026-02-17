@@ -69,9 +69,9 @@ class LayerHeatmapDeck(LayersBase):
 
         """
 
-        options, df = self._process_options(locals())
-        layer = {"layer": "heatmap_deck", "options": options}
+        layer_id, options, df = self._process_options(locals())
+        layer = {"id": layer_id, "layer": "heatmap_deck", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = df.points_data(options)
+        self._layers_data[layer_id] = df.points_data(options)
         self._has_deck_layers = True
         return self

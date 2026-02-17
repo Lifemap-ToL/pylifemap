@@ -31,18 +31,25 @@ const LANG = "en"
 export class Lifemap {
     constructor(el, options = {}) {
         const {
+            width = 600,
+            height = 600,
             center = "default",
             zoom = undefined,
             legend_width = undefined,
-            controls = [],
+            controls = ["zoom", "reset_zoom", "png_export", "search", "full_screen"],
             hide_labels = false,
             theme = "dark",
         } = options
+
+        // Init container
+        this.el = el
+        this.el.classList.add("pylifemap-map")
+        this.update_container({ width: width, height: height })
+
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
         this.map.default_zoom = zoom
         this.map.theme = THEMES[theme]
-        this.el = el
         this.center = center
         this.zoom = zoom
 
@@ -70,6 +77,32 @@ export class Lifemap {
         // Lazy loading spinner
         // Must be a map property to be accessible in a moveend event
         this.map.lazy_spinner = new LazySpinner(el)
+    }
+
+    update_container(options) {
+        const { width = undefined, height = undefined } = options
+        if (width !== undefined) {
+            this.el.style.width = width
+        }
+        if (height !== undefined) {
+            this.el.style.height = height
+        }
+    }
+
+    async update(options) {
+        const { data, layers, color_ranges } = options
+        this.spinner.show("Processing data")
+        requestAnimationFrame(() => {
+            this.update_data(data).then(() => {
+                this.spinner.update_message("Creating layers")
+                this.update_layers(layers, color_ranges)
+                    .then(async () => {
+                        this.spinner.update_message("Updating view")
+                        await this.update_zoom()
+                    })
+                    .then(this.spinner.hide())
+            })
+        })
     }
 
     async update_data(data) {
@@ -103,6 +136,7 @@ export class Lifemap {
                     for (let k in deserialized_data) {
                         deserialized_data[k].forEach((d) => {
                             const taxid_coords = coords[d.pylifemap_taxid]
+                            d.pylifemap_zoom = taxid_coords.zoom
                             if (taxid_coords !== undefined) {
                                 if (d.pylifemap_x !== undefined) {
                                     d.pylifemap_x = taxid_coords.x
@@ -140,13 +174,13 @@ export class Lifemap {
             : [layers_def_list]
         let layers_list = layers_def_list.map(async (l) => {
             // Get data
-            const layer_id = l.options.id
+            const layer_id = l.id
             let layer_data = this.data[layer_id]
             switch (l.layer) {
                 case "heatmap_deck":
-                    return await layer_heatmap_deck(layer_data, l.options ?? {})
+                    return await layer_heatmap_deck(layer_id, layer_data, l.options ?? {})
                 case "screengrid":
-                    return await layer_screengrid(layer_data, l.options ?? {})
+                    return await layer_screengrid(layer_id, layer_data, l.options ?? {})
             }
         })
         const layers = await Promise.all(layers_list)
@@ -162,11 +196,12 @@ export class Lifemap {
             : [layers_def_list]
         let layers_list = layers_def_list.map((l) => {
             // Get data
-            const layer_id = l.options.id
+            const layer_id = l.id
             let layer_data = this.data[layer_id]
             switch (l.layer) {
                 case "points":
                     return layer_points(
+                        layer_id,
                         this.map,
                         layer_data,
                         l.options ?? {},
@@ -174,19 +209,20 @@ export class Lifemap {
                     )
                 case "lines":
                     return layer_lines(
+                        layer_id,
                         this.map,
                         layer_data,
                         l.options ?? {},
                         color_ranges
                     )
                 case "heatmap":
-                    return layer_heatmap(layer_data, l.options ?? {})
+                    return layer_heatmap(layer_id, layer_data, l.options ?? {})
                 case "donuts":
-                    return layer_donuts(this.map, layer_data, l.options ?? {})
+                    return layer_donuts(layer_id, this.map, layer_data, l.options ?? {})
                 case "text":
-                    return layer_text(this.map, layer_data, l.options ?? {})
+                    return layer_text(layer_id, this.map, layer_data, l.options ?? {})
                 case "icons":
-                    return layer_icons(this.map, layer_data, l.options ?? {})
+                    return layer_icons(layer_id, this.map, layer_data, l.options ?? {})
                 default:
                     console.warn(`Invalid layer type: ${l.layer}`)
                     return undefined
@@ -347,5 +383,14 @@ export class Lifemap {
         if (Number.isFinite(this.zoom)) {
             view.setZoom(this.zoom)
         }
+    }
+
+    destroy() {
+        this.spinner.show("Cleaning up widget")
+        console.log("Disposing OpenLayers layers...")
+        this.dispose_ol_layers()
+        console.log("Disposing Deck.gl...")
+        this.dispose_deck()
+        this.spinner.hide()
     }
 }

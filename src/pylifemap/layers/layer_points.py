@@ -127,7 +127,7 @@ class LayerPoints(LayersBase):
 
         [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
         """
-        options, df = self._process_options(locals())
+        layer_id, options, df = self._process_options(locals())
 
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:
@@ -150,7 +150,7 @@ class LayerPoints(LayersBase):
             options["hover"] = len(df) < MAX_HOVER_DATA_LEN
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
-        layer = {"layer": "points", "options": options}
+        layer = {"id": layer_id, "layer": "points", "options": options}
         self._layers.append(layer)
 
         data_columns = [
@@ -161,7 +161,7 @@ class LayerPoints(LayersBase):
         if popup_col is not None:
             data_columns.append(options["popup_col"])
         d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
-        self._layers_data[options["id"]] = d
+        self._layers_data[layer_id] = d
 
         # Compute color range
         key = options["fill"]

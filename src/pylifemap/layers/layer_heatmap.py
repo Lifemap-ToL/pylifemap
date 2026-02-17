@@ -75,8 +75,8 @@ class LayerHeatmap(LayersBase):
 
         """
 
-        options, df = self._process_options(locals())
-        layer = {"layer": "heatmap", "options": options}
+        layer_id, options, df = self._process_options(locals())
+        layer = {"id": layer_id, "layer": "heatmap", "options": options}
         self._layers.append(layer)
-        self._layers_data[options["id"]] = df.points_data(options)
+        self._layers_data[layer_id] = df.points_data(options)
         return self

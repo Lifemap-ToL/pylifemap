@@ -91,14 +91,14 @@ class LayerText(LayersBase):
         >>> Lifemap(d).layer_text(text="value", font_size=14).show()
 
         """
-        options, df = self._process_options(locals())
+        layer_id, options, df = self._process_options(locals())
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
-        layer = {"layer": "text", "options": options}
+        layer = {"id": layer_id, "layer": "text", "options": options}
         self._layers.append(layer)
 
         data_columns = (text,)
         d = df.points_data(options, data_columns, lazy_mode=lazy_mode)
-        self._layers_data[options["id"]] = d
+        self._layers_data[layer_id] = d
 
         return self

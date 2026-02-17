@@ -1,0 +1,38 @@
+{
+  "name": "lifemap-js",
+  "version": "0.0.1",
+  "description": "JavaScript component for Lifemap visualizations",
+  "author": "Julien Barnier <julien.barnier@cnrs.fr>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lifemap-ToL/lifemap-js.git"
+  },
+  "type": "module",
+  "main": "index.js",
+  "browser": "dist/lifemap.js",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@apache-arrow/es2015-esm": "^21.1.0",
+    "@deck.gl/aggregation-layers": "^9.2.2",
+    "@deck.gl/core": "^9.2.2",
+    "@deck.gl/layers": "^9.2.2",
+    "@observablehq/plot": "^0.6.17",
+    "@zumer/snapdom": "^1.9.14",
+    "d3": "^7.9.0",
+    "lz4js": "^0.2.0",
+    "ol": "^10.7.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
+  }
+}

@@ -1,44 +1,23 @@
-import { Lifemap } from "./lifemap"
-
-import "../css/lifemap.css"
+import { Lifemap } from "../../packages/lifemap-js/index.js"
 
 // Data value change callback
-async function _onDataChanged(model, lifemap) {
+async function _onDataLayersChanged(model, lifemap) {
     let data = () => model.get("data")
     let layers = () => model.get("layers")
     let color_ranges = () => model.get("color_ranges")
-    lifemap.update_data(data()).then(() => {
-        lifemap
-            .update_layers(layers(), color_ranges())
-            .then(async () => await lifemap.update_zoom())
-    })
-}
-
-// Layers value change callback
-async function _onLayersChanged(model, lifemap) {
-    let layers = () => model.get("layers")
-    let color_ranges = () => model.get("color_ranges")
-    lifemap.spinner.show("Updating data")
-    requestAnimationFrame(() => {
-        lifemap
-            .update_layers(layers(), color_ranges())
-            .then(async () => await lifemap.update_zoom())
-            .then(lifemap.spinner.hide())
-    })
+    lifemap.update({ data: data(), layers: layers(), color_ranges: color_ranges() })
 }
 
 // Width value change callback
-function _onWidthChanged(model, el) {
+function _onWidthChanged(model, lifemap) {
     let width = () => model.get("width")
-    let container = el.querySelector(":scope > .pylifemap-map")
-    container.style.width = width()
+    lifemap.update_container({ width: width() })
 }
 
 // Height value change callback
-function _onHeightChanged(model, el) {
+function _onHeightChanged(model, lifemap) {
     let height = () => model.get("height")
-    let container = el.querySelector(":scope > .pylifemap-map")
-    container.style.height = height()
+    lifemap.update_container({ height: height() })
 }
 
 export default {
@@ -55,46 +34,26 @@ export default {
 
         // Add container div
         const container = document.createElement("div")
-        container.style.height = height()
-        container.style.width = width()
-        container.classList.add("pylifemap-map")
         el.appendChild(container)
 
         // Create map
-        let lifemap = new Lifemap(container, options())
+        let lifemap_options = options()
+        lifemap_options.width = width()
+        lifemap_options.height = height()
 
-        lifemap.spinner.show("Processing data")
-        requestAnimationFrame(() => {
-            lifemap.update_data(data()).then(() => {
-                lifemap.spinner.update_message("Creating layers")
-                lifemap
-                    .update_layers(layers(), color_ranges())
-                    .then(async () => {
-                        lifemap.spinner.update_message("Updating view")
-                        await lifemap.update_zoom()
-                    })
-                    .then(lifemap.spinner.hide())
-            })
-        })
+        let lifemap = new Lifemap(container, lifemap_options)
+        lifemap.update({ data: data(), layers: layers(), color_ranges: color_ranges() })
 
         // Add traitlets change callback
-        model.on("change:data", () => _onDataChanged(model, lifemap))
-        model.on("change:layers", () => _onLayersChanged(model, lifemap))
-        model.on("change:width", () => _onWidthChanged(model, el))
-        model.on("change:height", () => _onHeightChanged(model, el))
+        model.on("change:data", () => _onDataLayersChanged(model, lifemap))
+        model.on("change:layers", () => _onDataLayersChanged(model, lifemap))
+        model.on("change:width", () => _onWidthChanged(model, lifemap))
+        model.on("change:height", () => _onHeightChanged(model, lifemap))
 
         // Cleanup function
         return () => {
-            lifemap.spinner.show("Cleaning up widget")
-            console.log("Disposing OpenLayers layers...")
-            lifemap.dispose_ol_layers()
-            console.log("Disposing Deck.gl...")
-            lifemap.dispose_deck()
-            lifemap.spinner.hide()
-            // Garbage collection
+            lifemap.destroy()
             lifemap = null
-            layers = null
-            data = null
             container.remove()
         }
     },
