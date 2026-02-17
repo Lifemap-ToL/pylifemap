@@ -33,6 +33,7 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 
 [dependency-groups]
 dev = [
+  "griffe<2.0.0",
   "jupyter-cache>=1.0.1",
   "jupyterlab>=4.5.4",
   "marimo[recommended]>=0.19.11",
