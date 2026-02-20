@@ -125,7 +125,7 @@ class LayerDonuts(LayersBase):
             msg = f"leaves must be one of {leaves_values}"
             raise ValueError(msg)
         options["label"] = counts_col if options["label"] is None else options["label"]
-        layer = {"layer": "donuts", "options": options}
+        layer = {"id": layer_id, "layer": "donuts", "options": options}
         self._layers.append(layer)
         data_columns = (options["popup_col"],) if popup_col is not None else ()
         self._layers_data[layer_id] = df.donuts_data(options, data_columns=data_columns)
