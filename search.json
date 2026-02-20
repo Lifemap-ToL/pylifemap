@@ -1,80 +1,227 @@
 [
   {
-    "objectID": "getting_started.html",
-    "href": "getting_started.html",
-    "title": "Getting started",
+    "objectID": "large_datasets.html",
+    "href": "large_datasets.html",
+    "title": "Large datasets",
     "section": "",
-    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset and keep a subset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).filter()\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
+    "text": "Depending on your hardware, visualizing large datasets can be slow or downright impossible if the number of data points is very high. This page lists pylifemap features and some tips to try to improve map rendering in these cases."
   },
   {
-    "objectID": "getting_started.html#presentation",
-    "href": "getting_started.html#presentation",
-    "title": "Getting started",
-    "section": "",
-    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset and keep a subset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).filter()\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
+    "objectID": "large_datasets.html#lazy-loading",
+    "href": "large_datasets.html#lazy-loading",
+    "title": "Large datasets",
+    "section": "Lazy loading",
+    "text": "Lazy loading\nThe most important feature for handling large datasets is lazy loading. By default, the entire dataset is loaded and displayed on the map. Lazy loading means that data isn’t loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.\nLazy loading is available for the following layers:\n\npoints\nlines\ntext\ndonuts (enabled by default)\nicons\n\nIt is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.\nTo manually enable or disable lazy loading, you can set the lazy argument to True or False when calling the layer creation function.\n\nLifemap(data).layer_points(lazy=True).show()\n\nAnother useful argument is lazy_zoom, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level z, then only data points above zoom level z + lazy_zoom will be shown. You can set lazy_zoom to -1 to display all zoom levels.\nWith the following code, the points layer will use lazy loading and will only load and display the points included in the current view and with a zoom level above the current zoom plus 15.\n\nLifemap(data).layer_points(lazy=True, lazy_zoom=15).show()\n\n\nLazy loading modes\nIn some cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in. As an extreme example, if you only have leaves in your datasets, the map could appear completely empty initially.\nThere are two modes of lazy loading, which can be selected with the lazy_mode argument.\nThe \"self\" lazy loading mode will use the precomputed zoom level attributed to each taxon to determine which points must be displayed. This is the default mode, and it will work well for example if you used one of the provided aggregation functions on your data.\n\nLifemap(data).layer_points(lazy=True, lazy_mode=\"self\").show()\n\nThe \"parent\" lazy mode attributes to each taxon the zoom level of its nearest ancestor. This will allow to avoid “false” empty areas at higher zoom levels, but it will also be slower.\n\nLifemap(data).layer_points(lazy=True, lazy_mode=\"parent\").show()\n\n\n\n\n\n\n\nNote\n\n\n\nFor aggregated data, it is recommended to keep the default \"self\" mode and to adjust the lazy_zoom value. For non-aggregated data, it is recommended to try different combinations of lazy_mode and lazy_zoom values to try to get a good balance between display efficiency and visual accuracy."
   },
   {
-    "objectID": "getting_started.html#installation",
-    "href": "getting_started.html#installation",
-    "title": "Getting started",
+    "objectID": "large_datasets.html#disabling-popup-and-hover",
+    "href": "large_datasets.html#disabling-popup-and-hover",
+    "title": "Large datasets",
+    "section": "Disabling popup and hover",
+    "text": "Disabling popup and hover\nUsing popups or hover effect (the change of colour of points or lines below the mouse cursor) may slow down view rendering when zooming or panning the map if the dataset is very large. Hover effect is automatically disabled if there are more than 10 000 data points, but they both can be manually disabled by setting the hover and popup layer arguments to False.\n\nLifemap(data).layer_points(lazy=True, hover=False, popup=False).show()"
+  },
+  {
+    "objectID": "large_datasets.html#using-deck.gl-layers",
+    "href": "large_datasets.html#using-deck.gl-layers",
+    "title": "Large datasets",
+    "section": "Using deck.gl layers",
+    "text": "Using deck.gl layers\nDeck.gl layers may be more efficient when viewing large datasets:\n\nThe screengrid layer is very fast even with many data points\nThe heatmap_deck layer will also be fast, and much faster than the heatmap layer\n\nIn particular it is recommended to switch to heatmap_deck if the heatmap layer is too slow."
+  },
+  {
+    "objectID": "usage.html",
+    "href": "usage.html",
+    "title": "Usage",
+    "section": "",
+    "text": "Note\n\n\n\nSee the Getting started page for a more gentle introduction.\nIn the following we will use the example IUCN dataset. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nimport polars as pl\nfrom pylifemap import Lifemap\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)"
+  },
+  {
+    "objectID": "usage.html#installation",
+    "href": "usage.html#installation",
+    "title": "Usage",
     "section": "Installation",
-    "text": "Installation\nYou can install pylifemap like any other Python package. The recommended way is via pip or uv:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\nTo have an overview of the package without installing anything, you can also open our introduction notebook in Google Colab:"
+    "text": "Installation\n\nInstall locally\nYou can add the package to a project with uv or to a virtual environment with pip:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\n\n\nRun directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with pylifemap --with jupyter jupyter-lab\n\n# Run a marimo session\nuv run --with pylifemap --with marimo marimo edit\n\n# Run a custom script\nuv run --with pylifemap my_script.py\n\n\nRun with juv\njuv is a toolkit for reproducible Jupyter notebooks, powered by uv.\nYou can easily create and run a notebook with pylifemap with:\njuv init notebook.ipynb\njuv add notebook.ipynb pylifemap\njuv run notebook.ipynb\n\n\nRun with Docker\nAnother way to use the package without having to install it is to use our Docker image.\n\nRun in Jupyter\nTo use pylifemap in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 127.0.0.1:8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
   },
   {
-    "objectID": "getting_started.html#creating-a-visualization",
-    "href": "getting_started.html#creating-a-visualization",
-    "title": "Getting started",
-    "section": "Creating a visualization",
-    "text": "Creating a visualization\nTo create a Lifemap data visualization, you must follow these steps:\n\nImport Lifemap\nPrepare and load your data\nInitialize a Lifemap object\nAdd visualization layers\n\n\n1. Import Lifemap\nTo be able to use pylifemap in a script or notebook you have to import Lifemap from the package with the following line:\n\nfrom pylifemap import Lifemap\n\n\n\n2. Prepare your data\nThe data you want to visualize on the Lifemap tree of life must be in a pandas or polars DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.\nIn the following we will use an example dataset generated from The IUCN Red List of Threatened Species. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nWe can import it as a polars or pandas DataFrame with the following code:\n\nPolarsPandas\n\n\n\nimport polars as pl\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n\n\n\nimport pandas as pd\n\niucn = pd.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n\n\n\nThe resulting table only has two columns: taxid, which contains the species identifiers, and status, with the Red List category of each species.\n\niucn\n\n\nshape: (24_883, 2)taxidstatusi32str2803960\"Critically Endangered\"143610\"Critically Endangered\"2720032\"Vulnerable\"2720037\"Near Threatened\"1951289\"Vulnerable\"……1279211\"Vulnerable\"1912930\"Endangered\"442623\"Vulnerable\"2303643\"Critically Endangered\"442625\"Critically Endangered\"\n\n\nFor some visualizations you will have to aggregate a count of species or the values of a numerical or categorical variable along the tree branches. For this you can use one of the provided aggregation functions.\n\n\n3. Initialize a Lifemap object\nThe next step is to create a new Lifemap object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers1. We will also add .show(), which is needed to display the visualization.\n\nLifemap(iucn, taxid_col=\"taxid\").show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor the moment this only displays the Lifemap base map.\n\n\n\n\n\n\nNote\n\n\n\nWhen initializing a new Lifemap object, pylifemap will check and display a warning message if unknown or duplicated taxids are found in the data.\nYou can get the full list of unknown or duplicated taxids by using the helper functions get_unknown_taxids and get_duplicated_taxids.\n\n\n\n\n4. Add visualization layers\nAfter initializing our Lifemap object, we must add visualization layers to create graphical representations of our data. For example, we can add a points layer which will add a colored point over each species in our dataset. To do that, we can add a call to layer_points():\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nSome layers allow to represent the values of one of our dataset columns. For example, we can color our points depending on the values in the status column of iucn:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points(fill=\"status\").show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThere are many options to customize the base map or the layers, see the usage page for more informations."
+    "objectID": "usage.html#base-map-customization",
+    "href": "usage.html#base-map-customization",
+    "title": "Usage",
+    "section": "Base map customization",
+    "text": "Base map customization\nSeveral arguments can be passed to Lifemap() when initializing the visualization.\n\n\n\n\n\n\nNote\n\n\n\nFor a complete list of Lifemap arguments, see its documentation.\n\n\n\nWidget size\nThe width and height arguments allow to modify the widget size. They can be given in any CSS unit.\nFor example, the following initialization would make the visualization take the full available width, and an height of 800 pixels.\n\nLifemap(iucn, taxid_col=\"taxid\", width=\"100%\", height=800)\n\n\n\nMap theme\nBy default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a theme argument:\n\nLifemap(iucn, theme=\"light\").layer_points().show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nAvailable themes are currently dark, light, lightgrey, lightblue and lightgreen.\n\n\nMap controls\nBy default, the Lifemap widget displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a controls argument to Lifemap:\n\nLifemap(iucn, taxid_col=\"taxid\", controls=(\"zoom\", \"full_screen\"))\n\nThe following values are available:\n\n\"zoom\": zoom in and zoom out buttons\n\"reset_zoom\": zoom reset button\n\"png_export\": button to export the current view to a PNG file\n\"search\": taxa search button\n\"full_screen\": full screen toggle button\n\n\n\nDefault view (center and zoom)\nThe center and zoom arguments allow to specify the initial map view at widget creation.\nThere are three different possible values for center:\n\n\"default\": show the entire tree of life (default value)\n\"auto\": center the view on the displayed data\ntaxid (integer value): center the view on this taxid coordinates\n\nIf you set zoom to an integer value between 4 and 42, the initial zoom will be set to this level. If you leave zoom at its default None value, the zoom level will be computed according to the center value.\n\n\n\n\n\n\nNote\n\n\n\nFor technical reason, the center=\"auto\" argument doesn’t take into account data passed to layer_screengrid or layer_heatmap_deck."
   },
   {
-    "objectID": "getting_started.html#exporting-a-visualization",
-    "href": "getting_started.html#exporting-a-visualization",
-    "title": "Getting started",
-    "section": "Exporting a visualization",
-    "text": "Exporting a visualization\nOnce you are satisfied with a visualization, there are several ways to export it:\n\nat any time, you can use the “Export PNG” button on the widget to export the current view as a PNG image. You can use the “Fullscreen” button first to generate bigger images if needed\nyou can use .save(\"file.html\") instead of .show() to save the widget to an HTML file\nif in a Jupyter notebook, you can save it to HTML, which will include the widgets in the output\nyou can also use Quarto to generate an HTML document embedding pylifemap widgets, or to convert a Jupyter notebook to an HTML file"
+    "objectID": "usage.html#visualization-layers",
+    "href": "usage.html#visualization-layers",
+    "title": "Usage",
+    "section": "Visualization layers",
+    "text": "Visualization layers\nHere are the currently available layers:\n\n\n\nLayer\nDescription\n\n\n\n\nlayer_points\nDisplays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame.\n\n\nlayer_lines\nUsing aggregated data, highlights branches of the tree with lines of varying width and color.\n\n\nlayer_donuts\nDisplays aggregated categorical data as donut charts.\n\n\nlayer_heatmap\nDisplays a heatmap of the observations distribution in the tree.\n\n\nlayer_heatmap_deck\nDisplays a deck.gl heatmap of the observations distribution in the tree.\n\n\nlayer_screengrid\nDisplays the observations distribution with a colored grid with fixed-size cells.\n\n\nlayer_text\nDisplays text labels by taxid.\n\n\nlayer_icons\nDisplays icons associated to taxids.\n\n\n\nSeveral layers can be added to the same map by chaining several methods:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_heatmap().layer_points().show()\n\n\nLayers customization\nEach layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"#EFB118\", radius=5, opacity=0.5)\n    .show()\n)\n\n\n\n\nInstead of providing fixed values to fill or radius, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their status:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"status\", radius=4, opacity=0.9)\n    .show()\n)\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nSee each layer documentation page for a complete list of its arguments.\n\n\n\n\nLayers data\nBy default, layers use the data provided when calling Lifemap, but it is possible to give a specific dataset to a layer. To do this, just pass a data and optionally a taxid_col argument to the layer function.\n\nicons_data = pl.DataFrame({\n    'taxid': ['1005039','9544','41956','35128','74311'],\n    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png']\n})\n\n(\n    Lifemap(iucn, theme=\"lightgrey\")\n    .layer_points(radius=4, opacity=0.9)\n    .layer_icons(data=icons_data, icon=\"imageurl\", popup=True)\n    .show()\n)\n\n\n\n\n\n\nPopups customization\nFor layers like layer_points, layer_lines or layer_icons that support popups, it is possible to customize the popup content by adding a popup_col argument. This argument must be the name of a data column containing the popup content for each data point.\n\nicons_data = icons_data.with_columns(popup=\"The taxid of this node is &lt;strong&gt;\" + pl.col(\"taxid\") + \"&lt;/strong&gt;\")\n\n(\n    Lifemap(icons_data, theme=\"light\")\n    .layer_icons(icon=\"imageurl\", popup=True, popup_col=\"popup\")\n    .show()\n)\n\n\n\n\n\n\nLazy loading\nBy default the entire user data points are loaded and displayed on the map. This can be slow when the dataset is big.\nLazy loading means that data isn’t loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.\nFor more information about lazy loading, please take a look at the large datasets documentation page."
   },
   {
-    "objectID": "getting_started.html#footnotes",
-    "href": "getting_started.html#footnotes",
-    "title": "Getting started",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nif your column is named \"taxid\" you can omit the taxid_col argument as it is its default value.↩︎"
+    "objectID": "usage.html#widget-display-and-export",
+    "href": "usage.html#widget-display-and-export",
+    "title": "Usage",
+    "section": "Widget display and export",
+    "text": "Widget display and export\nLifemap and layer methods create a widget object but don’t display it. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualization as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nThe widget can also be saved to an HTML file by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")\n\nYou can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive pylifemap widgets.\n\n\n\n\n\n\nImportant\n\n\n\nLifemap is updated weekly from the latest NCBI data. During these updates, the precise coordinates of each taxon can change slightly.\nIf you export your widget to HTML and your data includes less than 100 000 data points, the up to date coordinates are retrieved from our API each time the widget is displayed, so the coordinates of the base map and of your dataset should still match. But if you have more than 100 000 data points, they may not correspond anymore if the base map has been updated since the widget creation.\n\n\nYou can also use the Export to PNG button on the widget to export the currently displayed view to an image file in PNG format."
   },
   {
-    "objectID": "reference/get_duplicated_taxids.html",
-    "href": "reference/get_duplicated_taxids.html",
-    "title": "get_duplicated_taxids",
+    "objectID": "usage.html#data-aggregation",
+    "href": "usage.html#data-aggregation",
+    "title": "Usage",
+    "section": "Data aggregation",
+    "text": "Data aggregation\npylifemap provides several functions that allow to aggregate data along the branches of the tree:\n\n\n\n\n\n\n\nFunction\nDescription\n\n\n\n\naggregate_count\nAggregates the number of children of each tree node.\n\n\naggregate_num\nAggregates a numerical variable along the tree branches with a given function (sum , mean, max…).\n\n\naggregate_freq\nAggregates the frequencies of the levels of a categorical variable.\n\n\n\nFor example, if we filter our dataset to only keep the species with an “extinct” status:\n\nPolarsPandas\n\n\n\niucn_extinct = iucn.filter(pl.col(\"status\") == \"Extinct\")\n\n\n\n\niucn_extinct = iucn[iucn[\"status\"] == \"Extinct\"]\n\n\n\n\nWe can then aggregate their count along the branches with aggregate_count:\n\nfrom pylifemap import aggregate_count\niucn_extinct_agg = aggregate_count(iucn_extinct)\niucn_extinct_agg\n\n\nshape: (774, 2)taxidni32u32null20196275919631932132681……30762441307811476313602313410119134101211\n\n\nFinally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.\n\n(\n    Lifemap(iucn_extinct_agg)\n    .layer_lines(color=\"n\", width=\"n\", label=\"Extinct species\")\n    .show()\n)\n\nWarning: 3 taxids have not been found in Lifemap database: [None, 1914395, 3041918]."
+  },
+  {
+    "objectID": "gallery/gallery.html",
+    "href": "gallery/gallery.html",
+    "title": "Gallery",
     "section": "",
-    "text": "get_duplicated_taxids(data, taxid_col='taxid')\nGet a list of duplicated taxids in a data frame.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame\nPandas or polars dataframe with original data.\nrequired\n\n\ntaxid_col\nstr\nName of the column storing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nlist\nDuplicated taxids\n\n\n\n\n\n\nget_unknown_taxids: function to get a list of unknown taxids.\n\n\n\n&gt;&gt;&gt; from pylifemap import get_duplicated_taxids\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid_values\": [2, 33154, 33090, 33090, 2], \"value\": [10, 5, 100, 1, 2]})\n&gt;&gt;&gt; get_duplicated_taxids(d, taxid_col=\"taxid_values\")\n[2, 33090]"
+    "text": "Note\n\n\n\nIf you want to have your visualization listed here, please open a new issue to give us your script.\n\n\n\n\n\n\n\n\n\n\n\n\nPhylopic - Tree of Life\n\n\n\nicons\n\nlightgrey\n\n\n\nSilhouettes of some species from Phylopic mapped at their exact location in Lifemap (lightgrey theme).\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nWuhan market metagenomics\n\n\n\nicons\n\nlightgrey theme\n\npoints\n\nlines\n\nin publication\n\n\n\nMetagenomics in the Wuhan market after beginning of the covid pandemy.\n\n\n\nJ. Barnier, V. Navratil, D. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nIUCN Categories 2\n\n\n\npoints\n\ndark theme\n\n\n\nSimple IUCN categories mapping.\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nIUCN Categories proportions\n\n\n\npoints\n\ndark theme\n\npublished\n\nscheme\n\nin publication\n\n\n\nIUCN categories proportions at each clade.\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "reference/get_duplicated_taxids.html#parameters",
-    "href": "reference/get_duplicated_taxids.html#parameters",
-    "title": "get_duplicated_taxids",
+    "objectID": "gallery/sources/iucn2.html",
+    "href": "gallery/sources/iucn2.html",
+    "title": "IUCN Categories 2",
     "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame\nPandas or polars dataframe with original data.\nrequired\n\n\ntaxid_col\nstr\nName of the column storing taxonomy ids. By default 'taxid'.\n'taxid'"
+    "text": "Show the code\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn, width=\"100%\").layer_points(fill=\"status\").show()\n\n\nWarning: 862 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data."
   },
   {
-    "objectID": "reference/get_duplicated_taxids.html#returns",
-    "href": "reference/get_duplicated_taxids.html#returns",
-    "title": "get_duplicated_taxids",
+    "objectID": "gallery/sources/phylopic.html",
+    "href": "gallery/sources/phylopic.html",
+    "title": "Phylopic - Tree of Life",
     "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nlist\nDuplicated taxids"
+    "text": "Show the code\nimport pandas as pd\nfrom pylifemap import Lifemap\n\n# Define data\ndata = pd.DataFrame({\n    'taxid': ['1005039','9544','41956','35128','74311','58838','3311','95972','431291','31380','1462422','160232'],\n    'name' : ['Fimbriimonas ginsengisoli','Macaca mulatta','Amanita muscaria','Thalassiosira pseudonana',\n    'Brevundimonas bacteroides','Hymenophyllum tunbrigense','Ginkgo biloba', 'Aphidoletes aphidimyza','Platanthera bifolia',\n    'Ceramium','Parvarchaeota','Nanoarchaeum equitans'],\n    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/b5339968-e357-4515-9e27-479d25eb09f4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/57556718-e114-45ff-b091-af62aeea410c/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/0ce74a6e-ea88-45f0-9103-20e05f6a4624/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4128df49-da1c-4759-86c2-e4242acecbdf/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/250dc359-24d1-49fd-9403-f7c9a7077135/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/a78574ec-fed5-41cc-98ce-a2104dbc1232/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ac77eca2-e484-4ab4-9cef-9e7dd38ddbb8/thumbnail/64x64.png']\n})\n\n# Show the Lifemap heatmap\n(\n    Lifemap(data, theme=\"lightgrey\", width=\"100%\")\n    .layer_icons(icon=\"imageurl\", popup=True)\n    .show()\n)\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nAll images come from the Phylopic website https://www.phylopic.org/.\nFor attribution and license information, follow this link."
   },
   {
-    "objectID": "reference/get_duplicated_taxids.html#see-also",
-    "href": "reference/get_duplicated_taxids.html#see-also",
-    "title": "get_duplicated_taxids",
+    "objectID": "reference/Lifemap.layer_heatmap.html",
+    "href": "reference/Lifemap.layer_heatmap.html",
+    "title": "Lifemap.layer_heatmap",
     "section": "",
-    "text": "get_unknown_taxids: function to get a list of unknown taxids."
+    "text": "Lifemap.layer_heatmap(\n    data=None,\n    *,\n    taxid_col='taxid',\n    radius=5.0,\n    blur=5.0,\n    opacity=1.0,\n    gradient=('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a'),\n)\nAdd an heatmap layer.\nThis layer is used to display observations distribution.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 5.0.\n5.0\n\n\nblur\nfloat\nHeatmap blur. By default 5.0.\n5.0\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\ngradient\ntuple\nTuple of CSS colors to define the heatmap gradient. By default gradient inspired from the ‘turbo’ color ramp.\n('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a')\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap().show()"
   },
   {
-    "objectID": "reference/get_duplicated_taxids.html#examples",
-    "href": "reference/get_duplicated_taxids.html#examples",
-    "title": "get_duplicated_taxids",
+    "objectID": "reference/Lifemap.layer_heatmap.html#parameters",
+    "href": "reference/Lifemap.layer_heatmap.html#parameters",
+    "title": "Lifemap.layer_heatmap",
     "section": "",
-    "text": "&gt;&gt;&gt; from pylifemap import get_duplicated_taxids\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid_values\": [2, 33154, 33090, 33090, 2], \"value\": [10, 5, 100, 1, 2]})\n&gt;&gt;&gt; get_duplicated_taxids(d, taxid_col=\"taxid_values\")\n[2, 33090]"
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 5.0.\n5.0\n\n\nblur\nfloat\nHeatmap blur. By default 5.0.\n5.0\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\ngradient\ntuple\nTuple of CSS colors to define the heatmap gradient. By default gradient inspired from the ‘turbo’ color ramp.\n('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a')"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap.html#returns",
+    "href": "reference/Lifemap.layer_heatmap.html#returns",
+    "title": "Lifemap.layer_heatmap",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap.html#examples",
+    "href": "reference/Lifemap.layer_heatmap.html#examples",
+    "title": "Lifemap.layer_heatmap",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap().show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html",
+    "href": "reference/Lifemap.layer_donuts.html",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "Lifemap.layer_donuts(\n    data=None,\n    *,\n    taxid_col='taxid',\n    counts_col,\n    categories=None,\n    radius=50,\n    leaves='hide',\n    show_totals=True,\n    scheme=None,\n    opacity=1,\n    popup=True,\n    popup_col=None,\n    label=None,\n    declutter=True,\n    lazy=True,\n    lazy_zoom=4,\n)\nAdd a donuts layer.\nThis layer displays the distribution of a categorical variable values among each nodes children. Optionally it can also represent leaves values as a point layer.\nIt should be applied to data computed with aggregate_freq.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\ncounts_col\nstr\nDataFrame column containing the counts.\nrequired\n\n\ncategories\nlist | tuple | None\nCustom order of categories. Defaults to None.\nNone\n\n\nradius\nint | list | tuple\nDonut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50.\n50\n\n\nleaves\nLiteral[\"show\", \"hide\"]\nIf 'show', add a points layer with individual leaves values. By default 'hide'.\n'hide'\n\n\nshow_totals\nbool\nIf True, display the total count of the current taxa in the center of the donut chart. Defaults to True.\nTrue\n\n\nscheme\nstr | None\nColor scheme for donut charts ans points. It is the name of a categorical Observable Plot color scale. By default None.\nNone\n\n\nopacity\nfloat | None\nDonut charts and points opacity. By default 1.\n1\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer. If None, the value of counts_col is used.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.\nTrue\n\n\nlazy_zoom\nint\nIf lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 4.\n4\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nValueError\nIf leaves is not one of the allowed values.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_freq\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"category\": [\"a\", \"b\", \"b\", \"a\", \"a\", \"c\", \"a\", \"b\", \"b\", \"a\", \"b\"],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_freq(d, column=\"category\")\n&gt;&gt;&gt; Lifemap(d).layer_donuts(counts_col=\"category\", leaves=\"hide\").show()\n\n\n\naggregate_freq : aggregation of the values counts of a categorical variable."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html#parameters",
+    "href": "reference/Lifemap.layer_donuts.html#parameters",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\ncounts_col\nstr\nDataFrame column containing the counts.\nrequired\n\n\ncategories\nlist | tuple | None\nCustom order of categories. Defaults to None.\nNone\n\n\nradius\nint | list | tuple\nDonut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50.\n50\n\n\nleaves\nLiteral[\"show\", \"hide\"]\nIf 'show', add a points layer with individual leaves values. By default 'hide'.\n'hide'\n\n\nshow_totals\nbool\nIf True, display the total count of the current taxa in the center of the donut chart. Defaults to True.\nTrue\n\n\nscheme\nstr | None\nColor scheme for donut charts ans points. It is the name of a categorical Observable Plot color scale. By default None.\nNone\n\n\nopacity\nfloat | None\nDonut charts and points opacity. By default 1.\n1\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer. If None, the value of counts_col is used.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.\nTrue\n\n\nlazy_zoom\nint\nIf lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 4.\n4"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html#returns",
+    "href": "reference/Lifemap.layer_donuts.html#returns",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html#raises",
+    "href": "reference/Lifemap.layer_donuts.html#raises",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nValueError\nIf leaves is not one of the allowed values."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html#examples",
+    "href": "reference/Lifemap.layer_donuts.html#examples",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_freq\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"category\": [\"a\", \"b\", \"b\", \"a\", \"a\", \"c\", \"a\", \"b\", \"b\", \"a\", \"b\"],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_freq(d, column=\"category\")\n&gt;&gt;&gt; Lifemap(d).layer_donuts(counts_col=\"category\", leaves=\"hide\").show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_donuts.html#see-also",
+    "href": "reference/Lifemap.layer_donuts.html#see-also",
+    "title": "Lifemap.layer_donuts",
+    "section": "",
+    "text": "aggregate_freq : aggregation of the values counts of a categorical variable."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap_deck.html",
+    "href": "reference/Lifemap.layer_heatmap_deck.html",
+    "title": "Lifemap.layer_heatmap_deck",
+    "section": "",
+    "text": "Lifemap.layer_heatmap_deck(\n    data=None,\n    *,\n    taxid_col='taxid',\n    radius=30,\n    intensity=5,\n    threshold=0.05,\n    opacity=0.5,\n    color_range=None,\n)\nAdd a deck.gl heatmap layer.\nThis layer is used to display observations distribution.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 30.\n30\n\n\nintensity\nfloat\nHeatmap intensity. By default 5.\n5\n\n\nthreshold\nfloat\nHeatmap threshold. By default 0.05.\n0.05\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 0.5.\n0.5\n\n\ncolor_range\nlist | None\nList of colors to define a custom color gradient.\nNone\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap_deck().show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap_deck.html#parameters",
+    "href": "reference/Lifemap.layer_heatmap_deck.html#parameters",
+    "title": "Lifemap.layer_heatmap_deck",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 30.\n30\n\n\nintensity\nfloat\nHeatmap intensity. By default 5.\n5\n\n\nthreshold\nfloat\nHeatmap threshold. By default 0.05.\n0.05\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 0.5.\n0.5\n\n\ncolor_range\nlist | None\nList of colors to define a custom color gradient.\nNone"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap_deck.html#returns",
+    "href": "reference/Lifemap.layer_heatmap_deck.html#returns",
+    "title": "Lifemap.layer_heatmap_deck",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_heatmap_deck.html#examples",
+    "href": "reference/Lifemap.layer_heatmap_deck.html#examples",
+    "title": "Lifemap.layer_heatmap_deck",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap_deck().show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_lines.html",
+    "href": "reference/Lifemap.layer_lines.html",
+    "title": "Lifemap.layer_lines",
+    "section": "",
+    "text": "Lifemap.layer_lines(\n    data=None,\n    *,\n    taxid_col='taxid',\n    width=3,\n    width_range=(1, 30),\n    color=None,\n    scheme=None,\n    linetype='solid',\n    opacity=0.8,\n    popup=True,\n    popup_col=None,\n    hover=None,\n    label=None,\n    lazy=None,\n    lazy_zoom=10,\n    lazy_mode='self',\n)\nAdd a lines layer.\nThis layer can be applied to data generated by aggregate_num or aggregate_count.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nwidth\nint | float | str\nIf numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column to compute line width from.\n3\n\n\nwidth_range\ntuple | list\nMin and max values for line widths, only used if width is a data column. By default (1, 30).\n(1, 30)\n\n\ncolor\nstr | None\nEither the name of a numerical DataFrame column to determine line color, or a fixed CSS color for lines.\nNone\n\n\nscheme\nstr | None\nColor scheme for lines color. It is the name of an Observable Plot color scale.\nNone\n\n\nlinetype\nLiteral['solid', 'dotted', 'smalldash', 'dashed']\nType of lines. Defaults to 'solid'.\n'solid'\n\n\nopacity\nfloat\nLine opacity as a floating number between 0 and 1. By default 0.8.\n0.8\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nhover\nbool | None\nIf True, highlight points on mouse hovering. By default True if less than 10_000 data points, False otherwise.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer if color is defined. If None, the value of color is used.\nNone\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only lines with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_num\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"value\": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_num(d, column=\"value\", fn=\"mean\")\n&gt;&gt;&gt; Lifemap(d).layer_lines(width=\"value\", color=\"value\").show()\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_lines.html#parameters",
+    "href": "reference/Lifemap.layer_lines.html#parameters",
+    "title": "Lifemap.layer_lines",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nwidth\nint | float | str\nIf numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column to compute line width from.\n3\n\n\nwidth_range\ntuple | list\nMin and max values for line widths, only used if width is a data column. By default (1, 30).\n(1, 30)\n\n\ncolor\nstr | None\nEither the name of a numerical DataFrame column to determine line color, or a fixed CSS color for lines.\nNone\n\n\nscheme\nstr | None\nColor scheme for lines color. It is the name of an Observable Plot color scale.\nNone\n\n\nlinetype\nLiteral['solid', 'dotted', 'smalldash', 'dashed']\nType of lines. Defaults to 'solid'.\n'solid'\n\n\nopacity\nfloat\nLine opacity as a floating number between 0 and 1. By default 0.8.\n0.8\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nhover\nbool | None\nIf True, highlight points on mouse hovering. By default True if less than 10_000 data points, False otherwise.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer if color is defined. If None, the value of color is used.\nNone\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only lines with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_lines.html#returns",
+    "href": "reference/Lifemap.layer_lines.html#returns",
+    "title": "Lifemap.layer_lines",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_lines.html#examples",
+    "href": "reference/Lifemap.layer_lines.html#examples",
+    "title": "Lifemap.layer_lines",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_num\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"value\": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_num(d, column=\"value\", fn=\"mean\")\n&gt;&gt;&gt; Lifemap(d).layer_lines(width=\"value\", color=\"value\").show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_lines.html#see-also",
+    "href": "reference/Lifemap.layer_lines.html#see-also",
+    "title": "Lifemap.layer_lines",
+    "section": "",
+    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
   },
   {
     "objectID": "reference/get_unknown_taxids.html",
@@ -140,48 +287,6 @@
     "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"value\": list(\"ABCDEFGHIJK\"),\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_text(text=\"value\", font_size=14).show()"
   },
   {
-    "objectID": "reference/Lifemap.show.html",
-    "href": "reference/Lifemap.show.html",
-    "title": "Lifemap.show",
-    "section": "",
-    "text": "Lifemap.show\nLifemap.show()\nDisplay the Jupyter widget for this instance.\nIn a Jupyter notebook environment, the method uses IPython.display.display to display the visualization directly. Otherwise, it exports the widget to an HTML file and opens it in a browser if possible.\nIn a marimo notebook environment, the widget object is returned in order to be passed to marimo.ui.anywidget()."
-  },
-  {
-    "objectID": "reference/aggregate_freq.html",
-    "href": "reference/aggregate_freq.html",
-    "title": "aggregate_freq",
-    "section": "",
-    "text": "aggregate_freq(d, column, *, taxid_col='taxid')\nCategorical variable frequencies aggregation along branches.\nAggregates a categorical variable in a DataFrame with taxonomy ids as levels frequencies along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input. The count column contains the value counts as a polars struct.\n\n\n\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_freq\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [\"a\", \"b\", \"a\"]})\n&gt;&gt;&gt; aggregate_freq(d, column=\"value\")\nshape: (7, 3)\n┌───────┬───────┬───────┐\n│ taxid ┆ value ┆ count │\n│ ---   ┆ ---   ┆ ---   │\n│ i32   ┆ str   ┆ u32   │\n╞═══════╪═══════╪═══════╡\n│ 0     ┆ a     ┆ 2     │\n│ 0     ┆ b     ┆ 1     │\n│ 2     ┆ a     ┆ 1     │\n│ 2759  ┆ a     ┆ 1     │\n│ 2759  ┆ b     ┆ 1     │\n│ 33090 ┆ b     ┆ 1     │\n│ 33154 ┆ a     ┆ 1     │\n└───────┴───────┴───────┘"
-  },
-  {
-    "objectID": "reference/aggregate_freq.html#parameters",
-    "href": "reference/aggregate_freq.html#parameters",
-    "title": "aggregate_freq",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
-  },
-  {
-    "objectID": "reference/aggregate_freq.html#returns",
-    "href": "reference/aggregate_freq.html#returns",
-    "title": "aggregate_freq",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input. The count column contains the value counts as a polars struct."
-  },
-  {
-    "objectID": "reference/aggregate_freq.html#see-also",
-    "href": "reference/aggregate_freq.html#see-also",
-    "title": "aggregate_freq",
-    "section": "",
-    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
-  },
-  {
-    "objectID": "reference/aggregate_freq.html#examples",
-    "href": "reference/aggregate_freq.html#examples",
-    "title": "aggregate_freq",
-    "section": "",
-    "text": "&gt;&gt;&gt; from pylifemap import aggregate_freq\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [\"a\", \"b\", \"a\"]})\n&gt;&gt;&gt; aggregate_freq(d, column=\"value\")\nshape: (7, 3)\n┌───────┬───────┬───────┐\n│ taxid ┆ value ┆ count │\n│ ---   ┆ ---   ┆ ---   │\n│ i32   ┆ str   ┆ u32   │\n╞═══════╪═══════╪═══════╡\n│ 0     ┆ a     ┆ 2     │\n│ 0     ┆ b     ┆ 1     │\n│ 2     ┆ a     ┆ 1     │\n│ 2759  ┆ a     ┆ 1     │\n│ 2759  ┆ b     ┆ 1     │\n│ 33090 ┆ b     ┆ 1     │\n│ 33154 ┆ a     ┆ 1     │\n└───────┴───────┴───────┘"
-  },
-  {
     "objectID": "reference/Lifemap.layer_screengrid.html",
     "href": "reference/Lifemap.layer_screengrid.html",
     "title": "Lifemap.layer_screengrid",
@@ -208,6 +313,34 @@
     "title": "Lifemap.layer_screengrid",
     "section": "",
     "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_screengrid().show()"
+  },
+  {
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "Reference",
+    "section": "",
+    "text": "Lifemap\nBuild visualization.\n\n\nLifemap.layer_points\nAdd a points layer.\n\n\nLifemap.layer_lines\nAdd a lines layer.\n\n\nLifemap.layer_donuts\nAdd a donuts layer.\n\n\nLifemap.layer_heatmap\nAdd an heatmap layer.\n\n\nLifemap.layer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nLifemap.layer_screengrid\nAdd a screengrid layer.\n\n\nLifemap.layer_text\nAdd a text labels layer.\n\n\nLifemap.layer_icons\nAdd an icons layer.\n\n\nLifemap.show\nDisplay the Jupyter widget for this instance.\n\n\nLifemap.save\nSave the Jupyter widget for this instance to an HTML file.\n\n\n\n\n\n\nFunctions to aggregate data along the branches of the lifemap tree.\n\n\n\naggregate_count\nNodes count aggregation along branches.\n\n\naggregate_num\nNumerical variable aggregation along branches.\n\n\naggregate_freq\nCategorical variable frequencies aggregation along branches.\n\n\n\n\n\n\nFunctions to help with user data handling\n\n\n\nget_unknown_taxids\nGet a list of taxids from a data frame which are not in Lifemap data.\n\n\nget_duplicated_taxids\nGet a list of duplicated taxids in a data frame."
+  },
+  {
+    "objectID": "reference/index.html#visualization",
+    "href": "reference/index.html#visualization",
+    "title": "Reference",
+    "section": "",
+    "text": "Lifemap\nBuild visualization.\n\n\nLifemap.layer_points\nAdd a points layer.\n\n\nLifemap.layer_lines\nAdd a lines layer.\n\n\nLifemap.layer_donuts\nAdd a donuts layer.\n\n\nLifemap.layer_heatmap\nAdd an heatmap layer.\n\n\nLifemap.layer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nLifemap.layer_screengrid\nAdd a screengrid layer.\n\n\nLifemap.layer_text\nAdd a text labels layer.\n\n\nLifemap.layer_icons\nAdd an icons layer.\n\n\nLifemap.show\nDisplay the Jupyter widget for this instance.\n\n\nLifemap.save\nSave the Jupyter widget for this instance to an HTML file."
+  },
+  {
+    "objectID": "reference/index.html#data-aggregation",
+    "href": "reference/index.html#data-aggregation",
+    "title": "Reference",
+    "section": "",
+    "text": "Functions to aggregate data along the branches of the lifemap tree.\n\n\n\naggregate_count\nNodes count aggregation along branches.\n\n\naggregate_num\nNumerical variable aggregation along branches.\n\n\naggregate_freq\nCategorical variable frequencies aggregation along branches."
+  },
+  {
+    "objectID": "reference/index.html#data-utilities",
+    "href": "reference/index.html#data-utilities",
+    "title": "Reference",
+    "section": "",
+    "text": "Functions to help with user data handling\n\n\n\nget_unknown_taxids\nGet a list of taxids from a data frame which are not in Lifemap data.\n\n\nget_duplicated_taxids\nGet a list of duplicated taxids in a data frame."
   },
   {
     "objectID": "reference/Lifemap.layer_points.html",
@@ -252,60 +385,11 @@
     "text": "aggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
   },
   {
-    "objectID": "reference/Lifemap.save.html",
-    "href": "reference/Lifemap.save.html",
-    "title": "Lifemap.save",
+    "objectID": "layers/layer_lines.html",
+    "href": "layers/layer_lines.html",
+    "title": "Lines layer",
     "section": "",
-    "text": "Lifemap.save(path, title='Lifemap')\nSave the Jupyter widget for this instance to an HTML file.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\npath\nstr | Path\nPath to the HTML file to save the widget.\nrequired\n\n\ntitle\nstr\nOptional HTML page title. By default 'Lifemap'.\n'Lifemap'\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; (\n...     Lifemap(d, width=\"100%\", height=\"100vh\")\n...     .layer_points()\n...     .save(\"lifemap.html\", title=\"Example lifemap\")\n... )"
-  },
-  {
-    "objectID": "reference/Lifemap.save.html#parameters",
-    "href": "reference/Lifemap.save.html#parameters",
-    "title": "Lifemap.save",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\npath\nstr | Path\nPath to the HTML file to save the widget.\nrequired\n\n\ntitle\nstr\nOptional HTML page title. By default 'Lifemap'.\n'Lifemap'"
-  },
-  {
-    "objectID": "reference/Lifemap.save.html#examples",
-    "href": "reference/Lifemap.save.html#examples",
-    "title": "Lifemap.save",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; (\n...     Lifemap(d, width=\"100%\", height=\"100vh\")\n...     .layer_points()\n...     .save(\"lifemap.html\", title=\"Example lifemap\")\n... )"
-  },
-  {
-    "objectID": "reference/index.html",
-    "href": "reference/index.html",
-    "title": "Reference",
-    "section": "",
-    "text": "Lifemap\nBuild visualization.\n\n\nLifemap.layer_points\nAdd a points layer.\n\n\nLifemap.layer_lines\nAdd a lines layer.\n\n\nLifemap.layer_donuts\nAdd a donuts layer.\n\n\nLifemap.layer_heatmap\nAdd an heatmap layer.\n\n\nLifemap.layer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nLifemap.layer_screengrid\nAdd a screengrid layer.\n\n\nLifemap.layer_text\nAdd a text labels layer.\n\n\nLifemap.layer_icons\nAdd an icons layer.\n\n\nLifemap.show\nDisplay the Jupyter widget for this instance.\n\n\nLifemap.save\nSave the Jupyter widget for this instance to an HTML file.\n\n\n\n\n\n\nFunctions to aggregate data along the branches of the lifemap tree.\n\n\n\naggregate_count\nNodes count aggregation along branches.\n\n\naggregate_num\nNumerical variable aggregation along branches.\n\n\naggregate_freq\nCategorical variable frequencies aggregation along branches.\n\n\n\n\n\n\nFunctions to help with user data handling\n\n\n\nget_unknown_taxids\nGet a list of taxids from a data frame which are not in Lifemap data.\n\n\nget_duplicated_taxids\nGet a list of duplicated taxids in a data frame."
-  },
-  {
-    "objectID": "reference/index.html#visualization",
-    "href": "reference/index.html#visualization",
-    "title": "Reference",
-    "section": "",
-    "text": "Lifemap\nBuild visualization.\n\n\nLifemap.layer_points\nAdd a points layer.\n\n\nLifemap.layer_lines\nAdd a lines layer.\n\n\nLifemap.layer_donuts\nAdd a donuts layer.\n\n\nLifemap.layer_heatmap\nAdd an heatmap layer.\n\n\nLifemap.layer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nLifemap.layer_screengrid\nAdd a screengrid layer.\n\n\nLifemap.layer_text\nAdd a text labels layer.\n\n\nLifemap.layer_icons\nAdd an icons layer.\n\n\nLifemap.show\nDisplay the Jupyter widget for this instance.\n\n\nLifemap.save\nSave the Jupyter widget for this instance to an HTML file."
-  },
-  {
-    "objectID": "reference/index.html#data-aggregation",
-    "href": "reference/index.html#data-aggregation",
-    "title": "Reference",
-    "section": "",
-    "text": "Functions to aggregate data along the branches of the lifemap tree.\n\n\n\naggregate_count\nNodes count aggregation along branches.\n\n\naggregate_num\nNumerical variable aggregation along branches.\n\n\naggregate_freq\nCategorical variable frequencies aggregation along branches."
-  },
-  {
-    "objectID": "reference/index.html#data-utilities",
-    "href": "reference/index.html#data-utilities",
-    "title": "Reference",
-    "section": "",
-    "text": "Functions to help with user data handling\n\n\n\nget_unknown_taxids\nGet a list of taxids from a data frame which are not in Lifemap data.\n\n\nget_duplicated_taxids\nGet a list of duplicated taxids in a data frame."
-  },
-  {
-    "objectID": "layers/layer_heatmap_deck.html",
-    "href": "layers/layer_heatmap_deck.html",
-    "title": "Deck.gl heatmap layer",
-    "section": "",
-    "text": "The heatmap layer displays observations distribution as a heatmap overlay provided by deck.gl.\nThe radius, intensity, threshold and opacity arguments can be used to customize the heatmap appearance.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn)\n    .layer_heatmap_deck(opacity=0.5)\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_heatmap_deck arguments you can take a look at its documentation.\nFor an alternative heatmap visualization, see layer_heatmap."
+    "text": "The lines layer displays aggregated observations (count or numerical variable) by highlighting branches of the tree.\nThe color and width arguments allow to modify the size and color of the lines. They can either be fixed values (numerical for width, an hexadecimal color code for color) or data column names. In this case, width or color will depend on the column values.\n\nimport polars as pl\nfrom pylifemap import Lifemap, aggregate_count\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n# Aggregate observations count along branches\niucn_agg = aggregate_count(iucn)\n\n(\n    Lifemap(iucn_agg)\n    .layer_lines(color=\"n\", width=\"n\", opacity=0.9)\n    .show()\n)\n\nWarning: 166 taxids have not been found in Lifemap database.\n\n\n\n\n\nFor a detailed list of layer_lines arguments you can take a look at its documentation."
   },
   {
     "objectID": "layers/layer_screengrid.html",
@@ -315,67 +399,18 @@
     "text": "The screengrid layer displays observations distribution as a colored grid with fixed-size cells.\n\n\n\n\n\n\nNote\n\n\n\nThis visualization is highly sensitive to the current zoom level and extent. Small modifications of the view can lead to very different visual representations.\n\n\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn)\n    .layer_screengrid(opacity=0.5)\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_screengrid arguments you can take a look at its documentation."
   },
   {
-    "objectID": "layers/layer_heatmap.html",
-    "href": "layers/layer_heatmap.html",
-    "title": "Heatmap layer",
+    "objectID": "layers/layer_heatmap_deck.html",
+    "href": "layers/layer_heatmap_deck.html",
+    "title": "Deck.gl heatmap layer",
     "section": "",
-    "text": "The heatmap layer displays observations distribution as a heatmap overlay.\nThe radius, blur and opacity arguments can be used to customize the heatmap appearance.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn)\n    .layer_heatmap(radius=2, blur=10, opacity=0.9)\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_heatmap arguments you can take a look at its documentation.\nFor an alternative heatmap visualization, see layer_heatmap_deck."
+    "text": "The heatmap layer displays observations distribution as a heatmap overlay provided by deck.gl.\nThe radius, intensity, threshold and opacity arguments can be used to customize the heatmap appearance.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn)\n    .layer_heatmap_deck(opacity=0.5)\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_heatmap_deck arguments you can take a look at its documentation.\nFor an alternative heatmap visualization, see layer_heatmap."
   },
   {
-    "objectID": "layers/layer_donuts.html",
-    "href": "layers/layer_donuts.html",
-    "title": "Donuts layer",
+    "objectID": "layers/layer_text.html",
+    "href": "layers/layer_text.html",
+    "title": "Text layer",
     "section": "",
-    "text": "The donuts layer displays aggregated levels count of a categorical variable as donut charts, optionally displaying the individual values with points.\n\nimport polars as pl\nfrom pylifemap import Lifemap, aggregate_freq\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n# Aggregate observations count along branches\niucn_freq = aggregate_freq(iucn, column=\"status\")\n\n(\n    Lifemap(iucn_freq)\n    .layer_donuts(counts_col=\"status\", opacity=0.9, leaves=\"show\")\n    .show()\n)\n\nWarning: 171 taxids have not been found in Lifemap database.\nWarning: 5657 duplicated taxids have been found in the data.\n\n\n\n\n\nThe leaves argument allows to \"show\" or \"hide\" individual leaves values.\nThe radius argument allows to modify the size of each donut chart. If it is a single integer, the size will be fixed. If it is an Array of two integers, the size will vary depending on the total count of the variable for this node. In the following example we make the size vary between 40 and 150, and we also show the total count as a number with the show_totals argument.\n\n(\n    Lifemap(iucn_freq)\n    .layer_donuts(counts_col=\"status\", radius = [40, 150], show_totals = True)\n    .show()\n)\n\n\n\n\nFor a detailed list of layer_donuts arguments you can take a look at its documentation."
-  },
-  {
-    "objectID": "gallery/sources/iucn.html",
-    "href": "gallery/sources/iucn.html",
-    "title": "IUCN Categories proportions",
-    "section": "",
-    "text": "Note\n\n\n\nThis visualization accompanies the article presenting pylifemap, available at link to be added.\n\n\nVisualization of the proportion of species at each taxonomic rank that belong to each one of the 11 IUCN Red List categories. Numbers inside donuts represent the number of species belonging to each clade present in the IUCN Red List. IUCN data version 2025-2, downloaded from https://www.iucnredlist.org/ the 4th of December 2025.\n\n\nShow the code\n# Load libraries\nfrom pylifemap import Lifemap, aggregate_freq\nimport pandas as pd\n\n# Read IUCN data (version 2025-2)\ndf = pd.read_parquet(\"data/IUCN_with_taxid_SMALL.parquet\")\n\n# Set the order for IUCN categories\norder_cat = [\n    'Data Deficient',\n    'Least Concern',\n    'Lower Risk/least concern',\n    'Near Threatened',\n    'Lower Risk/near threatened',\n    'Lower Risk/conservation dependent',\n    'Vulnerable',\n    'Endangered',\n    'Critically Endangered',\n    'Extinct in the Wild',\n    'Extinct'\n]\n\n# Aggregate\nagg = aggregate_freq(df, column=\"redlistCategory\")\n\n# Plot\n(\n    Lifemap(agg, center=41666, zoom=13)\n    .layer_donuts(\n        counts_col=\"redlistCategory\",\n        scheme=\"Turbo\",\n        radius = [70, 150],\n        show_totals = True,\n        lazy_zoom=4,\n        declutter=False,\n        opacity=0.7,\n        categories=order_cat\n    )\n    .show()\n)\n\n\nWarning: 108 taxids have not been found in Lifemap database.\nWarning: 11265 duplicated taxids have been found in the data."
-  },
-  {
-    "objectID": "gallery/sources/iucn2.html",
-    "href": "gallery/sources/iucn2.html",
-    "title": "IUCN Categories 2",
-    "section": "",
-    "text": "Show the code\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn.parquet\"\n)\n\nLifemap(iucn, width=\"100%\").layer_points(fill=\"status\").show()\n\n\nWarning: 862 taxids have not been found in Lifemap database.\nWarning: 152 duplicated taxids have been found in the data."
-  },
-  {
-    "objectID": "gallery/gallery.html",
-    "href": "gallery/gallery.html",
-    "title": "Gallery",
-    "section": "",
-    "text": "Note\n\n\n\nIf you want to have your visualization listed here, please open a new issue to give us your script.\n\n\n\n\n\n\n\n\n\n\n\n\nWuhan market metagenomics\n\n\n\nicons\n\nlightgrey theme\n\npoints\n\nlines\n\nin publication\n\n\n\nMetagenomics in the Wuhan market after beginning of the covid pandemy.\n\n\n\nJ. Barnier, V. Navratil, D. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nIUCN Categories 2\n\n\n\npoints\n\ndark theme\n\n\n\nSimple IUCN categories mapping.\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nPhylopic - Tree of Life\n\n\n\nicons\n\nlightgrey\n\n\n\nSilhouettes of some species from Phylopic mapped at their exact location in Lifemap (lightgrey theme).\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nIUCN Categories proportions\n\n\n\npoints\n\ndark theme\n\npublished\n\nscheme\n\nin publication\n\n\n\nIUCN categories proportions at each clade.\n\n\n\nD. de Vienne\n\n\nNov 25, 2025\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "changelog.html#pylifemap-0.1.3",
-    "href": "changelog.html#pylifemap-0.1.3",
-    "title": "Changelog",
-    "section": "pylifemap 0.1.3",
-    "text": "pylifemap 0.1.3\n\nFix: JavaScript bundling version problem\nMaint: upgrade Python dependencies"
-  },
-  {
-    "objectID": "changelog.html#pylifemap-0.1.2",
-    "href": "changelog.html#pylifemap-0.1.2",
-    "title": "Changelog",
-    "section": "pylifemap 0.1.2",
-    "text": "pylifemap 0.1.2\n\nFeature: add small lazy loading spinner\nFeature: add progress text to global spinner\nImprovement: automatically enable lazy loading if a large dataset (&gt; 300 000 rows) is detected\nImprovement: better lazy loading filter functions efficiency\nImprovement: better garbage collection when widget is destroyed\nFix: arcs in donut charts must follow the categories order\nFix: use sessionStorage instead of localStorage for updated coordinates caching\nFix: wrong lazy loading extent margins computation\nRefactor: move projection computations to Python code"
-  },
-  {
-    "objectID": "changelog.html#pylifemap-0.1.1",
-    "href": "changelog.html#pylifemap-0.1.1",
-    "title": "Changelog",
-    "section": "pylifemap 0.1.1",
-    "text": "pylifemap 0.1.1\n\nImproved default zoom level depending on widget size\nImproved animation when zooming into taxon"
-  },
-  {
-    "objectID": "changelog.html#pylifemap-0.1",
-    "href": "changelog.html#pylifemap-0.1",
-    "title": "Changelog",
-    "section": "pylifemap 0.1",
-    "text": "pylifemap 0.1\n\nFirst published version"
+    "text": "The text layer displays text labels associated to taxid values.\nIn this example we display the taxid values of all species in the iucn dataset. The text argument allows to specify the data column containing the text to be displayed. Text size, font and colors can be defined by additional arguments font_size, color, stroke or font_family.\nYou can add hide_labels=True to your Lifemap call if you want to hide the default taxa names layer.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn, hide_labels=True)\n    .layer_text(text=\"taxid\", font_size=14, color=\"#F5D770\", stroke=\"#000\")\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_text arguments you can take a look at its documentation."
   },
   {
     "objectID": "index.html",
@@ -406,60 +441,25 @@
     "text": "Credits\n\nThe iucn data files in the data/ directory have been generated from The IUCN Red List of Threatened Species dataset (DOI 10.15468/0qnb58).\nVisualizations are powered by Open Layers, deck.gl, d3 and Observable Plot.\nThe widget is developed thanks to the anywidget framework.\nThis documentation website is generated by Quarto and quartodoc."
   },
   {
-    "objectID": "usage.html",
-    "href": "usage.html",
-    "title": "Usage",
+    "objectID": "layers/layer_heatmap.html",
+    "href": "layers/layer_heatmap.html",
+    "title": "Heatmap layer",
     "section": "",
-    "text": "Note\n\n\n\nSee the Getting started page for a more gentle introduction.\nIn the following we will use the example IUCN dataset. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nimport polars as pl\nfrom pylifemap import Lifemap\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)"
+    "text": "The heatmap layer displays observations distribution as a heatmap overlay.\nThe radius, blur and opacity arguments can be used to customize the heatmap appearance.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn)\n    .layer_heatmap(radius=2, blur=10, opacity=0.9)\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_heatmap arguments you can take a look at its documentation.\nFor an alternative heatmap visualization, see layer_heatmap_deck."
   },
   {
-    "objectID": "usage.html#installation",
-    "href": "usage.html#installation",
-    "title": "Usage",
-    "section": "Installation",
-    "text": "Installation\n\nInstall locally\nYou can add the package to a project with uv or to a virtual environment with pip:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\n\n\nRun directly with uv\nYou can run pylifemap directly with uv run using a --with argument:\n# Run a Jupyter session\nuv run --with pylifemap --with jupyter jupyter-lab\n\n# Run a marimo session\nuv run --with pylifemap --with marimo marimo edit\n\n# Run a custom script\nuv run --with pylifemap my_script.py\n\n\nRun with juv\njuv is a toolkit for reproducible Jupyter notebooks, powered by uv.\nYou can easily create and run a notebook with pylifemap with:\njuv init notebook.ipynb\njuv add notebook.ipynb pylifemap\njuv run notebook.ipynb\n\n\nRun with Docker\nAnother way to use the package without having to install it is to use our Docker image.\n\nRun in Jupyter\nTo use pylifemap in a Jupyter environment, open a terminal in the directory containing your data and notebook files, and run:\ndocker run -it -p 127.0.0.1:8899:8899 -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest\nOpen the following URL in your browser: http://127.0.0.1:8899/lab, and you will have access to a Jupyter notebook environment with pylifemap and its dependencies preinstalled.\n\n\nRun a script\nIf you just want to run a Python script generating a pylifemap visualization, you can open a terminal in the script directory and run the following command:\ndocker run -v $PWD:/local/ ghcr.io/lifemap-tol/pylifemap:latest myscript.py\nIn this case, if you use show() in your script the result will not be opened in your browser but will instead be saved in a lifemap.html file in your working directory."
-  },
-  {
-    "objectID": "usage.html#base-map-customization",
-    "href": "usage.html#base-map-customization",
-    "title": "Usage",
-    "section": "Base map customization",
-    "text": "Base map customization\nSeveral arguments can be passed to Lifemap() when initializing the visualization.\n\n\n\n\n\n\nNote\n\n\n\nFor a complete list of Lifemap arguments, see its documentation.\n\n\n\nWidget size\nThe width and height arguments allow to modify the widget size. They can be given in any CSS unit.\nFor example, the following initialization would make the visualization take the full available width, and an height of 800 pixels.\n\nLifemap(iucn, taxid_col=\"taxid\", width=\"100%\", height=800)\n\n\n\nMap theme\nBy default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a theme argument:\n\nLifemap(iucn, theme=\"light\").layer_points().show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nAvailable themes are currently dark, light, lightgrey, lightblue and lightgreen.\n\n\nMap controls\nBy default, the Lifemap widget displays several controls allowing to interact with the map. It is possible to customize which controls are shown by passing a controls argument to Lifemap:\n\nLifemap(iucn, taxid_col=\"taxid\", controls=(\"zoom\", \"full_screen\"))\n\nThe following values are available:\n\n\"zoom\": zoom in and zoom out buttons\n\"reset_zoom\": zoom reset button\n\"png_export\": button to export the current view to a PNG file\n\"search\": taxa search button\n\"full_screen\": full screen toggle button\n\n\n\nDefault view (center and zoom)\nThe center and zoom arguments allow to specify the initial map view at widget creation.\nThere are three different possible values for center:\n\n\"default\": show the entire tree of life (default value)\n\"auto\": center the view on the displayed data\ntaxid (integer value): center the view on this taxid coordinates\n\nIf you set zoom to an integer value between 4 and 42, the initial zoom will be set to this level. If you leave zoom at its default None value, the zoom level will be computed according to the center value.\n\n\n\n\n\n\nNote\n\n\n\nFor technical reason, the center=\"auto\" argument doesn’t take into account data passed to layer_screengrid or layer_heatmap_deck."
-  },
-  {
-    "objectID": "usage.html#visualization-layers",
-    "href": "usage.html#visualization-layers",
-    "title": "Usage",
-    "section": "Visualization layers",
-    "text": "Visualization layers\nHere are the currently available layers:\n\n\n\nLayer\nDescription\n\n\n\n\nlayer_points\nDisplays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame.\n\n\nlayer_lines\nUsing aggregated data, highlights branches of the tree with lines of varying width and color.\n\n\nlayer_donuts\nDisplays aggregated categorical data as donut charts.\n\n\nlayer_heatmap\nDisplays a heatmap of the observations distribution in the tree.\n\n\nlayer_heatmap_deck\nDisplays a deck.gl heatmap of the observations distribution in the tree.\n\n\nlayer_screengrid\nDisplays the observations distribution with a colored grid with fixed-size cells.\n\n\nlayer_text\nDisplays text labels by taxid.\n\n\nlayer_icons\nDisplays icons associated to taxids.\n\n\n\nSeveral layers can be added to the same map by chaining several methods:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_heatmap().layer_points().show()\n\n\nLayers customization\nEach layer accepts a certain number of arguments to customize its appearance. For example we can change the radius, color and opacity of our points:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"#EFB118\", radius=5, opacity=0.5)\n    .show()\n)\n\n\n\n\nInstead of providing fixed values to fill or radius, we can also pass data column names to make size or color depending on the column values. For example, we can make the color of the points depending on their status:\n\n(\n    Lifemap(iucn)\n    .layer_points(fill=\"status\", radius=4, opacity=0.9)\n    .show()\n)\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nSee each layer documentation page for a complete list of its arguments.\n\n\n\n\nLayers data\nBy default, layers use the data provided when calling Lifemap, but it is possible to give a specific dataset to a layer. To do this, just pass a data and optionally a taxid_col argument to the layer function.\n\nicons_data = pl.DataFrame({\n    'taxid': ['1005039','9544','41956','35128','74311'],\n    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png']\n})\n\n(\n    Lifemap(iucn, theme=\"lightgrey\")\n    .layer_points(radius=4, opacity=0.9)\n    .layer_icons(data=icons_data, icon=\"imageurl\", popup=True)\n    .show()\n)\n\n\n\n\n\n\nPopups customization\nFor layers like layer_points, layer_lines or layer_icons that support popups, it is possible to customize the popup content by adding a popup_col argument. This argument must be the name of a data column containing the popup content for each data point.\n\nicons_data = icons_data.with_columns(popup=\"The taxid of this node is &lt;strong&gt;\" + pl.col(\"taxid\") + \"&lt;/strong&gt;\")\n\n(\n    Lifemap(icons_data, theme=\"light\")\n    .layer_icons(icon=\"imageurl\", popup=True, popup_col=\"popup\")\n    .show()\n)\n\n\n\n\n\n\nLazy loading\nBy default the entire user data points are loaded and displayed on the map. This can be slow when the dataset is big.\nLazy loading means that data isn’t loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.\nFor more information about lazy loading, please take a look at the large datasets documentation page."
-  },
-  {
-    "objectID": "usage.html#widget-display-and-export",
-    "href": "usage.html#widget-display-and-export",
-    "title": "Usage",
-    "section": "Widget display and export",
-    "text": "Widget display and export\nLifemap and layer methods create a widget object but don’t display it. For it to appear, we have to call the show() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen in a notebook environment, calling show() will display the visualization as a widget. When called from a Python script or a Python REPL, the visualization will be saved to a temporary file and, if possible, displayed in the user’s browser. When called from a Python script running inside our Docker container, it will be saved to a file in the working directory.\n\n\nThe widget can also be saved to an HTML file by using the save() method:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().save(\"lifemap.html\")\n\nYou can also use Jupyter HTML export or Quarto document conversion to create HTML documents embedding interactive pylifemap widgets.\n\n\n\n\n\n\nImportant\n\n\n\nLifemap is updated weekly from the latest NCBI data. During these updates, the precise coordinates of each taxon can change slightly.\nIf you export your widget to HTML and your data includes less than 100 000 data points, the up to date coordinates are retrieved from our API each time the widget is displayed, so the coordinates of the base map and of your dataset should still match. But if you have more than 100 000 data points, they may not correspond anymore if the base map has been updated since the widget creation.\n\n\nYou can also use the Export to PNG button on the widget to export the currently displayed view to an image file in PNG format."
-  },
-  {
-    "objectID": "usage.html#data-aggregation",
-    "href": "usage.html#data-aggregation",
-    "title": "Usage",
-    "section": "Data aggregation",
-    "text": "Data aggregation\npylifemap provides several functions that allow to aggregate data along the branches of the tree:\n\n\n\n\n\n\n\nFunction\nDescription\n\n\n\n\naggregate_count\nAggregates the number of children of each tree node.\n\n\naggregate_num\nAggregates a numerical variable along the tree branches with a given function (sum , mean, max…).\n\n\naggregate_freq\nAggregates the frequencies of the levels of a categorical variable.\n\n\n\nFor example, if we filter our dataset to only keep the species with an “extinct” status:\n\nPolarsPandas\n\n\n\niucn_extinct = iucn.filter(pl.col(\"status\") == \"Extinct\")\n\n\n\n\niucn_extinct = iucn[iucn[\"status\"] == \"Extinct\"]\n\n\n\n\nWe can then aggregate their count along the branches with aggregate_count:\n\nfrom pylifemap import aggregate_count\niucn_extinct_agg = aggregate_count(iucn_extinct)\niucn_extinct_agg\n\n\nshape: (774, 2)taxidni32u32null20196275919631932132681……30762441307811476313602313410119134101211\n\n\nFinally, we can represent this new dataset with a lines layer, making the lines width and color depending on the aggregated count values.\n\n(\n    Lifemap(iucn_extinct_agg)\n    .layer_lines(color=\"n\", width=\"n\", label=\"Extinct species\")\n    .show()\n)\n\nWarning: 3 taxids have not been found in Lifemap database: [None, 1914395, 3041918]."
-  },
-  {
-    "objectID": "gallery/sources/wuhan.html",
-    "href": "gallery/sources/wuhan.html",
-    "title": "Wuhan market metagenomics",
+    "objectID": "layers/layer_icons.html",
+    "href": "layers/layer_icons.html",
+    "title": "Icons layer",
     "section": "",
-    "text": "Note\n\n\n\nThis visualization accompanies the article presenting pylifemap, available at link to be added.\n\n\nThe visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).\nHere, taxa/lineages present in the reference database used by Kraken2 are represented by orange branches, and the number of reads assigned to each taxon is indicated by a circle whose size and color are proportional to this number. Points representing fewer than 1,000 reads mapped to the taxa were discarded.\n\n\nShow the code\n# Load library\nfrom pylifemap import Lifemap, aggregate_count, get_duplicated_taxids, aggregate_freq, aggregate_num\nimport pandas as pd\n\n# Get all metagenomics read data (kraken)\ndf = pd.read_parquet(\"data/wuhan_taxid_kraken2.parquet\", engine='pyarrow')\n\n# Get all taxids in the reference database at the time of the study\nalltaxid = pd.read_parquet(\"data/kraken2_nt_28112022_inspect_tax_id.parquet\", engine=\"pyarrow\")\n\n# Get all taxids belonging to amniota\namniota_taxid = pd.read_csv(\"data/amniota_taxid_list.csv\")\namniota_taxid = amniota_taxid[\"taxid\"].tolist()\n\n# Subsample datasets to only amniota\ndf_amniota = df[df[\"taxid\"].isin(amniota_taxid)].copy()\nalltaxid_amniota = alltaxid[alltaxid[\"taxid\"].isin(amniota_taxid)].copy()\n\n# Aggregate along tree nodes\nalltaxid_amniota_agg = aggregate_count(alltaxid_amniota)\n\n# Get species present in Wuhan market\nwuhan_taxid_df = pd.read_csv(\"data/wuhan_taxid_df.csv\")\n\n# PLOT\n(\n    Lifemap(\n        theme=\"lightgrey\",\n        center=32524,\n        zoom=12.5\n    )\n    .layer_lines(\n        alltaxid_amniota_agg,\n        color=\"#f4aa44\",\n        width=1.5\n    )\n    .layer_icons(\n        wuhan_taxid_df,\n        icon=\"img/cross.png\",\n        scale=0.2,\n        popup=False,\n        declutter=False\n    )\n    .layer_points(\n        df_amniota[df_amniota[\"count\"]&gt;=1000],\n        radius=\"count\",\n        fill=\"count\",\n        radius_range = [4,25],\n        scheme=\"YlOrRd\"\n    )\n    .show()\n)\n\n\nWarning: 11 taxids have not been found in Lifemap database.\nWarning: 1 taxids have not been found in Lifemap database: [None].\n\n\n\n\n\n\n\n\n\n\n\nNoteReferences\n\n\n\n[1] Xiao X., Newman C., Buesching C.D., Macdonald D.W., Zhou Z.-M. 2021. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Scientific Reports. 11:11898. https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2 [2] Liu W.J., Liu P., Lei W., Jia Z., He X., Shi W., Tan Y., Zou S., Wong G., Wang J., Wang F., Wang G., Qin K., Gao R., Zhang J., Li M., Xiao W., Guo Y., Xu Z., Zhao Y., Song J., Zhang J., Zhen W., Zhou W., Ye B., Song J., Yang M., Zhou W., Dai Y., Lu G., Bi Y., Tan W., Han J., Gao G.F., Wu G. 2024. Surveillance of SARS-CoV-2 at the Huanan Seafood Market. Nature. 631:402–408."
+    "text": "The icons layer displays images associated to taxid values.\nIcons are specified by either an http or https URL, a data URI, or a file path.\nIn the following example we use an svg icon encoded into a data URI. We specify an icon width, height, a vertical anchor and a color to tint it (color only works for certain type of SVG images).\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).sample(n=5000)\n\n(\n    Lifemap(iucn).layer_icons(\n        icon=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%2C11.5A2.5%2C2.5%200%200%2C1%209.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C6.5A2.5%2C2.5%200%200%2C1%2014.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C11.5M12%2C2A7%2C7%200%200%2C0%205%2C9C5%2C14.25%2012%2C22%2012%2C22C12%2C22%2019%2C14.25%2019%2C9A7%2C7%200%200%2C0%2012%2C2Z%22%20style%3D%22fill%3A%20%23FFFFFF%22%2F%3E%3C%2Fsvg%3E\",\n        y_anchor=1.0,\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n    ).show()\n)\n\nWarning: 27 taxids have not been found in Lifemap database.\nWarning: 2 duplicated taxids have been found in the data: [1930548, 2824916].\n\n\n\n\n\nThe icon parameter can also be a data column containing image URLs or image file paths. Here we also use the scale argument to resize the icons by a given factor.\n\nd = pl.DataFrame({\n        \"taxid\": [\n            \"1005039\",\n            \"9544\",\n            \"41956\",\n            \"35128\",\n            \"74311\",\n        ],\n        \"name\": [\n            \"Fimbriimonas ginsengisoli\",\n            \"Macaca mulatta\",\n            \"Amanita muscaria\",\n            \"Thalassiosira pseudonana\",\n            \"Brevundimonas bacteroides\",\n        ],\n        \"imageurl\": [\n            \"https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png\",\n        ],\n    })\n\nLifemap(d, theme=\"lightgrey\").layer_icons(icon=\"imageurl\", scale=0.8, popup=True).show()\n\n\n\n\nFor a detailed list of layer_icons arguments you can take a look at its documentation."
   },
   {
-    "objectID": "gallery/sources/phylopic.html",
-    "href": "gallery/sources/phylopic.html",
-    "title": "Phylopic - Tree of Life",
+    "objectID": "layers/layer_donuts.html",
+    "href": "layers/layer_donuts.html",
+    "title": "Donuts layer",
     "section": "",
-    "text": "Show the code\nimport pandas as pd\nfrom pylifemap import Lifemap\n\n# Define data\ndata = pd.DataFrame({\n    'taxid': ['1005039','9544','41956','35128','74311','58838','3311','95972','431291','31380','1462422','160232'],\n    'name' : ['Fimbriimonas ginsengisoli','Macaca mulatta','Amanita muscaria','Thalassiosira pseudonana',\n    'Brevundimonas bacteroides','Hymenophyllum tunbrigense','Ginkgo biloba', 'Aphidoletes aphidimyza','Platanthera bifolia',\n    'Ceramium','Parvarchaeota','Nanoarchaeum equitans'],\n    'imageurl': ['https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/b5339968-e357-4515-9e27-479d25eb09f4/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/57556718-e114-45ff-b091-af62aeea410c/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/0ce74a6e-ea88-45f0-9103-20e05f6a4624/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/4128df49-da1c-4759-86c2-e4242acecbdf/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/250dc359-24d1-49fd-9403-f7c9a7077135/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/a78574ec-fed5-41cc-98ce-a2104dbc1232/thumbnail/64x64.png',\n                 'https://images.phylopic.org/images/ac77eca2-e484-4ab4-9cef-9e7dd38ddbb8/thumbnail/64x64.png']\n})\n\n# Show the Lifemap heatmap\n(\n    Lifemap(data, theme=\"lightgrey\", width=\"100%\")\n    .layer_icons(icon=\"imageurl\", popup=True)\n    .show()\n)\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nAll images come from the Phylopic website https://www.phylopic.org/.\nFor attribution and license information, follow this link."
+    "text": "The donuts layer displays aggregated levels count of a categorical variable as donut charts, optionally displaying the individual values with points.\n\nimport polars as pl\nfrom pylifemap import Lifemap, aggregate_freq\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n# Aggregate observations count along branches\niucn_freq = aggregate_freq(iucn, column=\"status\")\n\n(\n    Lifemap(iucn_freq)\n    .layer_donuts(counts_col=\"status\", opacity=0.9, leaves=\"show\")\n    .show()\n)\n\nWarning: 171 taxids have not been found in Lifemap database.\nWarning: 5657 duplicated taxids have been found in the data.\n\n\n\n\n\nThe leaves argument allows to \"show\" or \"hide\" individual leaves values.\nThe radius argument allows to modify the size of each donut chart. If it is a single integer, the size will be fixed. If it is an Array of two integers, the size will vary depending on the total count of the variable for this node. In the following example we make the size vary between 40 and 150, and we also show the total count as a number with the show_totals argument.\n\n(\n    Lifemap(iucn_freq)\n    .layer_donuts(counts_col=\"status\", radius = [40, 150], show_totals = True)\n    .show()\n)\n\n\n\n\nFor a detailed list of layer_donuts arguments you can take a look at its documentation."
   },
   {
     "objectID": "layers/layer_points.html",
@@ -469,25 +469,235 @@
     "text": "The points layer displays observations as points on the Lifemap tree.\nThe fill and radius arguments allow to modify the size and color of the points. They can either be fixed values (numerical for radius, an hexadecimal color code for fill) or data column names. In this case, size or color will depend on the column values.\n\nimport polars as pl\nfrom pylifemap import Lifemap, aggregate_count\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n# Aggregate observations count along branches\niucn_agg = aggregate_count(iucn)\n\n(\n    Lifemap(iucn_agg)\n    .layer_points(fill=\"n\", radius=\"n\", opacity=0.9, popup=True)\n    .show()\n)\n\nWarning: 166 taxids have not been found in Lifemap database.\n\n\n\n\n\nFor a detailed list of layer_points arguments you can take a look at its documentation."
   },
   {
-    "objectID": "layers/layer_icons.html",
-    "href": "layers/layer_icons.html",
-    "title": "Icons layer",
+    "objectID": "reference/get_duplicated_taxids.html",
+    "href": "reference/get_duplicated_taxids.html",
+    "title": "get_duplicated_taxids",
     "section": "",
-    "text": "The icons layer displays images associated to taxid values.\nIcons are specified by either an http or https URL, a data URI, or a file path.\nIn the following example we use an svg icon encoded into a data URI. We specify an icon width, height, a vertical anchor and a color to tint it (color only works for certain type of SVG images).\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).sample(n=5000)\n\n(\n    Lifemap(iucn).layer_icons(\n        icon=\"data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%2C11.5A2.5%2C2.5%200%200%2C1%209.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C6.5A2.5%2C2.5%200%200%2C1%2014.5%2C9A2.5%2C2.5%200%200%2C1%2012%2C11.5M12%2C2A7%2C7%200%200%2C0%205%2C9C5%2C14.25%2012%2C22%2012%2C22C12%2C22%2019%2C14.25%2019%2C9A7%2C7%200%200%2C0%2012%2C2Z%22%20style%3D%22fill%3A%20%23FFFFFF%22%2F%3E%3C%2Fsvg%3E\",\n        y_anchor=1.0,\n        width=24,\n        height=24,\n        color=\"#FF4488\",\n    ).show()\n)\n\nWarning: 31 taxids have not been found in Lifemap database.\nWarning: 2 duplicated taxids have been found in the data: [153490, 465719].\n\n\n\n\n\nThe icon parameter can also be a data column containing image URLs or image file paths. Here we also use the scale argument to resize the icons by a given factor.\n\nd = pl.DataFrame({\n        \"taxid\": [\n            \"1005039\",\n            \"9544\",\n            \"41956\",\n            \"35128\",\n            \"74311\",\n        ],\n        \"name\": [\n            \"Fimbriimonas ginsengisoli\",\n            \"Macaca mulatta\",\n            \"Amanita muscaria\",\n            \"Thalassiosira pseudonana\",\n            \"Brevundimonas bacteroides\",\n        ],\n        \"imageurl\": [\n            \"https://images.phylopic.org/images/6767b093-d375-48c2-b4f2-9215b76ea08d/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/4e9c5666-79cc-4766-a7d3-d547514b0d77/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/f722ba34-03d4-4b90-8409-e02829a3c5d4/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/ebff2e9f-3091-4ad6-a7b2-f39a77d3a960/thumbnail/64x64.png\",\n            \"https://images.phylopic.org/images/8fbb3dd3-24ff-4e96-b41c-92b334ff4560/thumbnail/64x64.png\",\n        ],\n    })\n\nLifemap(d, theme=\"lightgrey\").layer_icons(icon=\"imageurl\", scale=0.8, popup=True).show()\n\n\n\n\nFor a detailed list of layer_icons arguments you can take a look at its documentation."
+    "text": "get_duplicated_taxids(data, taxid_col='taxid')\nGet a list of duplicated taxids in a data frame.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame\nPandas or polars dataframe with original data.\nrequired\n\n\ntaxid_col\nstr\nName of the column storing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nlist\nDuplicated taxids\n\n\n\n\n\n\nget_unknown_taxids: function to get a list of unknown taxids.\n\n\n\n&gt;&gt;&gt; from pylifemap import get_duplicated_taxids\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid_values\": [2, 33154, 33090, 33090, 2], \"value\": [10, 5, 100, 1, 2]})\n&gt;&gt;&gt; get_duplicated_taxids(d, taxid_col=\"taxid_values\")\n[2, 33090]"
   },
   {
-    "objectID": "layers/layer_lines.html",
-    "href": "layers/layer_lines.html",
-    "title": "Lines layer",
+    "objectID": "reference/get_duplicated_taxids.html#parameters",
+    "href": "reference/get_duplicated_taxids.html#parameters",
+    "title": "get_duplicated_taxids",
     "section": "",
-    "text": "The lines layer displays aggregated observations (count or numerical variable) by highlighting branches of the tree.\nThe color and width arguments allow to modify the size and color of the lines. They can either be fixed values (numerical for width, an hexadecimal color code for color) or data column names. In this case, width or color will depend on the column values.\n\nimport polars as pl\nfrom pylifemap import Lifemap, aggregate_count\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n# Aggregate observations count along branches\niucn_agg = aggregate_count(iucn)\n\n(\n    Lifemap(iucn_agg)\n    .layer_lines(color=\"n\", width=\"n\", opacity=0.9)\n    .show()\n)\n\nWarning: 166 taxids have not been found in Lifemap database.\n\n\n\n\n\nFor a detailed list of layer_lines arguments you can take a look at its documentation."
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame\nPandas or polars dataframe with original data.\nrequired\n\n\ntaxid_col\nstr\nName of the column storing taxonomy ids. By default 'taxid'.\n'taxid'"
   },
   {
-    "objectID": "layers/layer_text.html",
-    "href": "layers/layer_text.html",
-    "title": "Text layer",
+    "objectID": "reference/get_duplicated_taxids.html#returns",
+    "href": "reference/get_duplicated_taxids.html#returns",
+    "title": "get_duplicated_taxids",
     "section": "",
-    "text": "The text layer displays text labels associated to taxid values.\nIn this example we display the taxid values of all species in the iucn dataset. The text argument allows to specify the data column containing the text to be displayed. Text size, font and colors can be defined by additional arguments font_size, color, stroke or font_family.\nYou can add hide_labels=True to your Lifemap call if you want to hide the default taxa names layer.\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n(\n    Lifemap(iucn, hide_labels=True)\n    .layer_text(text=\"taxid\", font_size=14, color=\"#F5D770\", stroke=\"#000\")\n    .show()\n)\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor a detailed list of layer_text arguments you can take a look at its documentation."
+    "text": "Name\nType\nDescription\n\n\n\n\n\nlist\nDuplicated taxids"
+  },
+  {
+    "objectID": "reference/get_duplicated_taxids.html#see-also",
+    "href": "reference/get_duplicated_taxids.html#see-also",
+    "title": "get_duplicated_taxids",
+    "section": "",
+    "text": "get_unknown_taxids: function to get a list of unknown taxids."
+  },
+  {
+    "objectID": "reference/get_duplicated_taxids.html#examples",
+    "href": "reference/get_duplicated_taxids.html#examples",
+    "title": "get_duplicated_taxids",
+    "section": "",
+    "text": "&gt;&gt;&gt; from pylifemap import get_duplicated_taxids\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid_values\": [2, 33154, 33090, 33090, 2], \"value\": [10, 5, 100, 1, 2]})\n&gt;&gt;&gt; get_duplicated_taxids(d, taxid_col=\"taxid_values\")\n[2, 33090]"
+  },
+  {
+    "objectID": "reference/Lifemap.save.html",
+    "href": "reference/Lifemap.save.html",
+    "title": "Lifemap.save",
+    "section": "",
+    "text": "Lifemap.save(path, title='Lifemap')\nSave the Jupyter widget for this instance to an HTML file.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\npath\nstr | Path\nPath to the HTML file to save the widget.\nrequired\n\n\ntitle\nstr\nOptional HTML page title. By default 'Lifemap'.\n'Lifemap'\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; (\n...     Lifemap(d, width=\"100%\", height=\"100vh\")\n...     .layer_points()\n...     .save(\"lifemap.html\", title=\"Example lifemap\")\n... )"
+  },
+  {
+    "objectID": "reference/Lifemap.save.html#parameters",
+    "href": "reference/Lifemap.save.html#parameters",
+    "title": "Lifemap.save",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\npath\nstr | Path\nPath to the HTML file to save the widget.\nrequired\n\n\ntitle\nstr\nOptional HTML page title. By default 'Lifemap'.\n'Lifemap'"
+  },
+  {
+    "objectID": "reference/Lifemap.save.html#examples",
+    "href": "reference/Lifemap.save.html#examples",
+    "title": "Lifemap.save",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; (\n...     Lifemap(d, width=\"100%\", height=\"100vh\")\n...     .layer_points()\n...     .save(\"lifemap.html\", title=\"Example lifemap\")\n... )"
+  },
+  {
+    "objectID": "reference/Lifemap.show.html",
+    "href": "reference/Lifemap.show.html",
+    "title": "Lifemap.show",
+    "section": "",
+    "text": "Lifemap.show\nLifemap.show()\nDisplay the Jupyter widget for this instance.\nIn a Jupyter notebook environment, the method uses IPython.display.display to display the visualization directly. Otherwise, it exports the widget to an HTML file and opens it in a browser if possible.\nIn a marimo notebook environment, the widget object is returned in order to be passed to marimo.ui.anywidget()."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_icons.html",
+    "href": "reference/Lifemap.layer_icons.html",
+    "title": "Lifemap.layer_icons",
+    "section": "",
+    "text": "Lifemap.layer_icons(\n    data=None,\n    *,\n    taxid_col='taxid',\n    icon,\n    width=None,\n    height=None,\n    scale=None,\n    color=None,\n    x_offset=0,\n    y_offset=0,\n    x_anchor=0.5,\n    y_anchor=0.5,\n    opacity=1.0,\n    popup=True,\n    popup_col=None,\n    declutter=True,\n    lazy=None,\n    lazy_zoom=10,\n    lazy_mode='self',\n)\nAdd an icons layer.\nIt can be used to display icons associated to taxids.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nicon\nstr\nEither the URL to an image file or data uri to use as icon, or the name of a column of the data containing urls or data uris of icons to be displayed.\nrequired\n\n\nwidth\nint | None\nImage width, in pixels.\nNone\n\n\nheight\nint | None\nImage height, in pixels.\nNone\n\n\nscale\nfloat | None\nFactor with which to scale the original icon size. Cannot be used with width or height.\nNone\n\n\ncolor\nstr | None\nCSS color to tint the icon. By default None.\nNone\n\n\nx_offset\nint\nHorizontal offset in pixels. By default 0.\n0\n\n\ny_offset\nint\nVertical offset in pixels. By default 0.\n0\n\n\nx_anchor\nfloat\nHorizontal icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\ny_anchor\nfloat\nVertical icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\nopacity\nfloat\nText opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\npopup\nbool\nIf True, display informations in a popup when an icon is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only icons with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ]\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_icons(icon=\"https://openlayers.org/en/latest/examples/data/icon.png\").show()"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_icons.html#parameters",
+    "href": "reference/Lifemap.layer_icons.html#parameters",
+    "title": "Lifemap.layer_icons",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nicon\nstr\nEither the URL to an image file or data uri to use as icon, or the name of a column of the data containing urls or data uris of icons to be displayed.\nrequired\n\n\nwidth\nint | None\nImage width, in pixels.\nNone\n\n\nheight\nint | None\nImage height, in pixels.\nNone\n\n\nscale\nfloat | None\nFactor with which to scale the original icon size. Cannot be used with width or height.\nNone\n\n\ncolor\nstr | None\nCSS color to tint the icon. By default None.\nNone\n\n\nx_offset\nint\nHorizontal offset in pixels. By default 0.\n0\n\n\ny_offset\nint\nVertical offset in pixels. By default 0.\n0\n\n\nx_anchor\nfloat\nHorizontal icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\ny_anchor\nfloat\nVertical icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\nopacity\nfloat\nText opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\npopup\nbool\nIf True, display informations in a popup when an icon is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only icons with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'"
+  },
+  {
+    "objectID": "reference/Lifemap.layer_icons.html#returns",
+    "href": "reference/Lifemap.layer_icons.html#returns",
+    "title": "Lifemap.layer_icons",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+  },
+  {
+    "objectID": "reference/Lifemap.layer_icons.html#examples",
+    "href": "reference/Lifemap.layer_icons.html#examples",
+    "title": "Lifemap.layer_icons",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ]\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_icons(icon=\"https://openlayers.org/en/latest/examples/data/icon.png\").show()"
+  },
+  {
+    "objectID": "reference/Lifemap.html",
+    "href": "reference/Lifemap.html",
+    "title": "Lifemap",
+    "section": "",
+    "text": "Lifemap(\n    data=None,\n    *,\n    taxid_col='taxid',\n    width=DEFAULT_WIDTH,\n    height=DEFAULT_HEIGHT,\n    center='default',\n    zoom=None,\n    theme='dark',\n    controls=('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen'),\n    legend_width=None,\n    hide_labels=False,\n)\nBuild visualization.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nVisualization data.\nNone\n\n\ntaxid_col\nstr\nName of the data column with taxonomy ids. By default 'taxid'\n'taxid'\n\n\nwidth\nint | str\nLifemap visualization width, in pixels or CSS units. By default DEFAULT_WIDTH\nDEFAULT_WIDTH\n\n\nheight\nint | str\nLifemap visualization height, in pixels or CSS units. By default DEFAULT_HEIGHT\nDEFAULT_HEIGHT\n\n\ncenter\nLiteral['default', 'auto'] | int\nLifemap initial center. Can be 'default' (tree center), 'auto' (center on data) or a taxid value. Defaults to 'default'.\n'default'\n\n\nzoom\nint | float | None\nLifemap initial zoom level, if not specified, it is computed depending on the center argument value. Defaults to None.\nNone\n\n\ntheme\nstr\nColor theme for the basemap. Can be one of 'light', 'dark', 'lightblue', 'lightgrey', or 'lightgreen'. Defaults to 'dark'.\n'dark'\n\n\ncontrols\nSequence[str]\nList of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - 'zoom': zoom in and zoom out buttons - 'reset_zoom': zoom reset button - 'png_export': button to export current view to a PNG file - 'search': taxa search button - 'full_screen': full screen toggle button\n('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen')\n\n\nlegend_width\nint | None\nLegend width in pixels. By default None.\nNone\n\n\nhide_labels\nbool\nIf True, hide the taxa name labels. Defaults to False.\nFalse\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; Lifemap(d, width=\"100%\", height=\"100vh\").layer_points().show()\n\n\n\n\n\n\nName\nDescription\n\n\n\n\nlayer_points\nAdd a points layer.\n\n\nlayer_lines\nAdd a lines layer.\n\n\nlayer_donuts\nAdd a donuts layer.\n\n\nlayer_heatmap\nAdd an heatmap layer.\n\n\nlayer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nlayer_screengrid\nAdd a screengrid layer.\n\n\nlayer_text\nAdd a text labels layer.\n\n\nlayer_icons\nAdd an icons layer.\n\n\nshow\nDisplay the Jupyter widget for this instance.\n\n\nsave\nSave the Jupyter widget for this instance to an HTML file."
+  },
+  {
+    "objectID": "reference/Lifemap.html#parameters",
+    "href": "reference/Lifemap.html#parameters",
+    "title": "Lifemap",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nVisualization data.\nNone\n\n\ntaxid_col\nstr\nName of the data column with taxonomy ids. By default 'taxid'\n'taxid'\n\n\nwidth\nint | str\nLifemap visualization width, in pixels or CSS units. By default DEFAULT_WIDTH\nDEFAULT_WIDTH\n\n\nheight\nint | str\nLifemap visualization height, in pixels or CSS units. By default DEFAULT_HEIGHT\nDEFAULT_HEIGHT\n\n\ncenter\nLiteral['default', 'auto'] | int\nLifemap initial center. Can be 'default' (tree center), 'auto' (center on data) or a taxid value. Defaults to 'default'.\n'default'\n\n\nzoom\nint | float | None\nLifemap initial zoom level, if not specified, it is computed depending on the center argument value. Defaults to None.\nNone\n\n\ntheme\nstr\nColor theme for the basemap. Can be one of 'light', 'dark', 'lightblue', 'lightgrey', or 'lightgreen'. Defaults to 'dark'.\n'dark'\n\n\ncontrols\nSequence[str]\nList of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - 'zoom': zoom in and zoom out buttons - 'reset_zoom': zoom reset button - 'png_export': button to export current view to a PNG file - 'search': taxa search button - 'full_screen': full screen toggle button\n('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen')\n\n\nlegend_width\nint | None\nLegend width in pixels. By default None.\nNone\n\n\nhide_labels\nbool\nIf True, hide the taxa name labels. Defaults to False.\nFalse"
+  },
+  {
+    "objectID": "reference/Lifemap.html#examples",
+    "href": "reference/Lifemap.html#examples",
+    "title": "Lifemap",
+    "section": "",
+    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; Lifemap(d, width=\"100%\", height=\"100vh\").layer_points().show()"
+  },
+  {
+    "objectID": "reference/Lifemap.html#methods",
+    "href": "reference/Lifemap.html#methods",
+    "title": "Lifemap",
+    "section": "",
+    "text": "Name\nDescription\n\n\n\n\nlayer_points\nAdd a points layer.\n\n\nlayer_lines\nAdd a lines layer.\n\n\nlayer_donuts\nAdd a donuts layer.\n\n\nlayer_heatmap\nAdd an heatmap layer.\n\n\nlayer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nlayer_screengrid\nAdd a screengrid layer.\n\n\nlayer_text\nAdd a text labels layer.\n\n\nlayer_icons\nAdd an icons layer.\n\n\nshow\nDisplay the Jupyter widget for this instance.\n\n\nsave\nSave the Jupyter widget for this instance to an HTML file."
+  },
+  {
+    "objectID": "reference/aggregate_count.html",
+    "href": "reference/aggregate_count.html",
+    "title": "aggregate_count",
+    "section": "",
+    "text": "aggregate_count(d, *, result_col='n', taxid_col='taxid')\nNodes count aggregation along branches.\nAggregates nodes count in a DataFrame with taxonomy ids along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\nresult_col\nstr\nName of the column created to store the counts. By default 'n'.\n'n'\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input.\n\n\n\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_freq: aggregation of the values counts of a categorical variable.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_count\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2]})\n&gt;&gt;&gt; aggregate_count(d)\nshape: (5, 2)\n┌───────┬─────┐\n│ taxid ┆ n   │\n│ ---   ┆ --- │\n│ i32   ┆ u32 │\n╞═══════╪═════╡\n│ 0     ┆ 3   │\n│ 2     ┆ 1   │\n│ 2759  ┆ 2   │\n│ 33090 ┆ 1   │\n│ 33154 ┆ 1   │\n└───────┴─────┘"
+  },
+  {
+    "objectID": "reference/aggregate_count.html#parameters",
+    "href": "reference/aggregate_count.html#parameters",
+    "title": "aggregate_count",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\nresult_col\nstr\nName of the column created to store the counts. By default 'n'.\n'n'\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
+  },
+  {
+    "objectID": "reference/aggregate_count.html#returns",
+    "href": "reference/aggregate_count.html#returns",
+    "title": "aggregate_count",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input."
+  },
+  {
+    "objectID": "reference/aggregate_count.html#see-also",
+    "href": "reference/aggregate_count.html#see-also",
+    "title": "aggregate_count",
+    "section": "",
+    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_freq: aggregation of the values counts of a categorical variable."
+  },
+  {
+    "objectID": "reference/aggregate_count.html#examples",
+    "href": "reference/aggregate_count.html#examples",
+    "title": "aggregate_count",
+    "section": "",
+    "text": "&gt;&gt;&gt; from pylifemap import aggregate_count\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2]})\n&gt;&gt;&gt; aggregate_count(d)\nshape: (5, 2)\n┌───────┬─────┐\n│ taxid ┆ n   │\n│ ---   ┆ --- │\n│ i32   ┆ u32 │\n╞═══════╪═════╡\n│ 0     ┆ 3   │\n│ 2     ┆ 1   │\n│ 2759  ┆ 2   │\n│ 33090 ┆ 1   │\n│ 33154 ┆ 1   │\n└───────┴─────┘"
+  },
+  {
+    "objectID": "reference/aggregate_freq.html",
+    "href": "reference/aggregate_freq.html",
+    "title": "aggregate_freq",
+    "section": "",
+    "text": "aggregate_freq(d, column, *, taxid_col='taxid')\nCategorical variable frequencies aggregation along branches.\nAggregates a categorical variable in a DataFrame with taxonomy ids as levels frequencies along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input. The count column contains the value counts as a polars struct.\n\n\n\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_freq\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [\"a\", \"b\", \"a\"]})\n&gt;&gt;&gt; aggregate_freq(d, column=\"value\")\nshape: (7, 3)\n┌───────┬───────┬───────┐\n│ taxid ┆ value ┆ count │\n│ ---   ┆ ---   ┆ ---   │\n│ i32   ┆ str   ┆ u32   │\n╞═══════╪═══════╪═══════╡\n│ 0     ┆ a     ┆ 2     │\n│ 0     ┆ b     ┆ 1     │\n│ 2     ┆ a     ┆ 1     │\n│ 2759  ┆ a     ┆ 1     │\n│ 2759  ┆ b     ┆ 1     │\n│ 33090 ┆ b     ┆ 1     │\n│ 33154 ┆ a     ┆ 1     │\n└───────┴───────┴───────┘"
+  },
+  {
+    "objectID": "reference/aggregate_freq.html#parameters",
+    "href": "reference/aggregate_freq.html#parameters",
+    "title": "aggregate_freq",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
+  },
+  {
+    "objectID": "reference/aggregate_freq.html#returns",
+    "href": "reference/aggregate_freq.html#returns",
+    "title": "aggregate_freq",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input. The count column contains the value counts as a polars struct."
+  },
+  {
+    "objectID": "reference/aggregate_freq.html#see-also",
+    "href": "reference/aggregate_freq.html#see-also",
+    "title": "aggregate_freq",
+    "section": "",
+    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
+  },
+  {
+    "objectID": "reference/aggregate_freq.html#examples",
+    "href": "reference/aggregate_freq.html#examples",
+    "title": "aggregate_freq",
+    "section": "",
+    "text": "&gt;&gt;&gt; from pylifemap import aggregate_freq\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [\"a\", \"b\", \"a\"]})\n&gt;&gt;&gt; aggregate_freq(d, column=\"value\")\nshape: (7, 3)\n┌───────┬───────┬───────┐\n│ taxid ┆ value ┆ count │\n│ ---   ┆ ---   ┆ ---   │\n│ i32   ┆ str   ┆ u32   │\n╞═══════╪═══════╪═══════╡\n│ 0     ┆ a     ┆ 2     │\n│ 0     ┆ b     ┆ 1     │\n│ 2     ┆ a     ┆ 1     │\n│ 2759  ┆ a     ┆ 1     │\n│ 2759  ┆ b     ┆ 1     │\n│ 33090 ┆ b     ┆ 1     │\n│ 33154 ┆ a     ┆ 1     │\n└───────┴───────┴───────┘"
+  },
+  {
+    "objectID": "reference/aggregate_num.html",
+    "href": "reference/aggregate_num.html",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "aggregate_num(d, column, *, fn='sum', taxid_col='taxid')\nNumerical variable aggregation along branches.\nAggregates a numerical variable in a DataFrame with taxonomy ids along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\nfn\n(sum, mean, min, max, median)\nFunction used to aggregate the values. By default 'sum'.\n\"sum\"\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input.\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nValueError\nIf column is equal to 'taxid'.\n\n\n\nValueError\nIf fn is not on the allowed values.\n\n\n\n\n\n\naggregate_count: aggregation of the number of observations.\naggregate_freq: aggregation of the values counts of a categorical variable.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_num\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [10, 5, 100]})\n&gt;&gt;&gt; aggregate_num(d, column=\"value\", fn=\"sum\")\nshape: (5, 2)\n┌───────┬───────┐\n│ taxid ┆ value │\n│ ---   ┆ ---   │\n│ i32   ┆ i64   │\n╞═══════╪═══════╡\n│ 0     ┆ 115   │\n│ 2     ┆ 100   │\n│ 2759  ┆ 15    │\n│ 33090 ┆ 5     │\n│ 33154 ┆ 10    │\n└───────┴───────┘"
+  },
+  {
+    "objectID": "reference/aggregate_num.html#parameters",
+    "href": "reference/aggregate_num.html#parameters",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\nfn\n(sum, mean, min, max, median)\nFunction used to aggregate the values. By default 'sum'.\n\"sum\"\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
+  },
+  {
+    "objectID": "reference/aggregate_num.html#returns",
+    "href": "reference/aggregate_num.html#returns",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input."
+  },
+  {
+    "objectID": "reference/aggregate_num.html#raises",
+    "href": "reference/aggregate_num.html#raises",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "Name\nType\nDescription\n\n\n\n\n\nValueError\nIf column is equal to 'taxid'.\n\n\n\nValueError\nIf fn is not on the allowed values."
+  },
+  {
+    "objectID": "reference/aggregate_num.html#see-also",
+    "href": "reference/aggregate_num.html#see-also",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "aggregate_count: aggregation of the number of observations.\naggregate_freq: aggregation of the values counts of a categorical variable."
+  },
+  {
+    "objectID": "reference/aggregate_num.html#examples",
+    "href": "reference/aggregate_num.html#examples",
+    "title": "aggregate_num",
+    "section": "",
+    "text": "&gt;&gt;&gt; from pylifemap import aggregate_num\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [10, 5, 100]})\n&gt;&gt;&gt; aggregate_num(d, column=\"value\", fn=\"sum\")\nshape: (5, 2)\n┌───────┬───────┐\n│ taxid ┆ value │\n│ ---   ┆ ---   │\n│ i32   ┆ i64   │\n╞═══════╪═══════╡\n│ 0     ┆ 115   │\n│ 2     ┆ 100   │\n│ 2759  ┆ 15    │\n│ 33090 ┆ 5     │\n│ 33154 ┆ 10    │\n└───────┴───────┘"
   },
   {
     "objectID": "development.html",
@@ -546,297 +756,87 @@
     "text": "Release notes\n\nChange version in NEWS.md and pyproject.toml\nRun uv sync to update lock file\nCleanup the previous builds in dist/\nBundle and minify JS and CSS and build package with npm run build\nRelease the Python package with uv publish in pylifemap\nTag the version in git\nCreate a release on Github\nBump to dev version in pyproject.toml and NEWS.md"
   },
   {
-    "objectID": "reference/Lifemap.html",
-    "href": "reference/Lifemap.html",
-    "title": "Lifemap",
+    "objectID": "gallery/sources/wuhan.html",
+    "href": "gallery/sources/wuhan.html",
+    "title": "Wuhan market metagenomics",
     "section": "",
-    "text": "Lifemap(\n    data=None,\n    *,\n    taxid_col='taxid',\n    width=DEFAULT_WIDTH,\n    height=DEFAULT_HEIGHT,\n    center='default',\n    zoom=None,\n    theme='dark',\n    controls=('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen'),\n    legend_width=None,\n    hide_labels=False,\n)\nBuild visualization.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nVisualization data.\nNone\n\n\ntaxid_col\nstr\nName of the data column with taxonomy ids. By default 'taxid'\n'taxid'\n\n\nwidth\nint | str\nLifemap visualization width, in pixels or CSS units. By default DEFAULT_WIDTH\nDEFAULT_WIDTH\n\n\nheight\nint | str\nLifemap visualization height, in pixels or CSS units. By default DEFAULT_HEIGHT\nDEFAULT_HEIGHT\n\n\ncenter\nLiteral['default', 'auto'] | int\nLifemap initial center. Can be 'default' (tree center), 'auto' (center on data) or a taxid value. Defaults to 'default'.\n'default'\n\n\nzoom\nint | float | None\nLifemap initial zoom level, if not specified, it is computed depending on the center argument value. Defaults to None.\nNone\n\n\ntheme\nstr\nColor theme for the basemap. Can be one of 'light', 'dark', 'lightblue', 'lightgrey', or 'lightgreen'. Defaults to 'dark'.\n'dark'\n\n\ncontrols\nSequence[str]\nList of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - 'zoom': zoom in and zoom out buttons - 'reset_zoom': zoom reset button - 'png_export': button to export current view to a PNG file - 'search': taxa search button - 'full_screen': full screen toggle button\n('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen')\n\n\nlegend_width\nint | None\nLegend width in pixels. By default None.\nNone\n\n\nhide_labels\nbool\nIf True, hide the taxa name labels. Defaults to False.\nFalse\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; Lifemap(d, width=\"100%\", height=\"100vh\").layer_points().show()\n\n\n\n\n\n\nName\nDescription\n\n\n\n\nlayer_points\nAdd a points layer.\n\n\nlayer_lines\nAdd a lines layer.\n\n\nlayer_donuts\nAdd a donuts layer.\n\n\nlayer_heatmap\nAdd an heatmap layer.\n\n\nlayer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nlayer_screengrid\nAdd a screengrid layer.\n\n\nlayer_text\nAdd a text labels layer.\n\n\nlayer_icons\nAdd an icons layer.\n\n\nshow\nDisplay the Jupyter widget for this instance.\n\n\nsave\nSave the Jupyter widget for this instance to an HTML file."
+    "text": "Note\n\n\n\nThis visualization accompanies the article presenting pylifemap, available at link to be added.\n\n\nThe visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).\nHere, taxa/lineages present in the reference database used by Kraken2 are represented by orange branches, and the number of reads assigned to each taxon is indicated by a circle whose size and color are proportional to this number. Points representing fewer than 1,000 reads mapped to the taxa were discarded.\n\n\nShow the code\n# Load library\nfrom pylifemap import Lifemap, aggregate_count, get_duplicated_taxids, aggregate_freq, aggregate_num\nimport pandas as pd\n\n# Get all metagenomics read data (kraken)\ndf = pd.read_parquet(\"data/wuhan_taxid_kraken2.parquet\", engine='pyarrow')\n\n# Get all taxids in the reference database at the time of the study\nalltaxid = pd.read_parquet(\"data/kraken2_nt_28112022_inspect_tax_id.parquet\", engine=\"pyarrow\")\n\n# Get all taxids belonging to amniota\namniota_taxid = pd.read_csv(\"data/amniota_taxid_list.csv\")\namniota_taxid = amniota_taxid[\"taxid\"].tolist()\n\n# Subsample datasets to only amniota\ndf_amniota = df[df[\"taxid\"].isin(amniota_taxid)].copy()\nalltaxid_amniota = alltaxid[alltaxid[\"taxid\"].isin(amniota_taxid)].copy()\n\n# Aggregate along tree nodes\nalltaxid_amniota_agg = aggregate_count(alltaxid_amniota)\n\n# Get species present in Wuhan market\nwuhan_taxid_df = pd.read_csv(\"data/wuhan_taxid_df.csv\")\n\n# PLOT\n(\n    Lifemap(\n        theme=\"lightgrey\",\n        center=32524,\n        zoom=12.5\n    )\n    .layer_lines(\n        alltaxid_amniota_agg,\n        color=\"#f4aa44\",\n        width=1.5\n    )\n    .layer_icons(\n        wuhan_taxid_df,\n        icon=\"img/cross.png\",\n        scale=0.2,\n        popup=False,\n        declutter=False\n    )\n    .layer_points(\n        df_amniota[df_amniota[\"count\"]&gt;=1000],\n        radius=\"count\",\n        fill=\"count\",\n        radius_range = [4,25],\n        scheme=\"YlOrRd\"\n    )\n    .show()\n)\n\n\nWarning: 11 taxids have not been found in Lifemap database.\nWarning: 1 taxids have not been found in Lifemap database: [None].\n\n\n\n\n\n\n\n\n\n\n\nNoteReferences\n\n\n\n[1] Xiao X., Newman C., Buesching C.D., Macdonald D.W., Zhou Z.-M. 2021. Animal sales from Wuhan wet markets immediately prior to the COVID-19 pandemic. Scientific Reports. 11:11898. https://doi-org.docelec.univ-lyon1.fr/10.1038/s41598-021-91470-2 [2] Liu W.J., Liu P., Lei W., Jia Z., He X., Shi W., Tan Y., Zou S., Wong G., Wang J., Wang F., Wang G., Qin K., Gao R., Zhang J., Li M., Xiao W., Guo Y., Xu Z., Zhao Y., Song J., Zhang J., Zhen W., Zhou W., Ye B., Song J., Yang M., Zhou W., Dai Y., Lu G., Bi Y., Tan W., Han J., Gao G.F., Wu G. 2024. Surveillance of SARS-CoV-2 at the Huanan Seafood Market. Nature. 631:402–408."
   },
   {
-    "objectID": "reference/Lifemap.html#parameters",
-    "href": "reference/Lifemap.html#parameters",
-    "title": "Lifemap",
+    "objectID": "gallery/sources/iucn.html",
+    "href": "gallery/sources/iucn.html",
+    "title": "IUCN Categories proportions",
     "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nVisualization data.\nNone\n\n\ntaxid_col\nstr\nName of the data column with taxonomy ids. By default 'taxid'\n'taxid'\n\n\nwidth\nint | str\nLifemap visualization width, in pixels or CSS units. By default DEFAULT_WIDTH\nDEFAULT_WIDTH\n\n\nheight\nint | str\nLifemap visualization height, in pixels or CSS units. By default DEFAULT_HEIGHT\nDEFAULT_HEIGHT\n\n\ncenter\nLiteral['default', 'auto'] | int\nLifemap initial center. Can be 'default' (tree center), 'auto' (center on data) or a taxid value. Defaults to 'default'.\n'default'\n\n\nzoom\nint | float | None\nLifemap initial zoom level, if not specified, it is computed depending on the center argument value. Defaults to None.\nNone\n\n\ntheme\nstr\nColor theme for the basemap. Can be one of 'light', 'dark', 'lightblue', 'lightgrey', or 'lightgreen'. Defaults to 'dark'.\n'dark'\n\n\ncontrols\nSequence[str]\nList of controls to be displayed on the widget. By default all controls are displayed. Available controls are: - 'zoom': zoom in and zoom out buttons - 'reset_zoom': zoom reset button - 'png_export': button to export current view to a PNG file - 'search': taxa search button - 'full_screen': full screen toggle button\n('zoom', 'reset_zoom', 'png_export', 'search', 'full_screen')\n\n\nlegend_width\nint | None\nLegend width in pixels. By default None.\nNone\n\n\nhide_labels\nbool\nIf True, hide the taxa name labels. Defaults to False.\nFalse"
+    "text": "Note\n\n\n\nThis visualization accompanies the article presenting pylifemap, available at link to be added.\n\n\nVisualization of the proportion of species at each taxonomic rank that belong to each one of the 11 IUCN Red List categories. Numbers inside donuts represent the number of species belonging to each clade present in the IUCN Red List. IUCN data version 2025-2, downloaded from https://www.iucnredlist.org/ the 4th of December 2025.\n\n\nShow the code\n# Load libraries\nfrom pylifemap import Lifemap, aggregate_freq\nimport pandas as pd\n\n# Read IUCN data (version 2025-2)\ndf = pd.read_parquet(\"data/IUCN_with_taxid_SMALL.parquet\")\n\n# Set the order for IUCN categories\norder_cat = [\n    'Data Deficient',\n    'Least Concern',\n    'Lower Risk/least concern',\n    'Near Threatened',\n    'Lower Risk/near threatened',\n    'Lower Risk/conservation dependent',\n    'Vulnerable',\n    'Endangered',\n    'Critically Endangered',\n    'Extinct in the Wild',\n    'Extinct'\n]\n\n# Aggregate\nagg = aggregate_freq(df, column=\"redlistCategory\")\n\n# Plot\n(\n    Lifemap(agg, center=41666, zoom=13)\n    .layer_donuts(\n        counts_col=\"redlistCategory\",\n        scheme=\"Turbo\",\n        radius = [70, 150],\n        show_totals = True,\n        lazy_zoom=4,\n        declutter=False,\n        opacity=0.7,\n        categories=order_cat\n    )\n    .show()\n)\n\n\nWarning: 108 taxids have not been found in Lifemap database.\nWarning: 11265 duplicated taxids have been found in the data."
   },
   {
-    "objectID": "reference/Lifemap.html#examples",
-    "href": "reference/Lifemap.html#examples",
-    "title": "Lifemap",
+    "objectID": "changelog.html#pylifemap-0.1.3",
+    "href": "changelog.html#pylifemap-0.1.3",
+    "title": "Changelog",
+    "section": "pylifemap 0.1.3",
+    "text": "pylifemap 0.1.3\n\nFix: JavaScript bundling version problem\nMaint: upgrade Python dependencies"
+  },
+  {
+    "objectID": "changelog.html#pylifemap-0.1.2",
+    "href": "changelog.html#pylifemap-0.1.2",
+    "title": "Changelog",
+    "section": "pylifemap 0.1.2",
+    "text": "pylifemap 0.1.2\n\nFeature: add small lazy loading spinner\nFeature: add progress text to global spinner\nImprovement: automatically enable lazy loading if a large dataset (&gt; 300 000 rows) is detected\nImprovement: better lazy loading filter functions efficiency\nImprovement: better garbage collection when widget is destroyed\nFix: arcs in donut charts must follow the categories order\nFix: use sessionStorage instead of localStorage for updated coordinates caching\nFix: wrong lazy loading extent margins computation\nRefactor: move projection computations to Python code"
+  },
+  {
+    "objectID": "changelog.html#pylifemap-0.1.1",
+    "href": "changelog.html#pylifemap-0.1.1",
+    "title": "Changelog",
+    "section": "pylifemap 0.1.1",
+    "text": "pylifemap 0.1.1\n\nImproved default zoom level depending on widget size\nImproved animation when zooming into taxon"
+  },
+  {
+    "objectID": "changelog.html#pylifemap-0.1",
+    "href": "changelog.html#pylifemap-0.1",
+    "title": "Changelog",
+    "section": "pylifemap 0.1",
+    "text": "pylifemap 0.1\n\nFirst published version"
+  },
+  {
+    "objectID": "getting_started.html",
+    "href": "getting_started.html",
+    "title": "Getting started",
     "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [9685, 9615, 9994]})\n&gt;&gt;&gt; Lifemap(d, width=\"100%\", height=\"100vh\").layer_points().show()"
+    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset and keep a subset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).filter()\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
   },
   {
-    "objectID": "reference/Lifemap.html#methods",
-    "href": "reference/Lifemap.html#methods",
-    "title": "Lifemap",
+    "objectID": "getting_started.html#presentation",
+    "href": "getting_started.html#presentation",
+    "title": "Getting started",
     "section": "",
-    "text": "Name\nDescription\n\n\n\n\nlayer_points\nAdd a points layer.\n\n\nlayer_lines\nAdd a lines layer.\n\n\nlayer_donuts\nAdd a donuts layer.\n\n\nlayer_heatmap\nAdd an heatmap layer.\n\n\nlayer_heatmap_deck\nAdd a deck.gl heatmap layer.\n\n\nlayer_screengrid\nAdd a screengrid layer.\n\n\nlayer_text\nAdd a text labels layer.\n\n\nlayer_icons\nAdd an icons layer.\n\n\nshow\nDisplay the Jupyter widget for this instance.\n\n\nsave\nSave the Jupyter widget for this instance to an HTML file."
+    "text": "Note\n\n\n\nThis is a quick introduction to the features and usage of the package. See the usage page for more detailed informations.\n\n\n\n\npylifemap is a Python package that allows to visualize your own taxonomy data on the interactive tree of life provided by Lifemap.\nIt allows to create this type of interactive visualization:\n\nimport polars as pl\nfrom pylifemap import Lifemap\n\n# Load iucn dataset and keep a subset\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n).filter()\n\nLifemap(iucn).layer_points(radius=5, opacity=0.8).show()\n\n\n\n\n\n\n\npylifemap visualizations are jupyter widgets and are better created inside a notebook environment, such as Jupyter, marimo or Quarto. These environments allow to create documents with text, code and code output, including plots and interactive widgets. They allow to create and develop computations and visualizations interactively.\nIt is also possible to generate pylifemap visualizations from a Python script. In this case the interactive widget will be directly opened in your Web browser."
   },
   {
-    "objectID": "reference/Lifemap.layer_heatmap.html",
-    "href": "reference/Lifemap.layer_heatmap.html",
-    "title": "Lifemap.layer_heatmap",
-    "section": "",
-    "text": "Lifemap.layer_heatmap(\n    data=None,\n    *,\n    taxid_col='taxid',\n    radius=5.0,\n    blur=5.0,\n    opacity=1.0,\n    gradient=('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a'),\n)\nAdd an heatmap layer.\nThis layer is used to display observations distribution.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 5.0.\n5.0\n\n\nblur\nfloat\nHeatmap blur. By default 5.0.\n5.0\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\ngradient\ntuple\nTuple of CSS colors to define the heatmap gradient. By default gradient inspired from the ‘turbo’ color ramp.\n('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a')\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap().show()"
+    "objectID": "getting_started.html#installation",
+    "href": "getting_started.html#installation",
+    "title": "Getting started",
+    "section": "Installation",
+    "text": "Installation\nYou can install pylifemap like any other Python package. The recommended way is via pip or uv:\n\npipuv\n\n\n# Install pylifemap, preferably in a virtual environment\npip install pylifemap\n\n\n# Add pylifemap to a python project\nuv add pylifemap\n\n\n\nTo have an overview of the package without installing anything, you can also open our introduction notebook in Google Colab:"
   },
   {
-    "objectID": "reference/Lifemap.layer_heatmap.html#parameters",
-    "href": "reference/Lifemap.layer_heatmap.html#parameters",
-    "title": "Lifemap.layer_heatmap",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 5.0.\n5.0\n\n\nblur\nfloat\nHeatmap blur. By default 5.0.\n5.0\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\ngradient\ntuple\nTuple of CSS colors to define the heatmap gradient. By default gradient inspired from the ‘turbo’ color ramp.\n('#4675ed', '#39a2fc', '#1bcfd4', '#24eca6', '#61fc6c', '#a4fc3b', '#d1e834', '#f3363a')"
+    "objectID": "getting_started.html#creating-a-visualization",
+    "href": "getting_started.html#creating-a-visualization",
+    "title": "Getting started",
+    "section": "Creating a visualization",
+    "text": "Creating a visualization\nTo create a Lifemap data visualization, you must follow these steps:\n\nImport Lifemap\nPrepare and load your data\nInitialize a Lifemap object\nAdd visualization layers\n\n\n1. Import Lifemap\nTo be able to use pylifemap in a script or notebook you have to import Lifemap from the package with the following line:\n\nfrom pylifemap import Lifemap\n\n\n\n2. Prepare your data\nThe data you want to visualize on the Lifemap tree of life must be in a pandas or polars DataFrame. They must contain observations (species) as rows, and variables as columns, and one column must contain the NCBI taxonomy identifier of the species.\nIn the following we will use an example dataset generated from The IUCN Red List of Threatened Species. It is a parquet file with the Red List category (in 2022) of more than 84000 species.\nWe can import it as a polars or pandas DataFrame with the following code:\n\nPolarsPandas\n\n\n\nimport polars as pl\n\niucn = pl.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n\n\n\nimport pandas as pd\n\niucn = pd.read_parquet(\n    \"https://raw.githubusercontent.com/Lifemap-ToL/pylifemap/main/data/iucn_subset.parquet\"\n)\n\n\n\n\nThe resulting table only has two columns: taxid, which contains the species identifiers, and status, with the Red List category of each species.\n\niucn\n\n\nshape: (24_883, 2)taxidstatusi32str2803960\"Critically Endangered\"143610\"Critically Endangered\"2720032\"Vulnerable\"2720037\"Near Threatened\"1951289\"Vulnerable\"……1279211\"Vulnerable\"1912930\"Endangered\"442623\"Vulnerable\"2303643\"Critically Endangered\"442625\"Critically Endangered\"\n\n\nFor some visualizations you will have to aggregate a count of species or the values of a numerical or categorical variable along the tree branches. For this you can use one of the provided aggregation functions.\n\n\n3. Initialize a Lifemap object\nThe next step is to create a new Lifemap object. To do this we have to pass it our DataFrame, as well as the name of the column with our taxonomy identifiers1. We will also add .show(), which is needed to display the visualization.\n\nLifemap(iucn, taxid_col=\"taxid\").show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nFor the moment this only displays the Lifemap base map.\n\n\n\n\n\n\nNote\n\n\n\nWhen initializing a new Lifemap object, pylifemap will check and display a warning message if unknown or duplicated taxids are found in the data.\nYou can get the full list of unknown or duplicated taxids by using the helper functions get_unknown_taxids and get_duplicated_taxids.\n\n\n\n\n4. Add visualization layers\nAfter initializing our Lifemap object, we must add visualization layers to create graphical representations of our data. For example, we can add a points layer which will add a colored point over each species in our dataset. To do that, we can add a call to layer_points():\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points().show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\nSome layers allow to represent the values of one of our dataset columns. For example, we can color our points depending on the values in the status column of iucn:\n\nLifemap(iucn, taxid_col=\"taxid\").layer_points(fill=\"status\").show()\n\nWarning: 165 taxids have not been found in Lifemap database.\nWarning: 22 duplicated taxids have been found in the data.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThere are many options to customize the base map or the layers, see the usage page for more informations."
   },
   {
-    "objectID": "reference/Lifemap.layer_heatmap.html#returns",
-    "href": "reference/Lifemap.layer_heatmap.html#returns",
-    "title": "Lifemap.layer_heatmap",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
+    "objectID": "getting_started.html#exporting-a-visualization",
+    "href": "getting_started.html#exporting-a-visualization",
+    "title": "Getting started",
+    "section": "Exporting a visualization",
+    "text": "Exporting a visualization\nOnce you are satisfied with a visualization, there are several ways to export it:\n\nat any time, you can use the “Export PNG” button on the widget to export the current view as a PNG image. You can use the “Fullscreen” button first to generate bigger images if needed\nyou can use .save(\"file.html\") instead of .show() to save the widget to an HTML file\nif in a Jupyter notebook, you can save it to HTML, which will include the widgets in the output\nyou can also use Quarto to generate an HTML document embedding pylifemap widgets, or to convert a Jupyter notebook to an HTML file"
   },
   {
-    "objectID": "reference/Lifemap.layer_heatmap.html#examples",
-    "href": "reference/Lifemap.layer_heatmap.html#examples",
-    "title": "Lifemap.layer_heatmap",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap().show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_heatmap_deck.html",
-    "href": "reference/Lifemap.layer_heatmap_deck.html",
-    "title": "Lifemap.layer_heatmap_deck",
-    "section": "",
-    "text": "Lifemap.layer_heatmap_deck(\n    data=None,\n    *,\n    taxid_col='taxid',\n    radius=30,\n    intensity=5,\n    threshold=0.05,\n    opacity=0.5,\n    color_range=None,\n)\nAdd a deck.gl heatmap layer.\nThis layer is used to display observations distribution.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 30.\n30\n\n\nintensity\nfloat\nHeatmap intensity. By default 5.\n5\n\n\nthreshold\nfloat\nHeatmap threshold. By default 0.05.\n0.05\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 0.5.\n0.5\n\n\ncolor_range\nlist | None\nList of colors to define a custom color gradient.\nNone\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap_deck().show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_heatmap_deck.html#parameters",
-    "href": "reference/Lifemap.layer_heatmap_deck.html#parameters",
-    "title": "Lifemap.layer_heatmap_deck",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nradius\nfloat\nHeatmap radius. By default 30.\n30\n\n\nintensity\nfloat\nHeatmap intensity. By default 5.\n5\n\n\nthreshold\nfloat\nHeatmap threshold. By default 0.05.\n0.05\n\n\nopacity\nfloat\nHeatmap opacity as a floating number between 0 and 1. By default 0.5.\n0.5\n\n\ncolor_range\nlist | None\nList of colors to define a custom color gradient.\nNone"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_heatmap_deck.html#returns",
-    "href": "reference/Lifemap.layer_heatmap_deck.html#returns",
-    "title": "Lifemap.layer_heatmap_deck",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_heatmap_deck.html#examples",
-    "href": "reference/Lifemap.layer_heatmap_deck.html#examples",
-    "title": "Lifemap.layer_heatmap_deck",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_heatmap_deck().show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html",
-    "href": "reference/Lifemap.layer_donuts.html",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "Lifemap.layer_donuts(\n    data=None,\n    *,\n    taxid_col='taxid',\n    counts_col,\n    categories=None,\n    radius=50,\n    leaves='hide',\n    show_totals=True,\n    scheme=None,\n    opacity=1,\n    popup=True,\n    popup_col=None,\n    label=None,\n    declutter=True,\n    lazy=True,\n    lazy_zoom=4,\n)\nAdd a donuts layer.\nThis layer displays the distribution of a categorical variable values among each nodes children. Optionally it can also represent leaves values as a point layer.\nIt should be applied to data computed with aggregate_freq.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\ncounts_col\nstr\nDataFrame column containing the counts.\nrequired\n\n\ncategories\nlist | tuple | None\nCustom order of categories. Defaults to None.\nNone\n\n\nradius\nint | list | tuple\nDonut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50.\n50\n\n\nleaves\nLiteral[\"show\", \"hide\"]\nIf 'show', add a points layer with individual leaves values. By default 'hide'.\n'hide'\n\n\nshow_totals\nbool\nIf True, display the total count of the current taxa in the center of the donut chart. Defaults to True.\nTrue\n\n\nscheme\nstr | None\nColor scheme for donut charts ans points. It is the name of a categorical Observable Plot color scale. By default None.\nNone\n\n\nopacity\nfloat | None\nDonut charts and points opacity. By default 1.\n1\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer. If None, the value of counts_col is used.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.\nTrue\n\n\nlazy_zoom\nint\nIf lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 4.\n4\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nValueError\nIf leaves is not one of the allowed values.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_freq\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"category\": [\"a\", \"b\", \"b\", \"a\", \"a\", \"c\", \"a\", \"b\", \"b\", \"a\", \"b\"],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_freq(d, column=\"category\")\n&gt;&gt;&gt; Lifemap(d).layer_donuts(counts_col=\"category\", leaves=\"hide\").show()\n\n\n\naggregate_freq : aggregation of the values counts of a categorical variable."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html#parameters",
-    "href": "reference/Lifemap.layer_donuts.html#parameters",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\ncounts_col\nstr\nDataFrame column containing the counts.\nrequired\n\n\ncategories\nlist | tuple | None\nCustom order of categories. Defaults to None.\nNone\n\n\nradius\nint | list | tuple\nDonut charts radius. If an integer, all donut charts will be of the same size. If a list or a tuple of length 2, chart size will depend on the node total count. By default 50.\n50\n\n\nleaves\nLiteral[\"show\", \"hide\"]\nIf 'show', add a points layer with individual leaves values. By default 'hide'.\n'hide'\n\n\nshow_totals\nbool\nIf True, display the total count of the current taxa in the center of the donut chart. Defaults to True.\nTrue\n\n\nscheme\nstr | None\nColor scheme for donut charts ans points. It is the name of a categorical Observable Plot color scale. By default None.\nNone\n\n\nopacity\nfloat | None\nDonut charts and points opacity. By default 1.\n1\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer. If None, the value of counts_col is used.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to True.\nTrue\n\n\nlazy_zoom\nint\nIf lazy is True, only points with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 4.\n4"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html#returns",
-    "href": "reference/Lifemap.layer_donuts.html#returns",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html#raises",
-    "href": "reference/Lifemap.layer_donuts.html#raises",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nValueError\nIf leaves is not one of the allowed values."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html#examples",
-    "href": "reference/Lifemap.layer_donuts.html#examples",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_freq\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"category\": [\"a\", \"b\", \"b\", \"a\", \"a\", \"c\", \"a\", \"b\", \"b\", \"a\", \"b\"],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_freq(d, column=\"category\")\n&gt;&gt;&gt; Lifemap(d).layer_donuts(counts_col=\"category\", leaves=\"hide\").show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_donuts.html#see-also",
-    "href": "reference/Lifemap.layer_donuts.html#see-also",
-    "title": "Lifemap.layer_donuts",
-    "section": "",
-    "text": "aggregate_freq : aggregation of the values counts of a categorical variable."
-  },
-  {
-    "objectID": "reference/aggregate_count.html",
-    "href": "reference/aggregate_count.html",
-    "title": "aggregate_count",
-    "section": "",
-    "text": "aggregate_count(d, *, result_col='n', taxid_col='taxid')\nNodes count aggregation along branches.\nAggregates nodes count in a DataFrame with taxonomy ids along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\nresult_col\nstr\nName of the column created to store the counts. By default 'n'.\n'n'\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input.\n\n\n\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_freq: aggregation of the values counts of a categorical variable.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_count\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2]})\n&gt;&gt;&gt; aggregate_count(d)\nshape: (5, 2)\n┌───────┬─────┐\n│ taxid ┆ n   │\n│ ---   ┆ --- │\n│ i32   ┆ u32 │\n╞═══════╪═════╡\n│ 0     ┆ 3   │\n│ 2     ┆ 1   │\n│ 2759  ┆ 2   │\n│ 33090 ┆ 1   │\n│ 33154 ┆ 1   │\n└───────┴─────┘"
-  },
-  {
-    "objectID": "reference/aggregate_count.html#parameters",
-    "href": "reference/aggregate_count.html#parameters",
-    "title": "aggregate_count",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\nresult_col\nstr\nName of the column created to store the counts. By default 'n'.\n'n'\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
-  },
-  {
-    "objectID": "reference/aggregate_count.html#returns",
-    "href": "reference/aggregate_count.html#returns",
-    "title": "aggregate_count",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input."
-  },
-  {
-    "objectID": "reference/aggregate_count.html#see-also",
-    "href": "reference/aggregate_count.html#see-also",
-    "title": "aggregate_count",
-    "section": "",
-    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_freq: aggregation of the values counts of a categorical variable."
-  },
-  {
-    "objectID": "reference/aggregate_count.html#examples",
-    "href": "reference/aggregate_count.html#examples",
-    "title": "aggregate_count",
-    "section": "",
-    "text": "&gt;&gt;&gt; from pylifemap import aggregate_count\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2]})\n&gt;&gt;&gt; aggregate_count(d)\nshape: (5, 2)\n┌───────┬─────┐\n│ taxid ┆ n   │\n│ ---   ┆ --- │\n│ i32   ┆ u32 │\n╞═══════╪═════╡\n│ 0     ┆ 3   │\n│ 2     ┆ 1   │\n│ 2759  ┆ 2   │\n│ 33090 ┆ 1   │\n│ 33154 ┆ 1   │\n└───────┴─────┘"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_lines.html",
-    "href": "reference/Lifemap.layer_lines.html",
-    "title": "Lifemap.layer_lines",
-    "section": "",
-    "text": "Lifemap.layer_lines(\n    data=None,\n    *,\n    taxid_col='taxid',\n    width=3,\n    width_range=(1, 30),\n    color=None,\n    scheme=None,\n    linetype='solid',\n    opacity=0.8,\n    popup=True,\n    popup_col=None,\n    hover=None,\n    label=None,\n    lazy=None,\n    lazy_zoom=10,\n    lazy_mode='self',\n)\nAdd a lines layer.\nThis layer can be applied to data generated by aggregate_num or aggregate_count.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nwidth\nint | float | str\nIf numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column to compute line width from.\n3\n\n\nwidth_range\ntuple | list\nMin and max values for line widths, only used if width is a data column. By default (1, 30).\n(1, 30)\n\n\ncolor\nstr | None\nEither the name of a numerical DataFrame column to determine line color, or a fixed CSS color for lines.\nNone\n\n\nscheme\nstr | None\nColor scheme for lines color. It is the name of an Observable Plot color scale.\nNone\n\n\nlinetype\nLiteral['solid', 'dotted', 'smalldash', 'dashed']\nType of lines. Defaults to 'solid'.\n'solid'\n\n\nopacity\nfloat\nLine opacity as a floating number between 0 and 1. By default 0.8.\n0.8\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nhover\nbool | None\nIf True, highlight points on mouse hovering. By default True if less than 10_000 data points, False otherwise.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer if color is defined. If None, the value of color is used.\nNone\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only lines with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_num\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"value\": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_num(d, column=\"value\", fn=\"mean\")\n&gt;&gt;&gt; Lifemap(d).layer_lines(width=\"value\", color=\"value\").show()\n\n\n\naggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_lines.html#parameters",
-    "href": "reference/Lifemap.layer_lines.html#parameters",
-    "title": "Lifemap.layer_lines",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nwidth\nint | float | str\nIf numeric, the fixed width of the lines. If a string, the name of a numerical DataFrame column to compute line width from.\n3\n\n\nwidth_range\ntuple | list\nMin and max values for line widths, only used if width is a data column. By default (1, 30).\n(1, 30)\n\n\ncolor\nstr | None\nEither the name of a numerical DataFrame column to determine line color, or a fixed CSS color for lines.\nNone\n\n\nscheme\nstr | None\nColor scheme for lines color. It is the name of an Observable Plot color scale.\nNone\n\n\nlinetype\nLiteral['solid', 'dotted', 'smalldash', 'dashed']\nType of lines. Defaults to 'solid'.\n'solid'\n\n\nopacity\nfloat\nLine opacity as a floating number between 0 and 1. By default 0.8.\n0.8\n\n\npopup\nbool\nIf True, display informations in a popup when a point is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\nhover\nbool | None\nIf True, highlight points on mouse hovering. By default True if less than 10_000 data points, False otherwise.\nNone\n\n\nlabel\nstr | None\nLegend title for this layer if color is defined. If None, the value of color is used.\nNone\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only lines with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_lines.html#returns",
-    "href": "reference/Lifemap.layer_lines.html#returns",
-    "title": "Lifemap.layer_lines",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_lines.html#examples",
-    "href": "reference/Lifemap.layer_lines.html#examples",
-    "title": "Lifemap.layer_lines",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap, aggregate_num\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ],\n...         \"value\": [7.4, 2.5, 8.3, 1.0, 1.4, 5.6, 4.6, 3.4, 2.3, 2.8, 3.1],\n...     }\n... )\n&gt;&gt;&gt; d = aggregate_num(d, column=\"value\", fn=\"mean\")\n&gt;&gt;&gt; Lifemap(d).layer_lines(width=\"value\", color=\"value\").show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_lines.html#see-also",
-    "href": "reference/Lifemap.layer_lines.html#see-also",
-    "title": "Lifemap.layer_lines",
-    "section": "",
-    "text": "aggregate_num: aggregation of a numeric variable.\naggregate_count: aggregation of the number of observations."
-  },
-  {
-    "objectID": "reference/aggregate_num.html",
-    "href": "reference/aggregate_num.html",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "aggregate_num(d, column, *, fn='sum', taxid_col='taxid')\nNumerical variable aggregation along branches.\nAggregates a numerical variable in a DataFrame with taxonomy ids along the branches of the lifemap tree.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\nfn\n(sum, mean, min, max, median)\nFunction used to aggregate the values. By default 'sum'.\n\"sum\"\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input.\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nValueError\nIf column is equal to 'taxid'.\n\n\n\nValueError\nIf fn is not on the allowed values.\n\n\n\n\n\n\naggregate_count: aggregation of the number of observations.\naggregate_freq: aggregation of the values counts of a categorical variable.\n\n\n\n&gt;&gt;&gt; from pylifemap import aggregate_num\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [10, 5, 100]})\n&gt;&gt;&gt; aggregate_num(d, column=\"value\", fn=\"sum\")\nshape: (5, 2)\n┌───────┬───────┐\n│ taxid ┆ value │\n│ ---   ┆ ---   │\n│ i32   ┆ i64   │\n╞═══════╪═══════╡\n│ 0     ┆ 115   │\n│ 2     ┆ 100   │\n│ 2759  ┆ 15    │\n│ 33090 ┆ 5     │\n│ 33154 ┆ 10    │\n└───────┴───────┘"
-  },
-  {
-    "objectID": "reference/aggregate_num.html#parameters",
-    "href": "reference/aggregate_num.html#parameters",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\nd\npd.DataFrame | pl.DataFrame\nDataFrame to aggregate data from.\nrequired\n\n\ncolumn\nstr\nName of the d column to aggregate.\nrequired\n\n\nfn\n(sum, mean, min, max, median)\nFunction used to aggregate the values. By default 'sum'.\n\"sum\"\n\n\ntaxid_col\nstr\nName of the d column containing taxonomy ids. By default 'taxid'.\n'taxid'"
-  },
-  {
-    "objectID": "reference/aggregate_num.html#returns",
-    "href": "reference/aggregate_num.html#returns",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\npl.DataFrame | pd.DataFrame\nAggregated DataFrame in the same format as input."
-  },
-  {
-    "objectID": "reference/aggregate_num.html#raises",
-    "href": "reference/aggregate_num.html#raises",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nValueError\nIf column is equal to 'taxid'.\n\n\n\nValueError\nIf fn is not on the allowed values."
-  },
-  {
-    "objectID": "reference/aggregate_num.html#see-also",
-    "href": "reference/aggregate_num.html#see-also",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "aggregate_count: aggregation of the number of observations.\naggregate_freq: aggregation of the values counts of a categorical variable."
-  },
-  {
-    "objectID": "reference/aggregate_num.html#examples",
-    "href": "reference/aggregate_num.html#examples",
-    "title": "aggregate_num",
-    "section": "",
-    "text": "&gt;&gt;&gt; from pylifemap import aggregate_num\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; d = pl.DataFrame({\"taxid\": [33154, 33090, 2], \"value\": [10, 5, 100]})\n&gt;&gt;&gt; aggregate_num(d, column=\"value\", fn=\"sum\")\nshape: (5, 2)\n┌───────┬───────┐\n│ taxid ┆ value │\n│ ---   ┆ ---   │\n│ i32   ┆ i64   │\n╞═══════╪═══════╡\n│ 0     ┆ 115   │\n│ 2     ┆ 100   │\n│ 2759  ┆ 15    │\n│ 33090 ┆ 5     │\n│ 33154 ┆ 10    │\n└───────┴───────┘"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_icons.html",
-    "href": "reference/Lifemap.layer_icons.html",
-    "title": "Lifemap.layer_icons",
-    "section": "",
-    "text": "Lifemap.layer_icons(\n    data=None,\n    *,\n    taxid_col='taxid',\n    icon,\n    width=None,\n    height=None,\n    scale=None,\n    color=None,\n    x_offset=0,\n    y_offset=0,\n    x_anchor=0.5,\n    y_anchor=0.5,\n    opacity=1.0,\n    popup=True,\n    popup_col=None,\n    declutter=True,\n    lazy=None,\n    lazy_zoom=10,\n    lazy_mode='self',\n)\nAdd an icons layer.\nIt can be used to display icons associated to taxids.\n\n\n\n\n\nName\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nicon\nstr\nEither the URL to an image file or data uri to use as icon, or the name of a column of the data containing urls or data uris of icons to be displayed.\nrequired\n\n\nwidth\nint | None\nImage width, in pixels.\nNone\n\n\nheight\nint | None\nImage height, in pixels.\nNone\n\n\nscale\nfloat | None\nFactor with which to scale the original icon size. Cannot be used with width or height.\nNone\n\n\ncolor\nstr | None\nCSS color to tint the icon. By default None.\nNone\n\n\nx_offset\nint\nHorizontal offset in pixels. By default 0.\n0\n\n\ny_offset\nint\nVertical offset in pixels. By default 0.\n0\n\n\nx_anchor\nfloat\nHorizontal icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\ny_anchor\nfloat\nVertical icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\nopacity\nfloat\nText opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\npopup\nbool\nIf True, display informations in a popup when an icon is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only icons with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'\n\n\n\n\n\n\n\n\n\nName\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object.\n\n\n\n\n\n\n&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ]\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_icons(icon=\"https://openlayers.org/en/latest/examples/data/icon.png\").show()"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_icons.html#parameters",
-    "href": "reference/Lifemap.layer_icons.html#parameters",
-    "title": "Lifemap.layer_icons",
-    "section": "",
-    "text": "Name\nType\nDescription\nDefault\n\n\n\n\ndata\npl.DataFrame | pd.DataFrame | None\nLayer data. If not provided, use the base widget data.\nNone\n\n\ntaxid_col\nstr\nIf data is provided, name of the data column with taxonomy ids. By default 'taxid'.\n'taxid'\n\n\nicon\nstr\nEither the URL to an image file or data uri to use as icon, or the name of a column of the data containing urls or data uris of icons to be displayed.\nrequired\n\n\nwidth\nint | None\nImage width, in pixels.\nNone\n\n\nheight\nint | None\nImage height, in pixels.\nNone\n\n\nscale\nfloat | None\nFactor with which to scale the original icon size. Cannot be used with width or height.\nNone\n\n\ncolor\nstr | None\nCSS color to tint the icon. By default None.\nNone\n\n\nx_offset\nint\nHorizontal offset in pixels. By default 0.\n0\n\n\ny_offset\nint\nVertical offset in pixels. By default 0.\n0\n\n\nx_anchor\nfloat\nHorizontal icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\ny_anchor\nfloat\nVertical icon anchor, as a number between 0 and 1. By default 0.5.\n0.5\n\n\nopacity\nfloat\nText opacity as a floating number between 0 and 1. By default 1.0.\n1.0\n\n\npopup\nbool\nIf True, display informations in a popup when an icon is clicked. By default True.\nTrue\n\n\npopup_col\nstr | None\nName of a data column containing custom popup content. By default None.\nNone\n\n\ndeclutter\nbool\nIf True, use OpenLayers decluttering option for this layer. Defaults to True.\nTrue\n\n\nlazy\nbool | None\nIf True, points are displayed depending on the widget view. If False, all points are displayed. Can be useful when displaying a great number of items. Defaults to None.\nNone\n\n\nlazy_zoom\nint\nIf lazy is True, only icons with a zoom level less than (current zoom + lazy_zoom) level will be displayed. Defaults to 10.\n10\n\n\nlazy_mode\nLiteral['self', 'parent']\nIf lazy is True, choose the zoom level to apply to each taxa. If 'self', keep the taxa zoom level. If 'parent', get the nearest ancestor zoom level. Defaults to 'self'.\n'self'"
-  },
-  {
-    "objectID": "reference/Lifemap.layer_icons.html#returns",
-    "href": "reference/Lifemap.layer_icons.html#returns",
-    "title": "Lifemap.layer_icons",
-    "section": "",
-    "text": "Name\nType\nDescription\n\n\n\n\n\nLifemap\nA Lifemap visualization object."
-  },
-  {
-    "objectID": "reference/Lifemap.layer_icons.html#examples",
-    "href": "reference/Lifemap.layer_icons.html#examples",
-    "title": "Lifemap.layer_icons",
-    "section": "",
-    "text": "&gt;&gt;&gt; import polars as pl\n&gt;&gt;&gt; from pylifemap import Lifemap\n&gt;&gt;&gt; d = pl.DataFrame(\n...     {\n...         \"taxid\": [\n...             9685,\n...             9615,\n...             9994,\n...             2467430,\n...             2514524,\n...             2038938,\n...             1021470,\n...             1415565,\n...             1928562,\n...             1397240,\n...             230741,\n...         ]\n...     }\n... )\n&gt;&gt;&gt; Lifemap(d).layer_icons(icon=\"https://openlayers.org/en/latest/examples/data/icon.png\").show()"
-  },
-  {
-    "objectID": "large_datasets.html",
-    "href": "large_datasets.html",
-    "title": "Large datasets",
-    "section": "",
-    "text": "Depending on your hardware, visualizing large datasets can be slow or downright impossible if the number of data points is very high. This page lists pylifemap features and some tips to try to improve map rendering in these cases."
-  },
-  {
-    "objectID": "large_datasets.html#lazy-loading",
-    "href": "large_datasets.html#lazy-loading",
-    "title": "Large datasets",
-    "section": "Lazy loading",
-    "text": "Lazy loading\nThe most important feature for handling large datasets is lazy loading. By default, the entire dataset is loaded and displayed on the map. Lazy loading means that data isn’t loaded entirely when the widget is created, but incrementally depending on the current map view: only the visible points are loaded and displayed.\nLazy loading is available for the following layers:\n\npoints\nlines\ntext\ndonuts (enabled by default)\nicons\n\nIt is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.\nTo manually enable or disable lazy loading, you can set the lazy argument to True or False when calling the layer creation function.\n\nLifemap(data).layer_points(lazy=True).show()\n\nAnother useful argument is lazy_zoom, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level z, then only data points above zoom level z + lazy_zoom will be shown. You can set lazy_zoom to -1 to display all zoom levels.\nWith the following code, the points layer will use lazy loading and will only load and display the points included in the current view and with a zoom level above the current zoom plus 15.\n\nLifemap(data).layer_points(lazy=True, lazy_zoom=15).show()\n\n\nLazy loading modes\nIn some cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in. As an extreme example, if you only have leaves in your datasets, the map could appear completely empty initially.\nThere are two modes of lazy loading, which can be selected with the lazy_mode argument.\nThe \"self\" lazy loading mode will use the precomputed zoom level attributed to each taxon to determine which points must be displayed. This is the default mode, and it will work well for example if you used one of the provided aggregation functions on your data.\n\nLifemap(data).layer_points(lazy=True, lazy_mode=\"self\").show()\n\nThe \"parent\" lazy mode attributes to each taxon the zoom level of its nearest ancestor. This will allow to avoid “false” empty areas at higher zoom levels, but it will also be slower.\n\nLifemap(data).layer_points(lazy=True, lazy_mode=\"parent\").show()\n\n\n\n\n\n\n\nNote\n\n\n\nFor aggregated data, it is recommended to keep the default \"self\" mode and to adjust the lazy_zoom value. For non-aggregated data, it is recommended to try different combinations of lazy_mode and lazy_zoom values to try to get a good balance between display efficiency and visual accuracy."
-  },
-  {
-    "objectID": "large_datasets.html#disabling-popup-and-hover",
-    "href": "large_datasets.html#disabling-popup-and-hover",
-    "title": "Large datasets",
-    "section": "Disabling popup and hover",
-    "text": "Disabling popup and hover\nUsing popups or hover effect (the change of colour of points or lines below the mouse cursor) may slow down view rendering when zooming or panning the map if the dataset is very large. Hover effect is automatically disabled if there are more than 10 000 data points, but they both can be manually disabled by setting the hover and popup layer arguments to False.\n\nLifemap(data).layer_points(lazy=True, hover=False, popup=False).show()"
-  },
-  {
-    "objectID": "large_datasets.html#using-deck.gl-layers",
-    "href": "large_datasets.html#using-deck.gl-layers",
-    "title": "Large datasets",
-    "section": "Using deck.gl layers",
-    "text": "Using deck.gl layers\nDeck.gl layers may be more efficient when viewing large datasets:\n\nThe screengrid layer is very fast even with many data points\nThe heatmap_deck layer will also be fast, and much faster than the heatmap layer\n\nIn particular it is recommended to switch to heatmap_deck if the heatmap layer is too slow."
+    "objectID": "getting_started.html#footnotes",
+    "href": "getting_started.html#footnotes",
+    "title": "Getting started",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nif your column is named \"taxid\" you can omit the taxid_col argument as it is its default value.↩︎"
   }
 ]
