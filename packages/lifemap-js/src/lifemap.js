@@ -136,7 +136,9 @@ export class Lifemap {
                     for (let k in deserialized_data) {
                         deserialized_data[k].forEach((d) => {
                             const taxid_coords = coords[d.pylifemap_taxid]
-                            d.pylifemap_zoom = taxid_coords.zoom
+                            if (d.pylifemap_zoom !== undefined) {
+                                d.pylifemap_zoom = taxid_coords.zoom
+                            }
                             if (taxid_coords !== undefined) {
                                 if (d.pylifemap_x !== undefined) {
                                     d.pylifemap_x = taxid_coords.x
