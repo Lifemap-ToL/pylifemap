@@ -427,12 +427,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>It is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.</p>
 <p>To manually enable or disable lazy loading, you can set the <code>lazy</code> argument to <code>True</code> or <code>False</code> when calling the layer creation function.</p>
-<div id="16a76273" class="cell" data-execution_count="1">
+<div id="f93cd87b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Another useful argument is <code>lazy_zoom</code>, which is the maximum zoom depth to display. In other words, if the map view is currently at zoom level <code>z</code>, then only data points above zoom level <code>z</code> + <code>lazy_zoom</code> will be shown. You can set <code>lazy_zoom</code> to -1 to display all zoom levels.</p>
 <p>With the following code, the points layer will use lazy loading and will only load and display the points included in the current view and with a zoom level above the current zoom plus 15.</p>
-<div id="94d9e5f7" class="cell" data-execution_count="2">
+<div id="40f6405a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_zoom<span class="op">=</span><span class="dv">15</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="lazy-loading-modes" class="level3">
@@ -440,11 +440,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In some cases, lazy loading can make certain map area appear empty when zoomed out, whereas some data points become visible when zooming in. As an extreme example, if you only have leaves in your datasets, the map could appear completely empty initially.</p>
 <p>There are two modes of lazy loading, which can be selected with the <code>lazy_mode</code> argument.</p>
 <p>The <code>"self"</code> lazy loading mode will use the precomputed zoom level attributed to each taxon to determine which points must be displayed. This is the default mode, and it will work well for example if you used one of the provided aggregation functions on your data.</p>
-<div id="600d43b7" class="cell" data-execution_count="3">
+<div id="611c369e" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_mode<span class="op">=</span><span class="st">"self"</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The <code>"parent"</code> lazy mode attributes to each taxon the zoom level of its nearest ancestor. This will allow to avoid “false” empty areas at higher zoom levels, but it will also be slower.</p>
-<div id="ab0a6ac2" class="cell" data-execution_count="4">
+<div id="cf278a89" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, lazy_mode<span class="op">=</span><span class="st">"parent"</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -465,7 +465,7 @@ Note
 <section id="disabling-popup-and-hover" class="level2">
 <h2 class="anchored" data-anchor-id="disabling-popup-and-hover">Disabling popup and hover</h2>
 <p>Using popups or hover effect (the change of colour of points or lines below the mouse cursor) may slow down view rendering when zooming or panning the map if the dataset is very large. Hover effect is automatically disabled if there are more than 10 000 data points, but they both can be manually disabled by setting the <code>hover</code> and <code>popup</code> layer arguments to <code>False</code>.</p>
-<div id="53e4499c" class="cell" data-execution_count="5">
+<div id="32229013" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Lifemap(data).layer_points(lazy<span class="op">=</span><span class="va">True</span>, hover<span class="op">=</span><span class="va">False</span>, popup<span class="op">=</span><span class="va">False</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
