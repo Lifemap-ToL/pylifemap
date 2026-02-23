@@ -7,15 +7,15 @@ import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat, transformExtent } from "ol/proj"
 import { get_controls } from "./elements/controls"
 
-import { DEFAULT_LON, DEFAULT_LAT, MAP_EXTENT } from "./utils"
+import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, MAP_EXTENT } from "./utils"
 
 export function create_map(el, options) {
-    const { zoom = 5, minZoom = 4, maxZoom = 42, controls_list = [] } = options
+    const { zoom = undefined, minZoom = 4, maxZoom = 42, controls_list = [] } = options
 
     const view = new View({
         center: fromLonLat([DEFAULT_LON, DEFAULT_LAT]),
         extent: transformExtent(MAP_EXTENT, "EPSG:4326", "EPSG:3857"),
-        zoom: zoom,
+        zoom: zoom ?? DEFAULT_ZOOM,
         minZoom: minZoom,
         maxZoom: maxZoom,
         enableRotation: false,

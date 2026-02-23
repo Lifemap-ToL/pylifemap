@@ -7,6 +7,7 @@ export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 // Map defaults
 export const DEFAULT_LON = 0
 export const DEFAULT_LAT = -4.226497
+export const DEFAULT_ZOOM = 5
 export const LUCA_LON = 0
 export const LUCA_LAT = -4.226497
 export const LUCA_ZOOM = 5

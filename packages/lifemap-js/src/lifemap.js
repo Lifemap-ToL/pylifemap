@@ -13,7 +13,7 @@ import { layer_screengrid } from "./layers/layer_screengrid"
 import { LegendControl } from "./elements/controls"
 import { get_data_coords, get_taxid_coords } from "./data/api"
 import { deserialize_data } from "./data/deserialization"
-import { DEFAULT_LON, DEFAULT_LAT, stringify_scale } from "./utils"
+import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
 
 import { fromLonLat } from "ol/proj"
@@ -48,7 +48,7 @@ export class Lifemap {
 
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
-        this.map.default_zoom = zoom
+        this.map.default_zoom = zoom ?? DEFAULT_ZOOM
         this.map.theme = THEMES[theme]
         this.center = center
         this.zoom = zoom
