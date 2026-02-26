@@ -91,14 +91,17 @@ export class Lifemap {
 
     async update(options) {
         const { data, layers, color_ranges } = options
+        const is_update = this.ol_layers.length + this.deck_layers.length > 0
         this.spinner.show("Processing data")
         requestAnimationFrame(() => {
             this.update_data(data).then(() => {
                 this.spinner.update_message("Creating layers")
                 this.update_layers(layers, color_ranges)
                     .then(async () => {
-                        this.spinner.update_message("Updating view")
-                        await this.update_zoom()
+                        if (!is_update) {
+                            this.spinner.update_message("Updating view")
+                            await this.update_zoom()
+                        }
                     })
                     .then(this.spinner.hide())
             })
@@ -275,12 +278,17 @@ export class Lifemap {
             .getLayers()
             .getArray()
             .forEach((l) => {
-                l.setSource(null)
-                if (l.is_webgl) {
-                    l.dispose()
+                // Do not touch map and label layers in case of update
+                if (!this.base_layers.includes(l)) {
+                    l.setSource(null)
+                    if (l.is_webgl) {
+                        l.dispose()
+                    }
+                    this.map.removeLayer(l)
+                    l = null
+                } else {
+                    this.map.getView().setZoom(this.map.getView().getZoom())
                 }
-                this.map.removeLayer(l)
-                l = null
             })
     }
 
@@ -341,6 +349,8 @@ export class Lifemap {
             }
             legend_container.append(Plot.legend(scale))
         }
+        // Remove any previous legend in case of update
+        this.legend.element.innerHTML = ""
         this.legend.element.appendChild(legend_container)
         this.map.addControl(this.legend)
     }
