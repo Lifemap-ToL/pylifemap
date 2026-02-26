@@ -191,10 +191,12 @@ class TestDonutsData:
             "pylifemap_zoom",
             "value",
         ]
-        assert (
-            tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("value").item()
-            == '{"1":1,"2":1,"3":1,"4":1}'
-        )
+        assert tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("value").item() == {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+        }
         assert tmp.filter(pl.col("pylifemap_taxid") == 0).get_column("pylifemap_total").item() == 4
 
 
