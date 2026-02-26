@@ -8,6 +8,13 @@
     </head>
 
     <body>
+        <form>
+            <label>
+                <input type="radio" name="layer" value="points" checked />Points </label
+            ><br />
+            <label> <input type="radio" name="layer" value="lines" />Lines </label><br />
+            <label> <input type="radio" name="layer" value="donuts" />Donuts </label>
+        </form>
         <!-- Create base lifemap element -->
         <div id="map"></div>
     </body>
@@ -34,11 +41,11 @@
         // Base arquero lines table
         const lines_dt = aq.table({
             pylifemap_taxid: [2759, 33154, 4751, 451864],
-            pylifemap_parent: [0, 2759, 33154, 4751],
-            pylifemap_x0: [0, 0, 0, 0],
-            pylifemap_y0: [0, 0, 0, 0],
-            pylifemap_x1: [0, 0, 0, 0],
-            pylifemap_y1: [0, 0, 0, 0],
+            pylifemap_parent_taxid: [0, 2759, 33154, 4751],
+            pylifemap_x: [0, 0, 0, 0],
+            pylifemap_y: [0, 0, 0, 0],
+            pylifemap_parent_x: [0, 0, 0, 0],
+            pylifemap_parent_y: [0, 0, 0, 0],
             pylifemap_zoom: [0, 0, 0, 0],
             lines_value: [4.0, 3.0, 2.0, 1.0],
         })
@@ -78,39 +85,40 @@
         //     layer_donuts: { serialized: false, value: counts_data_objects },
         // }
 
-        // Define layers
-        const layers = [
-            {
-                layer: "points",
-                id: "layer_points",
-                options: {
-                    fill: "points_value",
-                    hover: true,
-                    popup: true,
-                    lazy: true,
-                    lazy_zoom: 25,
-                },
+        const layers = {}
+        layers["lines"] = {
+            layer: "lines",
+            id: "layer_lines",
+            options: {
+                color: "lines_value",
+                width: "lines_value",
+                hover: true,
+                popup: true,
             },
-            {
-                layer: "lines",
-                id: "layer_lines",
-                options: {
-                    color: "lines_value",
-                    width: "lines_value",
-                    hover: true,
-                    popup: true,
-                },
+        }
+
+        layers["points"] = {
+            layer: "points",
+            id: "layer_points",
+            options: {
+                fill: "points_value",
+                hover: true,
+                popup: true,
+                lazy: true,
+                lazy_zoom: 25,
             },
-            {
-                layer: "donuts",
-                id: "layer_donuts",
-                options: {
-                    counts_col: "counts_value",
-                    lazy: true,
-                    lazy_zoom: 30,
-                },
+        }
+
+        layers["donuts"] = {
+            layer: "donuts",
+            id: "layer_donuts",
+            options: {
+                counts_col: "counts_value",
+                lazy: true,
+                lazy_zoom: 30,
+                declutter: false,
             },
-        ]
+        }
 
         // We can optionnaly define ranges for continuous color variables in points and
         // lines layers. This is useful if you represent both a points and a lines layer of the
@@ -126,7 +134,26 @@
             height: 800,
             theme: "lightgrey",
         })
+        lifemap.update({
+            data: data,
+            layers: [layers["points"]],
+            color_ranges: color_ranges,
+        })
+
         // Update Lifemap with data, layers and optional color ranges
-        lifemap.update({ data: data, layers: layers, color_ranges: color_ranges })
+        const radioButtons = document.querySelectorAll('input[name="layer"]')
+
+        radioButtons.forEach((radio) => {
+            radio.addEventListener("change", function () {
+                if (this.checked) {
+                    console.log("Selected option:", this.value)
+                    lifemap.update({
+                        data: data,
+                        layers: [layers[this.value]],
+                        color_ranges: color_ranges,
+                    })
+                }
+            })
+        })
     </script>
 </html>
