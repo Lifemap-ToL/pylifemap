@@ -338,8 +338,9 @@ class LifemapData:
 
         # Store frequencies as a pl.Struct and encode as JSON
         data = data.pivot(index=TAXID_COL, on=counts_col, values="count").fill_null(0)
+
         data = data.with_columns(
-            pl.struct(pl.col(levels)).struct.json_encode().alias(counts_col),
+            pl.struct(pl.col(levels)).alias(counts_col),
             pl.sum_horizontal(pl.col(levels)).alias(total_col),
         ).select(pl.all().exclude(levels))
 

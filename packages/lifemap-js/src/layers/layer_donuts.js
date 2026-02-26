@@ -13,7 +13,7 @@ import Style from "ol/style/Style.js"
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 
-export function layer_donuts(id, map, data, options = {}) {
+export function layer_donuts(id, map, layer_data, options = {}) {
     let {
         counts_col,
         show_totals = false,
@@ -33,11 +33,14 @@ export function layer_donuts(id, map, data, options = {}) {
     id = `lifemap-ol-${id ?? guidGenerator()}`
 
     // Convert to array of {key: , value: } objects
-    data.forEach((d) => {
-        d[counts_col] = Object.entries(JSON.parse(d[counts_col])).map((d) => ({
-            key: d[0],
-            value: d[1],
-        }))
+    const data = layer_data.map((d) => {
+        return {
+            ...d,
+            [counts_col]: Object.entries(d[counts_col]).map(([key, value]) => ({
+                key,
+                value,
+            })),
+        }
     })
 
     label = label ?? counts_col
@@ -178,7 +181,6 @@ export function layer_donuts(id, map, data, options = {}) {
         const offset = [0, Array.isArray(radius) ? -radius[0] / 2 : -radius / 2]
         set_popup_event(map, id, coordinates_fn, content_fn, offset)
     }
-
     layer.lifemap_ol_id = id
     layer.lifemap_ol_scales = scales
 
