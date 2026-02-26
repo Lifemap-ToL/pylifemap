@@ -43,6 +43,12 @@ After that you have to create a `data` and a `layers` object and then update you
 lifemap.update({ data: data, layers: layers })
 ```
 
+If you want to update an existing lifemap object with new data or layers, you have to call the `update()` method again in the same way:
+
+```js
+lifemap.update({ data: data, layers: layers })
+```
+
 ## `data` object
 
 The `data` object is a dictionary whose keys are layers identifiers, and values are dictionaries with two entries `serialized` and `value`:
