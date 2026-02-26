@@ -48,7 +48,7 @@ export class Lifemap {
 
         // Base map object
         this.map = create_map(el, { zoom: zoom, controls_list: controls })
-        this.map.default_zoom = zoom ?? DEFAULT_ZOOM
+        this.map.default_zoom = DEFAULT_ZOOM
         this.map.theme = THEMES[theme]
         this.center = center
         this.zoom = zoom
