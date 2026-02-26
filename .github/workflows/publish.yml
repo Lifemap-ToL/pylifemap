@@ -5,7 +5,7 @@ on:
         branches: [main]
 
 jobs:
-    build-deploy-pages:
+    build:
         runs-on: ubuntu-latest
         permissions:
             contents: write
