@@ -45,6 +45,8 @@ jobs:
                   path: doc/_site/
 
     deploy:
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
