@@ -10,14 +10,14 @@ const points_filter_fn = (d, xmin, xmax, ymin, ymax, zoom) =>
 // Lines filtering function
 const lines_filter_fn = (d, xmin, xmax, ymin, ymax, zoom) =>
     d["pylifemap_zoom"] <= zoom &&
-    ((d["pylifemap_x0"] >= xmin &&
-        d["pylifemap_x0"] <= xmax &&
-        d["pylifemap_y0"] >= ymin &&
-        d["pylifemap_y0"] <= ymax) ||
-        (d["pylifemap_x1"] >= xmin &&
-            d["pylifemap_x1"] <= xmax &&
-            d["pylifemap_y1"] >= ymin &&
-            d["pylifemap_y1"] <= ymax))
+    ((d["pylifemap_x"] >= xmin &&
+        d["pylifemap_x"] <= xmax &&
+        d["pylifemap_y"] >= ymin &&
+        d["pylifemap_y"] <= ymax) ||
+        (d["pylifemap_parent_x"] >= xmin &&
+            d["pylifemap_parent_x"] <= xmax &&
+            d["pylifemap_parent_y"] >= ymin &&
+            d["pylifemap_parent_y"] <= ymax))
 
 export function setup_lazy_loading(options) {
     let { map, data, source, create_feature_fn, lazy_zoom, type } = options

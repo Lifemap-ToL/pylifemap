@@ -98,8 +98,8 @@ export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
     function create_feature(d) {
         return new Feature({
             geometry: new LineString([
-                [d["pylifemap_x0"], d["pylifemap_y0"]],
-                [d["pylifemap_x1"], d["pylifemap_y1"]],
+                [d["pylifemap_x"], d["pylifemap_y"]],
+                [d["pylifemap_parent_x"], d["pylifemap_parent_y"]],
             ]),
             data: popup ? d : null,
             width_col: width_col_fn != null ? width_col_fn(d[width_col]) : null,
@@ -204,8 +204,10 @@ export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
                   return content
               }
         const coordinates_fn = (feature) => [
-            (feature.get("data").pylifemap_x0 + feature.get("data").pylifemap_x1) / 2,
-            (feature.get("data").pylifemap_y0 + feature.get("data").pylifemap_y1) / 2,
+            (feature.get("data").pylifemap_x + feature.get("data").pylifemap_parent_x) /
+                2,
+            (feature.get("data").pylifemap_y + feature.get("data").pylifemap_parent_y) /
+                2,
         ]
         const offset = [0, -5]
         set_popup_event(map, id, coordinates_fn, content_fn)

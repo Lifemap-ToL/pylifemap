@@ -209,12 +209,12 @@ class TestLinesData:
         tmp = lmd_num.lines_data(options={"lazy": True}, data_columns=("value",))
         assert tmp.shape == (10, 8)
         assert sorted(tmp.columns) == [
-            "pylifemap_parent",
+            "pylifemap_parent_taxid",
+            "pylifemap_parent_x",
+            "pylifemap_parent_y",
             "pylifemap_taxid",
-            "pylifemap_x0",
-            "pylifemap_x1",
-            "pylifemap_y0",
-            "pylifemap_y1",
+            "pylifemap_x",
+            "pylifemap_y",
             "pylifemap_zoom",
             "value",
         ]
@@ -235,12 +235,12 @@ class TestLinesData:
         tmp = lmd_num.lines_data(options={}, data_columns=("value",))
         assert tmp.shape == (10, 7)
         assert sorted(tmp.columns) == [
-            "pylifemap_parent",
+            "pylifemap_parent_taxid",
+            "pylifemap_parent_x",
+            "pylifemap_parent_y",
             "pylifemap_taxid",
-            "pylifemap_x0",
-            "pylifemap_x1",
-            "pylifemap_y0",
-            "pylifemap_y1",
+            "pylifemap_x",
+            "pylifemap_y",
             "value",
         ]
         assert tmp.get_column("value").sort().to_list() == [

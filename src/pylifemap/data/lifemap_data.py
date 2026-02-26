@@ -393,12 +393,12 @@ class LifemapData:
         # Add ancestors info to data
         data = self.data_with_parents()
 
-        # Get points coordinates as x0 and y0 and sort by zoom level
+        # Get points coordinates
         data = data.join(
             BACKEND_DATA.select(
                 pl.col("taxid"),
-                pl.col("pylifemap_x").alias("pylifemap_x0"),
-                pl.col("pylifemap_y").alias("pylifemap_y0"),
+                pl.col("pylifemap_x"),
+                pl.col("pylifemap_y"),
                 pl.col("pylifemap_zoom"),
             ),
             how="inner",
@@ -406,25 +406,32 @@ class LifemapData:
             right_on="taxid",
         ).sort("pylifemap_zoom", descending=True)
 
-        # Get parent point coordinates as x1 and y1
-        data = data.join(
-            BACKEND_DATA.select(
-                pl.col("taxid"),
-                pl.col("pylifemap_x").alias("pylifemap_x1"),
-                pl.col("pylifemap_y").alias("pylifemap_y1"),
-            ),
-            left_on="pylifemap_parent",
-            right_on="taxid",
-            how="left",
-        ).filter((pl.col("pylifemap_x1").is_not_null()) & (pl.col("pylifemap_y1").is_not_null()))
+        # Get parent point coordinates
+        data = (
+            data.join(
+                BACKEND_DATA.select(
+                    pl.col("taxid"),
+                    pl.col("pylifemap_parent"),
+                    pl.col("pylifemap_x").alias("pylifemap_parent_x"),
+                    pl.col("pylifemap_y").alias("pylifemap_parent_y"),
+                ),
+                left_on="pylifemap_parent",
+                right_on="taxid",
+                how="left",
+            )
+            .filter(
+                (pl.col("pylifemap_parent_x").is_not_null()) & (pl.col("pylifemap_parent_y").is_not_null())
+            )
+            .rename({"pylifemap_parent": "pylifemap_parent_taxid"})
+        )
 
         needed_cols = [
             TAXID_COL,
-            "pylifemap_x0",
-            "pylifemap_y0",
-            "pylifemap_parent",
-            "pylifemap_x1",
-            "pylifemap_y1",
+            "pylifemap_x",
+            "pylifemap_y",
+            "pylifemap_parent_taxid",
+            "pylifemap_parent_x",
+            "pylifemap_parent_y",
             "pylifemap_zoom",
         ]
 
@@ -443,7 +450,7 @@ class LifemapData:
         elif lazy_mode == "parent":
             data = propagate_parent_zoom(data)
 
-        data = project_to_3857(data, x_col="pylifemap_x0", y_col="pylifemap_y0")
-        data = project_to_3857(data, x_col="pylifemap_x1", y_col="pylifemap_y1")
+        data = project_to_3857(data, x_col="pylifemap_x", y_col="pylifemap_y")
+        data = project_to_3857(data, x_col="pylifemap_parent_x", y_col="pylifemap_parent_y")
 
         return data

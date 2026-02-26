@@ -147,16 +147,13 @@ export class Lifemap {
                                     d.pylifemap_x = taxid_coords.x
                                     d.pylifemap_y = taxid_coords.y
                                 }
-                                if (d.pylifemap_x0 !== undefined) {
-                                    d.pylifemap_x0 = taxid_coords.x
-                                    d.pylifemap_y0 = taxid_coords.y
-                                }
                             }
-                            if (d.pylifemap_parent !== undefined) {
-                                const taxid_parent_coords = coords[d.pylifemap_parent]
+                            if (d.pylifemap_parent_taxid !== undefined) {
+                                const taxid_parent_coords =
+                                    coords[d.pylifemap_parent_taxid]
                                 if (taxid_parent_coords !== undefined) {
-                                    d.pylifemap_x1 = taxid_parent_coords.x
-                                    d.pylifemap_y1 = taxid_parent_coords.y
+                                    d.pylifemap_parent_x = taxid_parent_coords.x
+                                    d.pylifemap_parent_y = taxid_parent_coords.y
                                 }
                             }
                         })
