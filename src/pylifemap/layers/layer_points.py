@@ -3,13 +3,13 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 from pylifemap.utils import MAX_HOVER_DATA_LEN, init_lazy, is_hex_color
 
 
-class LayerPoints(LayersBase):
+class PointsMixin:
     def layer_points(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -28,7 +28,7 @@ class LayerPoints(LayersBase):
         lazy: bool | None = None,
         lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a points layer.
 
@@ -127,7 +127,7 @@ class LayerPoints(LayersBase):
 
         [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
 
         leaves_values = ["show", "only", "omit"]
         if options["leaves"] not in leaves_values:

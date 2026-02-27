@@ -1,12 +1,12 @@
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 
 
-class LayerHeatmapDeck(LayersBase):
+class HeatmapDeckMixin:
     def layer_heatmap_deck(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -15,7 +15,7 @@ class LayerHeatmapDeck(LayersBase):
         threshold: float = 0.05,
         opacity: float = 0.5,
         color_range: list | None = None,
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a deck.gl heatmap layer.
 
@@ -69,7 +69,7 @@ class LayerHeatmapDeck(LayersBase):
 
         """
 
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
         layer = {"id": layer_id, "layer": "heatmap_deck", "options": options}
         self._layers.append(layer)
         self._layers_data[layer_id] = df.points_data(options)

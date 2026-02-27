@@ -17,15 +17,15 @@ import polars as pl
 from IPython.display import display
 from ipywidgets.embed import dependency_state, embed_minimal_html
 
-from pylifemap.data.lifemap_data import LifemapData
-from pylifemap.layers.layer_donuts import LayerDonuts
-from pylifemap.layers.layer_heatmap import LayerHeatmap
-from pylifemap.layers.layer_heatmap_deck import LayerHeatmapDeck
-from pylifemap.layers.layer_icons import LayerIcons
-from pylifemap.layers.layer_lines import LayerLines
-from pylifemap.layers.layer_points import LayerPoints
-from pylifemap.layers.layer_screengrid import LayerScreengrid
-from pylifemap.layers.layer_text import LayerText
+from pylifemap.abc import LifemapABC
+from pylifemap.layers.layer_donuts import DonutsMixin
+from pylifemap.layers.layer_heatmap import HeatmapMixin
+from pylifemap.layers.layer_heatmap_deck import HeatmapDeckMixin
+from pylifemap.layers.layer_icons import IconsMixin
+from pylifemap.layers.layer_lines import LinesMixin
+from pylifemap.layers.layer_points import PointsMixin
+from pylifemap.layers.layer_screengrid import ScreengridMixin
+from pylifemap.layers.layer_text import TextMixin
 from pylifemap.utils import (
     DEFAULT_HEIGHT,
     DEFAULT_WIDTH,
@@ -36,14 +36,15 @@ from pylifemap.widget import LifemapWidget, LifemapWidgetDeck, LifemapWidgetNoDe
 
 
 class Lifemap(
-    LayerIcons,
-    LayerText,
-    LayerScreengrid,
-    LayerPoints,
-    LayerLines,
-    LayerDonuts,
-    LayerHeatmap,
-    LayerHeatmapDeck,
+    LifemapABC,
+    IconsMixin,
+    TextMixin,
+    ScreengridMixin,
+    PointsMixin,
+    LinesMixin,
+    DonutsMixin,
+    HeatmapMixin,
+    HeatmapDeckMixin,
 ):
     """
     Build visualization.
@@ -105,12 +106,7 @@ class Lifemap(
         legend_width: int | None = None,
         hide_labels: bool = False,
     ) -> None:
-        super().__init__()
-        # Init LifemapData object with data
-        if data is not None:
-            self.data = LifemapData(data, taxid_col=taxid_col)
-        else:
-            self.data = None
+        super().__init__(data=data, taxid_col=taxid_col)
 
         # Convert width and height to CSS pixels if integers
         self._width = width if isinstance(width, str) else f"{width}px"
@@ -141,15 +137,6 @@ class Lifemap(
             "controls": controls,
             "hide_labels": hide_labels,
         }
-
-        self._has_deck_layers = False
-
-    def __repr__(self) -> str:
-        # Override default __repr__ to avoid very long and slow text output
-        if self._has_deck_layers:
-            return "<LifemapWidget with deck.gl>"
-        else:
-            return "<LifemapWidget without deck.gl>"
 
     def _to_widget(self) -> LifemapWidget:
         """

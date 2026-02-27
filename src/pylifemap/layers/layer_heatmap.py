@@ -1,12 +1,12 @@
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 
 
-class LayerHeatmap(LayersBase):
+class HeatmapMixin:
     def layer_heatmap(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -23,7 +23,7 @@ class LayerHeatmap(LayersBase):
             "#d1e834",
             "#f3363a",
         ),
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add an heatmap layer.
 
@@ -75,7 +75,7 @@ class LayerHeatmap(LayersBase):
 
         """
 
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
         layer = {"id": layer_id, "layer": "heatmap", "options": options}
         self._layers.append(layer)
         self._layers_data[layer_id] = df.points_data(options)

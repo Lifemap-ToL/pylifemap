@@ -3,13 +3,13 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 from pylifemap.utils import init_lazy
 
 
-class LayerText(LayersBase):
+class TextMixin:
     def layer_text(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -23,7 +23,7 @@ class LayerText(LayersBase):
         lazy: bool | None = None,
         lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a text labels layer.
 
@@ -91,7 +91,7 @@ class LayerText(LayersBase):
         >>> Lifemap(d).layer_text(text="value", font_size=14).show()
 
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 
         layer = {"id": layer_id, "layer": "text", "options": options}

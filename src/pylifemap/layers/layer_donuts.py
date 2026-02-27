@@ -3,12 +3,12 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 
 
-class LayerDonuts(LayersBase):
+class DonutsMixin:
     def layer_donuts(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -25,7 +25,7 @@ class LayerDonuts(LayersBase):
         declutter: bool = True,
         lazy: bool = True,
         lazy_zoom: int = 4,
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a donuts layer.
 
@@ -119,7 +119,7 @@ class LayerDonuts(LayersBase):
         [](`~pylifemap.aggregate_freq`) : aggregation of the values counts of a categorical variable.
 
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
         leaves_values = ["show", "hide"]
         if options["leaves"] not in leaves_values:
             msg = f"leaves must be one of {leaves_values}"

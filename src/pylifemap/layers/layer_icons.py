@@ -3,13 +3,13 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 from pylifemap.utils import icon_url_to_data_uri, init_lazy
 
 
-class LayerIcons(LayersBase):
+class IconsMixin:
     def layer_icons(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -29,7 +29,7 @@ class LayerIcons(LayersBase):
         lazy: bool | None = None,
         lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add an icons layer.
 
@@ -108,7 +108,7 @@ class LayerIcons(LayersBase):
         >>> Lifemap(d).layer_icons(icon="https://openlayers.org/en/latest/examples/data/icon.png").show()
 
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
 
         options["lazy"] = init_lazy(lazy=options["lazy"], df_len=len(df))
 

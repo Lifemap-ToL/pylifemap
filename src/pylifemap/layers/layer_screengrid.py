@@ -1,19 +1,19 @@
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 
 
-class LayerScreengrid(LayersBase):
+class ScreengridMixin:
     def layer_screengrid(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
         cell_size: int = 30,
         extruded: bool = False,
         opacity: float = 0.5,
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a screengrid layer.
 
@@ -63,7 +63,7 @@ class LayerScreengrid(LayersBase):
         >>> Lifemap(d).layer_screengrid().show()
 
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
         layer = {"id": layer_id, "layer": "screengrid", "options": options}
         self._layers.append(layer)
         self._layers_data[layer_id] = df.points_data(options)

@@ -3,13 +3,13 @@ from typing import Literal
 import pandas as pd
 import polars as pl
 
-from pylifemap.layers.base import LayersBase
+from pylifemap.abc import LifemapABC
 from pylifemap.utils import MAX_HOVER_DATA_LEN, init_lazy, is_hex_color
 
 
-class LayerLines(LayersBase):
+class LinesMixin:
     def layer_lines(
-        self,
+        self: LifemapABC,
         data: pl.DataFrame | pd.DataFrame | None = None,
         *,
         taxid_col: str = "taxid",
@@ -26,7 +26,7 @@ class LayerLines(LayersBase):
         lazy: bool | None = None,
         lazy_zoom: int = 10,
         lazy_mode: Literal["self", "parent"] = "self",
-    ) -> LayersBase:
+    ) -> LifemapABC:
         """
         Add a lines layer.
 
@@ -112,7 +112,7 @@ class LayerLines(LayersBase):
 
         [](`~pylifemap.aggregate_count`): aggregation of the number of observations.
         """
-        layer_id, options, df = self._process_options(locals())
+        layer_id, options, df = self._process_layer_options(locals())
 
         lazy_mode_values = ["self", "parent"]
         if options["lazy_mode"] not in lazy_mode_values:
