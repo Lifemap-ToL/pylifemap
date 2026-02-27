@@ -18,6 +18,8 @@ LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 MAX_HOVER_DATA_LEN = 10_000
 MAX_LAZYLOADING_DATA_LEN = 300_000
 
+TAXID_COL = "pylifemap_taxid"
+
 logger = logging.getLogger("pylifemap")
 ch = logging.StreamHandler(stream=sys.stdout)
 logger.addHandler(ch)
