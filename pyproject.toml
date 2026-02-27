@@ -36,12 +36,12 @@ dev = [
   "griffe<2.0.0",
   "jupyter-cache>=1.0.1",
   "jupyterlab>=4.5.4",
-  "marimo[recommended]>=0.19.11",
+  "marimo[recommended]>=0.20.2",
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
-  "ruff>=0.15.1",
-  "ty>=0.0.17",
+  "ruff>=0.15.4",
+  "ty>=0.0.19",
   "watchfiles>=0.24.0",
 ]
 
