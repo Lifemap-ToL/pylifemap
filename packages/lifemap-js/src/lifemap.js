@@ -178,6 +178,10 @@ export class Lifemap {
             // Get data
             const layer_id = l.id
             let layer_data = this.data[layer_id]
+            if (layer_data.length == 0) {
+                return undefined
+            }
+
             switch (l.layer) {
                 case "heatmap_deck":
                     return await layer_heatmap_deck(layer_id, layer_data, l.options ?? {})
@@ -186,7 +190,7 @@ export class Lifemap {
             }
         })
         const layers = await Promise.all(layers_list)
-        this.deck_layers = layers.flat()
+        this.deck_layers = layers.filter((d) => d !== undefined).flat()
     }
 
     create_ol_layers(layers_def_list, color_ranges) {
@@ -200,6 +204,10 @@ export class Lifemap {
             // Get data
             const layer_id = l.id
             let layer_data = this.data[layer_id]
+            if (layer_data.length == 0) {
+                return undefined
+            }
+
             switch (l.layer) {
                 case "points":
                     return layer_points(
@@ -230,7 +238,7 @@ export class Lifemap {
                     return undefined
             }
         })
-        this.ol_layers = layers_list.flat()
+        this.ol_layers = layers_list.filter((d) => d !== undefined).flat()
     }
 
     async init_deck() {
