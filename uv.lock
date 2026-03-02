@@ -2589,7 +2589,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "griffe", specifier = "<2.0.0" },
+    { name = "griffe", specifier = "==1.15.0" },
     { name = "jupyter-cache", specifier = ">=1.0.1" },
     { name = "jupyterlab", specifier = ">=4.5.4" },
     { name = "marimo", extras = ["recommended"], specifier = ">=0.20.2" },
