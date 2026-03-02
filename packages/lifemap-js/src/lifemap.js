@@ -260,6 +260,12 @@ export class Lifemap {
             const deck_layers_def = layers_def_list.filter((d) =>
                 DECK_LAYERS.includes(d.layer)
             )
+
+            if (deck_layers_def.length == 0) {
+                if (this.deck !== undefined) {
+                    this.deck.setProps({ layers: [] })
+                }
+            }
             if (deck_layers_def.length > 0) {
                 if (this.deck === undefined) {
                     await this.init_deck()
