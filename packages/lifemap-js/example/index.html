@@ -13,7 +13,14 @@
                 <input type="radio" name="layer" value="points" checked />Points </label
             ><br />
             <label> <input type="radio" name="layer" value="lines" />Lines </label><br />
-            <label> <input type="radio" name="layer" value="donuts" />Donuts </label>
+            <label> <input type="radio" name="layer" value="donuts" />Donuts </label
+            ><br />
+            <label>
+                <input type="radio" name="layer" value="screengrid" />Screengrid </label
+            ><br />
+            <label>
+                <input type="radio" name="layer" value="empty" />Empty (no data)
+            </label>
         </form>
         <!-- Create base lifemap element -->
         <div id="map"></div>
@@ -77,6 +84,8 @@
             layer_points: { serialized: true, value: points_data_bytes },
             layer_lines: { serialized: true, value: lines_data_bytes },
             layer_donuts: { serialized: true, value: counts_data_bytes },
+            layer_screengrid: { serialized: true, value: points_data_bytes },
+            layer_empty: { serialized: false, value: [] },
         }
         // We could have used objects data this way instead
         // const data = {
@@ -118,6 +127,18 @@
                 lazy_zoom: 30,
                 declutter: false,
             },
+        }
+
+        layers["screengrid"] = {
+            layer: "screengrid",
+            id: "layer_screengrid",
+            options: {},
+        }
+
+        layers["empty"] = {
+            layer: "points",
+            id: "layer_empty",
+            options: {},
         }
 
         // We can optionnaly define ranges for continuous color variables in points and
