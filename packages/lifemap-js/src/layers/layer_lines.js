@@ -1,82 +1,170 @@
-import { guidGenerator, set_hover_event, DEFAULT_NUM_SCHEME } from "../utils"
+import { guidGenerator, DEFAULT_NUM_SCHEME } from "../utils"
 import { get_popup_title } from "../data/api"
-import { setup_lazy_loading } from "../data/lazy_loading"
+
+import { is_data_column } from "../utils"
 
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
-import { set_popup_event } from "../elements/popup"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
 import { LineString } from "ol/geom"
 
-export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
-    let {
-        width = null,
-        color = null,
-        label = null,
-        scheme = null,
-        opacity = 0.8,
-        linetype = "solid",
-        popup = false,
-        popup_col = null,
-        hover = false,
-        lazy = false,
-        lazy_zoom = 15,
-        width_range = [1, 20],
-    } = options
+const DEFAULT_WIDTH = 3
+const DEFAULT_COLOR = "#DD0000"
 
-    let scales = []
+export class LinesLayer {
+    constructor(id, map, data, options = {}, color_ranges = {}) {
+        let {
+            width = null,
+            color = null,
+            label = null,
+            scheme = null,
+            opacity = 0.8,
+            linetype = "solid",
+            popup = false,
+            popup_col = null,
+            hover = false,
+            lazy = false,
+            lazy_zoom = 15,
+            width_range = [1, 20],
+        } = options
 
-    id = `lifemap-ol-${id ?? guidGenerator()}`
+        Object.assign(this, {
+            width,
+            color,
+            label,
+            scheme,
+            opacity,
+            linetype,
+            popup,
+            popup_col,
+            hover,
+            lazy,
+            lazy_zoom,
+            width_range,
+        })
 
-    // Check if width is a fixed width or a data column
-    let width_col = null
-    if (typeof width === "string" && Object.keys(data[0]).includes(width)) {
-        width_col = width
+        this.id = `lifemap-ol-${id ?? guidGenerator()}`
+        this.map = map
+        this.data = data
+        this.color_ranges = color_ranges
+        this.label = this.label ?? this.color
+
+        this.is_webgl = true
+        this.type = "ol"
+
+        this.scales = []
+        this.layers = []
+
+        // Check if width is a fixed width or a data column
+        this.width_is_column = is_data_column(this.data, this.width)
+
+        // Check if color is a fixed color or a data column
+        this.color_is_column = is_data_column(this.data, this.color)
+
+        this.layers.push(this.create_layer())
     }
 
-    // Check if color is a fixed color or a data column
-    let color_col = null
-    if (typeof color === "string" && Object.keys(data[0]).includes(color)) {
-        color_col = color
-    }
+    create_layer() {
+        // Initialize source
+        let source = new VectorSource({
+            useSpatialIndex: !this.lazy || this.popup || this.hhover,
+        })
 
-    // Width function
-    let get_width_col_fn = function (data, col) {
-        if (col == null) {
-            return null
-        }
-        const min_domain = d3.min(data, (d) => Number(d[col]))
-        const max_domain = d3.max(data, (d) => Number(d[col]))
-        const [min_range, max_range] = width_range
+        // Layer definition
+        const layer = new WebGLVectorLayer({
+            source: source,
+            style: this.get_style(),
+            disableHitDetection: !(this.popup || this.hover),
+            opacity: this.opacity,
+        })
+        layer.id = this.id
 
-        const fn = (d) => {
-            return (
-                min_range +
-                ((Number(d) - min_domain) / (max_domain - min_domain)) *
-                    (max_range - min_range)
-            )
-        }
-        return fn
-    }
-
-    // Color function
-    let get_color_col_fn = function (data, col, color_ranges) {
-        if (col == null) {
-            return null
-        }
-        let fn, min_value, max_value
-        // Linear color scale
-        if (color_ranges[col] !== undefined) {
-            min_value = color_ranges[col].min
-            max_value = color_ranges[col].max
+        // Features creation
+        const create_feature_fn = this.get_create_feature_fn()
+        if (this.lazy) {
+            this.map.setup_lazy_loading({
+                data: this.data,
+                source: source,
+                create_feature_fn: create_feature_fn,
+                lazy_zoom: this.lazy_zoom,
+                type: "lines",
+            })
         } else {
-            max_value = d3.max(data, (d) => Number(d[col]))
-            min_value = d3.min(data, (d) => Number(d[col]))
+            source.addFeatures(this.data.map(create_feature_fn))
         }
-        scheme = scheme ?? DEFAULT_NUM_SCHEME
+
+        // Hover
+        if (this.hover) {
+            this.map.add_hover_event({ layer_id: layer.id, selected_feature: null })
+        }
+        layer.id = this.id
+
+        // Popup
+        if (this.popup) {
+            const coordinates_fn = (feature) => [
+                (feature.get("data").pylifemap_x +
+                    feature.get("data").pylifemap_parent_x) /
+                    2,
+                (feature.get("data").pylifemap_y +
+                    feature.get("data").pylifemap_parent_y) /
+                    2,
+            ]
+            this.map.add_popup_event({
+                layer_id: layer.id,
+                coordinates_fn,
+                content_fn: this.get_popup_content_fn(),
+                offset: [0, -5],
+            })
+        }
+        return layer
+    }
+
+    get_create_feature_fn() {
+        const width_fn = this.get_width_fn()
+        const color_fn = this.get_color_fn()
+        return (d) =>
+            new Feature({
+                geometry: new LineString([
+                    [d["pylifemap_x"], d["pylifemap_y"]],
+                    [d["pylifemap_parent_x"], d["pylifemap_parent_y"]],
+                ]),
+                data: this.popup ? d : null,
+                width: width_fn != null ? width_fn(d[this.width]) : null,
+                color: color_fn != null ? color_fn(d[this.color]) : null,
+            })
+    }
+
+    get_width_fn() {
+        if (!this.width_is_column) {
+            return null
+        }
+        const min_domain = d3.min(this.data, (d) => Number(d[this.width]))
+        const max_domain = d3.max(this.data, (d) => Number(d[this.width]))
+        const [min_range, max_range] = this.width_range
+
+        return (d) =>
+            min_range +
+            ((Number(d) - min_domain) / (max_domain - min_domain)) *
+                (max_range - min_range)
+    }
+
+    get_color_fn() {
+        if (!this.color_is_column) {
+            return null
+        }
+        let min_value, max_value
+        // Linear color scale
+        if (this.color_ranges[this.color] !== undefined) {
+            min_value = this.color_ranges[this.color].min
+            max_value = this.color_ranges[this.color].max
+        } else {
+            max_value = d3.max(this.data, (d) => Number(d[this.color]))
+            min_value = d3.min(this.data, (d) => Number(d[this.color]))
+        }
+        const scheme = this.scheme ?? DEFAULT_NUM_SCHEME
         const scale = {
             color: {
                 type: "linear",
@@ -84,117 +172,64 @@ export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
                 domain: [min_value, max_value],
             },
             className: "lifemap-ol-lin-legend",
-            label: label ?? col,
+            label: this.label,
         }
-        scales.push(scale)
+        this.scales.push(scale)
         const plot_scale = Plot.scale(scale)
-        fn = (d) => plot_scale.apply(Number(d))
-        return fn
+        return (d) => plot_scale.apply(Number(d))
     }
 
-    // Create feature function
-    const width_col_fn = get_width_col_fn(data, width_col)
-    const color_col_fn = get_color_col_fn(data, color_col, color_ranges)
-    function create_feature(d) {
-        return new Feature({
-            geometry: new LineString([
-                [d["pylifemap_x"], d["pylifemap_y"]],
-                [d["pylifemap_parent_x"], d["pylifemap_parent_y"]],
-            ]),
-            data: popup ? d : null,
-            width_col: width_col_fn != null ? width_col_fn(d[width_col]) : null,
-            color_col: color_col_fn != null ? color_col_fn(d[color_col]) : null,
-        })
+    get_style() {
+        // Width style
+        const stroke_width = this.width_is_column
+            ? ["get", "width"]
+            : (this.width ?? DEFAULT_WIDTH)
+
+        // Color style
+        let stroke_color = this.color_is_column
+            ? ["get", "color"]
+            : (this.color ?? DEFAULT_COLOR)
+        if (this.hover) {
+            stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]
+        }
+
+        // Linedash style
+        let stroke_line_dash = [0]
+        switch (this.linetype) {
+            case "dotted":
+                stroke_line_dash = [3, 3, 3, 3]
+                break
+            case "smalldash":
+                stroke_line_dash = [10, 10, 10, 10]
+                break
+            case "dashed":
+                stroke_line_dash = [25, 10, 25, 10]
+                break
+        }
+
+        return {
+            "stroke-width": stroke_width,
+            "stroke-color": stroke_color,
+            "stroke-line-dash": stroke_line_dash,
+            "stroke-line-dash-offset": 0,
+            "stroke-line-cap": this.linetype == "solid" ? "round" : "butt",
+            "stroke-line-join": "round",
+        }
     }
 
-    // Initialize source
-    const source = new VectorSource({ useSpatialIndex: !lazy || popup || hover })
-    if (!lazy) {
-        const features = data.map(create_feature)
-        source.addFeatures(features)
-    }
-
-    // Width style
-    let stroke_width
-    if (width_col !== null) {
-        stroke_width = ["get", "width_col"]
-    } else {
-        stroke_width = width ?? 3
-    }
-    // Color style
-    let stroke_color
-    if (color_col !== null) {
-        stroke_color = ["get", "color_col"]
-    } else {
-        stroke_color = color ?? "#DD0000"
-    }
-    if (hover) {
-        stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]
-    }
-    // Linedash style
-    let stroke_line_dash = [0]
-    switch (linetype) {
-        case "dotted":
-            stroke_line_dash = [3, 3, 3, 3]
-            break
-        case "smalldash":
-            stroke_line_dash = [10, 10, 10, 10]
-            break
-        case "dashed":
-            stroke_line_dash = [25, 10, 25, 10]
-            break
-    }
-
-    const style = {
-        "stroke-width": stroke_width,
-        "stroke-color": stroke_color,
-        "stroke-line-dash": stroke_line_dash,
-        "stroke-line-dash-offset": 0,
-        "stroke-line-cap": linetype == "solid" ? "round" : "butt",
-        "stroke-line-join": "round",
-    }
-
-    // Layer definition
-    const layer = new WebGLVectorLayer({
-        source: source,
-        style: style,
-        disableHitDetection: !(popup || hover),
-    })
-    layer.setOpacity(opacity)
-
-    // Lazy loading
-    if (lazy) {
-        setup_lazy_loading({
-            map: map,
-            data: data,
-            source: source,
-            create_feature_fn: create_feature,
-            lazy_zoom: lazy_zoom,
-            type: "lines",
-        })
-    }
-
-    // Hover
-    if (hover) {
-        let selected_feature = null
-        set_hover_event(map, id, selected_feature)
-    }
-
-    // Popup
-    if (popup) {
-        const content_fn = popup_col
-            ? (feature) => feature.get("data")[popup_col]
+    get_popup_content_fn() {
+        return this.popup_col
+            ? (feature) => feature.get("data")[this.popup_col]
             : async (feature) => {
                   const taxid = feature.get("data")["pylifemap_taxid"]
                   let content = await get_popup_title(taxid)
 
-                  let table_content = ""
-                  table_content +=
-                      width_col !== null && width_col != color_col
-                          ? `<tr><td class='right'><strong>${width_col}:</strong></td><td>${feature.get("data")[width_col]}</td></tr>`
+                  let table_content =
+                      this.width_is_column && this.width != this.color
+                          ? `<tr><td class='right'><strong>${this.width}:</strong></td><td>${feature.get("data")[this.width]}</td></tr>`
                           : ""
-                  table_content += color_col
-                      ? `<tr><td class='right'><strong>${label ?? color_col}:</strong></td><td>${feature.get("data")[color_col]}</td></tr>`
+                  table_content += this.color_is_column
+                      ? `<tr><td class='right'><strong>${this.label}:</strong></td><td>${feature.get("data")[this.color]}</td></tr>`
                       : ""
 
                   if (table_content != "") {
@@ -203,18 +238,5 @@ export function layer_lines(id, map, data, options = {}, color_ranges = {}) {
 
                   return content
               }
-        const coordinates_fn = (feature) => [
-            (feature.get("data").pylifemap_x + feature.get("data").pylifemap_parent_x) /
-                2,
-            (feature.get("data").pylifemap_y + feature.get("data").pylifemap_parent_y) /
-                2,
-        ]
-        const offset = [0, -5]
-        set_popup_event(map, id, coordinates_fn, content_fn)
     }
-
-    layer.lifemap_ol_id = id
-    layer.lifemap_ol_scales = scales
-    layer.is_webgl = true
-    return layer
 }

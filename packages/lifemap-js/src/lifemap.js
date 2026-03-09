@@ -1,31 +1,29 @@
-import { create_map } from "./map"
-import { layer_labels } from "./layers/layer_labels"
-import { layer_heatmap } from "./layers/layer_heatmap"
-import { layer_points } from "./layers/layer_points"
-import { layer_lines } from "./layers/layer_lines"
-import { layer_donuts } from "./layers/layer_donuts"
-import { layer_tiles } from "./layers/layer_tiles"
-import { layer_text } from "./layers/layer_text"
-import { layer_icons } from "./layers/layer_icons"
-import { layer_deck } from "./layers/layer_deck"
-import { layer_heatmap_deck } from "./layers/layer_heatmap_deck"
-import { layer_screengrid } from "./layers/layer_screengrid"
-import { LegendControl } from "./elements/controls"
-import { get_data_coords, get_taxid_coords } from "./data/api"
+import { BaseMap } from "./base_map"
+import { HeatmapLayer } from "./layers/layer_heatmap"
+import { PointsLayer } from "./layers/layer_points"
+import { LinesLayer } from "./layers/layer_lines"
+import { DonutsLayer } from "./layers/layer_donuts"
+import { TextLayer } from "./layers/layer_text"
+import { IconsLayer } from "./layers/layer_icons"
+import { TilesLayer } from "./layers/layer_tiles"
+import { LabelsLayer } from "./layers/layer_labels"
+import { DeckLayer } from "./layers/layer_deck"
+import { HeatmapDeckLayer } from "./layers/layer_heatmap_deck"
+import { ScreengridLayer } from "./layers/layer_screengrid"
+import { layer_arcs } from "./layers/layer_arcs"
+import { layer_arcs_deck } from "./layers/layer_arcs_deck"
+
+import { ErrorMessage } from "./elements/error"
+
 import { deserialize_data } from "./data/deserialization"
+import { update_coordinates } from "./data/update_coordinates"
+
 import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, stringify_scale } from "./utils"
 import { THEMES } from "./elements/themes"
 
-import { fromLonLat } from "ol/proj"
-import { extend } from "ol/extent"
-
-import * as Plot from "@observablehq/plot"
 import { Spinner } from "./elements/spinner"
-import { LazySpinner } from "./elements/lazy_spinner"
 
-const DECK_LAYERS = ["heatmap_deck", "screengrid"]
 const DARK_THEMES = ["dark"]
-const MAX_SOLR_QUERY = 100_000
 const LANG = "en"
 
 export class Lifemap {
@@ -47,36 +45,53 @@ export class Lifemap {
         this.update_container({ width: width, height: height })
 
         // Base map object
-        this.map = create_map(el, { zoom: zoom, controls_list: controls })
-        this.map.default_zoom = DEFAULT_ZOOM
-        this.map.theme = THEMES[theme]
-        this.center = center
-        this.zoom = zoom
+        this.base_map = new BaseMap(el, {
+            zoom: zoom,
+            controls_list: controls,
+            default_zoom: DEFAULT_ZOOM,
+            center: center,
+            legend_width: legend_width,
+        })
 
+        // Theme
+        this.theme = THEMES[theme]
         el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
 
         // Tiles layer
-        const tiles_layer = layer_tiles(this.map, LANG)
+        const tiles_layer = new TilesLayer(this.base_map, this.theme, LANG).layer
         this.base_layers = [tiles_layer]
         // Labels layer
         if (!hide_labels) {
-            const labels_layer = layer_labels(this.map)
+            const labels_layer = new LabelsLayer(this.base_map, this.theme).layer
             this.base_layers.push(labels_layer)
         }
+        // Data layers
+        this.data_layers = []
 
-        this.deck_layers = []
-        this.ol_layers = []
-
-        this.legend = new LegendControl()
-        this.legend_width = legend_width
         this.scales = []
         this.data = undefined
 
         // Global spinner
         this.spinner = new Spinner(el)
-        // Lazy loading spinner
-        // Must be a map property to be accessible in a moveend event
-        this.map.lazy_spinner = new LazySpinner(el)
+
+        // Error message
+        this.error_message = new ErrorMessage(this.el)
+    }
+
+    get_ol_layers(options = {}) {
+        let { filter_lazy = false } = options
+        let layers = this.data_layers.filter((d) => d.type == "ol")
+        if (filter_lazy) {
+            layers = layers.filter((d) => !d.lazy)
+        }
+        return layers.map((d) => d.layers).flat()
+    }
+
+    get_deck_layers() {
+        return this.data_layers
+            .filter((d) => d.type == "deck")
+            .map((d) => d.layers)
+            .flat()
     }
 
     update_container(options) {
@@ -91,7 +106,7 @@ export class Lifemap {
 
     async update(options) {
         const { data, layers, color_ranges } = options
-        const is_update = this.ol_layers.length + this.deck_layers.length > 0
+        const is_update = this.data_layers.length > 0
         this.spinner.show("Processing data")
         requestAnimationFrame(() => {
             this.update_data(data).then(() => {
@@ -100,7 +115,10 @@ export class Lifemap {
                     .then(async () => {
                         if (!is_update) {
                             this.spinner.update_message("Updating view")
-                            await this.update_zoom()
+                            await this.base_map.init_zoom(
+                                // We filter out lazy loading layers in case center is "auto"
+                                this.get_ol_layers({ filter_lazy: true })
+                            )
                         }
                     })
                     .then(this.spinner.hide())
@@ -110,71 +128,59 @@ export class Lifemap {
 
     async update_data(data) {
         try {
+            // Deserialize data
+            this.spinner.update_message("Deserializing data")
             let deserialized_data = {}
-            let taxids = new Set()
             for (let k in data) {
-                let current_data = deserialize_data(data[k])
-                deserialized_data[k] = current_data
-                taxids = taxids.union(
-                    new Set(
-                        current_data
-                            .map((d) =>
-                                d.pylifemap_parent !== undefined
-                                    ? [d.pylifemap_taxid, d.pylifemap_parent]
-                                    : d.pylifemap_taxid
-                            )
-                            .flat()
-                    )
-                )
+                deserialized_data[k] = deserialize_data(data[k])
             }
-            if (taxids.size > MAX_SOLR_QUERY) {
-                console.log("Too many taxids to query for up-to-date coordinates.")
-            }
-            if (taxids.size > 0 && taxids.size <= MAX_SOLR_QUERY) {
-                this.spinner.update_message("Getting up-to-date taxids coordinates")
-                // Get up-to-date coordinates from lifemap-back solr
-                let coords = await get_data_coords(taxids)
-                // If query succeeded, update coordinates with new values
-                if (coords !== null) {
-                    for (let k in deserialized_data) {
-                        deserialized_data[k].forEach((d) => {
-                            const taxid_coords = coords[d.pylifemap_taxid]
-                            if (d.pylifemap_zoom !== undefined) {
-                                d.pylifemap_zoom = taxid_coords.zoom
-                            }
-                            if (taxid_coords !== undefined) {
-                                if (d.pylifemap_x !== undefined) {
-                                    d.pylifemap_x = taxid_coords.x
-                                    d.pylifemap_y = taxid_coords.y
-                                }
-                            }
-                            if (d.pylifemap_parent_taxid !== undefined) {
-                                const taxid_parent_coords =
-                                    coords[d.pylifemap_parent_taxid]
-                                if (taxid_parent_coords !== undefined) {
-                                    d.pylifemap_parent_x = taxid_parent_coords.x
-                                    d.pylifemap_parent_y = taxid_parent_coords.y
-                                }
-                            }
-                        })
-                    }
-                }
-            }
+            // Update coordinates
+            this.spinner.update_message("Getting up-to-date taxids coordinates")
+            await update_coordinates(deserialized_data)
             this.data = deserialized_data
         } catch (e) {
-            this.map.error_message.show_message(e)
+            this.error_message.show_message(e)
             console.error(e)
         }
     }
 
-    async create_deck_layers(layers_def_list) {
-        if (layers_def_list.length == 0) {
+    async update_layers(layers_def, color_ranges) {
+        try {
+            this.dispose_ol_layers()
+            const base_layers = this.base_layers
+
+            this.data_layers = await this.create_layers(layers_def, color_ranges)
+            const ol_layers = this.get_ol_layers()
+            const deck_layers = this.get_deck_layers()
+
+            if (deck_layers.length == 0) {
+                if (this.deck !== undefined) {
+                    this.deck.setProps({ layers: [] })
+                }
+            }
+            if (deck_layers.length > 0) {
+                if (this.deck === undefined) {
+                    await this.init_deck()
+                }
+                base_layers.push(this.deck.base_layer)
+                this.deck.setProps({ layers: deck_layers })
+            }
+
+            this.base_map.map.setLayers([...base_layers, ...ol_layers])
+
+            this.update_scales()
+        } catch (e) {
+            this.error_message.show_message(e)
+            console.error(e)
+        }
+    }
+
+    async create_layers(layers_def, color_ranges) {
+        if (layers_def.length == 0) {
             return []
         }
-        layers_def_list = Array.isArray(layers_def_list)
-            ? layers_def_list
-            : [layers_def_list]
-        let layers_list = layers_def_list.map(async (l) => {
+        layers_def = Array.isArray(layers_def) ? layers_def : [layers_def]
+        let layers_list = layers_def.map(async (l) => {
             // Get data
             const layer_id = l.id
             let layer_data = this.data[layer_id]
@@ -184,108 +190,92 @@ export class Lifemap {
 
             switch (l.layer) {
                 case "heatmap_deck":
-                    return await layer_heatmap_deck(layer_id, layer_data, l.options ?? {})
-                case "screengrid":
-                    return await layer_screengrid(layer_id, layer_data, l.options ?? {})
-            }
-        })
-        const layers = await Promise.all(layers_list)
-        this.deck_layers = layers.filter((d) => d !== undefined).flat()
-    }
-
-    create_ol_layers(layers_def_list, color_ranges) {
-        if (layers_def_list.length == 0) {
-            return []
-        }
-        layers_def_list = Array.isArray(layers_def_list)
-            ? layers_def_list
-            : [layers_def_list]
-        let layers_list = layers_def_list.map((l) => {
-            // Get data
-            const layer_id = l.id
-            let layer_data = this.data[layer_id]
-            if (layer_data.length == 0) {
-                return undefined
-            }
-
-            switch (l.layer) {
-                case "points":
-                    return layer_points(
+                    const heatmap_deck_layer = new HeatmapDeckLayer(
                         layer_id,
-                        this.map,
+                        layer_data,
+                        l.options ?? {}
+                    )
+                    await heatmap_deck_layer.init()
+                    return heatmap_deck_layer
+                case "screengrid":
+                    const screengrid_layer = new ScreengridLayer(
+                        layer_id,
+                        layer_data,
+                        l.options ?? {}
+                    )
+                    await screengrid_layer.init()
+                    return screengrid_layer
+                case "arcs_deck":
+                    return await layer_arcs_deck(
+                        layer_id,
+                        this.base_map,
+                        layer_data,
+                        l.options ?? {}
+                    )
+                case "points":
+                    return new PointsLayer(
+                        layer_id,
+                        this.base_map,
                         layer_data,
                         l.options ?? {},
                         color_ranges
                     )
                 case "lines":
-                    return layer_lines(
+                    return new LinesLayer(
                         layer_id,
-                        this.map,
+                        this.base_map,
+                        layer_data,
+                        l.options ?? {},
+                        color_ranges
+                    )
+                case "arcs":
+                    return layer_arcs(
+                        layer_id,
+                        this.base_map,
                         layer_data,
                         l.options ?? {},
                         color_ranges
                     )
                 case "heatmap":
-                    return layer_heatmap(layer_id, layer_data, l.options ?? {})
+                    return new HeatmapLayer(layer_id, layer_data, l.options ?? {})
                 case "donuts":
-                    return layer_donuts(layer_id, this.map, layer_data, l.options ?? {})
+                    return new DonutsLayer(
+                        layer_id,
+                        this.base_map,
+                        layer_data,
+                        l.options ?? {}
+                    )
                 case "text":
-                    return layer_text(layer_id, this.map, layer_data, l.options ?? {})
+                    return new TextLayer(
+                        layer_id,
+                        this.base_map,
+                        layer_data,
+                        l.options ?? {}
+                    )
                 case "icons":
-                    return layer_icons(layer_id, this.map, layer_data, l.options ?? {})
+                    return new IconsLayer(
+                        layer_id,
+                        this.base_map,
+                        layer_data,
+                        l.options ?? {}
+                    )
                 default:
-                    console.warn(`Invalid layer type: ${l.layer}`)
-                    return undefined
+                    throw new Error(`Invalid layer type: ${l.layer}`)
             }
         })
-        this.ol_layers = layers_list.filter((d) => d !== undefined).flat()
+        const layers = await Promise.all(layers_list)
+        return layers.filter((d) => d !== undefined).flat()
     }
 
     async init_deck() {
-        let { deck_layer, deck } = await layer_deck(this.el, this.zoom)
-        this.deck = deck
-        this.deck.base_layer = deck_layer
-    }
-
-    async update_layers(layers_def_list, color_ranges) {
-        try {
-            this.dispose_ol_layers()
-
-            const ol_layers_def = layers_def_list.filter(
-                (d) => !DECK_LAYERS.includes(d.layer)
-            )
-            this.create_ol_layers(ol_layers_def, color_ranges)
-            let layers = [...this.base_layers, ...this.ol_layers]
-
-            const deck_layers_def = layers_def_list.filter((d) =>
-                DECK_LAYERS.includes(d.layer)
-            )
-
-            if (deck_layers_def.length == 0) {
-                if (this.deck !== undefined) {
-                    this.deck.setProps({ layers: [] })
-                }
-            }
-            if (deck_layers_def.length > 0) {
-                if (this.deck === undefined) {
-                    await this.init_deck()
-                }
-                layers = [this.deck.base_layer, ...layers]
-                await this.create_deck_layers(deck_layers_def)
-                this.deck.setProps({ layers: this.deck_layers })
-            }
-
-            this.map.setLayers(layers)
-
-            this.update_scales()
-        } catch (e) {
-            this.map.error_message.show_message(e)
-            console.error(e)
-        }
+        const deck_creator = new DeckLayer(this.el, this.zoom)
+        await deck_creator.init()
+        this.deck = deck_creator.deck
+        this.deck.base_layer = deck_creator.deck_layer
     }
 
     dispose_ol_layers() {
-        this.map
+        this.base_map.map
             .getLayers()
             .getArray()
             .forEach((l) => {
@@ -295,10 +285,12 @@ export class Lifemap {
                     if (l.is_webgl) {
                         l.dispose()
                     }
-                    this.map.removeLayer(l)
+                    this.base_map.map.removeLayer(l)
                     l = null
                 } else {
-                    this.map.getView().setZoom(this.map.getView().getZoom())
+                    this.base_map.map
+                        .getView()
+                        .setZoom(this.base_map.map.getView().getZoom())
                 }
             })
     }
@@ -312,99 +304,21 @@ export class Lifemap {
 
     // Update scales from layers
     update_scales() {
-        let scales = this.ol_layers
-            .filter((d) => d.lifemap_ol_scales)
-            .map((d) => d.lifemap_ol_scales)
+        let scales = this.data_layers
+            .map((d) => d.scales)
+            .filter((d) => d !== undefined)
             .flat()
 
         // Remove duplicated scales
         let unique_scales = {}
         scales.forEach((scale) => {
-            if (this.legend_width) scale.width = this.legend_width
             const key = stringify_scale(scale)
             unique_scales[key] = scale
         })
         unique_scales = Object.values(unique_scales)
         if (stringify_scale(this.scales) != stringify_scale(unique_scales)) {
             this.scales = unique_scales
-            this.update_legend()
-        }
-    }
-
-    // Create legend from scales
-    update_legend() {
-        this.map.removeControl(this.legend)
-        if (this.scales.length == 0) {
-            return
-        }
-
-        let legend_container = document.createElement("div")
-        if (this.legend_width) {
-            legend_container.style.width = this.legend_width
-        }
-        // Add legends
-        for (let scale of Object.values(this.scales)) {
-            if (scale.color.type == "categorical") {
-                const legend_label = document.createElement("div")
-                legend_label.classList.add("legend-title")
-                legend_label.innerHTML = scale.label
-                legend_container.append(legend_label)
-            }
-            if (scale.color.type == "linear") {
-                if (
-                    (Math.min(...scale.color.domain) <= -1e9) |
-                    (Math.max(...scale.color.domain) >= 1e9)
-                ) {
-                    scale.color.tickFormat = (d) => d.toExponential(1)
-                }
-            }
-            legend_container.append(Plot.legend(scale))
-        }
-        // Remove any previous legend in case of update
-        this.legend.element.innerHTML = ""
-        this.legend.element.appendChild(legend_container)
-        this.map.addControl(this.legend)
-    }
-
-    async update_zoom() {
-        let view = this.map.getView()
-        // Adjust view to data
-        if (this.center == "auto") {
-            let global_extent = null
-            for (let layer of this.ol_layers) {
-                let current_extent = layer.getSource().getExtent()
-                if (global_extent === null) {
-                    global_extent = current_extent
-                } else {
-                    global_extent = extend(global_extent, current_extent)
-                }
-            }
-
-            if (
-                JSON.stringify(global_extent) !=
-                JSON.stringify([Infinity, Infinity, -Infinity, -Infinity])
-            ) {
-                view.fit(global_extent, { padding: [50, 150, 50, 50], duration: 0 })
-            }
-        }
-        // Center view on taxid
-        else if (Number.isFinite(this.center)) {
-            const result = await get_taxid_coords(this.center)
-            if (result === undefined) {
-                console.warn(`taxid ${this.center} not found in Lifemap taxids.`)
-                view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
-            } else {
-                view.setCenter(fromLonLat([result["lon"], result["lat"]]))
-                view.setZoom(result["zoom"] - 3)
-            }
-        }
-        // "default"
-        else {
-            view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
-        }
-        // Apply zoom if specified
-        if (Number.isFinite(this.zoom)) {
-            view.setZoom(this.zoom)
+            this.base_map.update_legend(this.scales)
         }
     }
 

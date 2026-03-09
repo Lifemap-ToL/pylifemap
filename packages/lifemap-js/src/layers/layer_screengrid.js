@@ -2,24 +2,35 @@
 import { guidGenerator } from "../utils"
 import { toLonLat } from "ol/proj"
 
-export async function layer_screengrid(id, data, options = {}) {
-    let { cell_size = 30, opacity = 0.5, extruded = false } = options
+export class ScreengridLayer {
+    constructor(id, data, options = {}) {
+        let { cell_size = 30, opacity = 0.5, extruded = false } = options
 
-    id = `lifemap-ol-${id ?? guidGenerator()}`
+        Object.assign(this, { cell_size, opacity, extruded })
 
-    const aggregation_layers = await import("@deck.gl/aggregation-layers")
+        this.id = `lifemap-ol-${id ?? guidGenerator()}`
+        this.data = data
 
-    const layer = new aggregation_layers.ScreenGridLayer({
-        data: data,
-        id: id,
-        pickable: false,
-        getPosition: (d) => toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
-        getWeight: 1,
-        cellSizePixels: cell_size,
-        extruded: extruded,
-        opacity: opacity,
-    })
+        this.is_webgl = true
+        this.type = "deck"
 
-    layer.lifemap_ol_id = id
-    return layer
+        this.layers = []
+    }
+
+    async init() {
+        const aggregation_layers = await import("@deck.gl/aggregation-layers")
+
+        const layer = new aggregation_layers.ScreenGridLayer({
+            data: this.data,
+            id: this.id,
+            pickable: false,
+            getPosition: (d) => toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
+            getWeight: 1,
+            cellSizePixels: this.cell_size,
+            extruded: this.extruded,
+            opacity: this.opacity,
+        })
+
+        this.layers.push(layer)
+    }
 }

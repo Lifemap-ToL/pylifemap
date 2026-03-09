@@ -3,6 +3,7 @@ import { inAndOut } from "ol/easing"
 
 // Lifemap backend URL
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
+export const MAX_SOLR_QUERY = 100_000
 
 // Map defaults
 export const DEFAULT_LON = 0
@@ -27,24 +28,19 @@ export function stringify_scale(scale) {
     return JSON.stringify(scale, (_, v) => (typeof v === "bigint" ? v.toString() : v))
 }
 
-// Add hover event to layer
-export function set_hover_event(map, id, selected_feature) {
-    map.on("pointermove", function (ev) {
-        if (selected_feature !== null) {
-            selected_feature.set("hover", 0)
-            selected_feature = null
-        }
+// Check if column is the name of a column of data
+export function is_data_column(data, column) {
+    return typeof column === "string" && Object.keys(data[0]).includes(column)
+}
 
-        map.forEachFeatureAtPixel(
-            ev.pixel,
-            function (feature) {
-                feature.set("hover", 1)
-                selected_feature = feature
-                return true
-            },
-            { layerFilter: (d) => d.lifemap_ol_id == id }
-        )
-    })
+// Check if a data column can be considered categorical
+// Any column which is not numerical or is numerical with fewer
+// than 10 different values is considered categorical
+export function is_categorical_column(data, column) {
+    return !(
+        ["number", "bigint"].includes(typeof data[0][column]) &
+        ([...new Set(data.map((d) => d[column]))].length > 10)
+    )
 }
 
 // Animated dezoom / zoom movement helper

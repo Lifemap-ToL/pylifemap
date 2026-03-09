@@ -5,26 +5,60 @@ import { Stroke, Fill, Style, Text } from "ol/style"
 import { MVT } from "ol/format"
 import { LIFEMAP_BACK_URL } from "../utils"
 
-export function layer_tiles(map, lang) {
-    let view = map.getView()
-    const theme = map.theme
-
-    function createBranchStyle() {
-        return new Style({
-            stroke: new Stroke({
-                color: theme.branches_stroke_color,
-                width: theme.branches_width,
-            }),
-            zIndex: 6,
-        })
+export class TilesLayer {
+    constructor(base_map, theme, lang) {
+        this.view = base_map.map.getView()
+        this.theme = theme
+        this.id = "base-layer"
+        this.lang = lang
+        this.layer = this.create_layer()
     }
 
-    function createRankLabelStyleFunction(lang) {
-        return function (feature) {
+    create_layer() {
+        const source = new VectorTileSource({
+            maxZoom: 42,
+            format: new MVT(),
+            url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
+        })
+
+        const layer = new VectorTileLayer({
+            id: this.id,
+            background: this.theme.background_color,
+            source: source,
+            style: this.create_composite_style_fn(),
+            declutter: this.id,
+            renderMode: "vector",
+            updateWhileAnimating: true,
+            updateWhileInteracting: true,
+            renderBuffer: 256,
+            preload: Infinity,
+        })
+
+        return layer
+    }
+
+    create_composite_style_fn() {
+        const poly_style = this.create_rank_polygon_style_fn()
+        const branch_style = this.create_branch_style()
+        const rank_style = this.create_rank_label_style_fn()
+
+        return (feature) => {
+            const type = feature.getProperties()["layer"]
+            return type == "poly-layer"
+                ? poly_style(feature)
+                : type == "branches-layer"
+                  ? branch_style
+                  : rank_style(feature)
+        }
+    }
+
+    create_rank_label_style_fn() {
+        return (feature) => {
             const convex = feature.get("convex")
             // TODO: fix this ugly hack to avoid rank repeat
-            const label = "            " + feature.get(`rank_${lang}`) + "              "
-            const text_color = theme.rank_text_color[feature.get("ref")]
+            const label =
+                "            " + feature.get(`rank_${this.lang}`) + "              "
+            const text_color = this.theme.rank_text_color[feature.get("ref")]
 
             return new Style({
                 text: new Text({
@@ -44,16 +78,15 @@ export function layer_tiles(map, lang) {
         }
     }
 
-    function createRankPolygonStyleFunction(view) {
-        return function (feature) {
-            const themeColor = theme.polygon_fill_color[feature.get("ref")]
-            const currentZoom = view.getZoom()
+    create_rank_polygon_style_fn(view) {
+        return (feature) => {
+            const themeColor = this.theme.polygon_fill_color[feature.get("ref")]
+            const currentZoom = this.view.getZoom()
             const zoomLevel = feature.get("zoomview")
             const opacityFactor =
                 currentZoom !== undefined
                     ? 1 - Math.abs(currentZoom - zoomLevel - 1) / 5
                     : 1
-            //const opacityFactor = 1;
             const fillColor = [
                 themeColor[0],
                 themeColor[1],
@@ -67,38 +100,13 @@ export function layer_tiles(map, lang) {
         }
     }
 
-    function createCompositeStyleFunction(view, lang) {
-        const poly_style = createRankPolygonStyleFunction(view)
-        const branch_style = createBranchStyle()
-        const rank_style = createRankLabelStyleFunction(lang)
-
-        return function (feature) {
-            const type = feature.getProperties()["layer"]
-            return type == "poly-layer"
-                ? poly_style(feature)
-                : type == "branches-layer"
-                  ? branch_style
-                  : rank_style(feature)
-        }
+    create_branch_style() {
+        return new Style({
+            stroke: new Stroke({
+                color: this.theme.branches_stroke_color,
+                width: this.theme.branches_width,
+            }),
+            zIndex: 6,
+        })
     }
-
-    const id = "base-layer"
-    const layer = new VectorTileLayer({
-        id: id,
-        background: theme.background_color,
-        source: new VectorTileSource({
-            maxZoom: 42,
-            format: new MVT(),
-            url: `${LIFEMAP_BACK_URL}/vector_tiles/xyz/composite/{z}/{x}/{y}.pbf`,
-        }),
-        style: createCompositeStyleFunction(view, lang),
-        declutter: id,
-        renderMode: "vector",
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        renderBuffer: 256,
-        preload: Infinity,
-    })
-
-    return layer
 }

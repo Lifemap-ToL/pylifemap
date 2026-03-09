@@ -1,5 +1,4 @@
 import { guidGenerator } from "../utils"
-import { setup_lazy_loading } from "../data/lazy_loading"
 
 import Feature from "ol/Feature.js"
 import Point from "ol/geom/Point.js"
@@ -8,74 +7,100 @@ import VectorLayer from "ol/layer/Vector.js"
 import { Style, Fill, Stroke } from "ol/style.js"
 import Text from "ol/style/Text.js"
 
-const TEXT_COLOR = "rgba(255, 255, 255, 1)"
-const TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
+const DEFAULT_TEXT_COLOR = "rgba(255, 255, 255, 1)"
+const DEFAULT_TEXT_STROKE_COLOR = "rgba(0, 0, 0, 1)"
 
-export function layer_text(id, map, data, options = {}) {
-    let {
-        text = null,
-        font_family = "Segoe UI, Helvetica, sans-serif",
-        font_size = 12,
-        color = TEXT_COLOR,
-        stroke = TEXT_STROKE_COLOR,
-        opacity = 1.0,
-        declutter = true,
-        lazy = true,
-        lazy_zoom = 15,
-    } = options
+export class TextLayer {
+    constructor(id, map, data, options = {}) {
+        let {
+            text = null,
+            font_family = "Segoe UI, Helvetica, sans-serif",
+            font_size = 12,
+            color = null,
+            stroke = null,
+            opacity = 1.0,
+            declutter = true,
+            lazy = true,
+            lazy_zoom = 15,
+        } = options
 
-    id = `lifemap-ol-${id ?? guidGenerator()}`
-
-    // Create features
-    function create_feature(d) {
-        return new Feature({
-            geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
-            text: d[text],
+        Object.assign(this, {
+            text,
+            font_family,
+            font_size,
+            color,
+            stroke,
+            opacity,
+            declutter,
+            lazy,
+            lazy_zoom,
         })
+
+        this.id = `lifemap-ol-${id ?? guidGenerator()}`
+        this.map = map
+        this.data = data
+
+        this.is_webgl = false
+        this.type = "ol"
+
+        this.layers = []
+
+        this.layers.push(this.create_layer())
     }
 
-    // Initialize source
-    const source = new VectorSource({ useSpatialIndex: false })
-    if (!lazy) {
-        const features = data.map(create_feature)
-        source.addFeatures(features)
-    }
+    create_layer() {
+        // Initialize source
+        const source = new VectorSource({ useSpatialIndex: false })
 
-    const text_font = `${font_size}px ${font_family}`
-    const style_function = (feature) => {
-        return new Style({
-            text: new Text({
-                fill: new Fill({ color: color }),
-                stroke: new Stroke({ width: 2, color: stroke }),
-                text: [feature.get("text"), text_font],
-                offsetY: 10,
-                textBaseline: "top",
-            }),
-        })
-    }
-
-    // Create layer
-    const layer = new VectorLayer({
-        source: source,
-        style: style_function,
-        declutter: declutter ? id : false,
-        opacity: opacity,
-        zIndex: 5,
-    })
-
-    // Lazy loading
-    if (lazy) {
-        setup_lazy_loading({
-            map: map,
-            data: data,
+        // Layer definition
+        const layer = new VectorLayer({
             source: source,
-            create_feature_fn: create_feature,
-            lazy_zoom: lazy_zoom,
-            type: "points",
+            style: this.get_style(),
+            declutter: this.declutter ? this.id : false,
+            opacity: this.opacity,
+            zIndex: 5,
         })
+        layer.id = this.id
+
+        // Features creation
+        const create_feature_fn = this.get_create_feature_fn()
+        if (this.lazy) {
+            this.map.setup_lazy_loading({
+                data: this.data,
+                source: source,
+                create_feature_fn: create_feature_fn,
+                lazy_zoom: this.lazy_zoom,
+                type: "points",
+            })
+        } else {
+            source.addFeatures(this.data.map(create_feature_fn))
+        }
+        console.log(source.getFeatures())
+        return layer
     }
 
-    layer.lifemap_ol_id = id
+    get_create_feature_fn() {
+        return (d) =>
+            new Feature({
+                geometry: new Point([d["pylifemap_x"], d["pylifemap_y"]]),
+                text: d[this.text],
+            })
+    }
 
-    return layer
+    get_style() {
+        const text_font = `${this.font_size}px ${this.font_family}`
+        return (feature) =>
+            new Style({
+                text: new Text({
+                    fill: new Fill({ color: this.color ?? DEFAULT_TEXT_COLOR }),
+                    stroke: new Stroke({
+                        width: 2,
+                        color: this.stroke ?? DEFAULT_TEXT_STROKE_COLOR,
+                    }),
+                    text: [feature.get("text"), text_font],
+                    offsetY: 10,
+                    textBaseline: "top",
+                }),
+            })
+    }
 }

@@ -8,7 +8,7 @@ export class ErrorMessage {
     }
 
     show_message(e) {
-        const msg = `<p><strong>⚠ Sorry, an error occured while creating the widget.</strong></p><p><em>Error: ${e.name} - ${e.message}</em></p>`
+        const msg = `<p><strong>⚠ Sorry, an error occured while creating the widget</strong></p><p><em>Error: ${e.name} - ${e.message}</em></p>`
         this.error_message.querySelector("p").innerHTML = msg
         this.show()
     }

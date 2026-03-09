@@ -1,5 +1,5 @@
 import Control from "ol/control/Control.js"
-import { DEFAULT_LAT, DEFAULT_LON } from "../utils"
+import { DEFAULT_LAT, DEFAULT_LON, DEFAULT_ZOOM } from "../utils"
 import { fromLonLat } from "ol/proj"
 import { snapdom } from "@zumer/snapdom"
 import Attribution from "ol/control/Attribution.js"
@@ -112,7 +112,7 @@ class ResetZoomControl extends Control {
         const view = map.getView()
         view.animate({
             center: fromLonLat([DEFAULT_LON, DEFAULT_LAT]),
-            zoom: map.default_zoom,
+            zoom: DEFAULT_ZOOM,
         })
     }
 }
