@@ -13,7 +13,7 @@ export class HeatmapDeckLayer {
 
         Object.assign(this, { radius, intensity, threshold, opacity, color_range })
 
-        this.id = id
+        this.id = `lifemap-deck-${id ?? guidGenerator()}`
         this.data = data
 
         this.is_webgl = true

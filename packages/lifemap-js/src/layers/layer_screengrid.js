@@ -8,7 +8,7 @@ export class ScreengridLayer {
 
         Object.assign(this, { cell_size, opacity, extruded })
 
-        this.id = `lifemap-ol-${id ?? guidGenerator()}`
+        this.id = `lifemap-deck-${id ?? guidGenerator()}`
         this.data = data
 
         this.is_webgl = true
