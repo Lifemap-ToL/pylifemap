@@ -11,7 +11,8 @@
 
 For examples, installation and usage instructions, see the [documentation website](https://lifemap-tol.github.io/pylifemap).
 
-If you use pylifemap in your publication, please cite Barnier, J., Bompard, C., Siberchicot, A., Navratil, V., Martin, J., & de Vienne, D. M. (2025). pylifemap: Mapping Data onto the Tree of Life. bioRxiv, 2025-12. https://doi.org/10.64898/2025.12.16.694609
+If you use pylifemap in your publication, please cite:
+> Barnier, J., Bompard, C., Siberchicot, A., Navratil, V., Martin, J., & de Vienne, D. M. (2025). pylifemap: Mapping Data onto the Tree of Life. bioRxiv, 2025-12. https://doi.org/10.64898/2025.12.16.694609
 
 ## Credits
 
