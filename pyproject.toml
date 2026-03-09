@@ -33,10 +33,10 @@ Source = "https://github.com/Lifemap-ToL/pylifemap"
 
 [dependency-groups]
 dev = [
-  "griffe<2.0.0",
+  "griffe==1.15.0",
   "jupyter-cache>=1.0.1",
   "jupyterlab>=4.5.4",
-  "marimo[sql,sandbox,lsp]>=0.20.2",
+  "marimo[sql,sandbox,lsp]>=0.20.4",
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
