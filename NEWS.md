@@ -3,7 +3,7 @@
 - Feature: refactoring and documentation for JavaScript code reuse
 - Feature: allow updating an existing Lifemap in JavaScript while keeping the current view
 - Fix: error overlay positioning
-- Fix: zoom reset not working properly
+- Fix: zoom reset now goes back to starting view
 - Fix: parent coordinates not updated in lines layer
 - Fix: lazy loading spinner styling with light theme
 

@@ -7,7 +7,7 @@ import { defaults as defaultControls } from "ol/control/defaults.js"
 import FullScreen from "ol/control/FullScreen"
 import { SearchDialog } from "./search"
 
-export function get_controls(controls_list) {
+export function get_controls(controls_list, map) {
     const default_controls_options = {
         zoom: controls_list.includes("zoom"),
         rotate: false,
@@ -23,7 +23,7 @@ export function get_controls(controls_list) {
     let top = controls_list.includes("zoom") ? 4.25 : 0.5
 
     if (controls_list.includes("zoom") && controls_list.includes("reset_zoom")) {
-        controls.extend([new ResetZoomControl({ top: top })])
+        controls.extend([new ResetZoomControl({ top: top, map: map })])
         top += 2.75
     }
     if (controls_list.includes("search")) {
@@ -85,9 +85,8 @@ class TaxaSearchControl extends Control {
 }
 
 class ResetZoomControl extends Control {
-    constructor(opt_options) {
-        const options = opt_options || {}
-        const { top } = options
+    constructor(options = {}) {
+        const { top, map } = options
 
         const button = document.createElement("button")
         button.setAttribute("title", "Reset zoom")
@@ -104,16 +103,7 @@ class ResetZoomControl extends Control {
             target: options.target,
         })
 
-        button.addEventListener("click", this.handleResetZoom.bind(this), false)
-    }
-
-    handleResetZoom() {
-        const map = this.getMap()
-        const view = map.getView()
-        view.animate({
-            center: fromLonLat([DEFAULT_LON, DEFAULT_LAT]),
-            zoom: DEFAULT_ZOOM,
-        })
+        button.addEventListener("click", () => map.reset_view({ animate: true }), false)
     }
 }
 

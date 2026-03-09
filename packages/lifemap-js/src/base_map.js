@@ -20,7 +20,6 @@ export class BaseMap {
             zoom = undefined,
             minZoom = 4,
             maxZoom = 42,
-            default_zoom = DEFAULT_ZOOM,
             controls_list = [],
             center = "default",
             legend_width = undefined,
@@ -30,7 +29,6 @@ export class BaseMap {
             zoom,
             minZoom,
             maxZoom,
-            default_zoom,
             controls_list,
             center,
             legend_width,
@@ -38,6 +36,7 @@ export class BaseMap {
 
         this.el = el
         this.map = this.create_map()
+        this.default_view = null
 
         // Popup
         this.popup = this.create_popup()
@@ -62,7 +61,7 @@ export class BaseMap {
             smoothResolutionConstraint: false,
         })
 
-        const controls = get_controls(this.controls_list, this.default_zoom)
+        const controls = get_controls(this.controls_list, this)
 
         return new Map({
             controls: controls,
@@ -174,12 +173,21 @@ export class BaseMap {
         this.map.addControl(this.legend)
     }
 
-    // Initialize zoom after layers creation
-    // OpenLayers layers are passed as argument to use if center is "auto"
-    async init_zoom(ol_layers) {
-        let view = this.map.getView()
-        // Adjust view to data
-        if (this.center == "auto" && ol_layers.length > 0) {
+    // Compute start and default view
+    async compute_default_view(options) {
+        let { ol_layers = undefined } = options
+
+        // Default
+        const default_center = fromLonLat([DEFAULT_LON, DEFAULT_LAT])
+        const default_zoom = this.zoom ?? DEFAULT_ZOOM
+        this.default_view = {
+            type: "center-zoom",
+            center: default_center,
+            zoom: default_zoom,
+        }
+
+        // center = "auto" -> Adjust view to data
+        if (this.center == "auto" && ol_layers !== undefined && ol_layers.length > 0) {
             let global_extent = null
             for (let layer of ol_layers) {
                 let current_extent = layer.getSource().getExtent()
@@ -194,28 +202,56 @@ export class BaseMap {
                 JSON.stringify(global_extent) !=
                 JSON.stringify([Infinity, Infinity, -Infinity, -Infinity])
             ) {
-                view.fit(global_extent, { padding: [50, 150, 50, 50], duration: 0 })
+                this.default_view = { type: "extent", extent: global_extent }
             }
         }
+
         // Center view on taxid
         else if (Number.isFinite(this.center)) {
             const result = await get_taxid_coords(this.center)
             if (result === undefined) {
                 console.warn(`taxid ${this.center} not found in Lifemap taxids.`)
-                view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
             } else {
-                view.setCenter(fromLonLat([result["lon"], result["lat"]]))
-                view.setZoom(result["zoom"] - 3)
+                this.default_view = {
+                    type: "center-zoom",
+                    center: fromLonLat([result["lon"], result["lat"]]),
+                    zoom: this.zoom ?? result["zoom"] - 3,
+                }
             }
         }
-        // "default"
-        else {
-            view.setCenter(fromLonLat([DEFAULT_LON, DEFAULT_LAT]))
+    }
+
+    // Reset view to computed default view
+    reset_view(options) {
+        let { animate = false } = options
+        if (this.default_view === null) {
+            return
         }
-        // Apply zoom if specified
-        if (Number.isFinite(this.zoom)) {
-            view.setZoom(this.zoom)
+
+        const duration = animate ? 500 : 0
+        let view = this.map.getView()
+
+        if (this.default_view.type == "extent") {
+            view.fit(this.default_view.extent, {
+                padding: [50, 150, 50, 50],
+                duration: duration,
+            })
         }
+        if (this.default_view.type == "center-zoom") {
+            view.animate({
+                center: this.default_view.center,
+                zoom: this.default_view.zoom,
+                duration: duration,
+            })
+        }
+    }
+
+    // Initialize zoom after layers creation
+    // OpenLayers layers are passed as argument to use if center is "auto"
+    async init_view(options) {
+        let { ol_layers = undefined } = options
+        await this.compute_default_view({ ol_layers: ol_layers })
+        this.reset_view({ animate: false })
     }
 
     // Setup data lazy loading from a data source and an Ope

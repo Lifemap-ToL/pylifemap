@@ -48,7 +48,6 @@ export class Lifemap {
         this.base_map = new BaseMap(el, {
             zoom: zoom,
             controls_list: controls,
-            default_zoom: DEFAULT_ZOOM,
             center: center,
             legend_width: legend_width,
         })
@@ -115,10 +114,11 @@ export class Lifemap {
                     .then(async () => {
                         if (!is_update) {
                             this.spinner.update_message("Updating view")
-                            await this.base_map.init_zoom(
+                            await this.base_map.init_view({
                                 // We filter out lazy loading layers in case center is "auto"
-                                this.get_ol_layers({ filter_lazy: true })
-                            )
+                                ol_layers: this.get_ol_layers({ filter_lazy: true }),
+                                animate: false,
+                            })
                         }
                     })
                     .then(this.spinner.hide())
