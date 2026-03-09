@@ -5,6 +5,7 @@
 - Fix: error overlay positioning
 - Fix: zoom reset not working properly
 - Fix: parent coordinates not updated in lines layer
+- Fix: lazy loading spinner styling with light theme
 
 ## pylifemap 0.1.3
 

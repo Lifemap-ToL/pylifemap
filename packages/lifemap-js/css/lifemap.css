@@ -190,6 +190,13 @@
     bottom: 0;
     width: 22px;
     height: 22px;
+}
+
+.pylifemap-map.light .lifemap-lazyspinner {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.pylifemap-map.dark .lifemap-lazyspinner {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -203,9 +210,17 @@
     border-radius: 50%;
     width: 16px;
     height: 16px;
+    animation: spinner-rotation 0.8s linear infinite;
+}
+
+.pylifemap-map.light .lifemap-lazyspinner:after {
+    border: 3px solid #444;
+    border-bottom-color: transparent;
+}
+
+.pylifemap-map.dark .lifemap-lazyspinner:after {
     border: 3px solid #fff;
     border-bottom-color: transparent;
-    animation: spinner-rotation 0.8s linear infinite;
 }
 
 /* Error */
