@@ -140,7 +140,7 @@ class DonutsMixin:
                 "popup": popup,
                 "fill_col": options["counts_col"],
             }
-            points_layer = {"id": layer_id, "layer": "points", "options": points_options}
+            points_layer = {"id": points_id, "layer": "points", "options": points_options}
             self._layers.append(points_layer)
             points_options["leaves"] = "only"
             self._layers_data[points_id] = df.points_data(points_options)
