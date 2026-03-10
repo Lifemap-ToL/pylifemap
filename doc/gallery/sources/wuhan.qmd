@@ -11,7 +11,7 @@ categories: [icons, lightgrey theme, points, lines, in publication]
 This visualization accompanies the article presenting `pylifemap`, available at [link to be added](tocome).
 :::
 
-The visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (red crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).
+The visualization allows exploration and comparison of wild species inventoried between May 2017 and November 2019 in the Wuhan market [1], just prior to the SARS‑CoV‑2 pandemic (black crosses), with an environmental metagenomics survey performed in the same market in 2020. Sequenced reads were assigned to taxa using the taxonomic classifier Kraken2, which relies on a reference database (GenBank nt, November 2022).
 
 Here, taxa/lineages present in the reference database used by Kraken2 are represented by orange branches, and the number of reads assigned to each taxon is indicated by a circle whose size and color are proportional to this number. Points representing fewer than 1,000 reads mapped to the taxa were discarded.
 
