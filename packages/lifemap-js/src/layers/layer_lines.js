@@ -70,7 +70,7 @@ export class LinesLayer {
     create_layer() {
         // Initialize source
         let source = new VectorSource({
-            useSpatialIndex: !this.lazy || this.popup || this.hhover,
+            useSpatialIndex: !this.lazy || this.popup || this.hover,
         })
 
         // Layer definition
