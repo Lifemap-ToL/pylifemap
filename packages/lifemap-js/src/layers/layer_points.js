@@ -1,4 +1,10 @@
-import { guidGenerator, DEFAULT_CAT_SCHEME, DEFAULT_NUM_SCHEME } from "../utils"
+import {
+    guidGenerator,
+    is_data_column,
+    is_categorical_column,
+    DEFAULT_CAT_SCHEME,
+    DEFAULT_NUM_SCHEME,
+} from "../utils"
 import { get_popup_title } from "../data/api"
 
 import Feature from "ol/Feature.js"
@@ -8,7 +14,6 @@ import WebGLVectorLayer from "ol/layer/WebGLVector.js"
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
 import VectorSource from "ol/source/Vector.js"
-import { is_data_column, is_categorical_column } from "../utils"
 
 const DEFAULT_RADIUS = 5
 const DEFAULT_FILL = "#DD0000"
