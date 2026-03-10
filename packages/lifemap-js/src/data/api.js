@@ -172,4 +172,18 @@ export async function get_popup_title(taxid) {
     return out
 }
 
-export async function get_suggestions(str) {}
+// Get arc popup title for source and dest taxids by querying scientific name from solr API
+export async function get_arc_popup_title(source_taxid, dest_taxid) {
+    const source_names = await get_taxid_name(source_taxid)
+    const dest_names = await get_taxid_name(dest_taxid)
+    const source_name =
+        source_names !== null
+            ? `${source_names["sci_name"]} <span>(<a href="https://lifemap.cnrs.fr/tree?tid=${source_taxid}" target="_blank">${source_taxid}</a>)</span>`
+            : source_taxid
+    const dest_name =
+        dest_names !== null
+            ? `${dest_names["sci_name"]} <span>(<a href="https://lifemap.cnrs.fr/tree?tid=${dest_taxid}" target="_blank">${dest_taxid}</a>)</span>`
+            : dest_taxid
+    let out = `<h2>${source_name} - ${dest_name}</h2>`
+    return out
+}

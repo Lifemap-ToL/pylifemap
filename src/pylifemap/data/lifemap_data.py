@@ -8,6 +8,7 @@ import pandas as pd
 import polars as pl
 
 from pylifemap.data.backend_data import BACKEND_DATA
+from pylifemap.data.mixins.arcs import ArcsDataMixin
 from pylifemap.data.mixins.donuts import DonutsDataMixin
 from pylifemap.data.mixins.lines import LinesDataMixin
 from pylifemap.data.mixins.points import PointsDataMixin
@@ -18,7 +19,7 @@ from pylifemap.utils import TAXID_COL
 warnings.formatwarning = lambda msg, *args, **kwargs: f"Warning: {msg}.\n"  # type: ignore  # noqa: ARG005
 
 
-class LifemapData(PointsDataMixin, DonutsDataMixin, LinesDataMixin):
+class LifemapData(PointsDataMixin, DonutsDataMixin, LinesDataMixin, ArcsDataMixin):
     """
     LifemapData class.
 

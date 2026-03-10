@@ -162,6 +162,8 @@ Here are the currently available layers:
 | :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
 | [layer_points](layers/layer_points.qmd)             | Displays each observation with a point. Radius and color can be dependent of an attribute in the DataFrame. |
 | [layer_lines](layers/layer_lines.qmd)               | Using aggregated data, highlights branches of the tree with lines of varying width and color.               |
+| [layer_arcs](layers/layer_arcs.qmd)                 | Displays curved or straight arc lines between two taxa.                                                     |
+| [layer_arcs_deck](layers/layer_arcs_deck.qmd)       | Displays curved or straight arc lines between two taxa (deck.gl version).                                   |
 | [layer_donuts](layers/layer_donuts.qmd)             | Displays aggregated categorical data as donut charts.                                                       |
 | [layer_heatmap](layers/layer_heatmap.qmd)           | Displays a heatmap of the observations distribution in the tree.                                            |
 | [layer_heatmap_deck](layers/layer_heatmap_deck.qmd) | Displays a deck.gl heatmap of the observations distribution in the tree.                                    |

@@ -18,6 +18,8 @@ from IPython.display import display
 from ipywidgets.embed import dependency_state, embed_minimal_html
 
 from pylifemap.abc import LifemapABC
+from pylifemap.layers.layer_arcs import ArcsMixin
+from pylifemap.layers.layer_arcs_deck import ArcsDeckMixin
 from pylifemap.layers.layer_donuts import DonutsMixin
 from pylifemap.layers.layer_heatmap import HeatmapMixin
 from pylifemap.layers.layer_heatmap_deck import HeatmapDeckMixin
@@ -37,6 +39,8 @@ from pylifemap.widget import LifemapWidget, LifemapWidgetDeck, LifemapWidgetNoDe
 
 class Lifemap(
     LifemapABC,
+    ArcsMixin,
+    ArcsDeckMixin,
     IconsMixin,
     TextMixin,
     ScreengridMixin,

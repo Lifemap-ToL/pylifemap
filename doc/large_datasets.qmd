@@ -12,9 +12,10 @@ Lazy loading is available for the following layers:
 
 - `points`
 - `lines`
-- `text`
+- `arcs`
 - `donuts` (enabled by default)
 - `icons`
+- `text`
 
 It is also enabled automatically (with a warning message) if it is not set manually and the layer dataset has more than 300 000 rows.
 
@@ -33,6 +34,10 @@ With the following code, the points layer will use lazy loading and will only lo
 #| eval: false
 Lifemap(data).layer_points(lazy=True, lazy_zoom=15).show()
 ```
+
+::: {.callout-note}
+For arcs or lines layers, an arc or line is displayed only if one of its two extremities is present in the current view. This may lead to strange visual behavior as an item will "disappear" if both of its extremities goes out of sight.
+:::
 
 ### Lazy loading modes
 
@@ -73,5 +78,6 @@ Deck.gl layers may be more efficient when viewing large datasets:
 
 - The `screengrid` layer is very fast even with many data points
 - The `heatmap_deck` layer will also be fast, and much faster than the `heatmap` layer
+- The `arcs_deck` layer is less customizable but may be a bit faster than the `arcs` layer
 
 In particular it is recommended to switch to `heatmap_deck` if the `heatmap` layer is too slow.

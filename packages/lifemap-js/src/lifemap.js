@@ -10,8 +10,8 @@ import { LabelsLayer } from "./layers/layer_labels"
 import { DeckLayer } from "./layers/layer_deck"
 import { HeatmapDeckLayer } from "./layers/layer_heatmap_deck"
 import { ScreengridLayer } from "./layers/layer_screengrid"
-import { layer_arcs } from "./layers/layer_arcs"
-import { layer_arcs_deck } from "./layers/layer_arcs_deck"
+import { ArcsLayer } from "./layers/layer_arcs"
+import { ArcsDeckLayer } from "./layers/layer_arcs_deck"
 
 import { ErrorMessage } from "./elements/error"
 
@@ -189,6 +189,15 @@ export class Lifemap {
             }
 
             switch (l.layer) {
+                // Deck.gl layers
+                case "arcs_deck":
+                    const arcs_deck_layer = new ArcsDeckLayer(
+                        layer_id,
+                        layer_data,
+                        l.options ?? {}
+                    )
+                    await arcs_deck_layer.init()
+                    return arcs_deck_layer
                 case "heatmap_deck":
                     const heatmap_deck_layer = new HeatmapDeckLayer(
                         layer_id,
@@ -205,13 +214,7 @@ export class Lifemap {
                     )
                     await screengrid_layer.init()
                     return screengrid_layer
-                case "arcs_deck":
-                    return await layer_arcs_deck(
-                        layer_id,
-                        this.base_map,
-                        layer_data,
-                        l.options ?? {}
-                    )
+                // OpenLayers layers
                 case "points":
                     return new PointsLayer(
                         layer_id,
@@ -229,7 +232,7 @@ export class Lifemap {
                         color_ranges
                     )
                 case "arcs":
-                    return layer_arcs(
+                    return new ArcsLayer(
                         layer_id,
                         this.base_map,
                         layer_data,

@@ -1,0 +1,50 @@
+---
+title: Arcs layer
+---
+
+The arcs layer displays curved or straight arc lines between two arbitrary taxa.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+d = pl.DataFrame(
+    {
+        "taxid": [
+            9685,
+            9615,
+            9994,
+            2467430,
+            2514524,
+            2038938,
+            1021470,
+            1415565,
+            1928562,
+            1397240,
+            230741,
+        ],
+        "dest_taxid": [
+            9615,
+            1415565,
+            2467430,
+            9994,
+            9685,
+            2514524,
+            2038938,
+            1397240,
+            1021470,
+            1928562,
+            230741,
+        ],
+        "relation": ["A", "A", "B", "C", "A", "A", "B", "C", "B", "A", "A"],
+    }
+)
+Lifemap(d).layer_arcs(
+    taxid_dest_col="dest_taxid",
+    color="relation",
+    arrow=True
+).show()
+```
+
+For a detailed list of `layer_lines` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_arcs`).
+
+For an alternative arcs visualization, see [layer_arcs_deck](layer_arcs_deck.qmd).

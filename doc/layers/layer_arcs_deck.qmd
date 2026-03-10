@@ -1,0 +1,48 @@
+---
+title: Arcs Deck layer
+---
+
+The arcs deck layer displays curved or straight arc lines between two arbitrary taxa. IT is powered by deck.gl.
+
+```{python}
+import polars as pl
+from pylifemap import Lifemap
+d = pl.DataFrame(
+    {
+        "taxid": [
+            9685,
+            9615,
+            9994,
+            2467430,
+            2514524,
+            2038938,
+            1021470,
+            1415565,
+            1928562,
+            1397240,
+            230741,
+        ],
+        "dest_taxid": [
+            9615,
+            1415565,
+            2467430,
+            9994,
+            9685,
+            2514524,
+            2038938,
+            1397240,
+            1021470,
+            1928562,
+            230741,
+        ],
+    }
+)
+Lifemap(d).layer_arcs_deck(
+    taxid_dest_col="dest_taxid"
+).show()
+
+```
+
+For a detailed list of `layer_arcs_deck` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_arcs_deck`).
+
+For an alternative arcs visualization, see [layer_arcs_deck](layer_arcs.qmd).

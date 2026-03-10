@@ -16,6 +16,7 @@ d_dupl = pd.DataFrame({"taxid": [33090, 33090, 33208, 2, 33208], "value": [1, 2,
 
 d_pl_int64 = pl.DataFrame(d, schema_overrides={"tid": pl.Int64})
 d_cat = pl.DataFrame(d).with_columns(pl.col("value").cast(pl.Utf8))
+d_arcs = pl.DataFrame(d).with_columns(taxid_dest=pl.Series([47, 2, 9994, 1415565]))
 
 
 @pytest.fixture
@@ -51,6 +52,11 @@ def data_dupl():
 @pytest.fixture
 def lmd():
     return LifemapData(data=d, taxid_col="tid")
+
+
+@pytest.fixture
+def lmd_arcs():
+    return LifemapData(data=d_arcs, taxid_col="tid")
 
 
 @pytest.fixture
@@ -254,4 +260,51 @@ class TestLinesData:
             4,
             6,
             7,
+        ]
+
+
+class TestArcsData:
+    def test_arcs_data_validations(self, lmd_arcs):
+        with pytest.raises(ValueError):
+            lmd_arcs.arcs_data(options={"taxid_dest_col": "taxid_dest"}, data_columns=("whatever",))
+
+    def test_arcs_data(self, lmd_arcs):
+        tmp = lmd_arcs.arcs_data(
+            options={"taxid_dest_col": "taxid_dest", "lazy": True}, data_columns=("value",)
+        )
+        assert tmp.shape == (4, 8)
+        assert sorted(tmp.columns) == [
+            "pylifemap_dest_taxid",
+            "pylifemap_dest_x",
+            "pylifemap_dest_y",
+            "pylifemap_taxid",
+            "pylifemap_x",
+            "pylifemap_y",
+            "pylifemap_zoom",
+            "value",
+        ]
+        assert tmp.get_column("value").sort().to_list() == [
+            1,
+            2,
+            3,
+            4,
+        ]
+
+    def test_arcs_data_nolazy(self, lmd_arcs):
+        tmp = lmd_arcs.arcs_data(options={"taxid_dest_col": "taxid_dest"}, data_columns=("value",))
+        assert tmp.shape == (4, 7)
+        assert sorted(tmp.columns) == [
+            "pylifemap_dest_taxid",
+            "pylifemap_dest_x",
+            "pylifemap_dest_y",
+            "pylifemap_taxid",
+            "pylifemap_x",
+            "pylifemap_y",
+            "value",
+        ]
+        assert tmp.get_column("value").sort().to_list() == [
+            1,
+            2,
+            3,
+            4,
         ]
