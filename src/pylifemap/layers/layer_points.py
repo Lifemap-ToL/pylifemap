@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import Literal
 
 import pandas as pd
@@ -18,7 +19,7 @@ class PointsMixin:
         radius_range: tuple | list = (2, 30),
         fill: str | None = None,
         fill_cat: bool | None = None,
-        categories: list | tuple | None = None,
+        categories: Sequence | None = None,
         scheme: str | None = None,
         opacity: float = 0.8,
         popup: bool = True,
@@ -57,7 +58,7 @@ class PointsMixin:
         fill_cat : bool | None, optional
             If `True`, force color scheme to be categorical. If `False`, force it to be
             continuous. If `None`, let `pylifemap` decide. By default `None`.
-        categories : list | tuple | None, optional
+        categories : Sequence | None, optional
             Custom order of categories when a categorical variable is used for the `fill` argument.
             Defaults to `None`.
         scheme : str | None, optional
