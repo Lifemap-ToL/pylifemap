@@ -119,7 +119,12 @@ export class BaseMap {
     }
 
     add_popup_event(options) {
-        let { layer_id, coordinates_fn, content_fn, offset = [0, -5] } = options
+        let {
+            layer_id,
+            coordinates_fn = undefined,
+            content_fn,
+            offset = [0, -5],
+        } = options
         // /!\ Use arrow function here so that this is captured
         this.map.on("click", async (ev) => {
             const feature = this.map.forEachFeatureAtPixel(
@@ -133,8 +138,7 @@ export class BaseMap {
                 return
             }
             const content = await content_fn(feature)
-            const coordinates =
-                coordinates_fn !== null ? coordinates_fn(feature) : ev.coordinate
+            const coordinates = coordinates_fn ? coordinates_fn(feature) : ev.coordinate
             this.popup.show(coordinates, content, offset)
         })
     }
