@@ -13,6 +13,7 @@ export class SearchDialog {
         input.type = "search"
         input.placeholder = "Taxa name or id..."
         input.name = "pylifemap-search"
+        input.autocomplete = "off"
         dialog.appendChild(input)
         dialog.addEventListener("beforetoggle", (event) => {
             if (event.newState === "open") {
