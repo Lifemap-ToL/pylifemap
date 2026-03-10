@@ -82,7 +82,7 @@ export class DonutsLayer {
         const layer = new VectorLayer({
             declutter: this.declutter ? this.id : false,
             // Donuts are above labels
-            zIndex: 6,
+            zIndex: 8,
             source: source,
             style: this.get_style_fn(),
         })
