@@ -66,7 +66,13 @@ For data table corresponding to lines data, the data table must contain the foll
 
 - `pylifemap_taxid`, `pylifemap_parent_taxid`: NCBI taxids of both line points
 - `pylifemap_x`, `pylifemap_y`, `pylifemap_parent_x`, `pylifemap_parent_y`, `pylifemap_zoom`: the coordinates and zoom level of the line
-- any variable use for width, color, etc.
+- any variable used for width, color, etc.
+
+For data table corresponding to arcs data, the data table must contain the following columns:
+
+- `pylifemap_taxid`, `pylifemap_dest_taxid`: NCBI taxids of source and destination taxa
+- `pylifemap_x`, `pylifemap_y`, `pylifemap_dest_x`, `pylifemap_dest_y`, `pylifemap_zoom`: the coordinates and zoom level of the source and destination taxa
+- any variable used for width, color, etc.
 
 For counts data table used for the donuts layer, there must be a counts column containing a dictionary of counts. Something like:
 
