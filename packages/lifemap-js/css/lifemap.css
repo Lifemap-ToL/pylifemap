@@ -280,7 +280,7 @@
     margin-top: 0;
     padding: 5px 8px;
     background-color: #d00;
-    color: #fff;
+    color: #333;
     font-size: 14px;
 }
 
@@ -290,18 +290,18 @@
     margin-top: 0;
     padding: 0;
     border-top: 1px solid white;
-    color: #fff;
+    color: #333;
     font-size: 13px;
     max-height: 20rem;
     overflow-y: auto;
 }
 
 .pylifemap-map.dark .lifemap-search dialog .suggestions {
-    background-color: #723972cc;
+    background-color: #dadadacc;
 }
 
 .pylifemap-map.light .lifemap-search dialog .suggestions {
-    background-color: #442244cc;
+    background-color: #dadadacc;
 }
 
 .lifemap-search dialog .suggestions .suggestion {
@@ -351,13 +351,13 @@
 
 .lifemap-settings form select {
     /*border-color: #ccc;*/
-    color: #fff;
-    background-color: #442244cc;
+    color: #333;
+    background-color: #dadadacc;
 }
 
 .lifemap-settings form div {
     font-size: 14px;
-    color: #fff;
+    color: #333;
     border-top: 1px solid white;
     padding: 5px 8px;
     display: flex;
@@ -367,11 +367,11 @@
 }
 
 .pylifemap-map.dark .lifemap-settings form div {
-    background-color: #723972cc;
+    background-color: #dadadacc;
 }
 
 .pylifemap-map.light .lifemap-settings form div {
-    background-color: #442244cc;
+    background-color: #dadadacc;
 }
 
 /*.lifemap-settings dialog input {
