@@ -248,7 +248,6 @@ export class ArcsLayer {
         }
         // Check if color column is categorical
         let color_cat = this.color_cat ?? is_categorical_column(this.data, this.color)
-        console.log(color_cat)
         return color_cat ? this.get_categorical_color_fn() : this.get_linear_color_fn()
     }
 
