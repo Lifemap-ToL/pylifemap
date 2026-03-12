@@ -151,7 +151,6 @@ export class Lifemap {
     async update_layers(layers_def, color_ranges) {
         try {
             this.dispose_ol_layers()
-            const base_layers = this.base_layers
 
             this.data_layers = await this.create_layers(layers_def, color_ranges)
             const ol_layers = this.get_ol_layers()
@@ -165,12 +164,12 @@ export class Lifemap {
             if (deck_layers.length > 0) {
                 if (this.deck === undefined) {
                     await this.init_deck()
+                    this.base_layers.push(this.deck.base_layer)
                 }
-                base_layers.push(this.deck.base_layer)
                 this.deck.setProps({ layers: deck_layers })
             }
 
-            this.base_map.map.setLayers([...base_layers, ...ol_layers])
+            this.base_map.map.setLayers([...this.base_layers, ...ol_layers])
 
             this.update_scales()
         } catch (e) {
