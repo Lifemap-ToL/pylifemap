@@ -289,12 +289,19 @@
     display: none;
     margin-top: 0;
     padding: 0;
-    background-color: #442244cc;
     border-top: 1px solid white;
     color: #fff;
     font-size: 13px;
     max-height: 20rem;
     overflow-y: auto;
+}
+
+.pylifemap-map.dark .lifemap-search dialog .suggestions {
+    background-color: #723972cc;
+}
+
+.pylifemap-map.light .lifemap-search dialog .suggestions {
+    background-color: #442244cc;
 }
 
 .lifemap-search dialog .suggestions .suggestion {
@@ -351,13 +358,20 @@
 .lifemap-settings form div {
     font-size: 14px;
     color: #fff;
-    background-color: #442244cc;
     border-top: 1px solid white;
     padding: 5px 8px;
     display: flex;
     justify-content: flex-start;
     align-items: baseline;
     gap: 4px;
+}
+
+.pylifemap-map.dark .lifemap-settings form div {
+    background-color: #723972cc;
+}
+
+.pylifemap-map.light .lifemap-settings form div {
+    background-color: #442244cc;
 }
 
 /*.lifemap-settings dialog input {
