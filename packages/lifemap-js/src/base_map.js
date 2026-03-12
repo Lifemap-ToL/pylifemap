@@ -1,18 +1,27 @@
 // OL
 import Map from "ol/Map"
 import View from "ol/View"
-import { Popup } from "./elements/popup"
 import { DragPan, MouseWheelZoom, defaults } from "ol/interaction.js"
 import { fromLonLat, transformExtent } from "ol/proj"
-import { get_controls } from "./elements/controls"
-import { LazySpinner } from "./elements/lazy_spinner"
-import { get_taxid_coords } from "./data/api"
-import { LegendControl } from "./elements/controls"
 import { extend, getBottomLeft, getTopRight } from "ol/extent"
+import { Attribution } from "ol/control"
+import { defaults as defaultControls } from "ol/control/defaults.js"
+import FullScreen from "ol/control/FullScreen"
+
+import { get_taxid_coords } from "./data/api"
+import { Popup } from "./elements/popup"
+import { LazySpinner } from "./elements/lazy_spinner"
+import { SettingsControl } from "./elements/controls/settings"
+import { TaxaSearchControl } from "./elements/controls/search"
+import { ResetZoomControl } from "./elements/controls/reset_zoom"
+import { LegendControl } from "./elements/controls/legend"
+import { PngExportControl } from "./elements/controls/png_export"
+
+import { TilesLayer } from "./layers/layer_tiles"
+
+import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, MAP_EXTENT, DARK_THEMES } from "./utils"
 
 import * as Plot from "@observablehq/plot"
-
-import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, MAP_EXTENT } from "./utils"
 
 export class BaseMap {
     constructor(el, options) {
@@ -22,7 +31,10 @@ export class BaseMap {
             maxZoom = 42,
             controls_list = [],
             center = "default",
+            theme,
             legend_width = undefined,
+            hide_legend = false,
+            lang,
         } = options
 
         Object.assign(this, {
@@ -31,22 +43,27 @@ export class BaseMap {
             maxZoom,
             controls_list,
             center,
+            theme,
             legend_width,
+            hide_legend,
+            lang,
         })
 
         this.el = el
+        this.controls = {}
         this.map = this.create_map()
         this.default_view = null
+        this.has_legend = false
+
+        // Add tiles layer
+        this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
+        this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
 
         // Popup
         this.popup = this.create_popup()
 
         // Lazy loading spinner
         this.lazy_spinner = new LazySpinner(this.el)
-
-        // Legend
-        this.legend = new LegendControl()
-        this.legend_width = legend_width
     }
 
     create_map() {
@@ -61,10 +78,11 @@ export class BaseMap {
             smoothResolutionConstraint: false,
         })
 
-        const controls = get_controls(this.controls_list, this)
+        // Setup and get list of controls (search, settings, attribution, legend...)
+        const map_controls = this.setup_controls()
 
         return new Map({
-            controls: controls,
+            controls: map_controls,
             interactions: defaults({
                 dragZoom: false,
                 dragPan: false,
@@ -144,8 +162,17 @@ export class BaseMap {
     }
 
     update_legend(scales) {
-        this.map.removeControl(this.legend)
-        if (scales == 0) {
+        this.map.removeControl(this.controls.legend)
+        this.has_legend = !(scales == 0)
+
+        if ("settings" in this.controls) {
+            this.controls.settings.dialog.legend_input.disabled = !this.has_legend
+            if (!this.has_legend) {
+                this.controls.settings.dialog.legend_input.checked = false
+            }
+        }
+
+        if (!this.has_legend) {
             return
         }
 
@@ -171,10 +198,12 @@ export class BaseMap {
             }
             legend_container.append(Plot.legend(scale))
         }
+        // Show or hide legend depending on global setting
+        this.controls.legend.element.style.display = this.hide_legend ? "none" : "block"
         // Remove any previous legend in case of update
-        this.legend.element.innerHTML = ""
-        this.legend.element.appendChild(legend_container)
-        this.map.addControl(this.legend)
+        this.controls.legend.element.innerHTML = ""
+        this.controls.legend.element.appendChild(legend_container)
+        this.map.addControl(this.controls.legend)
     }
 
     // Compute start and default view
@@ -223,6 +252,19 @@ export class BaseMap {
                 }
             }
         }
+    }
+
+    update_tiles_layer(theme) {
+        this.theme = theme
+        const current_layers = this.map.getLayers()
+        current_layers.removeAt(0)
+        const new_tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
+        current_layers.insertAt(0, new_tiles_layer)
+
+        this.el.classList.remove(...["dark", "light"])
+        this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
+
+        this.map.render()
     }
 
     // Reset view to computed default view
@@ -335,5 +377,61 @@ export class BaseMap {
                 }
             })
         })
+    }
+
+    setup_controls() {
+        const default_controls_options = {
+            zoom: this.controls_list.includes("zoom"),
+            rotate: false,
+            attribution: false,
+        }
+
+        this.controls.attribution = new Attribution({
+            collapsible: false,
+            attributions: `Basemap from <a href="https://lifemap.cnrs.fr">Lifemap</a>`,
+        })
+
+        let map_controls = defaultControls(default_controls_options).extend([
+            this.controls.attribution,
+        ])
+        let top = this.controls_list.includes("zoom") ? 4.25 : 0.5
+
+        if (
+            this.controls_list.includes("zoom") &&
+            this.controls_list.includes("reset_zoom")
+        ) {
+            this.controls.reset_zoom = new ResetZoomControl({ top: top, base_map: this })
+            map_controls.extend([this.controls.reset_zoom])
+            top += 2.75
+        }
+        if (this.controls_list.includes("search")) {
+            this.controls.taxa_search = new TaxaSearchControl({
+                top: top,
+                base_map: this,
+            })
+            map_controls.extend([this.controls.taxa_search])
+            top += 2.75
+        }
+        if (this.controls_list.includes("settings")) {
+            this.controls.settings = new SettingsControl({ top: top, base_map: this })
+            map_controls.extend([this.controls.settings])
+            top += 2.75
+        }
+        if (this.controls_list.includes("png_export")) {
+            this.controls.png_export = new PngExportControl({
+                top: top,
+                base_map: this,
+            })
+            map_controls.extend([this.controls.png_export])
+        }
+        if (this.controls_list.includes("full_screen")) {
+            this.controls.full_screen = new FullScreen()
+            map_controls.extend([this.controls.full_screen])
+        }
+
+        // Legend
+        this.controls.legend = new LegendControl()
+
+        return map_controls
     }
 }

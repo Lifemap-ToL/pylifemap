@@ -6,13 +6,14 @@ import VectorLayer from "ol/layer/Vector.js"
 import { Style, Fill, Stroke } from "ol/style.js"
 import Text from "ol/style/Text.js"
 import { LIFEMAP_BACK_URL } from "../utils"
+import { THEMES } from "../elements/themes"
 
 const SOLR_API_URL = `${LIFEMAP_BACK_URL}/solr`
 
 export class LabelsLayer {
     constructor(base_map, theme) {
         this.map = base_map
-        this.theme = theme
+        this.theme = THEMES[theme]
         this.id = "labels-layer"
 
         this.source = new Vector({ useSpatialIndex: false })

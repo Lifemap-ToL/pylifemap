@@ -5,7 +5,6 @@ import { LinesLayer } from "./layers/layer_lines"
 import { DonutsLayer } from "./layers/layer_donuts"
 import { TextLayer } from "./layers/layer_text"
 import { IconsLayer } from "./layers/layer_icons"
-import { TilesLayer } from "./layers/layer_tiles"
 import { LabelsLayer } from "./layers/layer_labels"
 import { DeckLayer } from "./layers/layer_deck"
 import { HeatmapDeckLayer } from "./layers/layer_heatmap_deck"
@@ -18,13 +17,9 @@ import { ErrorMessage } from "./elements/error"
 import { deserialize_data } from "./data/deserialization"
 import { update_coordinates } from "./data/update_coordinates"
 
-import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, stringify_scale } from "./utils"
-import { THEMES } from "./elements/themes"
+import { stringify_scale, LANG } from "./utils"
 
 import { Spinner } from "./elements/spinner"
-
-const DARK_THEMES = ["dark"]
-const LANG = "en"
 
 export class Lifemap {
     constructor(el, options = {}) {
@@ -34,8 +29,16 @@ export class Lifemap {
             center = "default",
             zoom = undefined,
             legend_width = undefined,
-            controls = ["zoom", "reset_zoom", "png_export", "search", "full_screen"],
+            controls = [
+                "zoom",
+                "reset_zoom",
+                "png_export",
+                "search",
+                "settings",
+                "full_screen",
+            ],
             hide_labels = false,
+            hide_legend = false,
             theme = "dark",
         } = options
 
@@ -44,21 +47,22 @@ export class Lifemap {
         this.el.classList.add("pylifemap-map")
         this.update_container({ width: width, height: height })
 
+        // Theme
+        this.theme = theme
+
         // Base map object
         this.base_map = new BaseMap(el, {
             zoom: zoom,
             controls_list: controls,
             center: center,
+            theme: this.theme,
             legend_width: legend_width,
+            hide_legend: hide_legend,
+            lang: LANG,
         })
 
-        // Theme
-        this.theme = THEMES[theme]
-        el.classList.add(DARK_THEMES.includes(theme) ? "dark" : "light")
-
         // Tiles layer
-        const tiles_layer = new TilesLayer(this.base_map, this.theme, LANG).layer
-        this.base_layers = [tiles_layer]
+        this.base_layers = [this.base_map.tiles_layer]
         // Labels layer
         if (!hide_labels) {
             const labels_layer = new LabelsLayer(this.base_map, this.theme).layer
@@ -319,10 +323,8 @@ export class Lifemap {
             unique_scales[key] = scale
         })
         unique_scales = Object.values(unique_scales)
-        if (stringify_scale(this.scales) != stringify_scale(unique_scales)) {
-            this.scales = unique_scales
-            this.base_map.update_legend(this.scales)
-        }
+        this.scales = unique_scales
+        this.base_map.update_legend(this.scales)
     }
 
     destroy() {

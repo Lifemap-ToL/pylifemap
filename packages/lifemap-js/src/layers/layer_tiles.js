@@ -4,13 +4,14 @@ import VectorTileSource from "ol/source/VectorTile"
 import { Stroke, Fill, Style, Text } from "ol/style"
 import { MVT } from "ol/format"
 import { LIFEMAP_BACK_URL } from "../utils"
+import { THEMES } from "../elements/themes"
 
 export class TilesLayer {
     constructor(base_map, theme, lang) {
         this.view = base_map.map.getView()
-        this.theme = theme
         this.id = "base-layer"
         this.lang = lang
+        this.theme = THEMES[theme]
         this.layer = this.create_layer()
     }
 

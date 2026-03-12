@@ -81,11 +81,15 @@ class Lifemap(
             - `'reset_zoom'`: zoom reset button
             - `'png_export'`: button to export current view to a PNG file
             - `'search'`: taxa search button
+            - `'settings'`: settings button
             - `'full_screen'`: full screen toggle button
     legend_width : int | None, optional
         Legend width in pixels. By default `None`.
     hide_labels : bool
         If `True`, hide the taxa name labels. Defaults to `False`.
+    hide_legend : bool
+        If `True`, hide the map legend, if any. Defaults to `False`.
+
 
     Examples
     --------
@@ -106,9 +110,10 @@ class Lifemap(
         center: Literal["default", "auto"] | int = "default",
         zoom: int | float | None = None,
         theme: str = "dark",
-        controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "search", "full_screen"),
+        controls: Sequence[str] = ("zoom", "reset_zoom", "png_export", "search", "settings", "full_screen"),
         legend_width: int | None = None,
         hide_labels: bool = False,
+        hide_legend: bool = False,
     ) -> None:
         super().__init__(data=data, taxid_col=taxid_col)
 
@@ -140,6 +145,7 @@ class Lifemap(
             "legend_width": legend_width,
             "controls": controls,
             "hide_labels": hide_labels,
+            "hide_legend": hide_legend,
         }
 
     def _to_widget(self) -> LifemapWidget:

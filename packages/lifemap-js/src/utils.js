@@ -5,6 +5,9 @@ import { inAndOut } from "ol/easing"
 export const LIFEMAP_BACK_URL = "https://lifemap-back.univ-lyon1.fr"
 export const MAX_SOLR_QUERY = 100_000
 
+export const DARK_THEMES = ["dark"]
+export const LANG = "en"
+
 // Map defaults
 export const DEFAULT_LON = 0
 export const DEFAULT_LAT = -4.226497
