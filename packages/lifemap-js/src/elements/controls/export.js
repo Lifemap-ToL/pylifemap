@@ -121,6 +121,7 @@ class ExportDialog {
             link.click()
             URL.revokeObjectURL(link.href)
             document.body.removeChild(link)
+            this.hide()
         }, "image/png")
     }
 }
