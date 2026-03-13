@@ -1,8 +1,8 @@
 :root {
     --pylifemap-font-family:
         "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif;
-    --pylifemap-dialog-bg-light: #ffffffcc;
-    --pylifemap-dialog-bg-dark: #ffffffcc;
+    --pylifemap-dialog-bg-light: #ffffffdd;
+    --pylifemap-dialog-bg-dark: #ffffffdd;
     --pylifemap-dialog-border-light: 1px solid #b2b2b2;
     --pylifemap-dialog-border-dark: 1px solid #b2b2b2;
 }
@@ -260,7 +260,7 @@
                 }
             }
             .suggestion:hover {
-                background-color: #eee;
+                background-color: #eeeeeedd;
             }
         }
     }
@@ -418,7 +418,7 @@
         }
     }
 
-    lifemap-search dialog .suggestions {
+    .lifemap-search dialog .suggestions {
         background-color: var(--pylifemap-dialog-bg-dark);
         border: var(--pylifemap-dialog-border-dark);
 
