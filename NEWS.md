@@ -1,4 +1,4 @@
-## pylifemap 0.1.4dev (development version)
+## pylifemap 0.2.0dev (development version)
 
 - Feature: add Arcs and Arcs deck layers
 - Feature: add settings menu to dynamically switch theme and base Lifemap settings
