@@ -1,5 +1,6 @@
 import Control from "ol/control/Control.js"
 import { snapdom } from "@zumer/snapdom"
+import { THEMES } from "../themes"
 
 export class PngExportControl extends Control {
     constructor(options) {
@@ -34,7 +35,8 @@ export class PngExportControl extends Control {
         result_canvas.height = canvases[0].height
 
         const result_ctx = result_canvas.getContext("2d")
-        result_ctx.fillStyle = this.base_map.theme.background_color
+        const bg_color = THEMES[this.base_map.theme].background_color
+        result_ctx.fillStyle = bg_color
         result_ctx.fillRect(0, 0, result_canvas.width, result_canvas.height)
 
         // Draw each canvas onto the result canvas in order
