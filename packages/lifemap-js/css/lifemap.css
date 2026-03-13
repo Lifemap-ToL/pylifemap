@@ -21,6 +21,7 @@
     bottom: 20px;
     cursor: default;
     color: #000;
+    backdrop-filter: blur(3px);
 
     .legend-title {
         font-size: 11px;
@@ -40,7 +41,7 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: 12px;
-    background-color: #fff;
+    background-color: #ffffffee;
     color: #000;
     font-size: 12px;
     padding: 14px 30px 14px 14px;
@@ -50,8 +51,9 @@
     width: max-content;
     min-width: 100px;
     cursor: default;
+    backdrop-filter: blur(3px);
 
-    :after {
+    &:after {
         position: absolute;
         z-index: -1;
         content: "";
@@ -83,9 +85,9 @@
                 font-weight: 400;
                 color: #479eba;
                 text-decoration: underline;
-            }
-            a:hover {
-                text-decoration: none;
+                &:hover {
+                    text-decoration: none;
+                }
             }
         }
     }
@@ -136,7 +138,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
 
-    :after {
+    &:after {
         content: "";
         display: inline-block;
         box-sizing: border-box;
@@ -259,9 +261,9 @@
                     font-style: italic;
                     font-size: 14px;
                 }
-            }
-            .suggestion:hover {
-                background-color: #eeeeeedd;
+                &:hover {
+                    background-color: #eeeeeedd;
+                }
             }
         }
     }
@@ -330,9 +332,10 @@
             color: #333;
             padding: 5px 8px;
             cursor: pointer;
-        }
-        div:hover {
-            background-color: #eeeeeedd;
+
+            &:hover {
+                background-color: #eeeeeedd;
+            }
         }
     }
 }
@@ -373,6 +376,7 @@
     right: auto;
     left: 0;
     border-radius: 0 4px 0 0;
+    backdrop-filter: blur(3px);
 }
 
 /* VSCode workarounds */
@@ -425,7 +429,7 @@
 
     .lifemap-lazyspinner {
         background-color: rgba(255, 255, 255, 0.6);
-        :after {
+        &:after {
             border: 3px solid #444;
             border-bottom-color: transparent;
         }
@@ -479,7 +483,7 @@
 
     .lifemap-lazyspinner {
         background-color: rgba(0, 0, 0, 0.6);
-        :after {
+        &:after {
             border: 3px solid #fff;
             border-bottom-color: transparent;
         }
