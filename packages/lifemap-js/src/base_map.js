@@ -465,7 +465,7 @@ export class BaseMap {
         this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
         this.map.getLayers().insertAt(0, this.tiles_layer)
 
-        switch_labels(!this.hide_labels)
+        this.switch_labels(!this.hide_labels)
 
         this.el.classList.remove(...["dark", "light"])
         this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
