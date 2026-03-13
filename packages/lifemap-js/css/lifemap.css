@@ -254,6 +254,7 @@
                 width: auto;
                 padding: 5px 8px;
                 cursor: pointer;
+                backdrop-filter: blur(3px);
                 span {
                     font-style: italic;
                     font-size: 14px;
@@ -282,6 +283,7 @@
         margin: 0 0 0 1.9em;
         max-height: 20rem;
         overflow-y: auto;
+        backdrop-filter: blur(3px);
 
         form {
             margin: 0;
