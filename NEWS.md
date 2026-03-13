@@ -1,5 +1,8 @@
 ## pylifemap 0.1.4dev (development version)
 
+- Feature: add Arcs and Arcs deck layers
+- Feature: add settings menu to dynamically switch theme and base Lifemap settings
+- Feature: add `hide_legend` argument to Lifemap
 - Feature: refactoring and documentation for JavaScript code reuse
 - Feature: allow updating an existing Lifemap in JavaScript while keeping the current view
 - Fix: error overlay positioning
