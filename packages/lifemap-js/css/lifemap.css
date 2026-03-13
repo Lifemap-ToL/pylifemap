@@ -306,6 +306,37 @@
     }
 }
 
+/* Export */
+
+.export {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    dialog {
+        width: 15rem;
+        height: auto;
+        z-index: 15;
+        padding: 0;
+        margin: 0 0 0 1.9em;
+        max-height: 20rem;
+        overflow-y: auto;
+        backdrop-filter: blur(3px);
+
+        div {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+            padding: 5px 8px;
+            cursor: pointer;
+        }
+        div:hover {
+            background-color: #eeeeeedd;
+        }
+    }
+}
+
 /* Controls */
 
 .pylifemap-control {
@@ -373,6 +404,13 @@
         }
     }
 
+    .export {
+        dialog {
+            background-color: var(--pylifemap-dialog-bg-light);
+            border: var(--pylifemap-dialog-border-light);
+        }
+    }
+
     .lifemap-search dialog .suggestions {
         background-color: var(--pylifemap-dialog-bg-light);
         border: var(--pylifemap-dialog-border-light);
@@ -417,6 +455,13 @@
                     border-bottom: none;
                 }
             }
+        }
+    }
+
+    .export {
+        dialog {
+            background-color: var(--pylifemap-dialog-bg-dark);
+            border: var(--pylifemap-dialog-border-dark);
         }
     }
 

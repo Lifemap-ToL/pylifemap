@@ -15,7 +15,7 @@ import { SettingsControl } from "./elements/controls/settings"
 import { TaxaSearchControl } from "./elements/controls/search"
 import { ResetZoomControl } from "./elements/controls/reset_zoom"
 import { LegendControl } from "./elements/controls/legend"
-import { PngExportControl } from "./elements/controls/png_export"
+import { ExportControl } from "./elements/controls/export"
 
 import { LabelsLayer } from "./layers/layer_labels"
 import { TilesLayer } from "./layers/layer_tiles"
@@ -409,12 +409,12 @@ export class BaseMap {
             map_controls.extend([this.controls.settings])
             top += 2.75
         }
-        if (this.controls_list.includes("png_export")) {
-            this.controls.png_export = new PngExportControl({
+        if (this.controls_list.includes("export")) {
+            this.controls.export = new ExportControl({
                 top: top,
                 base_map: this,
             })
-            map_controls.extend([this.controls.png_export])
+            map_controls.extend([this.controls.export])
         }
         if (this.controls_list.includes("full_screen")) {
             this.controls.full_screen = new FullScreen()

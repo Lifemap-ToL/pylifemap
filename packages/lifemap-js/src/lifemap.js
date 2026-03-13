@@ -32,7 +32,7 @@ export class Lifemap {
             controls = [
                 "zoom",
                 "reset_zoom",
-                "png_export",
+                "export",
                 "search",
                 "settings",
                 "full_screen",

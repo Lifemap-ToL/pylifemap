@@ -18,8 +18,6 @@ export class TaxaSearchControl extends Control {
         })
         this.base_map = base_map
 
-        const control = document.createElement("div")
-        control.className = "pylifemap-control ol-unselectable ol-control"
         const button = document.createElement("button")
         button.setAttribute("title", "Search")
         button.innerHTML =
@@ -39,6 +37,9 @@ export class TaxaSearchControl extends Control {
         } else {
             if ("settings" in this.base_map.controls) {
                 this.base_map.controls.settings.dialog.hide()
+            }
+            if ("export" in this.base_map.controls) {
+                this.base_map.controls.export.dialog.hide()
             }
             this.dialog.show()
         }
