@@ -20,7 +20,6 @@ d = pl.DataFrame(
             1415565,
             1928562,
             1397240,
-            230741,
         ],
         "dest_taxid": [
             9615,
@@ -33,9 +32,8 @@ d = pl.DataFrame(
             1397240,
             1021470,
             1928562,
-            230741,
         ],
-        "relation": ["A", "A", "B", "C", "A", "A", "B", "C", "B", "A", "A"],
+        "relation": ["A", "A", "B", "C", "A", "A", "B", "C", "B", "A"],
     }
 )
 Lifemap(d).layer_arcs(
