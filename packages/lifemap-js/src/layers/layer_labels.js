@@ -12,14 +12,15 @@ const SOLR_API_URL = `${LIFEMAP_BACK_URL}/solr`
 
 export class LabelsLayer {
     constructor(base_map, theme) {
-        this.map = base_map
+        this.base_map = base_map
         this.theme = THEMES[theme]
         this.id = "labels-layer"
 
         this.source = new Vector({ useSpatialIndex: false })
         this.layer = this.create_layer()
 
-        this.map.add_moveend_callback((ev) => this.on_move_end(ev))
+        this.update_labels_from_view()
+        this.base_map.add_moveend_callback((ev) => this.update_labels_from_view(ev))
     }
 
     create_layer() {
@@ -46,8 +47,8 @@ export class LabelsLayer {
             })
     }
 
-    async on_move_end(ev) {
-        const map = ev.map
+    async update_labels_from_view() {
+        const map = this.base_map.map
         const extent = transformExtent(
             map.getView().calculateExtent(),
             "EPSG:3857",

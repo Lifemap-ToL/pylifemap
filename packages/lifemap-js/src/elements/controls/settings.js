@@ -127,15 +127,11 @@ class SettingsDialog {
     }
 
     legend_input_changed(event) {
-        if (event.target.checked) {
-            this.base_map.controls.legend.show()
-        } else {
-            this.base_map.controls.legend.hide()
-        }
+        this.base_map.switch_legend(event.target.checked)
     }
 
     theme_input_changed(event) {
         const new_theme = event.target.value
-        this.base_map.update_tiles_layer(new_theme)
+        this.base_map.switch_theme(new_theme)
     }
 }

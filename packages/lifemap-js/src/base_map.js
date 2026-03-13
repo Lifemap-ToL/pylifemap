@@ -17,6 +17,7 @@ import { ResetZoomControl } from "./elements/controls/reset_zoom"
 import { LegendControl } from "./elements/controls/legend"
 import { PngExportControl } from "./elements/controls/png_export"
 
+import { LabelsLayer } from "./layers/layer_labels"
 import { TilesLayer } from "./layers/layer_tiles"
 
 import { DEFAULT_LON, DEFAULT_LAT, DEFAULT_ZOOM, MAP_EXTENT, DARK_THEMES } from "./utils"
@@ -34,6 +35,7 @@ export class BaseMap {
             theme,
             legend_width = undefined,
             hide_legend = false,
+            hide_labels,
             lang,
         } = options
 
@@ -46,6 +48,7 @@ export class BaseMap {
             theme,
             legend_width,
             hide_legend,
+            hide_labels,
             lang,
         })
 
@@ -58,6 +61,11 @@ export class BaseMap {
         // Add tiles layer
         this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
         this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
+
+        // Add labels layer
+        if (!this.hide_labels) {
+            this.labels_layer = new LabelsLayer(this, this.theme).layer
+        }
 
         // Popup
         this.popup = this.create_popup()
@@ -254,12 +262,26 @@ export class BaseMap {
         }
     }
 
-    update_tiles_layer(theme) {
+    switch_theme(theme) {
         this.theme = theme
+
+        this.map.removeLayer(this.tiles_layer)
+        if (this.labels_layer !== undefined) {
+            this.map.removeLayer(this.labels_layer)
+        }
+
         const current_layers = this.map.getLayers()
-        current_layers.removeAt(0)
-        const new_tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
-        current_layers.insertAt(0, new_tiles_layer)
+        console.log(current_layers)
+
+        this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
+        current_layers.insertAt(0, this.tiles_layer)
+
+        if (!this.hide_labels) {
+            this.labels_layer = new LabelsLayer(this, this.theme, this.lang).layer
+            current_layers.insertAt(1, this.labels_layer)
+        } else {
+            this.labels_layer = undefined
+        }
 
         this.el.classList.remove(...["dark", "light"])
         this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
@@ -433,5 +455,22 @@ export class BaseMap {
         this.controls.legend = new LegendControl()
 
         return map_controls
+    }
+
+    get_base_layers() {
+        const base_layers = [this.tiles_layer]
+        if (this.labels_layer !== undefined) {
+            base_layers.push(this.labels_layer)
+        }
+        return base_layers
+    }
+
+    switch_legend(show) {
+        if (show) {
+            this.controls.legend.show()
+        } else {
+            this.controls.legend.hide()
+        }
+        this.hide_legend = !show
     }
 }

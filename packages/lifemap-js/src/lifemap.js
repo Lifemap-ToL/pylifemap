@@ -61,13 +61,6 @@ export class Lifemap {
             lang: LANG,
         })
 
-        // Tiles layer
-        this.base_layers = [this.base_map.tiles_layer]
-        // Labels layer
-        if (!hide_labels) {
-            const labels_layer = new LabelsLayer(this.base_map, this.theme).layer
-            this.base_layers.push(labels_layer)
-        }
         // Data layers
         this.data_layers = []
 
@@ -109,8 +102,10 @@ export class Lifemap {
 
     async update(options) {
         const { data, layers, color_ranges } = options
+
         const is_update = this.data_layers.length > 0
         this.spinner.show("Processing data")
+
         requestAnimationFrame(() => {
             this.update_data(data).then(() => {
                 this.spinner.update_message("Creating layers")
@@ -164,12 +159,16 @@ export class Lifemap {
             if (deck_layers.length > 0) {
                 if (this.deck === undefined) {
                     await this.init_deck()
-                    this.base_layers.push(this.deck.base_layer)
                 }
                 this.deck.setProps({ layers: deck_layers })
             }
 
-            this.base_map.map.setLayers([...this.base_layers, ...ol_layers])
+            const layers = [...this.base_map.get_base_layers()]
+            if (this.deck !== undefined) {
+                layers.push(this.deck.base_layer)
+            }
+            layers.push(...ol_layers)
+            this.base_map.map.setLayers(layers)
 
             this.update_scales()
         } catch (e) {
@@ -286,19 +285,16 @@ export class Lifemap {
             .getArray()
             .forEach((l) => {
                 // Do not touch map and label layers in case of update
-                if (!this.base_layers.includes(l)) {
+                if (!this.base_map.get_base_layers().includes(l)) {
                     l.setSource(null)
                     if (l.is_webgl) {
                         l.dispose()
                     }
                     this.base_map.map.removeLayer(l)
                     l = null
-                } else {
-                    this.base_map.map
-                        .getView()
-                        .setZoom(this.base_map.map.getView().getZoom())
                 }
             })
+        this.base_map.map.getView().setZoom(this.base_map.map.getView().getZoom())
     }
 
     dispose_deck() {

@@ -9,7 +9,7 @@ import { THEMES } from "../elements/themes"
 export class TilesLayer {
     constructor(base_map, theme, lang) {
         this.view = base_map.map.getView()
-        this.id = "base-layer"
+        this.id = "tiles-layer"
         this.lang = lang
         this.theme = THEMES[theme]
         this.layer = this.create_layer()
