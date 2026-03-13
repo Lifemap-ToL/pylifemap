@@ -25,18 +25,18 @@ You can add the package to a project with [uv](https://docs.astral.sh/uv/) or to
 
 ::: {.panel-tabset}
 
-## pip
-
-```sh
-# Install pylifemap, preferably in a virtual environment
-pip install pylifemap
-```
-
 ## uv
 
 ```sh
 # Add pylifemap to a python project
 uv add pylifemap
+```
+
+## pip
+
+```sh
+# Install pylifemap, preferably in a virtual environment
+pip install pylifemap
 ```
 
 :::
@@ -113,11 +113,13 @@ Lifemap(iucn, taxid_col="taxid", width="100%", height=800)
 
 ### Map theme
 
-By default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a `theme` argument:
+By default Lifemap displays its base map in a dark theme with a black background, but you can switch to another theme by adding a `theme` argument.
 
 ```{python}
 Lifemap(iucn, theme="light").layer_points().show()
 ```
+
+You can also switch to another theme dynamically by using the "settings" menu in the widget.
 
 Available themes are currently `dark`, `light`, `lightgrey`, `lightblue` and `lightgreen`.
 
@@ -136,6 +138,7 @@ The following values are available:
 - `"reset_zoom"`: zoom reset button
 - `"export"`: button to export the current view to a PNG file
 - `"search"`: taxa search button
+- `"settings"`: settings dialog button
 - `"full_screen"`: full screen toggle button
 
 ### Default view (center and zoom)
