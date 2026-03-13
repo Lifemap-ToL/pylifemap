@@ -175,9 +175,6 @@ export class BaseMap {
 
         if ("settings" in this.controls) {
             this.controls.settings.dialog.legend_input.disabled = !this.has_legend
-            if (!this.has_legend) {
-                this.controls.settings.dialog.legend_input.checked = false
-            }
         }
 
         if (!this.has_legend) {
@@ -260,33 +257,6 @@ export class BaseMap {
                 }
             }
         }
-    }
-
-    switch_theme(theme) {
-        this.theme = theme
-
-        this.map.removeLayer(this.tiles_layer)
-        if (this.labels_layer !== undefined) {
-            this.map.removeLayer(this.labels_layer)
-        }
-
-        const current_layers = this.map.getLayers()
-        console.log(current_layers)
-
-        this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
-        current_layers.insertAt(0, this.tiles_layer)
-
-        if (!this.hide_labels) {
-            this.labels_layer = new LabelsLayer(this, this.theme, this.lang).layer
-            current_layers.insertAt(1, this.labels_layer)
-        } else {
-            this.labels_layer = undefined
-        }
-
-        this.el.classList.remove(...["dark", "light"])
-        this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
-
-        this.map.render()
     }
 
     // Reset view to computed default view
@@ -472,5 +442,34 @@ export class BaseMap {
             this.controls.legend.hide()
         }
         this.hide_legend = !show
+    }
+
+    switch_labels(show) {
+        if (this.labels_layer !== undefined) {
+            this.map.removeLayer(this.labels_layer)
+        }
+
+        if (show) {
+            this.labels_layer = new LabelsLayer(this, this.theme, this.lang).layer
+            this.map.getLayers().insertAt(1, this.labels_layer)
+        } else {
+            this.labels_layer = undefined
+        }
+        this.hide_labels = !show
+    }
+
+    switch_theme(theme) {
+        this.theme = theme
+
+        this.map.removeLayer(this.tiles_layer)
+        this.tiles_layer = new TilesLayer(this, this.theme, this.lang).layer
+        this.map.getLayers().insertAt(0, this.tiles_layer)
+
+        switch_labels(!this.hide_labels)
+
+        this.el.classList.remove(...["dark", "light"])
+        this.el.classList.add(DARK_THEMES.includes(this.theme) ? "dark" : "light")
+
+        this.map.render()
     }
 }

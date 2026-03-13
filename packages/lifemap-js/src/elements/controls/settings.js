@@ -53,18 +53,6 @@ class SettingsDialog {
         // Settings form
         const form = document.createElement("form")
 
-        // Legend
-        const legend_div = document.createElement("div")
-        const legend_label = document.createElement("label")
-        const legend_input = document.createElement("input")
-        legend_input.type = "checkbox"
-        legend_input.name = "show_legend"
-        legend_input.checked = !this.base_map.hide_legend
-        legend_label.appendChild(legend_input)
-        legend_label.appendChild(document.createTextNode(" Show legend"))
-        legend_div.appendChild(legend_input)
-        legend_div.appendChild(legend_label)
-
         // Theme
         const theme_div = document.createElement("div")
         const theme_label = document.createElement("label")
@@ -86,26 +74,56 @@ class SettingsDialog {
             theme_input.appendChild(option_el)
         })
 
+        // Legend
+        const legend_div = document.createElement("div")
+        const legend_label = document.createElement("label")
+        const legend_input = document.createElement("input")
+        legend_input.type = "checkbox"
+        legend_input.name = "show_legend"
+        legend_input.checked = !this.base_map.hide_legend
+        legend_label.appendChild(legend_input)
+        legend_label.appendChild(document.createTextNode(" Show legend"))
+        legend_div.appendChild(legend_input)
+        legend_div.appendChild(legend_label)
+
+        // Labels
+        const labels_div = document.createElement("div")
+        const labels_label = document.createElement("label")
+        const labels_input = document.createElement("input")
+        labels_input.type = "checkbox"
+        labels_input.name = "show_labels"
+        labels_input.checked = !this.base_map.hide_labels
+        labels_label.appendChild(labels_input)
+        labels_label.appendChild(document.createTextNode(" Show taxa labels"))
+        labels_div.appendChild(labels_input)
+        labels_div.appendChild(labels_label)
+
         // Add form elements
         form.appendChild(theme_div)
         form.appendChild(legend_div)
+        form.appendChild(labels_div)
 
         dialog.appendChild(form)
         el.appendChild(dialog)
 
         this.button = button
         this.dialog = dialog
-        this.theme_input = theme_input
+        // Used to disable the checkbox if no legend
         this.legend_input = legend_input
 
-        this.legend_input.addEventListener(
+        theme_input.addEventListener(
+            "change",
+            (event) => this.theme_input_changed(event),
+            false
+        )
+        legend_input.addEventListener(
             "change",
             (event) => this.legend_input_changed(event),
             false
         )
-        this.theme_input.addEventListener(
+        labels_input.addEventListener(
             "change",
-            (event) => this.theme_input_changed(event),
+            (event) => this.labels_input_changed(event),
             false
         )
 
@@ -130,8 +148,11 @@ class SettingsDialog {
         this.base_map.switch_legend(event.target.checked)
     }
 
+    labels_input_changed(event) {
+        this.base_map.switch_labels(event.target.checked)
+    }
+
     theme_input_changed(event) {
-        const new_theme = event.target.value
-        this.base_map.switch_theme(new_theme)
+        this.base_map.switch_theme(event.target.value)
     }
 }
