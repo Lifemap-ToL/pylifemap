@@ -1,17 +1,14 @@
+:root {
+    --pylifemap-font-family:
+        "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif;
+    --pylifemap-dialog-bg-light: #ffffffcc;
+    --pylifemap-dialog-bg-dark: #ffffffcc;
+    --pylifemap-dialog-border-light: 1px solid #b2b2b2;
+    --pylifemap-dialog-border-dark: 1px solid #b2b2b2;
+}
+
 .pylifemap-map {
-    font-family:
-        "Source Sans 3", "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue",
-        sans-serif;
-}
-
-/* Global border */
-
-.pylifemap-map.light {
-    border: 1px solid #ccc;
-}
-
-.pylifemap-map.dark {
-    border: 1px solid #555;
+    font-family: var(--pylifemap-font-family);
 }
 
 /* Legend */
@@ -24,24 +21,16 @@
     bottom: 20px;
     cursor: default;
     color: #000;
-}
 
-.lifemap-legend .legend-title {
-    font-size: 11px;
-    font-weight: bold;
-    font-family: system-ui, sans-serif;
-}
+    .legend-title {
+        font-size: 11px;
+        font-weight: bold;
+        font-family: system-ui, sans-serif;
+    }
 
-.lifemap-ol-cat-legend-swatch {
-    padding-top: 3px;
-}
-
-.pylifemap-map.dark .lifemap-legend {
-    background-color: rgba(255, 255, 255, 0.9);
-}
-
-.pylifemap-map.light .lifemap-legend {
-    background-color: rgba(230, 230, 230, 0.9);
+    .lifemap-ol-cat-legend-swatch {
+        padding-top: 3px;
+    }
 }
 
 /* Popup */
@@ -61,65 +50,58 @@
     width: max-content;
     min-width: 100px;
     cursor: default;
-}
 
-#lifemap-popup:after {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    right: calc(50% - 10px);
-    bottom: -9px;
-    border-style: solid;
-    border-width: 10px 10px 0 10px;
-    border-color: #fff transparent transparent transparent;
-}
+    :after {
+        position: absolute;
+        z-index: -1;
+        content: "";
+        right: calc(50% - 10px);
+        bottom: -9px;
+        border-style: solid;
+        border-width: 10px 10px 0 10px;
+        border-color: #fff transparent transparent transparent;
+    }
 
-#lifemap-popup-closer {
-    position: absolute;
-    top: 4px;
-    right: 10px;
-}
+    #lifemap-popup-closer {
+        position: absolute;
+        top: 4px;
+        right: 10px;
 
-#lifemap-popup-closer a {
-    text-decoration: none;
-    color: #666;
-}
-
-#lifemap-popup h2 {
-    font-weight: 700;
-    font-size: 14px;
-    margin-top: 0px !important;
-    margin-bottom: 0px;
-}
-
-#lifemap-popup h2 span {
-    font-size: 13px;
-}
-
-#lifemap-popup h2 span a {
-    font-weight: 400;
-    color: #479eba;
-    text-decoration: underline;
-}
-
-#lifemap-popup h2 span a:hover {
-    text-decoration: none;
-}
-
-#lifemap-popup table {
-    margin-top: 8px;
-    border: none;
-    border-collapse: collapse;
-}
-
-#lifemap-popup table td {
-    padding: 2px 4px;
-    font-size: 12px;
-    line-height: 13px;
-}
-
-#lifemap-popup table .right {
-    text-align: right;
+        a {
+            text-decoration: none;
+            color: #666;
+        }
+    }
+    h2 {
+        font-weight: 700;
+        font-size: 14px;
+        margin-top: 0px !important;
+        margin-bottom: 0px;
+        span {
+            font-size: 13px;
+            a {
+                font-weight: 400;
+                color: #479eba;
+                text-decoration: underline;
+            }
+            a:hover {
+                text-decoration: none;
+            }
+        }
+    }
+    table {
+        margin-top: 8px;
+        border: none;
+        border-collapse: collapse;
+        td {
+            padding: 2px 4px;
+            font-size: 12px;
+            line-height: 13px;
+        }
+        .right {
+            text-align: right;
+        }
+    }
 }
 
 /* Misc */
@@ -153,32 +135,31 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-}
 
-.lifemap-spinner:after {
-    content: "";
-    display: inline-block;
-    box-sizing: border-box;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    margin-top: -24px;
-    margin-left: -24px;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    border: 5px solid #fff;
-    border-bottom-color: #ff3d00;
-    animation: spinner-rotation 1s linear infinite;
-}
-
-.lifemap-spinner p {
-    position: absolute;
-    top: calc(45% + 30px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    color: #fff;
+    :after {
+        content: "";
+        display: inline-block;
+        box-sizing: border-box;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        margin-top: -24px;
+        margin-left: -24px;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        border: 5px solid #fff;
+        border-bottom-color: #ff3d00;
+        animation: spinner-rotation 1s linear infinite;
+    }
+    p {
+        position: absolute;
+        top: calc(45% + 30px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 14px;
+        color: #fff;
+    }
 }
 
 /* Lazy Loading spinner */
@@ -190,37 +171,19 @@
     bottom: 0;
     width: 22px;
     height: 22px;
-}
 
-.pylifemap-map.light .lifemap-lazyspinner {
-    background-color: rgba(255, 255, 255, 0.6);
-}
-
-.pylifemap-map.dark .lifemap-lazyspinner {
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
-.lifemap-lazyspinner:after {
-    content: "";
-    display: inline-block;
-    box-sizing: border-box;
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    animation: spinner-rotation 0.8s linear infinite;
-}
-
-.pylifemap-map.light .lifemap-lazyspinner:after {
-    border: 3px solid #444;
-    border-bottom-color: transparent;
-}
-
-.pylifemap-map.dark .lifemap-lazyspinner:after {
-    border: 3px solid #fff;
-    border-bottom-color: transparent;
+    :after {
+        content: "";
+        display: inline-block;
+        box-sizing: border-box;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spinner-rotation 0.8s linear infinite;
+    }
 }
 
 /* Error */
@@ -237,10 +200,9 @@
     background-color: rgba(0, 0, 0, 0.9);
     z-index: 15;
     padding: 2rem;
-}
-
-.lifemap-error p {
-    color: #fff;
+    p {
+        color: #fff;
+    }
 }
 
 /* Search */
@@ -250,74 +212,58 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-}
 
-.lifemap-search dialog {
-    width: 15rem;
-    height: auto;
-    z-index: 15;
-    padding: 0;
-    margin: 0 0 0 1.9em;
-    background-color: transparent;
-    border: none;
-}
-
-.lifemap-search dialog input {
-    width: 100%;
-    padding: 3px 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    background-color: #fff;
-    color: #000;
-    margin-bottom: 3px;
-}
-
-.lifemap-search dialog .error {
-    width: 100%;
-    display: none;
-    margin-top: 0;
-    padding: 5px 8px;
-    background-color: #d00;
-    color: #333;
-    font-size: 14px;
-}
-
-.lifemap-search dialog .suggestions {
-    width: 100%;
-    display: none;
-    margin-top: 0;
-    padding: 0;
-    border-top: 1px solid white;
-    color: #333;
-    font-size: 13px;
-    max-height: 20rem;
-    overflow-y: auto;
-}
-
-.pylifemap-map.dark .lifemap-search dialog .suggestions {
-    background-color: #dadadacc;
-}
-
-.pylifemap-map.light .lifemap-search dialog .suggestions {
-    background-color: #dadadacc;
-}
-
-.lifemap-search dialog .suggestions .suggestion {
-    width: auto;
-    padding: 5px 8px;
-    border-bottom: 1px solid white;
-    cursor: pointer;
-}
-
-.lifemap-search dialog .suggestions .suggestion:hover {
-    background-color: #444;
-}
-
-.lifemap-search dialog .suggestions .suggestion span {
-    font-style: italic;
-    font-size: 14px;
+    dialog {
+        width: 15rem;
+        height: auto;
+        z-index: 15;
+        padding: 0;
+        margin: 0 0 0 1.9em;
+        background-color: transparent;
+        border: none;
+        input {
+            width: 100%;
+            padding: 3px 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: var(--pylifemap-font-family);
+            font-size: 14px;
+            background-color: #fff;
+            color: #000;
+            margin-bottom: 3px;
+        }
+        .error {
+            width: 100%;
+            display: none;
+            margin-top: 0;
+            padding: 5px 8px;
+            background-color: #d00;
+            color: #333;
+            font-size: 14px;
+        }
+        .suggestions {
+            width: 100%;
+            display: none;
+            margin-top: 0;
+            padding: 0;
+            color: #333;
+            font-size: 13px;
+            max-height: 20rem;
+            overflow-y: auto;
+            .suggestion {
+                width: auto;
+                padding: 5px 8px;
+                cursor: pointer;
+                span {
+                    font-style: italic;
+                    font-size: 14px;
+                }
+            }
+            .suggestion:hover {
+                background-color: #eee;
+            }
+        }
+    }
 }
 
 /* Settings */
@@ -327,93 +273,59 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-}
 
-.lifemap-settings dialog {
-    width: 15rem;
-    height: auto;
-    z-index: 15;
-    padding: 0;
-    margin: 0 0 0 1.9em;
-    background-color: transparent;
-    border: 1px solid white;
-    border-top: none;
-    /*background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px; */
-    max-height: 20rem;
-    overflow-y: auto;
-}
+    dialog {
+        width: 15rem;
+        height: auto;
+        z-index: 15;
+        padding: 0;
+        margin: 0 0 0 1.9em;
+        max-height: 20rem;
+        overflow-y: auto;
 
-.lifemap-settings form {
-    margin: 0;
-}
+        form {
+            margin: 0;
 
-.lifemap-settings form select {
-    /*border-color: #ccc;*/
-    color: #333;
-    background-color: #dadadacc;
-}
+            div {
+                font-size: 14px;
+                color: #333;
+                padding: 5px 8px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: baseline;
+                gap: 4px;
 
-.lifemap-settings form div {
-    font-size: 14px;
-    color: #333;
-    border-top: 1px solid white;
-    padding: 5px 8px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: baseline;
-    gap: 4px;
+                select {
+                    color: #333;
+                    background-color: #eaeaea;
+                }
+            }
+        }
+    }
 }
-
-.pylifemap-map.dark .lifemap-settings form div {
-    background-color: #dadadacc;
-}
-
-.pylifemap-map.light .lifemap-settings form div {
-    background-color: #dadadacc;
-}
-
-/*.lifemap-settings dialog input {
-    width: 100%;
-    padding: 3px 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: "Segoe UI", Roboto, Ubuntu, "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    background-color: #fff;
-    color: #000;
-    margin-bottom: 3px;
-}*/
 
 /* Controls */
-
-.ol-control button {
-    width: 1.6em;
-    height: 1.6em;
-}
 
 .pylifemap-control {
     position: absolute;
     left: 0.5em;
-}
-
-.pylifemap-control button {
-    padding: 3px;
-}
-
-.pylifemap-control button.selected {
-    background-color: #ddd;
-    padding: 4px 2px 2px 4px;
+    button {
+        padding: 3px;
+    }
+    button.selected {
+        background-color: #ddd;
+        padding: 4px 2px 2px 4px;
+    }
 }
 
 .ol-control {
     cursor: default;
     background-color: #ccc;
-}
-
-.ol-control button {
-    cursor: pointer;
+    button {
+        width: 1.6em;
+        height: 1.6em;
+        cursor: pointer;
+    }
 }
 
 /* Disable bigger controls on mobile */
@@ -430,15 +342,103 @@
     border-radius: 0 4px 0 0;
 }
 
-.pylifemap-map.dark .ol-attribution.ol-uncollapsible {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.pylifemap-map.light .ol-attribution.ol-uncollapsible {
-    background-color: rgba(240, 240, 240, 0.75);
-}
-
 /* VSCode workarounds */
 .cell-output-ipywidget-background:has(.p-Widget):has(.pylifemap-map) {
     background-color: transparent !important;
+}
+
+/* THEMES */
+
+/* Light theme */
+
+.pylifemap-map.light {
+    border: 1px solid #ccc;
+
+    .lifemap-legend {
+        background-color: rgba(230, 230, 230, 0.9);
+    }
+
+    .lifemap-settings {
+        dialog {
+            background-color: var(--pylifemap-dialog-bg-light);
+            border: var(--pylifemap-dialog-border-light);
+            form div {
+                border-bottom: var(--pylifemap-dialog-border-light);
+                &:last-of-type {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+
+    .lifemap-search dialog .suggestions {
+        background-color: var(--pylifemap-dialog-bg-light);
+        border: var(--pylifemap-dialog-border-light);
+
+        .suggestion {
+            border-bottom: var(--pylifemap-dialog-border-light);
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .lifemap-lazyspinner {
+        background-color: rgba(255, 255, 255, 0.6);
+        :after {
+            border: 3px solid #444;
+            border-bottom-color: transparent;
+        }
+    }
+
+    .ol-attribution.ol-uncollapsible {
+        background-color: rgba(240, 240, 240, 0.75);
+    }
+}
+
+/* Dark theme */
+
+.pylifemap-map.dark {
+    border: 1px solid #555;
+
+    .lifemap-legend {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .lifemap-settings {
+        dialog {
+            background-color: var(--pylifemap-dialog-bg-dark);
+            border: var(--pylifemap-dialog-border-dark);
+            form div {
+                border-bottom: var(--pylifemap-dialog-border-light);
+                &:last-of-type {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+
+    lifemap-search dialog .suggestions {
+        background-color: var(--pylifemap-dialog-bg-dark);
+        border: var(--pylifemap-dialog-border-dark);
+
+        .suggestion {
+            border-bottom: var(--pylifemap-dialog-border-dark);
+            &:last-of-type {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .lifemap-lazyspinner {
+        background-color: rgba(0, 0, 0, 0.6);
+        :after {
+            border: 3px solid #fff;
+            border-bottom-color: transparent;
+        }
+    }
+
+    .ol-attribution.ol-uncollapsible {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
 }
