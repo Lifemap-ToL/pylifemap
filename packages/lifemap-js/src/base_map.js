@@ -350,6 +350,7 @@ export class BaseMap {
             const extent_features = data
                 .filter((d) => filter_fn(d, xmin, xmax, ymin, ymax, zoom))
                 .map(create_feature_fn)
+                .flat()
             source.clear()
             source.addFeatures(extent_features)
 

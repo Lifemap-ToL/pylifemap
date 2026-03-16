@@ -12,6 +12,7 @@ import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
 import VectorLayer from "ol/layer/Vector"
 import { Point } from "ol/geom"
+import { Stroke } from "ol/style"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
@@ -21,6 +22,8 @@ import { is_data_column } from "../utils"
 
 const DEFAULT_WIDTH = 3
 const DEFAULT_COLOR = "#DD0000"
+// Arcs are above labels
+const BASE_ZINDEX = 6
 
 export class ArcsLayer {
     constructor(id, map, data, options = {}, color_ranges = {}) {
@@ -35,13 +38,13 @@ export class ArcsLayer {
             linetype = "solid",
             arrow = false,
             arrow_width = 12,
-            arrow_width_range = [8, 20],
+            arrow_width_range = [6, 20],
             popup = false,
             popup_col = null,
             hover = false,
             lazy = false,
             lazy_zoom = 15,
-            width_range = [1, 20],
+            width_range = [2, 15],
         } = options
 
         Object.assign(this, {
@@ -82,41 +85,38 @@ export class ArcsLayer {
         // Check if color is a fixed color or a data column
         this.color_is_column = is_data_column(this.data, this.color)
 
-        this.layers.push(this.create_arc_layer())
-        if (this.arrow) {
-            this.layers.push(this.create_arrow_layer())
-        }
+        this.layers.push(this.create_layer())
     }
 
-    create_arc_layer() {
+    create_layer() {
         // Initialize source
         let arc_source = new VectorSource({
             useSpatialIndex: !this.lazy || this.popup || this.hover,
         })
 
-        // Layer definition
-        const arc_layer = new WebGLVectorLayer({
-            // Arcs are above labels
-            zIndex: 6,
+        let style = this.arrow ? this.get_canvas_style() : this.get_webgl_style()
+        const layer_type = this.arrow ? VectorLayer : WebGLVectorLayer
+        const arc_layer = new layer_type({
+            zIndex: BASE_ZINDEX,
             source: arc_source,
-            style: this.get_arc_style(),
+            style: style,
             disableHitDetection: !(this.popup || this.hover),
             opacity: this.opacity,
         })
         arc_layer.id = this.id
 
         // Features creation
-        const create_arc_feature_fn = this.get_create_arc_feature_fn()
+        const create_feature_fn = this.get_create_feature_fn()
         if (this.lazy) {
             this.map.setup_lazy_loading({
                 data: this.data,
                 source: arc_source,
-                create_feature_fn: create_arc_feature_fn,
+                create_feature_fn: create_feature_fn,
                 lazy_zoom: this.lazy_zoom,
                 type: "arcs",
             })
         } else {
-            arc_source.addFeatures(this.data.map(create_arc_feature_fn))
+            arc_source.addFeatures(this.data.map(create_feature_fn).flat())
         }
 
         // Hover
@@ -135,83 +135,50 @@ export class ArcsLayer {
         return arc_layer
     }
 
-    create_arrow_layer() {
-        // Initialize source
-        let arrow_source = new VectorSource({
-            useSpatialIndex: !this.lazy || this.popup || this.hover,
-        })
-
-        // Layer definition
-        const arrow_layer = new VectorLayer({
-            // Arcs are above labels
-            zIndex: 6,
-            source: arrow_source,
-            style: this.get_arrow_style_fn(),
-            disableHitDetection: true,
-            opacity: 1.0,
-        })
-        arrow_layer.id = this.id
-
-        // Features creation
-        const create_arrow_feature_fn = this.get_create_arrow_feature_fn()
-        if (this.lazy) {
-            this.map.setup_lazy_loading({
-                data: this.data,
-                source: arrow_source,
-                create_feature_fn: create_arrow_feature_fn,
-                lazy_zoom: this.lazy_zoom,
-                type: "arcs",
-            })
-        } else {
-            arrow_source.addFeatures(this.data.map(create_arrow_feature_fn))
-        }
-
-        return arrow_layer
-    }
-
-    get_create_arrow_feature_fn() {
+    get_create_feature_fn() {
+        const width_fn = this.get_width_fn()
         const arrow_width_fn = this.get_arrow_width_fn()
         const color_fn = this.get_color_fn()
-        return (d) => {
+        return (d, i) => {
             const arc_geometry = compute_arc(
                 toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
                 toLonLat([d["pylifemap_dest_x"], d["pylifemap_dest_y"]])
             )
-
-            arc_geometry.applyTransform((coord) => {
-                return fromLonLat(coord, "EPSG:3857")
-            })
-            const coordinates = arc_geometry.getCoordinates()
-            const last_coord = coordinates[coordinates.length - 1]
-            const prev_coord = coordinates[coordinates.length - 2]
-
-            // Calculate the angle of the line segment
-            const angle = Math.atan2(
-                last_coord[1] - prev_coord[1],
-                last_coord[0] - prev_coord[0]
-            )
-            return new Feature({
-                geometry: new Point(last_coord),
-                angle: angle,
-                width: arrow_width_fn != null ? arrow_width_fn(d[this.width]) : null,
-                color: color_fn != null ? color_fn(d[this.color]) : null,
-            })
-        }
-    }
-
-    get_create_arc_feature_fn() {
-        const width_fn = this.get_width_fn()
-        const color_fn = this.get_color_fn()
-        return (d) =>
-            new Feature({
-                geometry: compute_arc(
-                    toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
-                    toLonLat([d["pylifemap_dest_x"], d["pylifemap_dest_y"]])
-                ),
+            const arc_feature = new Feature({
+                geometry: arc_geometry.clone(),
                 data: this.popup ? d : null,
                 width: width_fn != null ? width_fn(d[this.width]) : null,
                 color: color_fn != null ? color_fn(d[this.color]) : null,
+                zindex: i,
             })
+            let features = Array(arc_feature)
+            if (this.arrow) {
+                arc_geometry.applyTransform((coord) => {
+                    return fromLonLat(coord, "EPSG:3857")
+                })
+                const coordinates = arc_geometry.getCoordinates()
+                const last_coord = coordinates[coordinates.length - 1]
+                const prev_coord = coordinates[coordinates.length - 2]
+
+                // Calculate the angle of the line segment
+                const angle = Math.atan2(
+                    last_coord[1] - prev_coord[1],
+                    last_coord[0] - prev_coord[0]
+                )
+                const radius =
+                    arrow_width_fn != null ? arrow_width_fn(d[this.width]) : DEFAULT_WIDTH
+                const arrow_feature = new Feature({
+                    geometry: new Point(last_coord),
+                    angle: Math.PI / 2 - angle,
+                    radius: radius,
+                    displacement_y: -radius,
+                    color: color_fn != null ? color_fn(d[this.color]) : DEFAULT_COLOR,
+                    zindex: i,
+                })
+                features = [arrow_feature, ...features]
+            }
+            return features
+        }
     }
 
     get_arrow_width_fn() {
@@ -291,7 +258,56 @@ export class ArcsLayer {
         return (d) => plot_scale.apply(d.toString())
     }
 
-    get_arc_style() {
+    get_canvas_style() {
+        return (feature) => {
+            const stroke_width = this.width_is_column
+                ? feature.get("width")
+                : (this.width ?? DEFAULT_WIDTH)
+
+            // Color style
+            let stroke_color = this.color_is_column
+                ? feature.get("color")
+                : (this.color ?? DEFAULT_COLOR)
+            if (this.hover) {
+                stroke_color = feature.get("hover") == 1 ? "#ff0000" : stroke_color
+            }
+
+            const arc_style = new Style({
+                stroke: new Stroke({
+                    color: stroke_color,
+                    width: stroke_width,
+                    lineCap: "butt",
+                    lineJoin: "bevel",
+                    lineDash: this.get_line_dash(),
+                    lineDashOffset: 0,
+                }),
+                zIndex: feature.get("zindex"),
+            })
+            const styles = [arc_style]
+            if (this.arrow) {
+                const radius = feature.get("radius") ?? this.arrow_width
+                const rotation = feature.get("angle")
+                const arrow_style = new Style({
+                    image: new RegularShape({
+                        fill: new Fill({
+                            color: feature.get("color") ?? "#DD0000",
+                        }),
+                        points: 3,
+                        radius: radius,
+                        angle: 0,
+                        rotation: rotation,
+                        // Displacement to put arrow head at last coordinate
+                        displacement: [0, -radius],
+                    }),
+                    zIndex: feature.get("zindex"),
+                })
+                styles.push(arrow_style)
+            }
+            return styles
+        }
+    }
+
+    get_webgl_style() {
         // Width style
         const stroke_width = this.width_is_column
             ? ["get", "width"]
@@ -305,6 +321,17 @@ export class ArcsLayer {
             stroke_color = ["match", ["get", "hover"], 1, "#ff0000", stroke_color]
         }
 
+        return {
+            "stroke-width": stroke_width,
+            "stroke-color": stroke_color,
+            "stroke-line-dash": this.get_line_dash(),
+            "stroke-line-dash-offset": 0,
+            "stroke-line-cap": "butt",
+            "stroke-line-join": "bevel",
+        }
+    }
+
+    get_line_dash() {
         // Linedash style
         let stroke_line_dash = [0]
         switch (this.linetype) {
@@ -318,36 +345,7 @@ export class ArcsLayer {
                 stroke_line_dash = [25, 10, 25, 10]
                 break
         }
-
-        return {
-            "stroke-width": stroke_width,
-            "stroke-color": stroke_color,
-            "stroke-line-dash": stroke_line_dash,
-            "stroke-line-dash-offset": 0,
-            "stroke-line-cap": "butt",
-            "stroke-line-join": "butt",
-        }
-    }
-
-    get_arrow_style_fn() {
-        return (feature) => {
-            const radius = feature.get("width") ?? this.arrow_width
-            // Math.PI / 2 is initial rotation to have the arrow pointing to the right
-            const rotation = Math.PI / 2 - feature.get("angle")
-            return new Style({
-                image: new RegularShape({
-                    fill: new Fill({
-                        color: feature.get("color") ?? "#DD0000",
-                    }),
-                    points: 3,
-                    radius: radius,
-                    angle: 0,
-                    rotation: rotation,
-                    // Displacement to put arrow head at last coordinate
-                    displacement: [0, -radius],
-                }),
-            })
-        }
+        return stroke_line_dash
     }
 
     get_popup_content_fn() {
