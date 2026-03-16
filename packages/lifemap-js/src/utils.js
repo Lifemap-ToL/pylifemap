@@ -40,10 +40,17 @@ export function is_data_column(data, column) {
 // Any column which is not numerical or is numerical with fewer
 // than 10 different values is considered categorical
 export function is_categorical_column(data, column) {
-    return !(
+    const test_value = data[0][column]
+    if ((typeof data[0][column] == "number") & !Number.isInteger(test_value)) {
+        return false
+    }
+    if (
         ["number", "bigint"].includes(typeof data[0][column]) &
         ([...new Set(data.map((d) => d[column]))].length > 10)
-    )
+    ) {
+        return false
+    }
+    return true
 }
 
 // Animated dezoom / zoom movement helper
