@@ -36,7 +36,7 @@ d = pl.DataFrame(
         "relation": ["A", "A", "B", "C", "A", "A", "B", "C", "B", "A"],
     }
 )
-Lifemap(d).layer_arcs(
+Lifemap(d, theme="lightgrey").layer_arcs(
     taxid_dest_col="dest_taxid",
     color="relation",
     arrow=True
