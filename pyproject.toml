@@ -40,13 +40,13 @@ dev = [
   "nbstripout>=0.7.1",
   "pytest>=9.0.2",
   "quartodoc>=0.11.1",
-  "ruff>=0.15.4",
-  "ty>=0.0.19",
+  "ruff>=0.15.6",
+  "ty>=0.0.23",
   "watchfiles>=0.24.0",
 ]
 
 [build-system]
-requires = ["uv_build>=0.9.10,<0.10.0"]
+requires = ["uv_build>=0.10.9,<0.11.0"]
 build-backend = "uv_build"
 
 [tool.marimo.runtime]
