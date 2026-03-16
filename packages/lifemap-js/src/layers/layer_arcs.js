@@ -166,7 +166,7 @@ export class ArcsLayer {
                     last_coord[0] - prev_coord[0]
                 )
                 const radius =
-                    arrow_width_fn != null ? arrow_width_fn(d[this.width]) : DEFAULT_WIDTH
+                    arrow_width_fn != null ? arrow_width_fn(d[this.width]) : null
                 const arrow_feature = new Feature({
                     geometry: new Point(last_coord),
                     angle: Math.PI / 2 - angle,
@@ -285,12 +285,12 @@ export class ArcsLayer {
             })
             const styles = [arc_style]
             if (this.arrow) {
-                const radius = feature.get("radius") ?? this.arrow_width
+                const radius = feature.get("radius") ?? this.arrow_width ?? DEFAULT_WIDTH
                 const rotation = feature.get("angle")
                 const arrow_style = new Style({
                     image: new RegularShape({
                         fill: new Fill({
-                            color: feature.get("color") ?? "#DD0000",
+                            color: feature.get("color") ?? DEFAULT_COLOR,
                         }),
                         points: 3,
                         radius: radius,
