@@ -209,7 +209,7 @@ export class ArcsLayer {
                 (max_range - min_range)
     }
 
-    get_color_fn = function () {
+    get_color_fn() {
         if (!this.color_is_column) {
             return null
         }
