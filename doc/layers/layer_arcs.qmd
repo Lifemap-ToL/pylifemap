@@ -43,6 +43,10 @@ Lifemap(d, theme="lightgrey").layer_arcs(
 ).show()
 ```
 
-For a detailed list of `layer_lines` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_arcs`).
+::: {.callout-note}
+Performance is degraded when using `arrow=True`. On a typical laptop, displaying more than a few thousand arcs with arrow heads will lead to slow rendering. If you have a lot of arcs to plot you can either disable arrows, use lazy loading or try [layer_arcs_deck](layer_arcs_deck.qmd).
+:::
+
+For a detailed list of `layer_arcs` arguments you can take a look at its [documentation](`~pylifemap.Lifemap.layer_arcs`).
 
 For an alternative arcs visualization, see [layer_arcs_deck](layer_arcs_deck.qmd).
