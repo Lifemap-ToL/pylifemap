@@ -256,6 +256,7 @@ For more information about lazy loading, please take a look at the [large datase
 `Lifemap` and layer methods create a widget object but don't display it. For it to appear, we have to call the [show()](`~pylifemap.Lifemap.show`) method:
 
 ```{python}
+#| eval: false
 Lifemap(iucn, taxid_col="taxid").layer_points().show()
 ```
 
