@@ -1,8 +1,8 @@
 ---
-title: Arcs Deck layer
+title: Arcs layer (deck.gl)
 ---
 
-The arcs deck layer displays curved or straight arc lines between two arbitrary taxa. IT is powered by deck.gl.
+The `arcs_deck` layer displays curved or straight arc lines between two arbitrary taxa. It is powered by [deck.gl](https://deck.gl).
 
 ```{python}
 import polars as pl

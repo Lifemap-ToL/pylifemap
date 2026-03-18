@@ -1,5 +1,5 @@
 ---
-title: Deck.gl heatmap layer
+title: Heatmap layer (deck.gl)
 ---
 
 The heatmap layer displays observations distribution as a heatmap overlay provided by [deck.gl](https://deck.gl).
