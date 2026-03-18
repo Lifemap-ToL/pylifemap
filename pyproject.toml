@@ -1,6 +1,6 @@
 [project]
 name = "pylifemap"
-version = "0.2.0"
+version = "0.2.1dev"
 description = "Taxonomy data visualizations on the Lifemap tree of life"
 readme = "README.md"
 requires-python = ">=3.10"
