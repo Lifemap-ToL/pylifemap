@@ -11,8 +11,9 @@ import { GeoJSON } from "ol/format"
 import Feature from "ol/Feature.js"
 import WebGLVectorLayer from "ol/layer/WebGLVector.js"
 import VectorLayer from "ol/layer/Vector"
-import { Point } from "ol/geom"
+import { Point, LineString } from "ol/geom"
 import { Stroke } from "ol/style"
+import { getLength } from "ol/sphere"
 
 import * as d3 from "d3"
 import * as Plot from "@observablehq/plot"
@@ -86,6 +87,10 @@ export class ArcsLayer {
         this.color_is_column = is_data_column(this.data, this.color)
 
         this.layers.push(this.create_layer())
+        if (this.arrow) {
+            // If arrow heads, arcs must be shortened at each zoom level
+            this.map.add_moveend_callback(() => this.layers.forEach((l) => l.changed()))
+        }
     }
 
     create_layer() {
@@ -144,14 +149,8 @@ export class ArcsLayer {
                 toLonLat([d["pylifemap_x"], d["pylifemap_y"]]),
                 toLonLat([d["pylifemap_dest_x"], d["pylifemap_dest_y"]])
             )
-            const arc_feature = new Feature({
-                geometry: arc_geometry.clone(),
-                data: this.popup ? d : null,
-                width: width_fn != null ? width_fn(d[this.width]) : null,
-                color: color_fn != null ? color_fn(d[this.color]) : null,
-                zindex: i,
-            })
-            let features = Array(arc_feature)
+            let features = []
+            let radius
             if (this.arrow) {
                 arc_geometry.applyTransform((coord) => {
                     return fromLonLat(coord, "EPSG:3857")
@@ -165,8 +164,7 @@ export class ArcsLayer {
                     last_coord[1] - prev_coord[1],
                     last_coord[0] - prev_coord[0]
                 )
-                const radius =
-                    arrow_width_fn != null ? arrow_width_fn(d[this.width]) : null
+                radius = arrow_width_fn != null ? arrow_width_fn(d[this.width]) : null
                 const arrow_feature = new Feature({
                     geometry: new Point(last_coord),
                     angle: Math.PI / 2 - angle,
@@ -175,8 +173,18 @@ export class ArcsLayer {
                     color: color_fn != null ? color_fn(d[this.color]) : DEFAULT_COLOR,
                     zindex: i,
                 })
-                features = [arrow_feature, ...features]
+                features.push(arrow_feature)
             }
+            const arc_feature = new Feature({
+                geometry: arc_geometry.clone(),
+                data: this.popup ? d : null,
+                radius: radius,
+                width: width_fn != null ? width_fn(d[this.width]) : null,
+                color: color_fn != null ? color_fn(d[this.color]) : null,
+                zindex: i,
+            })
+            features.push(arc_feature)
+
             return features
         }
     }
@@ -273,6 +281,7 @@ export class ArcsLayer {
             }
 
             const arc_style = new Style({
+                geometry: this.arrow ? (feature) => this.shorten_arc(feature) : undefined,
                 stroke: new Stroke({
                     color: stroke_color,
                     width: stroke_width,
@@ -371,23 +380,44 @@ export class ArcsLayer {
                   return content
               }
     }
+
+    shorten_arc(feature) {
+        const geometry = feature.getGeometry()
+        if (!(geometry instanceof LineString)) {
+            return geometry
+        }
+        const coordinates = geometry.getCoordinates()
+        const last_coord = coordinates.pop()
+        const prev_coord = coordinates[coordinates.length - 1]
+
+        const segment = new LineString([prev_coord, last_coord])
+        const segment_length = segment.getLength()
+        const remove_length =
+            (feature.get("radius") / 1.5) * this.map.map.getView().getResolution()
+
+        if (remove_length < segment_length) {
+            const ratio = 1 - remove_length / segment_length
+            coordinates.push(segment.getCoordinateAt(ratio))
+        }
+        return new LineString(coordinates)
+    }
 }
 
-function compute_arc(p1LonLat, p2LonLat) {
-    const source_point = turf.point(p1LonLat)
-    const dest_point = turf.point(p2LonLat)
+function compute_arc(p1_lon_lat, p2_lon_lat) {
+    const source_point = turf.point(p1_lon_lat)
+    const dest_point = turf.point(p2_lon_lat)
     const d = turf.distance(source_point, dest_point)
-    const pMid = turf.midpoint(source_point, dest_point)
+    const p_mid = turf.midpoint(source_point, dest_point)
 
-    const lineBearing = turf.bearing(source_point, dest_point)
-    const center_point = turf.destination(pMid, 0.15 * d, lineBearing - 90)
+    const line_bearing = turf.bearing(source_point, dest_point)
+    const center_point = turf.destination(p_mid, 0.15 * d, line_bearing - 90)
     const line = turf.lineString([
         source_point.geometry.coordinates,
         center_point.geometry.coordinates,
         dest_point.geometry.coordinates,
     ])
 
-    const arc = turf.bezierSpline(line, { resolution: 2000, sharpness: 1.1 })
+    const arc = turf.bezierSpline(line, { resolution: 1000, sharpness: 1.1 })
 
     const arc_feature = new GeoJSON().readFeatures(arc, {
         featureProjection: "EPSG:3857",
