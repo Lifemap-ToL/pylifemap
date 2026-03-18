@@ -75,7 +75,6 @@ export class TextLayer {
         } else {
             source.addFeatures(this.data.map(create_feature_fn))
         }
-        console.log(source.getFeatures())
         return layer
     }
 
