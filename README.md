@@ -4,7 +4,7 @@
 [![Tests](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/tests.yml/badge.svg)](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/tests.yml)
 [![Documentation](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/publish.yml/badge.svg)](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/publish.yml)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb)
-[![DOI](https://zenodo.org/badge/733925448.svg)](https://doi.org/10.5281/zenodo.19241196)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19241196.svg)](https://doi.org/10.5281/zenodo.19241196)
 
 ## Overview
 
@@ -13,7 +13,7 @@
 For examples, installation and usage instructions, see the [documentation website](https://lifemap-tol.github.io/pylifemap).
 
 If you use `pylifemap` in your publications, please cite:
-> Barnier, J., Bompard, C., Siberchicot, A., Navratil, V., Martin, J., & de Vienne, D. M. (2025). pylifemap: Mapping Data onto the Tree of Life. bioRxiv, 2025-12. https://doi.org/10.64898/2025.12.16.694609
+> Barnier, J., Bompard, C., Siberchicot, A., Navratil, V., Martin, J., & de Vienne, D. M. (2026). pylifemap: Mapping data onto the tree of life. _Methods in Ecology and Evolution_, 00, 1–7. https://doi.org/10.1111/2041-210x.70300
 
 ## Credits
 
