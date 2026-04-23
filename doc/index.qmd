@@ -29,6 +29,12 @@ Lifemap(iucn).layer_points(radius=5, opacity=0.8).show()
 - The _Layers_ section shows examples of the different available layers.
 - [Reference](reference/index.qmd) provides detailed documentation of the different methods and functions.
 
+## Citation
+
+If you use `pylifemap` in your publications, please cite:
+
+> Barnier, J., Bompard, C., Siberchicot, A., Navratil, V., Martin, J., & de Vienne, D. M. (2026). pylifemap: Mapping data onto the tree of life. _Methods in Ecology and Evolution_, 00, 1–7. <https://doi.org/10.1111/2041-210x.70300>
+
 ## Credits
 
 - The `iucn` data files in the `data/` directory have been generated from [The IUCN Red List of Threatened Species](https://www.gbif.org/dataset/19491596-35ae-4a91-9a98-85cf505f1bd3) dataset (DOI [10.15468/0qnb58](https://doi.org/10.15468/0qnb58)).
