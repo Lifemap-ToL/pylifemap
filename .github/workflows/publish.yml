@@ -29,7 +29,7 @@ jobs:
               uses: quarto-dev/quarto-actions/setup@v2
 
             - name: Install uv
-              uses: astral-sh/setup-uv@v7
+              uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
 
             - name: Set up Python and dependencies
               run: uv sync --all-extras --dev
@@ -40,7 +40,7 @@ jobs:
 
             - name: Upload static files as artifact
               id: deployment
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-pages-artifact@v5
               with:
                   path: doc/_site/
 
@@ -59,4 +59,4 @@ jobs:
         steps:
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v4
+              uses: actions/deploy-pages@v5
