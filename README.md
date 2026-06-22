@@ -4,7 +4,7 @@
 [![Tests](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/tests.yml/badge.svg)](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/tests.yml)
 [![Documentation](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/publish.yml/badge.svg)](https://github.com/Lifemap-ToL/pylifemap/actions/workflows/publish.yml)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Lifemap-ToL/pylifemap/blob/master/notebooks/introduction.ipynb)
-[![DOI](https://zenodo.org/badge/19241196.svg)](https://doi.org/10.5281/zenodo.19241196)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19241196-blue)](https://doi.org/10.5281/zenodo.19241196)
 
 ## Overview
 
