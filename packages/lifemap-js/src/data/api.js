@@ -2,34 +2,55 @@ import { fromLonLat } from "ol/proj"
 import { LUCA_LAT, LUCA_LON, LUCA_ZOOM, LIFEMAP_BACK_URL } from "../utils"
 import { generate_hash } from "../utils"
 
+// Parse an check a coordinates cache entry in sessionStorage
+function parse_cached_data(key, wanted_key, cache_duration) {
+    if (!key.startsWith("taxids_")) {
+        return null
+    }
+    const cached_data = sessionStorage.getItem(key)
+    let timestamp,
+        data,
+        cache_outdated = null
+    try {
+        ;({ timestamp, data } = JSON.parse(cached_data))
+    } catch (e) {
+        sessionStorage.removeItem(key)
+        console.log(`Removed malformed cache entry for key ${key}`)
+        return null
+    }
+    try {
+        cache_outdated = Date.now() - timestamp > cache_duration
+    } catch (e) {
+        sessionStorage.removeItem(key)
+        console.log(`Removed malformed timestamp cache entry for key ${key}`)
+        return null
+    }
+    if (cache_outdated) {
+        sessionStorage.removeItem(key)
+        console.log(`Removed stale cache entry for key ${key}`)
+        return null
+    }
+    if (key == wanted_key && !cache_outdated) {
+        console.log("Returning cached coordinates...")
+        return data
+    }
+    return null
+}
+
 // Get up-to-date taxids coordinates from lifemap-back solr server
 export async function get_data_coords(taxids) {
     const url_taxids = [...taxids].join(" ")
     const cache_key = `taxids_${generate_hash(url_taxids)}`
-    const cache_duration = 3600 * 1000 // 3600 seconds in milliseconds
+    const cache_duration = 1800 * 1000 // 1800 seconds in milliseconds
 
-    // Check if cached data exists and is still valid
-    const cached_data = sessionStorage.getItem(cache_key)
-    if (cached_data) {
-        const { timestamp, data } = JSON.parse(cached_data)
-        if (Date.now() - timestamp <= cache_duration) {
-            console.log("Returning cached coordinates...")
-            return data
-        }
-    }
-    // Clear stale cache entries from sessionStorage
+    let data = null
+    // Check cached items
     for (let key of Object.keys(sessionStorage)) {
-        if (key.startsWith("taxids_")) {
-            try {
-                const { timestamp, data } = JSON.parse(sessionStorage.getItem(key))
-                if (timestamp && Date.now() - timestamp > cache_duration) {
-                    sessionStorage.removeItem(key)
-                    console.log(`Removed stale cache for ${key}`)
-                }
-            } catch (e) {
-                // Ignore malformed cache entries
-            }
-        }
+        const parsed_data = parse_cached_data(key, cache_key, cache_duration)
+        data = parsed_data ?? data
+    }
+    if (data !== null) {
+        return data
     }
     // If no valid cache, fetch from the backend
     const url = `${LIFEMAP_BACK_URL}/solr/taxo/select`
@@ -42,7 +63,7 @@ export async function get_data_coords(taxids) {
             rows: taxids.size,
         },
     }
-    let data = null
+    data = null
     try {
         const response = await fetch(url, {
             method: "post",
