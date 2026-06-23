@@ -1,5 +1,7 @@
 ## pylifemap 0.2.1dev (development version)
 
+- Fix: better handling of cached coordinates in sessionStorage.
+
 ## pylifemap 0.2.0
 
 - Feature: add Arcs and Arcs deck layers
