@@ -33,26 +33,42 @@ export async function update_coordinates(data) {
             for (let k in data) {
                 data[k].forEach((d) => {
                     const taxid_coords = coords[d.pylifemap_taxid]
+                    if (taxid_coords === undefined) {
+                        console.warn(`${d.pylifemap_taxid} not found in updated coords`)
+                        return
+                    }
                     if (d.pylifemap_zoom !== undefined) {
                         d.pylifemap_zoom = taxid_coords.zoom
                     }
-                    if (taxid_coords !== undefined) {
-                        if (d.pylifemap_x !== undefined) {
-                            d.pylifemap_x = taxid_coords.x
-                            d.pylifemap_y = taxid_coords.y
-                        }
+                    if (d.pylifemap_x !== undefined) {
+                        d.pylifemap_x = taxid_coords.x
+                        d.pylifemap_y = taxid_coords.y
                     }
+
                     // Lines data
                     if (d.pylifemap_parent_taxid !== undefined) {
                         const taxid_parent_coords = coords[d.pylifemap_parent_taxid]
+                        if (taxid_parent_coords === undefined) {
+                            console.warn(
+                                `${d.pylifemap_parent_taxid} not found in updated parent coords`
+                            )
+                            return
+                        }
                         if (taxid_parent_coords !== undefined) {
                             d.pylifemap_parent_x = taxid_parent_coords.x
                             d.pylifemap_parent_y = taxid_parent_coords.y
                         }
                     }
+
                     // Arcs data
                     if (d.pylifemap_dest_taxid !== undefined) {
                         const taxid_dest_coords = coords[d.pylifemap_dest_taxid]
+                        if (taxid_dest_coords === undefined) {
+                            console.warn(
+                                `${d.pylifemap_dest_taxid} not found in updated dest coords`
+                            )
+                            return
+                        }
                         if (taxid_dest_coords !== undefined) {
                             d.pylifemap_dest_x = taxid_dest_coords.x
                             d.pylifemap_dest_y = taxid_dest_coords.y
