@@ -98,7 +98,7 @@ export class LabelsLayer {
             taxon["common_name"] = doc["common_name"] ? doc["common_name"][0] : undefined
             taxon["geometry"] = new Point(fromLonLat([doc["lon"], doc["lat"]]))
             taxon["zoom"] = doc["zoom"][0]
-            taxon["label_font_size"] = 16 + (zoom - doc["zoom"][0]) * 3
+            taxon["label_font_size"] = 14 + (zoom - doc["zoom"][0]) * 3
             return new Feature(taxon)
         }
 
