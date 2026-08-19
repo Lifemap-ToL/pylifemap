@@ -1,6 +1,7 @@
 ## pylifemap 0.2.1dev (development version)
 
 - Fix: better handling of cached coordinates in sessionStorage.
+- Fix: missing taxids when updating coordinates.
 
 ## pylifemap 0.2.0
 
