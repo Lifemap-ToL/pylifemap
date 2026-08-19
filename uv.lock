@@ -585,7 +585,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
@@ -794,17 +794,17 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "colorama", marker = "python_full_version < '3.11' and sys_platform == 'win32'" },
-    { name = "decorator", marker = "python_full_version < '3.11'" },
-    { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
-    { name = "jedi", marker = "python_full_version < '3.11'" },
-    { name = "matplotlib-inline", marker = "python_full_version < '3.11'" },
-    { name = "pexpect", marker = "python_full_version < '3.11' and sys_platform != 'emscripten' and sys_platform != 'win32'" },
-    { name = "prompt-toolkit", marker = "python_full_version < '3.11'" },
-    { name = "pygments", marker = "python_full_version < '3.11'" },
-    { name = "stack-data", marker = "python_full_version < '3.11'" },
-    { name = "traitlets", marker = "python_full_version < '3.11'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "decorator" },
+    { name = "exceptiongroup" },
+    { name = "jedi" },
+    { name = "matplotlib-inline" },
+    { name = "pexpect", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "prompt-toolkit" },
+    { name = "pygments" },
+    { name = "stack-data" },
+    { name = "traitlets" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e5/61/1810830e8b93c72dcd3c0f150c80a00c3deb229562d9423807ec92c3a539/ipython-8.38.0.tar.gz", hash = "sha256:9cfea8c903ce0867cc2f23199ed8545eb741f3a69420bfcf3743ad1cec856d39", size = 5513996, upload-time = "2026-01-05T10:59:06.901Z" }
 wheels = [
@@ -824,17 +824,17 @@ resolution-markers = [
     "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "colorama", marker = "python_full_version >= '3.11' and sys_platform == 'win32'" },
-    { name = "decorator", marker = "python_full_version >= '3.11'" },
-    { name = "ipython-pygments-lexers", marker = "python_full_version >= '3.11'" },
-    { name = "jedi", marker = "python_full_version >= '3.11'" },
-    { name = "matplotlib-inline", marker = "python_full_version >= '3.11'" },
-    { name = "pexpect", marker = "python_full_version >= '3.11' and sys_platform != 'emscripten' and sys_platform != 'win32'" },
-    { name = "prompt-toolkit", marker = "python_full_version >= '3.11'" },
-    { name = "pygments", marker = "python_full_version >= '3.11'" },
-    { name = "stack-data", marker = "python_full_version >= '3.11'" },
-    { name = "traitlets", marker = "python_full_version >= '3.11'" },
-    { name = "typing-extensions", marker = "python_full_version == '3.11.*'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "decorator" },
+    { name = "ipython-pygments-lexers" },
+    { name = "jedi" },
+    { name = "matplotlib-inline" },
+    { name = "pexpect", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "prompt-toolkit" },
+    { name = "pygments" },
+    { name = "stack-data" },
+    { name = "traitlets" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a6/60/2111715ea11f39b1535bed6024b7dec7918b71e5e5d30855a5b503056b50/ipython-9.10.0.tar.gz", hash = "sha256:cd9e656be97618a0676d058134cd44e6dc7012c0e5cb36a9ce96a8c904adaf77", size = 4426526, upload-time = "2026-02-02T10:00:33.594Z" }
 wheels = [
@@ -846,7 +846,7 @@ name = "ipython-pygments-lexers"
 version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pygments", marker = "python_full_version >= '3.11'" },
+    { name = "pygments" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ef/4c/5dd1d8af08107f88c7f741ead7a40854b8ac24ddf9ae850afbcf698aa552/ipython_pygments_lexers-1.1.1.tar.gz", hash = "sha256:09c0138009e56b6854f9535736f4171d855c8c08a563a0dcd8022f78355c7e81", size = 8393, upload-time = "2025-01-17T11:24:34.505Z" }
 wheels = [
@@ -1292,7 +1292,7 @@ wheels = [
 
 [[package]]
 name = "marimo"
-version = "0.23.13"
+version = "0.24.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click", marker = "sys_platform != 'emscripten'" },
@@ -1312,13 +1312,13 @@ dependencies = [
     { name = "pyzmq", marker = "python_full_version < '3.15' and sys_platform != 'emscripten'" },
     { name = "starlette", marker = "sys_platform != 'emscripten'" },
     { name = "tomlkit" },
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12'" },
     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
     { name = "websockets", marker = "sys_platform != 'emscripten'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/33/8d/5527d7ddd38a3a495f38f86a41731437301f0d08d81353fb9ceedf167b3d/marimo-0.23.13.tar.gz", hash = "sha256:12dffd800b3f6beae15e0ee3983cc3e8a3fb03c8a87cb0d58973e560008ba3aa", size = 38641267, upload-time = "2026-07-01T17:36:40.151Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/e0/70c18b2862d9a439c811cf2e5bf0aef2b9d0cc7ac72beb2ba6eea9a9a055/marimo-0.24.0.tar.gz", hash = "sha256:30aaeae5a5936df524814fddd98f4b260d3068f97df2611d252fe4b253f3fb80", size = 39054161, upload-time = "2026-08-17T21:30:18.072Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/c0/8470e4e383b01d88fa9c80fba2b0b203d6e4a41e4fbcaedcac997b664b42/marimo-0.23.13-py3-none-any.whl", hash = "sha256:bc6e0f2c59d2086b0707fac56edeedf5f6edf8a390b4d59f4c417ce4c683adb9", size = 39091347, upload-time = "2026-07-01T17:36:36.151Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/8b/3899b23020f5e43c7357171712b14b774434cb6b1a285f5678cc1234013a/marimo-0.24.0-py3-none-any.whl", hash = "sha256:a5470207ac4c228ee7c2c16f820b0ca1cdf58ec4b51074aca1a5c997422ae90a", size = 39517936, upload-time = "2026-08-17T21:30:13.832Z" },
 ]
 
 [package.optional-dependencies]
@@ -1333,7 +1333,7 @@ sandbox = [
 sql = [
     { name = "duckdb" },
     { name = "polars", extra = ["pyarrow"] },
-    { name = "sqlglot" },
+    { name = "sqlglot", extra = ["c"] },
 ]
 
 [[package]]
@@ -1815,10 +1815,10 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "python-dateutil", marker = "python_full_version < '3.11'" },
-    { name = "pytz", marker = "python_full_version < '3.11'" },
-    { name = "tzdata", marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" } },
+    { name = "python-dateutil" },
+    { name = "pytz" },
+    { name = "tzdata" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/33/01/d40b85317f86cf08d853a4f495195c73815fdf205eef3993821720274518/pandas-2.3.3.tar.gz", hash = "sha256:e05e1af93b977f7eafa636d043f9f94c7ee3ac81af99c13508215942e64c993b", size = 4495223, upload-time = "2025-09-29T23:34:51.853Z" }
 wheels = [
@@ -1884,9 +1884,9 @@ resolution-markers = [
     "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "numpy", version = "2.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "python-dateutil", marker = "python_full_version >= '3.11'" },
-    { name = "tzdata", marker = "(python_full_version >= '3.11' and sys_platform == 'emscripten') or (python_full_version >= '3.11' and sys_platform == 'win32')" },
+    { name = "numpy", version = "2.4.2", source = { registry = "https://pypi.org/simple" } },
+    { name = "python-dateutil" },
+    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2e/0c/b28ed414f080ee0ad153f848586d61d1878f91689950f037f976ce15f6c8/pandas-3.0.1.tar.gz", hash = "sha256:4186a699674af418f655dbd420ed87f50d56b4cd6603784279d9eef6627823c8", size = 4641901, upload-time = "2026-02-17T22:20:16.434Z" }
 wheels = [
@@ -1971,7 +1971,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "(python_full_version < '3.11' and sys_platform == 'emscripten') or (python_full_version < '3.11' and sys_platform == 'win32') or (sys_platform != 'emscripten' and sys_platform != 'win32')" },
+    { name = "ptyprocess" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2442,7 +2442,7 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 dependencies = [
-    { name = "certifi", marker = "python_full_version < '3.11'" },
+    { name = "certifi" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/67/10/a8480ea27ea4bbe896c168808854d00f2a9b49f95c0319ddcbba693c8a90/pyproj-3.7.1.tar.gz", hash = "sha256:60d72facd7b6b79853f19744779abcd3f804c4e0d4fa8815469db20c9f640a47", size = 226339, upload-time = "2025-02-16T04:28:46.621Z" }
 wheels = [
@@ -2493,7 +2493,7 @@ resolution-markers = [
     "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "certifi", marker = "python_full_version >= '3.11'" },
+    { name = "certifi" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/04/90/67bd7260b4ea9b8b20b4f58afef6c223ecb3abf368eb4ec5bc2cdef81b49/pyproj-3.7.2.tar.gz", hash = "sha256:39a0cf1ecc7e282d1d30f36594ebd55c9fae1fda8a2622cee5d100430628f88c", size = 226279, upload-time = "2025-08-14T12:05:42.18Z" }
 wheels = [
@@ -3211,11 +3211,47 @@ wheels = [
 
 [[package]]
 name = "sqlglot"
-version = "28.6.0"
+version = "30.17.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/46/b6/f188b9616bef49943353f3622d726af30fdb08acbd081deef28ba43ceb48/sqlglot-28.6.0.tar.gz", hash = "sha256:8c0a432a6745c6c7965bbe99a17667c5a3ca1d524a54b31997cf5422b1727f6a", size = 5676522, upload-time = "2026-01-13T17:39:24.389Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/56/d4/da49abcc81beebbb25f29ddf87f2980c63c949569d7f2da40c06d95fa415/sqlglot-30.17.0.tar.gz", hash = "sha256:2d6b8def93304fa300f4d20f48e3909e7f436fda56ca1fafd8975f6c561ef62c", size = 5999019, upload-time = "2026-08-12T19:36:50.587Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/a6/21b1e19994296ba4a34bc7abaf4fcb40d7e7787477bdfde58cd843594459/sqlglot-28.6.0-py3-none-any.whl", hash = "sha256:8af76e825dc8456a49f8ce049d69bbfcd116655dda3e53051754789e2edf8eba", size = 575186, upload-time = "2026-01-13T17:39:22.327Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/bc/2a07cef49046e6cf5d1a8b1de553aaef8491b4170dbfe254c8687c764408/sqlglot-30.17.0-py3-none-any.whl", hash = "sha256:84435ac283a60173da31b5fd7d11a725037a1c3fd6ed1e21fb065de74ddb579f", size = 741795, upload-time = "2026-08-12T19:36:48.699Z" },
+]
+
+[package.optional-dependencies]
+c = [
+    { name = "sqlglotc" },
+]
+
+[[package]]
+name = "sqlglotc"
+version = "30.17.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sqlglot" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f0/57/994126404551c5b40aa5f93d2c60b56fb191271a4cec445f7007f68070ab/sqlglotc-30.17.0.tar.gz", hash = "sha256:8f83229edbeebb5c02602257a59b596d0c26e63e9827c5dfe9976681e2fb51a7", size = 518037, upload-time = "2026-08-12T19:35:47.487Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/72/390f7018222a851fbedd4e555813e9169c0619bfc373056c4b812ae27d48/sqlglotc-30.17.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:c2d62b78b846cd22eb213d6179851a679d67b4ccd75b3032059be1975802cfa6", size = 32884387, upload-time = "2026-08-12T19:34:57.175Z" },
+    { url = "https://files.pythonhosted.org/packages/38/5c/7cd224b90b5f4c55645679564fd991c68933ddf046846a0f411a88b2db62/sqlglotc-30.17.0-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c7b6d21a763958288b4b75f0b9c170103563b0ffa458a1f52d8ddb1f4aa4d12c", size = 25271708, upload-time = "2026-08-12T19:34:59.872Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/36/c91a7fe508a3ffd6d0874ee6f2daa7f779bbccd290649e19a05035f868c6/sqlglotc-30.17.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:db57dda46789cc5e9017bdd6ea941dbc77ab495839d426fbb539baeffbcbfa42", size = 26415037, upload-time = "2026-08-12T19:35:02.359Z" },
+    { url = "https://files.pythonhosted.org/packages/57/f7/8c3342c18018bdc5aedf78ff642334cec8a7edb9f8b8a0516f9fdd67dbbb/sqlglotc-30.17.0-cp310-cp310-win_amd64.whl", hash = "sha256:f02839a2a3b95cca5adb1012980f7fd73fd24a4414e675bd20584babc617632c", size = 11078688, upload-time = "2026-08-12T19:35:04.766Z" },
+    { url = "https://files.pythonhosted.org/packages/31/e0/f2de63aa8b3e3b23ce68b83bafce0632258d425a009c4477fba4bac03d17/sqlglotc-30.17.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:08b052ba08d13cc888e7d911110f22752a4a8c44647417679d4cd6dc5f9d8573", size = 32728968, upload-time = "2026-08-12T19:35:07.363Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/0b/64c31d5b0bcad7b0b30972f09072cbd3ee6827bf1604f99d7a2cfa5a5084/sqlglotc-30.17.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1f86a27ca12c4a931359aa0073b5ea1c4fe570da0aa9ed577855bec063556f5d", size = 25467846, upload-time = "2026-08-12T19:35:09.95Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/2e/9114b3921a2570ffaceab34da55c38540e80041601151adaa420e07c62c3/sqlglotc-30.17.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e2b740cf36af60c97b57e9941e877d55b4761832a032c5b31bd637afa375eff7", size = 26639733, upload-time = "2026-08-12T19:35:12.55Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/33/f442640dff7a939a80ac46f1e0990188eafc29b87b0292bb472d5374b90d/sqlglotc-30.17.0-cp311-cp311-win_amd64.whl", hash = "sha256:9f5396e8c81c59e1a18d5fa0a78e9c91754e893dcb50f7902f61c835db24121f", size = 11071414, upload-time = "2026-08-12T19:35:14.898Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/5e/23816877b67e707bb56d2537c9c0972fdd876928e9f8ee0685fc451486c0/sqlglotc-30.17.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:cc37a0d9b78e73e187a1caee7d01d966107a0fef77d35294acb4ae69f400342c", size = 32965395, upload-time = "2026-08-12T19:35:17.507Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/85/48cc91739c86fb41239ded78c675b7f72ead286b3a84a6ccdec7dff4b7d4/sqlglotc-30.17.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:5d02c86e516509ef971fe0d290140818f9ecd471a2d86b43de573f5c778f467b", size = 26396103, upload-time = "2026-08-12T19:35:20.102Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/fc/55f5c8d92d516da373a0dcbadb103759c385ef17d1f4ec409228c443b27e/sqlglotc-30.17.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:24c0df324d3b8cb1ab65b4139b52dc4de2291ba0e3ce4086ef7fcd0b96555ba3", size = 27686053, upload-time = "2026-08-12T19:35:22.654Z" },
+    { url = "https://files.pythonhosted.org/packages/35/72/70da36523e61d2ac9854d502221958b4e4caf737fb22fe57e92e2b8f60d5/sqlglotc-30.17.0-cp312-cp312-win_amd64.whl", hash = "sha256:98386f93556e1c3075f58aab85be6f919b5af3ade4cc0609996f7fb68cb85bab", size = 11288238, upload-time = "2026-08-12T19:35:25.054Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/7b/e1a76eccad0fc585e0ec219eddb4d8411014eff2c0b4826d86c8ca348fb2/sqlglotc-30.17.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:486bb9652a11fd8d97005dbbd37aebe33a93fd74903c21c88f25b2e4cdc8d769", size = 32493923, upload-time = "2026-08-12T19:35:27.504Z" },
+    { url = "https://files.pythonhosted.org/packages/36/d8/b16152da0feff92eec30564dfaf25ba2d713d73d2a749e702b4363c7dcb3/sqlglotc-30.17.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1c34c1c99121dd510553a1cdaa3ea1c597fafc58a60d794a81bdb09a1d45eef2", size = 25971903, upload-time = "2026-08-12T19:35:30.048Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/ae/10e451d34dc0d62c1c334c5a50a70ab1dcab9fdddd6c6db7aaab214e8362/sqlglotc-30.17.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c397302b4739e134e0062d48809dbe841a85b704bf5d0291336f057d74784a35", size = 27270385, upload-time = "2026-08-12T19:35:32.713Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/90/5843d6da4de08aea9c264f111f8df7783c414300371e4a38c604c467d382/sqlglotc-30.17.0-cp313-cp313-win_amd64.whl", hash = "sha256:a5a5cb708a9d96e08b5fa6d31a3817d94d615d7b536ade2cb1e88b6f1ec10917", size = 11288453, upload-time = "2026-08-12T19:35:34.819Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/14/40e655b38b369533bb19e9ca0de274d3f3d0a410de396cadcd34e2d897a6/sqlglotc-30.17.0-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:a79ca1259d89194b1ae3d50509aebb2727e74de0190dc57568917d27b2f70baf", size = 32419054, upload-time = "2026-08-12T19:35:37.351Z" },
+    { url = "https://files.pythonhosted.org/packages/57/91/f6000ee61f31a9614e7bdee365ffb9b9faf8483f23c12c4fb48f184fd982/sqlglotc-30.17.0-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:86b84c58b563d9762724a503398604c25553a5e637501c48dc27cf9fef466332", size = 25963607, upload-time = "2026-08-12T19:35:40.584Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/7e/82107bbe1b86fec5d71074ab210165d6a725c1b9f8479162c5340826209a/sqlglotc-30.17.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:599ec9e4c7450175df0c4f844d95e7732c4890077a997352f62af25203633970", size = 27168501, upload-time = "2026-08-12T19:35:43.519Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/24/4c59aee76544d4c6f0a6af2871bc0e9848a899cb310149f13d81d1dd8694/sqlglotc-30.17.0-cp314-cp314-win_amd64.whl", hash = "sha256:3396b2e596049cb185b9980b6b59453ff7b5d400b2c6c335cb854cf93458b0a8", size = 11429982, upload-time = "2026-08-12T19:35:45.737Z" },
 ]
 
 [[package]]
@@ -3237,8 +3273,8 @@ name = "starlette"
 version = "0.52.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "anyio", marker = "python_full_version < '3.11' or sys_platform != 'emscripten'" },
-    { name = "typing-extensions", marker = "(python_full_version < '3.13' and sys_platform != 'emscripten') or (python_full_version < '3.11' and sys_platform == 'emscripten')" },
+    { name = "anyio" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c4/68/79977123bb7be889ad680d79a40f339082c1978b5cfcf62c2d8d196873ac/starlette-0.52.1.tar.gz", hash = "sha256:834edd1b0a23167694292e94f597773bc3f89f362be6effee198165a35d62933", size = 2653702, upload-time = "2026-01-18T13:34:11.062Z" }
 wheels = [
@@ -3554,8 +3590,8 @@ name = "uvicorn"
 version = "0.41.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click", marker = "python_full_version < '3.11' or sys_platform != 'emscripten'" },
-    { name = "h11", marker = "python_full_version < '3.11' or sys_platform != 'emscripten'" },
+    { name = "click" },
+    { name = "h11" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/32/ce/eeb58ae4ac36fe09e3842eb02e0eb676bf2c53ae062b98f1b2531673efdd/uvicorn-0.41.0.tar.gz", hash = "sha256:09d11cf7008da33113824ee5a1c6422d89fbc2ff476540d69a34c87fab8b571a", size = 82633, upload-time = "2026-02-16T23:07:24.1Z" }
