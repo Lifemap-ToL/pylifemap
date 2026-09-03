@@ -2366,7 +2366,7 @@ wheels = [
 
 [[package]]
 name = "pylifemap"
-version = "0.2.1.dev0"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget", extra = ["dev"] },
