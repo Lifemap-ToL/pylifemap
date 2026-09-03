@@ -1,3 +1,5 @@
+## pylifemap 0.2.2dev
+
 ## pylifemap 0.2.1
 
 - Fix: better handling of cached coordinates in sessionStorage.
